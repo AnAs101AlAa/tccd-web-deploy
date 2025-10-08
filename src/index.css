@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #cd3a38;
+  --color-secondary: #295e7e;
+  --color-contrast: #272727;
+  --color-background: #fff;
+  --color-text: #f8f8f8;
+  --color-muted-primary: #E9AAA9;
+  --color-muted-secondary: #BABDC4;
+  --color-active-tab-bg: #f6f5f2;
+  --color-active-tab-text: #ea4c59;
+  --color-inactive-tab-text: #6b7280;
+  --color-label: #b3b3b3;
+  --color-error: #fb2c36;
+  --color-background-contrast: #e5e7eb;
+  --color-background-primary: #faebea;
+}
+
+:root {
+  /* Font Variables */
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-black: #060606;
+  --font-tag: 10px;
+  --font-tag-large: 1rem;
+}
+
+
+/* Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+input[type=password]::-ms-reveal,
+input[type=password]::-ms-clear {
+  display: none;
+}
