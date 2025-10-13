@@ -1,0 +1,105 @@
+export type Gender = "Male" | "Female";
+
+export type UserRole = "Student" | "TA" | "DR" | "BusinessRep" | "Admin";
+
+export type UserStatus = "Pending" | "Approved" | "Rejected" | "Banned";
+
+export type Committee =
+  | "Operations"
+  | "HumanResources"
+  | "IT"
+  | "GraphicDesign"
+  | "ExternalRelations"
+  | "ContentCreation"
+  | "Marketing"
+  | "VideoEditing"
+  | "HighBoard";
+
+export type Position =
+  | "Head"
+  | "Member"
+  | "President"
+  | "VicePresident"
+  | "Director";
+
+export interface User {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  isDeleted: boolean;
+  englishFullName: string;
+  arabicFullName: string;
+  email: string;
+  phoneNumber: string;
+  gender: Gender;
+  role: UserRole;
+  profileImage?: string;
+  status: UserStatus;
+  lastActive?: string;
+}
+
+export interface Company {
+  id: string;
+  companyName: string;
+  businessType: string;
+  description: string;
+  website: string;
+  brief: string;
+  logo: string;
+  businessReps?: string[]; // IDs of BusinessRepUser
+}
+
+export interface StudentUser extends User {
+  gpa: string; // e.g., "3.7" or "85%"
+  graduationYear: string;
+  department: string;
+  faculty: string;
+  university: string;
+  cv: string; // URL
+  linkedin?: string;
+  gitHub?: string;
+  experience?: string;
+  extracurricularActivities?: string;
+  committeeAffiliation?: Committee;
+  position?: Position;
+}
+
+export interface BusinessRepUser extends User {
+  companyId: string;
+  position: string;
+  proofFileUrl: string;
+  company?: Company;
+}
+
+export interface VolunteeringProfile {
+  userId: string;
+  committeeAffiliation: Committee;
+  position: Position;
+  studentProfile?: StudentUser;
+}
+
+export interface FacultyMemberUser extends User {
+  proofFileUrl: string;
+  universityName: string;
+  facultyName: string;
+  department: string;
+}
+export interface AdminUser extends User {
+  role: "Admin";
+  volunteering?: VolunteeringProfile;
+}
+
+/** Union every component can accept */
+export type AnyUser =
+  | StudentUser
+  | BusinessRepUser
+  | FacultyMemberUser
+  | AdminUser;
+
+/** Guards for Conditional Rendering */
+export const isStudent = (u: AnyUser): u is StudentUser => u.role === "Student";
+export const isBusinessRep = (u: AnyUser): u is BusinessRepUser =>
+  u.role === "BusinessRep";
+export const isTA = (u: AnyUser): u is FacultyMemberUser => u.role === "TA";
+export const isDR = (u: AnyUser): u is FacultyMemberUser => u.role === "DR";
+export const isAdmin = (u: AnyUser): u is AdminUser => u.role === "Admin";
