@@ -6,7 +6,7 @@ import {
   isTA,
   isDR,
   isAdmin,
-} from "@/shared/queries/user/types";
+} from "@/shared/types/users";
 
 export const selectUserState = (state: RootState) => state.user;
 export const selectCurrentUser = (state: RootState) => state.user.currentUser;

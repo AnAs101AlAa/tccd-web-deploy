@@ -19,7 +19,7 @@ import {
   selectIsTA,
   selectIsDR,
 } from '@/shared/store/selectors';
-import type { AnyUser } from '@/shared/queries/user/types';
+import type { AnyUser } from '@/shared/types/users';
 
 /**
  * Custom Redux Hooks for User Domain
