@@ -9,8 +9,12 @@ function App() {
       <Toaster />
       <WithNavbar>
         <Routes>
-          {routes.map((path, component) => (
-            <Route key={path} path={path} element={component} />
+          {routes.map(({path, Component}) => (
+            <Route
+              key={path}
+              path={path}
+              element={<Component/>}
+            />
           ))}
         </Routes>
       </WithNavbar>
