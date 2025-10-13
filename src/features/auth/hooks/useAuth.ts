@@ -74,7 +74,7 @@ export const useAuth = () => {
   const handleSignup = async (data: SignupFormData) => {
     try {
       await signupMutation.mutateAsync(data);
-      navigate("/dashboard");
+      navigate("/confirmation");
     } catch (error) {
       // Error is handled by the mutation's onError callback
       console.error("Signup error:", error);
