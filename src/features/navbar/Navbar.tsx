@@ -6,10 +6,14 @@ import ProfileMenu from "./components/ProfileMenu";
 import logo from "@/assets/TCCD_logo.svg";
 import facultyLogo from "@/assets/faculty.png";
 import universityLogo from "@/assets/university.png";
+import { useAppSelector } from "@/shared/store/hooks";
+import { selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
+
 const Navbar = () => {
   const { pathname } = useLocation();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const isAuthenticated = false;
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  console.log("Is Authenticated:", isAuthenticated);
 
   const handleAvatarClick = () => {
     setShowProfileMenu(!showProfileMenu);

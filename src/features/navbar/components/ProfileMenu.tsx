@@ -1,6 +1,15 @@
 import profileImage from "@/assets/placeholders/profileImage.jpeg";
-import { PROFILE_MENU_ITEMS } from "@/constants/ProfileMenuItems";
+import { getProfileMenuItems } from "@/constants/ProfileMenuItems";
 import { useEffect, useRef } from "react";
+import { useAppSelector, useAppDispatch } from "@/shared/store/hooks";
+import {
+  selectUserFullName,
+  selectUserEmail,
+  selectUserProfileImage,
+  selectCurrentUser,
+} from "@/shared/store/selectors/userSelectors";
+import { clearUser } from "@/shared/store/slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileMenuProps {
   isOpen: boolean;
@@ -16,6 +25,28 @@ const ProfileMenu = ({
   position = "top",
 }: ProfileMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  // Get user data from Redux store
+  const currentUser = useAppSelector(selectCurrentUser);
+  const userFullName = useAppSelector(selectUserFullName);
+  const userEmail = useAppSelector(selectUserEmail);
+  const userProfileImage = useAppSelector(selectUserProfileImage);
+
+  // Get dynamic menu items based on user role
+  const menuItems = getProfileMenuItems(currentUser);
+
+  const handleMenuItemClick = (action?: string) => {
+    if (action === "logout") {
+      dispatch(clearUser());
+      navigate("/login");
+      onClose();
+    } else if (action) {
+      navigate(action);
+      onClose();
+    }
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -92,31 +123,32 @@ const ProfileMenu = ({
           <div className="flex flex-col items-center pt-[30px] pb-6">
             <div className="w-[61px] h-[61px] rounded-full border border-background overflow-hidden mb-2">
               <img
-                src={profileImage}
+                src={userProfileImage || profileImage}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
             </div>
             <p className="text-[13px] leading-6 tracking-[-0.365714px] text-contrast font-inter">
-              Ahmed Fathy Mohamed
+              {userFullName || "Guest User"}
             </p>
             <p className="text-[10px] leading-6 tracking-[-0.365714px] text-contrast font-inter">
-              ahmedfathy@gmail.com
+              {userEmail || "No email available"}
             </p>
           </div>
 
           {/* Main Settings */}
           <div className="flex flex-col">
-            {PROFILE_MENU_ITEMS.map((item, index) => {
+            {menuItems.map((item, index) => {
               const Icon = item.icon;
-              const isLast = index === PROFILE_MENU_ITEMS.length - 1;
+              const isLast = index === menuItems.length - 1;
               return (
                 <div
                   key={item.title}
-                  className={`flex flex-row items-center px-4 gap-[14px] ${
+                  className={`flex flex-row items-center px-4 gap-[14px] cursor-pointer hover:bg-gray-50 transition-colors ${
                     !isLast ? "border-b border-[#14191D]" : ""
                   }`}
                   style={{ height: item.height || "72px" }}
+                  onClick={() => handleMenuItemClick(item.action)}
                 >
                   <div className="flex items-center justify-center w-[42px] h-10">
                     <Icon size={32} color={item.iconColor} />
@@ -129,9 +161,7 @@ const ProfileMenu = ({
                       {item.title}
                     </h3>
                     <p
-                      className={`${
-                        index === 1 ? "text-xs" : "text-[13px]"
-                      } leading-6 tracking-[-0.365714px] font-inter`}
+                      className="text-[13px] leading-6 tracking-[-0.365714px] font-inter"
                       style={{ color: item.iconColor }}
                     >
                       {item.description}

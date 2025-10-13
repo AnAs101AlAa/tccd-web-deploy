@@ -4,12 +4,13 @@ import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import ProfileAvatar from "./components/ProfileAvatar";
 import ProfileMenu from "./components/ProfileMenu";
+import { useAppSelector } from "@/shared/store/hooks";
+import { selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
 
 const MobileNavbar = () => {
   const { pathname } = useLocation();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const isAuthenticated = false;
-
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const handleAvatarClick = () => {
     if (isAuthenticated) {
       setShowProfileMenu(!showProfileMenu);
