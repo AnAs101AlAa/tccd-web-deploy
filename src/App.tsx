@@ -7,11 +7,11 @@ function App() {
     <BrowserRouter>
       <Toaster />
         <Routes>
-          {routes.map((path, component) => (
+          {routes.map(({path, Component}) => (
             <Route
               key={path}
               path={path}
-              element={component}
+              element={<Component/>}
             />
           ))}
         </Routes>
