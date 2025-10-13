@@ -7,23 +7,17 @@ import ProfileMenu from "./components/ProfileMenu";
 
 const MobileNavbar = () => {
   const { pathname } = useLocation();
-  const [showProfile, setShowProfile] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const isAuthenticated = true;
+  const isAuthenticated = false;
 
   const handleAvatarClick = () => {
     if (isAuthenticated) {
-      setShowProfile(true);
-      if (!showProfileMenu) {
-        setShowProfileMenu(true);
-      } else {
-        setShowProfileMenu(false);
-      }
+      setShowProfileMenu(!showProfileMenu);
     }
   };
 
   return (
-    <nav className="w-full bg-white relative flex justify-between items-center px-[6%] h-16 border border-[#000]/13 rounded-t-3xl">
+    <nav className="w-full bg-background relative flex justify-between items-center px-[6%] h-16 border border-contrast/13 rounded-t-3xl">
       {NAV_ITEMS.map(({ icon: Icon, to, title }, index) => {
         const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
         return (
@@ -47,20 +41,32 @@ const MobileNavbar = () => {
           </Link>
         );
       })}
-      
-      <div className="absolute left-1/2 -translate-x-1/2 -top-7">
-        <ProfileAvatar
-          isAuthenticated={isAuthenticated}
-          showProfile={showProfile}
-          onClick={handleAvatarClick}
-        />
 
-        <ProfileMenu
-          isOpen={showProfileMenu}
-          onClose={() => {
-            setShowProfileMenu(false);
-          }}
-        />
+      <div className="absolute left-1/2 -translate-x-1/2 -top-7">
+        {isAuthenticated ? (
+          <>
+            <ProfileAvatar
+              isAuthenticated={isAuthenticated}
+              onClick={handleAvatarClick}
+            />
+
+            <ProfileMenu
+              isOpen={showProfileMenu}
+              onClose={() => {
+                setShowProfileMenu(false);
+              }}
+              isAuthenticated={isAuthenticated}
+              position="top"
+            />
+          </>
+        ) : (
+          <Link to="/signin">
+            <ProfileAvatar
+              isAuthenticated={isAuthenticated}
+              onClick={() => {}}
+            />
+          </Link>
+        )}
       </div>
     </nav>
   );

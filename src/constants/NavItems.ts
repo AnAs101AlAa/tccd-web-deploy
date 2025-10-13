@@ -23,6 +23,6 @@ export const NAV_ITEMS: { to: string; icon: IconType; title: string }[] = [
   {
     to: "/aboutus",
     icon: IoInformationCircleOutline,
-    title: "About Us",
+    title: "About us",
   },
 ];
