@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
 import { useUserActions } from "@/shared/queries/user/userHooks";
 import type { LoginCredentials, SignupCredentials } from "./types";
-import type { AnyUser } from "@/shared/queries/user/types";
+import type { AnyUser } from "@/shared/types/users";
 
 export const authKeys = {
   all: ["auth"] as const,

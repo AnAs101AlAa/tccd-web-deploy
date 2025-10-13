@@ -1,6 +1,6 @@
 export type Gender = "Male" | "Female";
 
-export type UserRole = "Student" | "TA" | "DR" | "BusinessRep" | "Admin";
+export type EntityRole = "Student" | "TA" | "DR" | "BusinessRep" | "Admin" | "Volunteer" | "company";
 
 export type UserStatus = "Pending" | "Approved" | "Rejected" | "Banned";
 
@@ -22,24 +22,26 @@ export type Position =
   | "VicePresident"
   | "Director";
 
-export interface User {
+interface Entity {
   id: string;
+  lastActive?: string;
   createdAt: string;
   updatedAt: string;
   isDeleted: boolean;
-  englishFullName: string;
-  arabicFullName: string;
-  email: string;
-  phoneNumber: string;
-  gender: Gender;
-  role: UserRole;
-  profileImage?: string;
   status: UserStatus;
-  lastActive?: string;
+  role: EntityRole;
 }
 
-export interface Company {
-  id: string;
+interface User extends Entity {
+  englishFullName: string;
+  arabicFullName: string;
+  phoneNumber: string;
+  email: string;
+  gender: Gender;
+  profilePicture?: string;
+}
+
+export interface CompanyUser extends Entity {
   companyName: string;
   businessType: string;
   description: string;
@@ -47,6 +49,12 @@ export interface Company {
   brief: string;
   logo: string;
   businessReps?: string[]; // IDs of BusinessRepUser
+}
+
+export interface BusinessRepUser extends User {
+  companyId: string;
+  jobTitle: string;
+  company?: CompanyUser;
 }
 
 export interface StudentUser extends User {
@@ -59,39 +67,28 @@ export interface StudentUser extends User {
   linkedin?: string;
   gitHub?: string;
   experience?: string;
-  extracurricularActivities?: string;
-  committeeAffiliation?: Committee;
-  position?: Position;
 }
 
-export interface BusinessRepUser extends User {
-  companyId: string;
-  position: string;
-  proofFileUrl: string;
-  company?: Company;
-}
-
-export interface VolunteeringProfile {
-  userId: string;
+export interface VolunteeringUser extends StudentUser {
   committeeAffiliation: Committee;
   position: Position;
-  studentProfile?: StudentUser;
 }
 
 export interface FacultyMemberUser extends User {
-  proofFileUrl: string;
-  universityName: string;
-  facultyName: string;
+  university: string;
+  faculty: string;
   department: string;
 }
+
 export interface AdminUser extends User {
-  role: "Admin";
-  volunteering?: VolunteeringProfile;
+  adminLevel: number;
 }
 
 /** Union every component can accept */
 export type AnyUser =
   | StudentUser
+  | VolunteeringUser
+  | CompanyUser
   | BusinessRepUser
   | FacultyMemberUser
   | AdminUser;
@@ -103,3 +100,7 @@ export const isBusinessRep = (u: AnyUser): u is BusinessRepUser =>
 export const isTA = (u: AnyUser): u is FacultyMemberUser => u.role === "TA";
 export const isDR = (u: AnyUser): u is FacultyMemberUser => u.role === "DR";
 export const isAdmin = (u: AnyUser): u is AdminUser => u.role === "Admin";
+export const isVolunteer = (u: AnyUser): u is VolunteeringUser =>
+  u.role === "Volunteer";
+export const isCompany = (u: AnyUser | CompanyUser): u is CompanyUser =>
+  u.role === "company";
