@@ -71,6 +71,7 @@ FormInputProps<T>) {
                     onChange={field.onChange}
                     error={error?.message}
                     label={label}
+                    id={name}
                   />
                 </div>
               ) : (
