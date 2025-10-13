@@ -70,7 +70,7 @@ const Navbar = () => {
             </>
           ) : (
             <Link
-              to="/signin"
+              to="/login"
               className="font-poppins font-semibold text-xl text-secondary hover:text-primary transition-colors"
             >
               Login

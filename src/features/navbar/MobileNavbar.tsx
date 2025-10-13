@@ -60,7 +60,7 @@ const MobileNavbar = () => {
             />
           </>
         ) : (
-          <Link to="/signin">
+          <Link to="/login">
             <ProfileAvatar
               isAuthenticated={isAuthenticated}
               onClick={() => {}}
