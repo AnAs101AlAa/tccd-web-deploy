@@ -6,6 +6,7 @@ import {
   isTA,
   isDR,
   isAdmin,
+  isVolunteer,
 } from "@/shared/types/users";
 
 export const selectUserState = (state: RootState) => state.user;
@@ -97,8 +98,10 @@ export const selectStudentData = createSelector([selectCurrentUser], (user) => {
       department: user.department,
       faculty: user.faculty,
       university: user.university,
-      committeeAffiliation: user.committeeAffiliation,
-      position: user.position,
+      cv: user.cv || "",
+      linkedin: user.linkedin || "",
+      gitHub: user.gitHub || "",
+      experience: user.experience || "",
     };
   }
   return undefined;
@@ -114,8 +117,8 @@ export const selectBusinessRepData = createSelector(
     if (user && isBusinessRep(user)) {
       return {
         companyId: user.companyId,
-        position: user.position,
         company: user.company,
+        jobTitle: user.jobTitle,
       };
     }
     return undefined;
@@ -129,11 +132,8 @@ export const selectBusinessRepData = createSelector(
 export const selectHasCommitteeAffiliation = createSelector(
   [selectCurrentUser],
   (user) => {
-    if (user && isStudent(user)) {
+    if (user && isVolunteer(user)) {
       return user.committeeAffiliation !== undefined;
-    }
-    if (user && isAdmin(user)) {
-      return user.volunteering?.committeeAffiliation !== undefined;
     }
     return false;
   }

@@ -63,7 +63,7 @@ export interface StudentUser extends User {
   department: string;
   faculty: string;
   university: string;
-  cv: string; // URL
+  cv?: string; // URL
   linkedin?: string;
   gitHub?: string;
   experience?: string;
