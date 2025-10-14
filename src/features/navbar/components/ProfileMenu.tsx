@@ -79,11 +79,11 @@ const ProfileMenu = ({
   const triangleHorizontalPosition =
     position === "top"
       ? "left-1/2 -translate-x-1/2" 
-      : "right-[30px]"; 
+      : "right-[15px]"; 
 
   const positionClasses =
     position === "top"
-      ? "bottom-[calc(100%+12px)]" 
+      ? "bottom-[calc(100%+22px)]" 
       : "top-[calc(100%+20px)]"; 
 
   const triangleStyle =
@@ -104,7 +104,7 @@ const ProfileMenu = ({
   return (
     <div
       ref={menuRef}
-      className={`absolute ${horizontalPosition} ${positionClasses} w-[260px] md:w-[307px] bg-background shadow-[0px_4px_14.7px_rgba(0,0,0,0.25)] rounded-[10px] z-50`}
+      className={`absolute ${horizontalPosition} ${positionClasses} w-[210px] md:w-[250px] bg-background shadow-[0px_4px_14.7px_rgba(0,0,0,0.25)] rounded-[10px] z-50`}
     >
       <div
         className={`absolute ${triangleHorizontalPosition} w-0 h-0`}
@@ -115,17 +115,17 @@ const ProfileMenu = ({
         <>
           {/* Profile Header */}
           <div className="flex flex-col items-center pt-4 pb-3 md:pt-[30px] md:pb-3">
-            <div className="w-[40px] h-[40px] md:w-[61px] md:h-[61px] rounded-full border border-background overflow-hidden mb-1 md:mb-2">
+            <div className="w-[48px] h-[48px] md:w-[61px] md:h-[61px] rounded-full border border-background overflow-hidden mb-1 md:mb-2">
               <img
                 src={userProfileImage || profileImage}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
             </div>
-            <p className="text-[12px] md:text-[13px] leading-5 md:leading-6 tracking-[-0.365714px] text-contrast font-inter">
+            <p className="text-[13px] md:text-[14px] lg:text-[15px] leading-5 md:leading-6 tracking-[-0.365714px] text-contrast font-inter mb-1">
               {userFullName || "Guest User"}
             </p>
-            <p className="text-[9px] md:text-[10px] leading-1.5 md:leading-2.5 tracking-[-0.365714px] text-contrast font-inter">
+            <p className="text-[11px] md:text-[12px] lg:text-[13px] leading-1.5 md:leading-2.5 tracking-[-0.365714px] text-contrast font-inter">
               {userEmail || "No email available"}
             </p>
           </div>
@@ -138,34 +138,21 @@ const ProfileMenu = ({
               return (
                 <div
                   key={item.title}
-                  className={`flex flex-row items-center px-2 md:px-4 gap-2 md:gap-[8px] cursor-pointer hover:bg-secondary/10 transition-colors ${
-                    !isLast ? "border-b border-[#14191D]" : ""
+                  className={`flex flex-row items-center px-2 md:px-4 py-3 gap-2 md:gap-[8px] cursor-pointer hover:bg-secondary/10 transition-colors ${
+                    !isLast ? "border-b border-gray-400" : ""
                   }`}
-                  style={{
-                    height: position === "top" ? "48px" : item.height || "72px",
-                  }}
                   onClick={() => handleMenuItemClick(item.action)}
                 >
-                  <div className="flex items-center justify-center w-[32px] h-8 md:w-[42px] md:h-10">
                     <Icon
-                      size={position === "top" ? 22 : 32}
+                      size={position === "top" ? 22 : 22}
                       color={item.iconColor}
                     />
-                  </div>
-                  <div className="flex flex-col justify-center gap-0.5 md:gap-1 flex-1">
                     <h3
-                      className={`text-[13px] md:text-base leading-4 md:leading-3 tracking-[-0.365714px] font-bold`}
+                      className={`text-[12px] md:text-[14px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold`}
                       style={{ color: item.iconColor }}
                     >
                       {item.title}
                     </h3>
-                    <p
-                      className="text-[10px] md:text-[13px] leading-4 md:leading-6 tracking-[-0.365714px] font-inter font-normal"
-                      style={{ color: item.iconColor }}
-                    >
-                      {item.description}
-                    </p>
-                  </div>
                 </div>
               );
             })}

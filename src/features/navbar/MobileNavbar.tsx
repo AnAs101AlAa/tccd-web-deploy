@@ -43,7 +43,7 @@ const MobileNavbar = () => {
         );
       })}
 
-      <div className="absolute left-1/2 -translate-x-1/2 -top-5">
+      <div className="absolute left-1/2 -translate-x-1/2 -top-2 sm:-top-4">
         {isAuthenticated ? (
           <>
             <ProfileAvatar

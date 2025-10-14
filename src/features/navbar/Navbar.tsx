@@ -20,46 +20,58 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="relative w-full h-[52px] bg-background">
-      <div className="relative w-full max-w-[1200px] mx-auto h-full px-4">
+    <nav className="relative w-full bg-background h-[70px] shadow-lg">
+      <div className="w-[94%] xl:w-[90%] flex items-center justify-between h-full mx-auto">
         {/* Logos */}
-        <div className="absolute left-[2%] top-[5.9px] flex items-center gap-2">
-          <div className="flex items-center gap-2">
-            <img
-              src={universityLogo}
-              alt="University"
-              className="h-[38px] xl:h-[44px] w-auto"
-            />
-            <img
-              src={facultyLogo}
-              alt="Faculty"
-              className="h-[38px] xl:h-[44px] w-auto"
-            />
-          </div>
-          <div className="h-[28px] w-[2px] bg-secondary opacity-30"></div>
-          <img src={logo} alt="TCCD" className="h-[28px] xl:h-[32px] w-auto" />
+        <div className="flex items-center gap-4">
+          <img
+            src={universityLogo}
+            alt="University"
+            className="h-[46px] xl:h-[56px] w-auto"
+          />
+          <img
+            src={facultyLogo}
+            alt="Faculty"
+            className="h-[44px] xl:h-[53px] w-auto"
+          />
         </div>
-
-        <div className="absolute left-[50%] -translate-x-1/2 top-[29.3%] flex items-center gap-5 xl:gap-8">
-          {NAV_ITEMS.map(({ to, title }) => {
+        
+        <div className="flex items-center gap-5 xl:gap-8">
+          {NAV_ITEMS.slice(0, Math.ceil(NAV_ITEMS.length / 2)).map(({ to, title }) => {
             const active =
               to === "/" ? pathname === "/" : pathname.startsWith(to);
             return (
               <Link
-                key={title}
-                to={to}
-                className={`font-poppins font-bold text-base xl:text-lg leading-7 whitespace-nowrap ${
-                  active ? "text-primary" : "text-secondary"
-                } hover:opacity-80 transition-opacity`}
+          key={title}
+          to={to}
+          className={`font-bold text-base xl:text-lg leading-7 whitespace-nowrap ${
+            active ? "text-primary" : "text-secondary"
+          } hover:opacity-80 transition-opacity`}
               >
-                {title}
+          {title}
+              </Link>
+            );
+          })}
+          <img src={logo} alt="TCCD" className="h-[28px] xl:h-[32px] w-auto" />
+          {NAV_ITEMS.slice(Math.ceil(NAV_ITEMS.length / 2)).map(({ to, title }) => {
+            const active =
+              to === "/" ? pathname === "/" : pathname.startsWith(to);
+            return (
+              <Link
+          key={title}
+          to={to}
+          className={`font-bold text-base xl:text-lg leading-7 whitespace-nowrap ${
+            active ? "text-primary" : "text-secondary"
+          } hover:opacity-80 transition-opacity`}
+              >
+          {title}
               </Link>
             );
           })}
         </div>
 
         {/* Profile Avatar or Login Link */}
-        <div className="absolute right-[2%] top-1/2 -translate-y-1/2">
+        <div className="relative">
           {isAuthenticated ? (
             <>
               <ProfileAvatar

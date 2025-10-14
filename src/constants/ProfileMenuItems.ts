@@ -9,9 +9,7 @@ import { isAdmin, isVolunteer } from "@/shared/types/users";
 export interface ProfileMenuItem {
   icon: IconType;
   title: string;
-  description: string;
   iconColor: string;
-  height?: string;
   action?: string; // For navigation or actions like 'logout'
 }
 
@@ -23,9 +21,7 @@ export const getProfileMenuItems = (
   menuItems.push({
     icon: HiOutlineUser,
     title: "Profile",
-    description: "View and edit your profile",
-    iconColor: "var(--color-contrast)",
-    height: "72px",
+    iconColor: "#4A4A4A",
     action: "/profile",
   });
 
@@ -33,9 +29,7 @@ export const getProfileMenuItems = (
     menuItems.push({
       icon: MdDashboard,
       title: "Admin Dashboard",
-      description: "Manage system settings",
-      iconColor: "var(--color-contrast)",
-      height: "72px",
+      iconColor: "#4A4A4A",
       action: "/admin",
     });
   }
@@ -44,9 +38,7 @@ export const getProfileMenuItems = (
     menuItems.push({
       icon: MdPostAdd,
       title: "Manage Posts",
-      description: "Create and edit posts",
-      iconColor: "var(--color-contrast)",
-      height: "72px",
+      iconColor: "#4A4A4A",
       action: "/manage-posts",
     });
   }
@@ -54,18 +46,14 @@ export const getProfileMenuItems = (
   menuItems.push({
     icon: BiMessageSquareDetail,
     title: "Help & Support",
-    description: "Get assistance and answers",
-    iconColor: "var(--color-contrast)",
-    height: "72px",
+    iconColor: "#4A4A4A",
     action: "/support",
   });
 
   menuItems.push({
     icon: RiLogoutBoxLine,
     title: "Logout",
-    description: "Sign out of your account",
-    iconColor: "var(--color-error)",
-    height: "72px",
+    iconColor: "var(--color-primary)",
     action: "logout",
   });
 
