@@ -1,7 +1,7 @@
 import { routes } from "@/routing/routes";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import WithNavbar from "./components/hoc/WithNavbar";
+import WithNavbar from "./shared/components/hoc/WithNavbar";
 
 function App() {
   return (
