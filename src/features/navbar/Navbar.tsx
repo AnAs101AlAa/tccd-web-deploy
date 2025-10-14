@@ -27,16 +27,16 @@ const Navbar = () => {
           <img
             src={universityLogo}
             alt="University"
-            className="h-[46px] xl:h-[56px] w-auto"
+            className="h-[46px] xl:h-[50px] w-auto"
           />
           <img
             src={facultyLogo}
             alt="Faculty"
-            className="h-[44px] xl:h-[53px] w-auto"
+            className="h-[44px] xl:h-[47px] w-auto"
           />
         </div>
         
-        <div className="flex items-center gap-5 xl:gap-8">
+        <div className="flex items-center gap-4 xl:gap-6">
           {NAV_ITEMS.slice(0, Math.ceil(NAV_ITEMS.length / 2)).map(({ to, title }) => {
             const active =
               to === "/" ? pathname === "/" : pathname.startsWith(to);
@@ -44,7 +44,7 @@ const Navbar = () => {
               <Link
           key={title}
           to={to}
-          className={`font-bold text-base xl:text-lg leading-7 whitespace-nowrap ${
+          className={`font-bold text-[15px] xl:text-[17px] leading-7 whitespace-nowrap ${
             active ? "text-primary" : "text-secondary"
           } hover:opacity-80 transition-opacity`}
               >
@@ -52,7 +52,7 @@ const Navbar = () => {
               </Link>
             );
           })}
-          <img src={logo} alt="TCCD" className="h-[28px] xl:h-[32px] w-auto" />
+          <img src={logo} alt="TCCD" className="h-[28px] xl:h-[26px] w-auto" />
           {NAV_ITEMS.slice(Math.ceil(NAV_ITEMS.length / 2)).map(({ to, title }) => {
             const active =
               to === "/" ? pathname === "/" : pathname.startsWith(to);
@@ -60,7 +60,7 @@ const Navbar = () => {
               <Link
           key={title}
           to={to}
-          className={`font-bold text-base xl:text-lg leading-7 whitespace-nowrap ${
+          className={`font-bold text-[15px] xl:text-[17px] leading-7 whitespace-nowrap ${
             active ? "text-primary" : "text-secondary"
           } hover:opacity-80 transition-opacity`}
               >

@@ -114,15 +114,15 @@ const ProfileMenu = ({
       {isAuthenticated ? (
         <>
           {/* Profile Header */}
-          <div className="flex flex-col items-center pt-4 pb-3 md:pt-[30px] md:pb-3">
-            <div className="w-[48px] h-[48px] md:w-[61px] md:h-[61px] rounded-full border border-background overflow-hidden mb-1 md:mb-2">
+          <div className="flex flex-col items-center pt-4 pb-3 md:pt-[20px] md:pb-3">
+            <div className="w-[48px] h-[48px] md:w-[55px] md:h-[55px] rounded-full border border-background overflow-hidden mb-1 md:mb-2">
               <img
                 src={userProfileImage || profileImage}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
             </div>
-            <p className="text-[13px] md:text-[14px] lg:text-[15px] leading-5 md:leading-6 tracking-[-0.365714px] text-contrast font-inter mb-1">
+            <p className="text-[12px] md:text-[13px] lg:text-[15px] leading-5 md:leading-6 tracking-[-0.365714px] text-contrast font-inter mb-1">
               {userFullName || "Guest User"}
             </p>
             <p className="text-[11px] md:text-[12px] lg:text-[13px] leading-1.5 md:leading-2.5 tracking-[-0.365714px] text-contrast font-inter">
@@ -144,11 +144,11 @@ const ProfileMenu = ({
                   onClick={() => handleMenuItemClick(item.action)}
                 >
                     <Icon
-                      size={position === "top" ? 22 : 22}
+                      size={position === "top" ? 16 : 22}
                       color={item.iconColor}
                     />
                     <h3
-                      className={`text-[12px] md:text-[14px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold`}
+                      className={`text-[12px] md:text-[13px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold`}
                       style={{ color: item.iconColor }}
                     >
                       {item.title}
