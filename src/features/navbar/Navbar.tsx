@@ -20,23 +20,27 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="relative w-full h-[65px] bg-background">
-      <div className="relative w-full max-w-[1600px] mx-auto h-full px-8">
+    <nav className="relative w-full h-[52px] bg-background">
+      <div className="relative w-full max-w-[1200px] mx-auto h-full px-4">
         {/* Logos */}
-        <div className="absolute left-[2%] top-[8.5px] flex items-center gap-3">
-          <div className="flex items-center gap-3 h-[56px]">
+        <div className="absolute left-[2%] top-[5.9px] flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <img
               src={universityLogo}
               alt="University"
-              className="h-full w-auto"
+              className="h-[38px] xl:h-[44px] w-auto"
             />
-            <img src={facultyLogo} alt="Faculty" className="h-full w-auto" />
+            <img
+              src={facultyLogo}
+              alt="Faculty"
+              className="h-[38px] xl:h-[44px] w-auto"
+            />
           </div>
-          <div className="h-[48px] w-[2px] bg-secondary opacity-30"></div>
-          <img src={logo} alt="TCCD" className="h-[48px] w-auto" />
+          <div className="h-[28px] w-[2px] bg-secondary opacity-30"></div>
+          <img src={logo} alt="TCCD" className="h-[28px] xl:h-[32px] w-auto" />
         </div>
 
-        <div className="absolute left-[50%] -translate-x-1/2 top-[29.3%] flex items-center gap-8 xl:gap-12">
+        <div className="absolute left-[50%] -translate-x-1/2 top-[29.3%] flex items-center gap-5 xl:gap-8">
           {NAV_ITEMS.map(({ to, title }) => {
             const active =
               to === "/" ? pathname === "/" : pathname.startsWith(to);
@@ -44,7 +48,7 @@ const Navbar = () => {
               <Link
                 key={title}
                 to={to}
-                className={`font-poppins font-bold text-xl xl:text-2xl leading-9 whitespace-nowrap ${
+                className={`font-poppins font-bold text-base xl:text-lg leading-7 whitespace-nowrap ${
                   active ? "text-primary" : "text-secondary"
                 } hover:opacity-80 transition-opacity`}
               >
@@ -75,7 +79,7 @@ const Navbar = () => {
           ) : (
             <Link
               to="/login"
-              className="font-poppins font-semibold text-xl text-secondary hover:text-primary transition-colors"
+              className="font-poppins font-semibold text-base text-secondary hover:text-primary transition-colors"
             >
               Login
             </Link>
