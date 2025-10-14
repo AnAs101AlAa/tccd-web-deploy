@@ -6,9 +6,9 @@ import {
 import type { UserStatus } from "@/shared/types";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ErrorScreen, InfoScreen, SuccessScreen } from "tccd-ui";
+import {ErrorScreen , InfoScreen, SuccessScreen } from "tccd-ui";
 
-export default function SingupConfirmation() {
+export default function SignupConfirmation() {
   const navigate = useNavigate();
   const userStatus: UserStatus = useAppSelector(selectUserStatus);
   const userFullName: string = useAppSelector(selectUserFullName);
@@ -27,21 +27,21 @@ export default function SingupConfirmation() {
     }
   }, [userStatus, navigate]);
 
-  if (!userStatus) {
-    return (
-      <ErrorScreen
-        title="Error Logging In"
-        message="There was an error loggin you in, please try again later or contact support"
-      />
-    );
-  }
+  // if (!userStatus) {
+  //   return (
+  //     <ErrorScreen
+  //       title="Error Logging In"
+  //       message="There was an error loggin you in, please try again later or contact support"
+  //     />
+  //   );
+  // }
 
   switch (userStatus) {
     case "Pending":
       return (
         <InfoScreen
           title="Account Under Review"
-          message="Your account is under review for the time being. Please check back later or contact support."
+          message="Thank you for signing up! Your account is currently under review. You will receive an email notification once your account has been approved."
         />
       );
 
@@ -73,9 +73,9 @@ export default function SingupConfirmation() {
 
     default:
       return (
-        <ErrorScreen
-          title="Unexpected Error"
-          message="An unexpected error occurred. Please contact support."
+        <SuccessScreen
+          title={`Welcome, ${userFirstName}!`}
+          message="Your account has been successfully created. You will be redirected to the home page shortly."
         />
       );
   }
