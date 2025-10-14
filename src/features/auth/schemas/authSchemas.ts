@@ -23,12 +23,14 @@ const phoneNumberSchema = z
 
 const fullNameSchema = z
   .string()
+  .trim()
   .min(1, "Name is required")
   .min(3, "Name must be at least 3 characters")
   .max(100, "Name must not exceed 100 characters");
 
 const arabicNameSchema = z
   .string()
+  .trim()
   .min(1, "Arabic name is required")
   .min(3, "Arabic name must be at least 3 characters")
   .max(100, "Arabic name must not exceed 100 characters")
