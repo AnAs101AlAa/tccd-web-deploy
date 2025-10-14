@@ -46,13 +46,29 @@ export interface UserState {
 /**
  * Initial state for the user slice
  * All values start in a "clean slate" configuration
+ *
+ * TEMPORARY: Mock admin user for development until API integration is complete
  */
 const initialState: UserState = {
-  currentUser: null,
+  currentUser: {
+    id: "admin-mock-001",
+    englishFullName: "Ahmed Fathy Mohamed",
+    arabicFullName: "أحمد فتحي محمد",
+    phoneNumber: "+20123456789",
+    email: "admin@tccd.edu.eg",
+    gender: "Male" as const,
+    role: "Admin" as const,
+    status: "Approved" as const,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    isDeleted: false,
+    adminLevel: 1,
+    profilePicture: undefined, // Will use placeholder
+  },
   isLoading: false,
   error: null,
-  isAuthenticated: false,
-  lastUpdated: null,
+  isAuthenticated: true,
+  lastUpdated: Date.now(),
 };
 
 /**

@@ -1,11 +1,13 @@
-import { routes } from '@/routing/routes'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { Toaster } from 'react-hot-toast'
+import { routes } from "@/routing/routes";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import WithNavbar from "./shared/components/hoc/WithNavbar";
 
 function App() {
   return (
     <BrowserRouter>
       <Toaster />
+      <WithNavbar>
         <Routes>
           {routes.map(({path, Component}) => (
             <Route
@@ -15,8 +17,9 @@ function App() {
             />
           ))}
         </Routes>
+      </WithNavbar>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
