@@ -27,14 +27,14 @@ export default function SignupConfirmation() {
     }
   }, [userStatus, navigate]);
 
-  // if (!userStatus) {
-  //   return (
-  //     <ErrorScreen
-  //       title="Error Logging In"
-  //       message="There was an error loggin you in, please try again later or contact support"
-  //     />
-  //   );
-  // }
+  if (!userStatus) {
+    return (
+      <ErrorScreen
+        title="Error Logging In"
+        message="There was an error loggin you in, please try again later or contact support"
+      />
+    );
+  }
 
   switch (userStatus) {
     case "Pending":
@@ -73,9 +73,9 @@ export default function SignupConfirmation() {
 
     default:
       return (
-        <SuccessScreen
-          title={`Welcome, ${userFirstName}!`}
-          message="Your account has been successfully created. You will be redirected to the home page shortly."
+        <ErrorScreen
+          title="Error Signing Up"
+          message="There was an error signing you up, please try again later or contact support"
         />
       );
   }
