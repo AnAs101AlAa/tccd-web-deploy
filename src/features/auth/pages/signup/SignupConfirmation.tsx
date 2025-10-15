@@ -6,7 +6,7 @@ import {
 import type { UserStatus } from "@/shared/types";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {ErrorScreen , InfoScreen, SuccessScreen } from "tccd-ui";
+import { ErrorScreen, InfoScreen, SuccessScreen } from "tccd-ui";
 
 export default function SignupConfirmation() {
   const navigate = useNavigate();
@@ -50,7 +50,6 @@ export default function SignupConfirmation() {
         <ErrorScreen
           title="Account Registration Rejected"
           message="Your account registration has been rejected. If you wish to appeal this decision, please contact support."
-          showAdditionalInfo={false}
         />
       );
 
@@ -59,7 +58,6 @@ export default function SignupConfirmation() {
         <ErrorScreen
           title="Account Banned"
           message="Your account has been banned due to breaking Community Guidelines. If you wish to appeal this decision, please contact support."
-          showAdditionalInfo={false}
         />
       );
 
