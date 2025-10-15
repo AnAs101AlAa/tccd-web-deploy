@@ -1,6 +1,7 @@
 import type { EventGalleryCardProps } from "@/shared/types";
-import { useState } from "react";
 import Format from "@/shared/utils/dateFormater";
+import { LazyImageLoader } from "tccd-ui";
+import { useNavigate } from "react-router-dom";
 
 export const EventGalleryCard = ({
     id,
@@ -10,63 +11,23 @@ export const EventGalleryCard = ({
     eventDescription,
     eventDate
 }: EventGalleryCardProps) => {
-    const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+    const navigate = useNavigate();
 
-    const isVideo = mediaUrl?.endsWith(".mp4") || mediaUrl?.endsWith(".webm") || false;
+    const handleCardClick = () => {
+        navigate(`/gallery/view/${id}`);
+    };
 
     return (
-        <div className="w-full rounded-2xl overflow-hidden shadow-lg hover:scale-[102%] cursor-pointer transition-all duration-300 bg-white h-full">
-            <div className="relative w-full h-48 sm:h-56 md:h-64 overflow-hidden">
-                {mediaUrl ? (
-                    <>
-                        {isVideo ? (
-                            <>
-                                {!isVideoLoaded && (
-                                    <div className="absolute inset-0 bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 z-5">
-                                        <div className="relative w-full h-full overflow-hidden">
-                                            <div
-                                                className="absolute inset-[-100%] bg-gradient-to-br from-transparent via-white/60 to-transparent animate-shimmer"
-                                                style={{
-                                                    width: '200%',
-                                                    height: '200%',
-                                                }}
-                                            ></div>
-                                        </div>
-                                    </div>
-                                )}
-                                <video
-                                    src={mediaUrl}
-                                    autoPlay
-                                    loop
-                                    muted
-                                    playsInline
-                                    onLoadedData={() => setIsVideoLoaded(true)}
-                                    className={`w-full h-full object-cover transition-opacity duration-300 ${isVideoLoaded ? "opacity-100" : "opacity-0"
-                                        }`}
-                                />
-                            </>
-                        ) : (
-                            <img
-                                src={mediaUrl}
-                                alt={eventName}
-                                className="w-full h-full object-cover"
-                            />
-                        )}
-                    </>
-                ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200">
-                        <div className="relative w-full h-full overflow-hidden">
-                            <div
-                                className="absolute inset-[-100%] bg-gradient-to-br from-transparent via-white/60 to-transparent animate-shimmer"
-                                style={{
-                                    width: '200%',
-                                    height: '200%',
-                                }}
-                            ></div>
-                        </div>
-                    </div>
-                )}
-            </div>
+        <div
+            onClick={handleCardClick}
+            className="w-full rounded-2xl overflow-hidden shadow-lg hover:scale-[102%] cursor-pointer transition-all duration-300 bg-white h-full"
+        >
+            <LazyImageLoader
+                src={mediaUrl}
+                alt={eventName}
+                className="w-full"
+                height="16rem"
+            />
 
             <div className="p-3 space-y-1">
                 <div className="flex gap-1 items-center">
