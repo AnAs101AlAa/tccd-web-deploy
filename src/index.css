@@ -31,18 +31,18 @@
 }
 
 
-/* Shimmer Animation */
+/* Shimmer Animation - Classic Diagonal Style */
 @keyframes shimmer {
   0% {
-    transform: translateX(-100%);
+    transform: translate(-150%, -150%) rotate(30deg);
   }
   100% {
-    transform: translateX(100%);
+    transform: translate(150%, 150%) rotate(30deg);
   }
 }
 
 .animate-shimmer {
-  animation: shimmer 2s infinite;
+  animation: shimmer 1.5s infinite;
 }
 
 body {

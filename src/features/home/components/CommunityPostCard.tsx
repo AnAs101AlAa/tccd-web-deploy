@@ -2,10 +2,14 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Button } from "tccd-ui";
 import type { CommunityPostCardProps } from "@/shared/types";
+import { useState } from "react";
 
 export const CommunityPostCard = ({ id, createdOn, name, description, postMedia }: CommunityPostCardProps) => {
     console.log(id)
     const navigate = useNavigate();
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [videoLoaded, setVideoLoaded] = useState(false);
+
     const handleClick = () => {
         navigate('');
     };
@@ -15,20 +19,54 @@ export const CommunityPostCard = ({ id, createdOn, name, description, postMedia 
             {postMedia?.[0] !== "" ? (
                 <div className="relative w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden">
                     {postMedia[0].endsWith(".mp4") || postMedia[0].endsWith(".webm") ? (
-                        <video
-                            src={postMedia[0]}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        />
+                        <>
+                            {!videoLoaded && (
+                                <div className="absolute inset-0 bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 z-10">
+                                    <div className="relative w-full h-full overflow-hidden">
+                                        <div
+                                            className="absolute inset-[-100%] bg-gradient-to-br from-transparent via-white/60 to-transparent animate-shimmer"
+                                            style={{
+                                                width: '200%',
+                                                height: '200%',
+                                            }}
+                                        ></div>
+                                    </div>
+                                </div>
+                            )}
+                            <video
+                                src={postMedia[0]}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                onLoadedData={() => setVideoLoaded(true)}
+                                className={`w-full h-full object-cover transition-all duration-300 hover:scale-105 ${videoLoaded ? 'opacity-100' : 'opacity-0'
+                                    }`}
+                            />
+                        </>
                     ) : (
-                        <img
-                            src={postMedia[0] ?? "/placeholder.jpg"}
-                            alt={name}
-                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        />
+                        <>
+                            {!imageLoaded && (
+                                <div className="absolute inset-0 bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 z-10">
+                                    <div className="relative w-full h-full overflow-hidden">
+                                        <div
+                                            className="absolute inset-[-100%] bg-gradient-to-br from-transparent via-white/60 to-transparent animate-shimmer"
+                                            style={{
+                                                width: '200%',
+                                                height: '200%',
+                                            }}
+                                        ></div>
+                                    </div>
+                                </div>
+                            )}
+                            <img
+                                src={postMedia[0] ?? "/placeholder.jpg"}
+                                alt={name}
+                                onLoad={() => setImageLoaded(true)}
+                                className={`w-full h-full object-cover transition-all duration-300 hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'
+                                    }`}
+                            />
+                        </>
                     )}
                 </div>
             ) : (
