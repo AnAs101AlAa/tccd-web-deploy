@@ -1,21 +1,21 @@
-import { Button } from "tccd-ui";
 import type { EventGalleryCardProps } from "@/shared/types";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import Format from "@/shared/utils/dateFormater";
 
 export const EventGalleryCard = ({
     id,
     eventName,
     eventType,
     mediaUrl,
+    eventDescription,
+    eventDate
 }: EventGalleryCardProps) => {
-    const navigate = useNavigate();
     const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
     const isVideo = mediaUrl?.endsWith(".mp4") || mediaUrl?.endsWith(".webm") || false;
 
     return (
-        <div className="w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
+        <div className="w-full rounded-2xl overflow-hidden shadow-lg hover:scale-[102%] cursor-pointer transition-all duration-300 bg-white h-full">
             <div className="relative w-full h-48 sm:h-56 md:h-64 overflow-hidden">
                 {mediaUrl ? (
                     <>
@@ -66,27 +66,24 @@ export const EventGalleryCard = ({
                         </div>
                     </div>
                 )}
-
-                <div className="absolute top-4 left-4">
-                    <span className="inline-block bg-primary text-text px-4 py-2 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wide shadow-lg">
-                        {eventType}
-                    </span>
-                </div>
             </div>
 
-            <div className="p-4 sm:p-6 space-y-4">
-                <h3 className="text-gray-900 text-xl sm:text-2xl md:text-2xl font-bold">
-                    {eventName}
-                </h3>
-
-                <div className="flex justify-end">
-                    <Button
-                        buttonText="Details"
-                        onClick={() => navigate(`/gallery/view/${id}`)}
-                        type="secondary"
-                        width="auto"
-                    />
+            <div className="p-3 space-y-1">
+                <div className="flex gap-1 items-center">
+                    <span className="text-primary text-[13px] md:text-[15px] font-semibold">
+                        {eventType}
+                    </span>
+                    <span className="text-gray-400">|</span>
+                    <span className="text-inactive-tab-text text-[12px] md:text-[14px] font-semibold">
+                        {Format(eventDate, "stringed")}
+                    </span>
                 </div>
+                <h2 className="text-[20px] md:text-[24px] font-bold text-gray-800 mb-2">
+                    {eventName}
+                </h2>
+                <p className="text-gray-600 text-[13px] md:text-[15px] line-clamp-3">
+                    {eventDescription}
+                </p>
             </div>
         </div>
     );

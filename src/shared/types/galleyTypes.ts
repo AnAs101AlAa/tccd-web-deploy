@@ -3,4 +3,6 @@ export interface EventGalleryCardProps {
     eventName: string;
     eventType: string;
     mediaUrl: string;
+    eventDescription: string;
+    eventDate: string;
 }
