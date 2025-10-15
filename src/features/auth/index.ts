@@ -1,3 +1,3 @@
 // Pages
 export { LoginPage } from "./pages/login";
-export { SignupPage } from "./pages/signup";
+export { SignupPage, SignupConfirmation } from "./pages/signup";
