@@ -55,31 +55,97 @@ export const loginSchema = z.object({
 });
 
 /**
- * Signup Form Schema
- *
- * Validates signup credentials with password confirmation
- *
- * @example
- * const { register, handleSubmit } = useForm({
- *   resolver: zodResolver(signupSchema)
- * });
+ * User Type Schema
  */
-export const signupSchema = z
+export const userTypeSchema = z.enum(["student", "company_representative", "academic"], {
+  message: "Please select an account type",
+});
+
+export type UserType = z.infer<typeof userTypeSchema>;
+
+/**
+ * Step 1: Account Type Selection Schema
+ */
+export const accountTypeSchema = z.object({
+  userType: userTypeSchema,
+});
+
+export type AccountTypeFormData = z.infer<typeof accountTypeSchema>;
+
+/**
+ * Step 2: Basic Info Schema
+ */
+export const basicInfoSchema = z
   .object({
-    email: emailSchema,
-    password: passwordSchema,
-    confirmPassword: z.string().min(1, "Please confirm your password"),
     englishFullName: fullNameSchema.regex(
       /^[a-zA-Z\s]+$/,
       "English name must contain only English characters"
     ),
     arabicFullName: arabicNameSchema,
     phoneNumber: phoneNumberSchema,
+    email: emailSchema,
+    linkedinUrl: z
+      .string()
+      .url("Please enter a valid URL")
+      .regex(
+        /^https?:\/\/(www\.)?linkedin\.com\/.+$/,
+        "Please enter a valid LinkedIn profile URL"
+      )
+      .or(z.literal("")),
+    password: passwordSchema,
+    confirmPassword: z.string().min(1, "Please confirm your password"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export type BasicInfoFormData = z.infer<typeof basicInfoSchema>;
+
+/**
+ * Step 3: Student Info Schema
+ */
+export const studentInfoSchema = z.object({
+  university: z.string().min(1, "University is required"),
+  faculty: z.string().min(1, "Faculty is required"),
+  department: z.string().optional(),
+  graduationYear: z
+    .number()
+    .min(2000, "Graduation year must be after 2000")
+    .max(2050, "Graduation year must be before 2050"),
+});
+
+export type StudentInfoFormData = z.infer<typeof studentInfoSchema>;
+
+/**
+ * Step 4: Company Rep Info Schema
+ */
+export const companyRepInfoSchema = z.object({
+  companyId: z.string().min(1, "Please select a company"),
+});
+
+export type CompanyRepInfoFormData = z.infer<typeof companyRepInfoSchema>;
+
+/**
+ * Complete Signup Schema
+ */
+export const signupSchema = z.object({
+  userType: userTypeSchema,
+  englishFullName: fullNameSchema,
+  arabicFullName: arabicNameSchema,
+  phoneNumber: phoneNumberSchema,
+  email: emailSchema,
+  linkedinUrl: z.string().optional(),
+  password: passwordSchema,
+  confirmPassword: z.string(),
+  // Student fields (optional)
+  university: z.string().optional(),
+  faculty: z.string().optional(),
+  department: z.string().optional(),
+  graduationYear: z.number().optional(),
+  // Company rep fields (optional)
+  companyId: z.string().optional(),
+});
 
 /**
  * Type inference from schemas

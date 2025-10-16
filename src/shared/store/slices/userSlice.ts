@@ -51,14 +51,14 @@ export interface UserState {
  */
 const initialState: UserState = {
   currentUser: {
-    id: "admin-mock-001",
-    englishFullName: "Ahmed Fathy Mohamed",
-    arabicFullName: "أحمد فتحي محمد",
-    phoneNumber: "+20123456789",
-    email: "admin@tccd.edu.eg",
-    gender: "Male" as const,
+    id: "",
+    englishFullName: "",
+    arabicFullName: "",
+    phoneNumber: "",
+    email: "",
+    gender: "Male",
     role: "Admin" as const,
-    status: "Approved" as const,
+    status: "Pending",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     isDeleted: false,
@@ -67,7 +67,7 @@ const initialState: UserState = {
   },
   isLoading: false,
   error: null,
-  isAuthenticated: true,
+  isAuthenticated: false,
   lastUpdated: Date.now(),
 };
 
