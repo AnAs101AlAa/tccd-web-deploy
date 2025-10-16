@@ -12,29 +12,29 @@ export const galleryEvents: EventGalleryCardProps[] = [
   },
   {
     id: "2",
-    eventName: "AI & Machine Learning Seminar",
-    eventType: "Seminar",
+    eventName: "New Student Orientation",
+    eventType: "Orientation",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
-      "Explore the latest trends in artificial intelligence and machine learning. Industry experts will share their insights and experiences.",
+      "Welcome new students to the club! Learn about our mission, upcoming events, and how to get involved in the community.",
     eventDate: "2025-10-30",
   },
   {
     id: "3",
-    eventName: "Hackathon 2025",
-    eventType: "Competition",
+    eventName: "Annual Research Day",
+    eventType: "ResearchDay",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
-      "24-hour coding competition where teams build innovative solutions to real-world problems. Exciting prizes and networking opportunities!",
+      "Showcase of student research projects and innovations. Present your work and learn from fellow researchers.",
     eventDate: "2025-11-05",
   },
   {
     id: "4",
-    eventName: "Networking Social Event",
-    eventType: "Social",
+    eventName: "Monthly Club Meeting",
+    eventType: "Meeting",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
-      "Connect with fellow students, alumni, and industry professionals in a relaxed social setting. Great opportunity to expand your network!",
+      "Regular monthly meeting to discuss upcoming events, project updates, and club activities. All members welcome!",
     eventDate: "2025-11-10",
   },
   {
@@ -48,8 +48,8 @@ export const galleryEvents: EventGalleryCardProps[] = [
   },
   {
     id: "6",
-    eventName: "Tech Career Fair",
-    eventType: "Career",
+    eventName: "Tech Career and Job Fair",
+    eventType: "JobFair",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
       "Meet with top tech companies and explore career opportunities. Bring your resume and prepare for on-spot interviews!",
@@ -66,20 +66,20 @@ export const galleryEvents: EventGalleryCardProps[] = [
   },
   {
     id: "8",
-    eventName: "Blockchain Technology Seminar",
-    eventType: "Seminar",
+    eventName: "AI/ML Technical Session",
+    eventType: "Session",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
-      "Understand blockchain technology, cryptocurrencies, and smart contracts. Explore the future of decentralized systems.",
+      "Technical session on artificial intelligence and machine learning. Industry experts will share their insights and experiences.",
     eventDate: "2025-11-28",
   },
   {
     id: "9",
-    eventName: "Startup Pitch Competition",
-    eventType: "Competition",
+    eventName: "Company Visit Field Trip",
+    eventType: "FieldTrip",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
-      "Pitch your startup ideas to investors and industry experts. Win funding and mentorship for your venture.",
+      "Visit a leading tech company to see their operations firsthand. Network with professionals and learn about industry practices.",
     eventDate: "2025-12-02",
   },
   {
@@ -93,17 +93,17 @@ export const galleryEvents: EventGalleryCardProps[] = [
   },
   {
     id: "11",
-    eventName: "Digital Marketing Bootcamp",
-    eventType: "Training",
+    eventName: "Blockchain Technology Session",
+    eventType: "Session",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
-      "Comprehensive training on SEO, social media marketing, content strategy, and analytics.",
+      "Understand blockchain technology, cryptocurrencies, and smart contracts. Explore the future of decentralized systems.",
     eventDate: "2025-12-08",
   },
   {
     id: "12",
-    eventName: "Winter Tech Social",
-    eventType: "Social",
+    eventName: "Winter Networking Event",
+    eventType: "Other",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
       "End-of-year celebration with games, food, and networking. Perfect way to wrap up the semester!",
@@ -111,20 +111,20 @@ export const galleryEvents: EventGalleryCardProps[] = [
   },
   {
     id: "13",
-    eventName: "Mobile App Development Training",
-    eventType: "Training",
+    eventName: "Mobile App Development Workshop",
+    eventType: "Workshop",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
-      "Comprehensive training on building cross-platform mobile applications using React Native and Flutter.",
+      "Comprehensive workshop on building cross-platform mobile applications using React Native and Flutter.",
     eventDate: "2025-09-15",
   },
   {
     id: "14",
-    eventName: "Tech Conference 2025",
-    eventType: "Conference",
+    eventName: "Spring Semester Orientation",
+    eventType: "Orientation",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
-      "Annual technology conference featuring keynote speakers, panel discussions, and technical sessions on emerging technologies.",
+      "Kickoff event for the spring semester. Meet new members and learn about exciting projects planned for the semester.",
     eventDate: "2025-08-20",
   },
   {
@@ -138,8 +138,8 @@ export const galleryEvents: EventGalleryCardProps[] = [
   },
   {
     id: "16",
-    eventName: "UI/UX Design Seminar",
-    eventType: "Seminar",
+    eventName: "UI/UX Design Session",
+    eventType: "Session",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
       "Discover the principles of user interface and user experience design. Learn to create intuitive and beautiful interfaces.",
@@ -147,16 +147,16 @@ export const galleryEvents: EventGalleryCardProps[] = [
   },
   {
     id: "17",
-    eventName: "Data Science Bootcamp",
-    eventType: "Training",
+    eventName: "Tech Museum Field Trip",
+    eventType: "FieldTrip",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:
-      "Intensive bootcamp covering Python, pandas, NumPy, and machine learning. Transform data into actionable insights.",
+      "Educational trip to the technology museum. Explore the history of computing and emerging innovations.",
     eventDate: "2025-05-12",
   },
   {
     id: "18",
-    eventName: "DevOps Best Practices",
+    eventName: "DevOps Best Practices Workshop",
     eventType: "Workshop",
     mediaUrl: "https://via.placeholder.com/400x300",
     eventDescription:

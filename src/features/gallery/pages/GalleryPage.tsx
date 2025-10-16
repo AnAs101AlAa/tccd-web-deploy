@@ -4,7 +4,9 @@ import { galleryEvents } from "../data/dummyGallery";
 import WithNavbar from "@/shared/components/hoc/WithNavbar";
 import { usePagination } from "@/shared/hooks";
 import GalleryGrid from "../components/GalleryGrid";
+import GalleryFilter from "../components/GalleryFilter";
 import type { EventGalleryCardProps } from "@/shared/types/galleyTypes";
+import { useGalleryFilter } from "../hooks";
 // import { useGallery } from "../hooks";
 
 const GalleryPage = () => {
@@ -26,9 +28,20 @@ const GalleryPage = () => {
   const error = null;
   // ============================================
 
+  // Gallery filtering
+  const {
+    searchKey,
+    setSearchKey,
+    selectedEventTypes,
+    setSelectedEventTypes,
+    selectedDateRange,
+    setSelectedDateRange,
+    filteredGallery,
+  } = useGalleryFilter({ galleryItems: apiGalleryEvents });
+
   const { currentPage, paginatedItems, totalPages, setPage } =
     usePagination<EventGalleryCardProps>({
-      items: apiGalleryEvents,
+      items: filteredGallery,
       itemsPerPageMobile: 6,
       itemsPerPageDesktop: 12,
     });
@@ -75,7 +88,17 @@ const GalleryPage = () => {
 
         <main className="max-w-7xl mx-auto px-6 py-5">
           <section className="mb-16">
-            {/* Filter component will be added later */}
+            <div className="mb-6">
+              <GalleryFilter
+                searchKey={searchKey}
+                onSearchChange={setSearchKey}
+                selectedEventTypes={selectedEventTypes}
+                onEventTypesChange={setSelectedEventTypes}
+                selectedDateRange={selectedDateRange}
+                onDateRangeChange={setSelectedDateRange}
+                onSearch={() => setPage(1)}
+              />
+            </div>
 
             <GalleryGrid
               gallery={paginatedItems}
