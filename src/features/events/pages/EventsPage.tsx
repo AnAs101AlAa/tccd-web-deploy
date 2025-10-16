@@ -8,8 +8,29 @@ import WithNavbar from "@/shared/components/hoc/WithNavbar";
 import { usePagination, useViewAll } from "@/shared/hooks";
 import ViewAllButton from "@/shared/components/ViewAllButton";
 import type Event from "@/shared/types/events";
+// import { useEvents } from "../hooks";
 
 const EventsPage = () => {
+  // ============================================
+  // TODO: Uncomment when API is ready
+  // ============================================
+  // const {
+  //   upcomingEvents: apiUpcomingEvents,
+  //   pastEvents: apiPastEvents,
+  //   isLoading,
+  //   error,
+  // } = useEvents();
+
+  // ============================================
+  // Temporary: Using dummy data
+  // Remove these lines when API is ready
+  // ============================================
+  const apiUpcomingEvents = upcomingEvents;
+  const apiPastEvents = pastEvents;
+  const isLoading = false;
+  const error = null;
+  // ============================================
+
   // Upcoming events pagination
   const {
     selectedCategory: upcomingCategory,
@@ -20,7 +41,7 @@ const EventsPage = () => {
     handleCategoryChange: handleUpcomingCategoryChange,
     setPage: setUpcomingPage,
   } = usePagination<Event>({
-    items: upcomingEvents,
+    items: apiUpcomingEvents,
     itemsPerPageMobile: 1,
     itemsPerPageDesktop: 3,
     filterBy: (event) => event.category,
@@ -29,10 +50,42 @@ const EventsPage = () => {
   // Past events view all logic
   const {
     displayedItems: displayedPastEvents,
-    isViewingAll: isViewingAllPast,
     hasMore: hasMorePast,
     toggleViewAll: toggleViewAllPast,
-  } = useViewAll<Event>({ items: pastEvents, initialLimit: 6 });
+  } = useViewAll<Event>({ items: apiPastEvents, initialLimit: 6 });
+
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <WithNavbar>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
+            <p className="text-lg text-secondary">Loading events...</p>
+          </div>
+        </div>
+      </WithNavbar>
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <WithNavbar>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-lg text-red-600 mb-4">Failed to load events</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-contrast text-white rounded-lg hover:bg-contrast/90"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </WithNavbar>
+    );
+  }
 
   return (
     <WithNavbar>
@@ -86,11 +139,7 @@ const EventsPage = () => {
               gridCols="grid-cols-1 md:grid-cols-2"
             />
 
-            <ViewAllButton
-              isViewingAll={isViewingAllPast}
-              hasMore={hasMorePast}
-              onClick={toggleViewAllPast}
-            />
+            <ViewAllButton hasMore={hasMorePast} onClick={toggleViewAllPast} />
           </section>
         </main>
       </div>
