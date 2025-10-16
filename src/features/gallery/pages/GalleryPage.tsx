@@ -1,0 +1,87 @@
+import Pagination from "@/shared/components/Pagination";
+import UpperHeader from "@/shared/components/mainpages/UpperHeader";
+import { galleryEvents } from "../data/dummyGallery";
+import WithNavbar from "@/shared/components/hoc/WithNavbar";
+import { usePagination } from "@/shared/hooks";
+import GalleryGrid from "../components/GalleryGrid";
+import type { EventGalleryCardProps } from "@/shared/types/galleyTypes";
+
+const GalleryPage = () => {
+  // ============================================
+  // Temporary: Using dummy data
+  // ============================================
+  const apiGalleryEvents = galleryEvents;
+  const isLoading = false;
+  const error = null;
+  // ============================================
+
+  const { currentPage, paginatedItems, totalPages, setPage } =
+    usePagination<EventGalleryCardProps>({
+      items: apiGalleryEvents,
+      itemsPerPageMobile: 6,
+      itemsPerPageDesktop: 12,
+    });
+
+  if (isLoading) {
+    return (
+      <WithNavbar>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
+            <p className="text-lg text-secondary">Loading gallery...</p>
+          </div>
+        </div>
+      </WithNavbar>
+    );
+  }
+
+  if (error) {
+    return (
+      <WithNavbar>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-lg text-red-600 mb-4">Failed to load gallery</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-contrast text-white rounded-lg hover:bg-contrast/90"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </WithNavbar>
+    );
+  }
+
+  return (
+    <WithNavbar>
+      <div className="min-h-screen bg-gray-50">
+        <UpperHeader
+          image=""
+          title="Gallery"
+          subtitle="Dive into the collection of our best and brightest moments shaped by our members and community."
+        />
+
+        <main className="max-w-7xl mx-auto px-6 py-5">
+          <section className="mb-16">
+            {/* Filter component will be added later */}
+
+            <GalleryGrid
+              gallery={paginatedItems}
+              emptyMessage="No gallery items at the moment. Check back soon!"
+              gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            />
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          </section>
+        </main>
+      </div>
+    </WithNavbar>
+  );
+};
+
+export default GalleryPage;
