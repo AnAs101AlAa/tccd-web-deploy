@@ -14,7 +14,7 @@ export default function PastEventCard({event}: {event: Event}) {
     >
       <div className="max-w-[38%] min-w-[38%] xl:max-w-[42%] xl:min-w-[42%] md:block hidden">
         <LazyImageLoader 
-          src={event.media[0]}
+          src={event.eventPoster}
           alt={event.title}
           className="rounded-l-lg"
         />
