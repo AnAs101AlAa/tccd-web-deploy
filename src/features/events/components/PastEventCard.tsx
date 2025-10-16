@@ -13,7 +13,7 @@ export default function PastEventCard(event: Event) {
   return (
     <div
       onClick={() => navigate(`${window.location.origin}/events/${event.id}`)}
-      className="flex m-auto flex-row border-1 border-contrast/13 rounded-lg p-2 w-11/12 md:w-9/12 lg:w-5/12 cursor-pointer bg-background hover:bg-background-contrast transition duration-300 ease-in-out hover:border-primary"
+      className="flex flex-row border-1 border-contrast/13 rounded-lg p-2 cursor-pointer bg-background hover:bg-background-contrast transition duration-300 ease-in-out hover:border-primary h-full"
     >
       <img
         src={event.image}

@@ -1,5 +1,6 @@
 import CategoryFilter from "../components/CategoryFilter";
 import EventsGrid from "../components/EventsGrid";
+import PastEventCard from "../components/PastEventCard";
 import Pagination from "@/shared/components/Pagination";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import { upcomingEvents, pastEvents } from "../data/dummyEvents";
@@ -20,6 +21,8 @@ const EventsPage = () => {
     setPage: setUpcomingPage,
   } = usePagination<Event>({
     items: upcomingEvents,
+    itemsPerPageMobile: 1,
+    itemsPerPageDesktop: 3,
     filterBy: (event) => event.category,
   });
 
@@ -40,7 +43,7 @@ const EventsPage = () => {
           subtitle="Explore the catalogue of our latest and history of events on full display"
         />
 
-        <main className="max-w-7xl mx-auto px-6 py-12">
+        <main className="max-w-7xl mx-auto px-6 py-5">
           {/* Upcoming Events Section */}
           <section className="mb-16">
             <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-6 sm:mb-8">
@@ -78,6 +81,8 @@ const EventsPage = () => {
             <EventsGrid
               events={displayedPastEvents}
               emptyMessage="No past events to display."
+              renderCard={(event) => <PastEventCard {...event} />}
+              gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
             />
 
             <ViewAllButton
