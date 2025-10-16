@@ -61,6 +61,7 @@ const EventsPage = () => {
             <EventsGrid
               events={paginatedUpcomingEvents}
               emptyMessage="No upcoming events at the moment. Check back soon!"
+              gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
             />
 
             <Pagination
@@ -81,8 +82,8 @@ const EventsPage = () => {
             <EventsGrid
               events={displayedPastEvents}
               emptyMessage="No past events to display."
-              renderCard={(event) => <PastEventCard {...event} />}
-              gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              renderCard={(event) => <PastEventCard event={event} />}
+              gridCols="grid-cols-1 md:grid-cols-2"
             />
 
             <ViewAllButton
