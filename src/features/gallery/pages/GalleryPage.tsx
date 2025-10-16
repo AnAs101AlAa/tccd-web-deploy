@@ -5,10 +5,21 @@ import WithNavbar from "@/shared/components/hoc/WithNavbar";
 import { usePagination } from "@/shared/hooks";
 import GalleryGrid from "../components/GalleryGrid";
 import type { EventGalleryCardProps } from "@/shared/types/galleyTypes";
+// import { useGallery } from "../hooks";
 
 const GalleryPage = () => {
   // ============================================
+  // TODO: Uncomment when API is ready
+  // ============================================
+  // const {
+  //   galleryItems: apiGalleryEvents,
+  //   isLoading,
+  //   error,
+  // } = useGallery();
+
+  // ============================================
   // Temporary: Using dummy data
+  // Remove these lines when API is ready
   // ============================================
   const apiGalleryEvents = galleryEvents;
   const isLoading = false;

@@ -1,5 +1,4 @@
 import { LoginPage, SignupPage, SignupConfirmation, EventsPage, GalleryPage } from "@/features";
-import path from "path";
 
 export const routes = [
   { path: "/login", Component: LoginPage },
