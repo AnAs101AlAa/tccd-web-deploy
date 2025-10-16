@@ -27,7 +27,9 @@ const EventsGrid = ({
     <div className={`grid ${gridCols} gap-6`}>
       {events.map((event) =>
         renderCard ? (
-          <div key={event.id}>{renderCard(event)}</div>
+          <div key={event.id} className="h-full">
+            {renderCard(event)}
+          </div>
         ) : (
           <EventCard key={event.id} event={event} />
         )

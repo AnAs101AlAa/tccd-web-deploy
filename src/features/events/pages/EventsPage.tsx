@@ -31,7 +31,6 @@ const EventsPage = () => {
   const error = null;
   // ============================================
 
-  // Upcoming events pagination
   const {
     selectedCategory: upcomingCategory,
     currentPage: upcomingPage,
@@ -47,14 +46,12 @@ const EventsPage = () => {
     filterBy: (event) => event.category,
   });
 
-  // Past events view all logic
   const {
     displayedItems: displayedPastEvents,
     hasMore: hasMorePast,
     toggleViewAll: toggleViewAllPast,
   } = useViewAll<Event>({ items: apiPastEvents, initialLimit: 6 });
 
-  // Handle loading state
   if (isLoading) {
     return (
       <WithNavbar>
@@ -68,7 +65,6 @@ const EventsPage = () => {
     );
   }
 
-  // Handle error state
   if (error) {
     return (
       <WithNavbar>
