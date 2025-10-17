@@ -92,10 +92,10 @@ const EventsPage = () => {
           subtitle="Explore the catalogue of our latest and history of events on full display"
         />
 
-        <main className="max-w-7xl mx-auto px-6 py-5">
+        <main className="w-[96%] md:w-[92%] lg:w-[85%] mx-auto px-6 py-5">
           {/* Upcoming Events Section */}
           <section className="mb-16">
-            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-6 sm:mb-8">
+            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-3 sm:mb-6">
               <h2 className="text-2xl sm:text-3xl font-bold text-contrast">
                 Upcoming Events
               </h2>

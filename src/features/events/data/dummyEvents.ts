@@ -7,6 +7,7 @@ export const upcomingEvents: Event[] = [
     description:
       "Learn modern web development with React and TypeScript. This hands-on workshop will cover the fundamentals of building responsive web applications.",
     media: [],
+    eventPoster: "https://images.unsplash.com/photo-1760340769739-653d00200baf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470",
     date: "2025-10-25T14:00:00Z",
     location: "Tech Lab, Building A",
     category: "Workshop",
