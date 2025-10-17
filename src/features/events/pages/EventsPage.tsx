@@ -11,6 +11,7 @@ import WithNavbar from "@/shared/components/hoc/WithNavbar";
 import { usePagination, useViewAll } from "@/shared/hooks";
 import ViewAllButton from "@/shared/components/ViewAllButton";
 import type Event from "@/shared/types/events";
+import EVENT_TYPES from "@/constants/EventTypes";
 // import { useEvents } from "../hooks";
 
 const EventsPage = () => {
@@ -37,7 +38,6 @@ const EventsPage = () => {
   const {
     selectedCategory: upcomingCategory,
     currentPage: upcomingPage,
-    categories: upcomingCategories,
     paginatedItems: paginatedUpcomingEvents,
     totalPages: upcomingTotalPages,
     handleCategoryChange: handleUpcomingCategoryChange,
@@ -48,6 +48,7 @@ const EventsPage = () => {
     itemsPerPageDesktop: 3,
     filterBy: (event) => event.category,
   });
+  const upcomingCategories = EVENT_TYPES;
 
   const {
     displayedItems: displayedPastEvents,
