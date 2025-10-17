@@ -1,10 +1,16 @@
-type FormatMode = "full" | "hour" | "phone" | "stringed";
+type FormatMode = "full" | "hour" | "phone" | "date" | "stringed";
 
 const formatDateTime = (date: Date, mode: FormatMode = "full") => {
   if (mode === "hour") {
     return date.toLocaleString("en-US", {
       hour: "numeric",
       hour12: true,
+    });
+  } else if (mode === "date") {
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   }
   return date.toLocaleString("en-US", {
@@ -63,6 +69,7 @@ const format = (data: unknown, mode: FormatMode): string => {
       case "phone":
         return formatPhone(data as string);
       case "hour":
+      case "date":
       case "full": {
         if (!data) return "N/A";
         const dateObj =

@@ -1,6 +1,6 @@
 import type Event from "@/shared/types/events";
-import EventCard from "./EventCard";
 import type { ReactNode } from "react";
+import UpcomingEventCard from "./UpcomingEventCard";
 
 interface EventsGridProps {
   events: Event[];
@@ -31,7 +31,7 @@ const EventsGrid = ({
             {renderCard(event)}
           </div>
         ) : (
-          <EventCard key={event.id} event={event} />
+          <UpcomingEventCard key={event.id} event={event} />
         )
       )}
     </div>
