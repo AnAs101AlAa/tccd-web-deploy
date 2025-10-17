@@ -145,6 +145,9 @@ export const AboutUsPage = () => {
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent">
                     Board members
                 </h1>
+                <p className="text-gray-600 text-sm md:text-base lg:text-lg max-w-3xl mx-auto px-4 mb-4">
+                    Meet the dedicated leaders who guide TCCD's strategic vision and ensure our commitment to empowering students and graduates in their career journeys.
+                </p>
             </div>
             <div className="max-w-7xl mx-auto px-4 md:px-5 relative pb-8 md:pb-12">
                 <button
@@ -191,6 +194,10 @@ export const AboutUsPage = () => {
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent">
                     Website Founders
                 </h1>
+                <p className="text-gray-600 text-sm md:text-base lg:text-lg max-w-3xl mx-auto px-4 mb-4">
+                    With a passion for technology and a commitment to excellence, our founders have been instrumental in shaping the vision and mission of TCCD.
+                    giving up their time and effort to make this website a reality and proving that you can make a difference.
+                </p>
             </div>
             <div className="max-w-7xl mx-auto px-4 md:px-5 relative pb-8 md:pb-16">
                 <button
