@@ -1,0 +1,74 @@
+[
+    {
+        "ImgSrc" : "https://res.cloudinary.com/dhvghbm7k/image/upload/c_fill,w_500,h_500,ar_1:1,g_auto/v1745111902/president-logo_gylo80.jpg",
+        "Name" : "Ahmed Taha",
+        "Role" : "President & Founder",
+        "email": "ahmed.wesal03@eng-st.cu.edu.eg",
+        "linkedin": "https://www.linkedin.com/in/ahmed-taha-953459250?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        "github": "https://github.com/tahaaa22"
+    },
+    {
+        "ImgSrc" : "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743588986/farouqDiaa_nvwwzu.jpg",
+        "Name" : "Farouq Diaa",
+        "Role" : "Backend Head",
+        "email": "Farouqdiaaeldin@gmail.com ",
+        "linkedin": "https://www.linkedin.com/in/farouq-diaa-eldin-9b8063251",
+        "github": "https://github.com/FarouqDiaa"
+    },
+    {
+        "ImgSrc" : "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif",
+        "Name" : "Anas Alaa",
+        "Role" : "Frontend Head",
+        "email": "anas.ibrahim03@eng-st.cu.edu.eg",
+        "linkedin": "https://www.linkedin.com/in/anas-alaa-637a2425a/",
+        "github": "https://github.com/AnAs101AlAa"
+    },
+    {
+        "ImgSrc" : "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743588987/mostafaRabie_vdnmt3.jpg",
+        "Name" : "Mostafa Rabie",
+        "Role" : "Backend Member",
+        "email": "mostafarabie5902@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/mostafa-rabie-90458a209/",
+        "github": "https://github.com/mostafarabie5"
+    },
+    {
+        "ImgSrc" : "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743588986/hazemYasser_b2wti3.jpg",
+        "Name" : "Hazem Yasser",
+        "Role" : "Frontend Member",
+        "email": "hazemyasser6@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/hazem-hassan-6547282b6/",
+        "github": "https://github.com/hazemyasser123"
+    },
+    {
+        "ImgSrc" : "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743588986/kareemSaeed_xobuim.jpg",
+        "Name" : "Kareem Saeed",
+        "Role" : "Backend Member",
+        "email": "kareemuashraf@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/kareem-saeed-025a23292",
+        "github": "https://github.com/KareemAshrafSaeed"
+    },
+    {
+        "ImgSrc" : "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743588986/hazemKotb_lomb0i.jpg",
+        "Name" : "Hazem Kotb",
+        "Role" : "Frontend Member",
+        "email": "hazemkotb.72003@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/hazem-kotb-46b349267/",
+        "github": "https://github.com/theHeliE"
+    },
+    {
+        "ImgSrc" : "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743588986/aliBahr_wvd7xo.jpg",
+        "Name" : "Ali Bahr",
+        "Role" : "Backend Member",
+        "email": "alibahr313@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/ali-bahr-50233a262/",
+        "github": "https://github.com/ali-bahr"
+    },
+    {
+        "ImgSrc" : "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743588987/mostafaEhab_co0ze4.jpg",
+        "Name" : "Mostafa Ehab",
+        "Role" : "Backend Member",
+        "email": "mostafa.e.h.m.r@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/mostafa-ehab41/",
+        "github": "https://github.com/Mostafa-Ehab"
+    }
+]
