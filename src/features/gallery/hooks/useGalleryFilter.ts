@@ -6,8 +6,10 @@ interface UseGalleryFilterProps {
 }
 
 interface UseGalleryFilterReturn {
+  searchInput: string;
+  setSearchInput: (input: string) => void;
   searchKey: string;
-  setSearchKey: (key: string) => void;
+  handleSearch: () => void;
   selectedEventTypes: string[];
   setSelectedEventTypes: (types: string[]) => void;
   selectedDateRange: { start: Date | null; end: Date | null };
@@ -22,18 +24,23 @@ interface UseGalleryFilterReturn {
 export const useGalleryFilter = ({
   galleryItems,
 }: UseGalleryFilterProps): UseGalleryFilterReturn => {
-  const [searchKey, setSearchKey] = useState("");
+
+  const [searchInput, setSearchInput] = useState(""); 
+  const [searchKey, setSearchKey] = useState(""); 
+
   const [selectedEventTypes, setSelectedEventTypes] = useState<string[]>([]);
   const [selectedDateRange, setSelectedDateRange] = useState<{
     start: Date | null;
     end: Date | null;
   }>({ start: null, end: null });
 
-  // Apply filters to gallery items
+  const handleSearch = () => {
+    setSearchKey(searchInput);
+  };
+
   const filteredGallery = useMemo(() => {
     let filtered = galleryItems;
 
-    // Search filter
     if (searchKey.trim()) {
       const search = searchKey.toLowerCase();
       filtered = filtered.filter(
@@ -43,14 +50,12 @@ export const useGalleryFilter = ({
       );
     }
 
-    // Event type filter
     if (selectedEventTypes.length > 0) {
       filtered = filtered.filter((item) =>
         selectedEventTypes.includes(item.eventType)
       );
     }
 
-    // Date range filter
     if (selectedDateRange.start || selectedDateRange.end) {
       filtered = filtered.filter((item) => {
         const itemDate = new Date(item.eventDate);
@@ -68,14 +73,17 @@ export const useGalleryFilter = ({
   }, [galleryItems, searchKey, selectedEventTypes, selectedDateRange]);
 
   const resetFilters = () => {
+    setSearchInput("");
     setSearchKey("");
     setSelectedEventTypes([]);
     setSelectedDateRange({ start: null, end: null });
   };
 
   return {
+    searchInput,
+    setSearchInput,
     searchKey,
-    setSearchKey,
+    handleSearch,
     selectedEventTypes,
     setSelectedEventTypes,
     selectedDateRange,

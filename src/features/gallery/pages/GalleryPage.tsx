@@ -30,14 +30,20 @@ const GalleryPage = () => {
 
   // Gallery filtering
   const {
-    searchKey,
-    setSearchKey,
+    searchInput,
+    setSearchInput,
+    handleSearch,
     selectedEventTypes,
     setSelectedEventTypes,
     selectedDateRange,
     setSelectedDateRange,
     filteredGallery,
   } = useGalleryFilter({ galleryItems: apiGalleryEvents });
+
+  const handleSearchWithPagination = () => {
+    handleSearch();
+    setPage(1);
+  };
 
   const { currentPage, paginatedItems, totalPages, setPage } =
     usePagination<EventGalleryCardProps>({
@@ -90,13 +96,13 @@ const GalleryPage = () => {
           <section className="mb-16">
             <div className="mb-6">
               <GalleryFilter
-                searchKey={searchKey}
-                onSearchChange={setSearchKey}
+                searchKey={searchInput}
+                onSearchChange={setSearchInput}
                 selectedEventTypes={selectedEventTypes}
                 onEventTypesChange={setSelectedEventTypes}
                 selectedDateRange={selectedDateRange}
                 onDateRangeChange={setSelectedDateRange}
-                onSearch={() => setPage(1)}
+                onSearch={handleSearchWithPagination}
               />
             </div>
 
