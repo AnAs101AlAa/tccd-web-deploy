@@ -1,11 +1,10 @@
 import type Event from "@/shared/types/events";
 import type { ReactNode } from "react";
-import UpcomingEventCard from "./UpcomingEventCard";
 
 interface EventsGridProps {
   events: Event[];
   emptyMessage?: string;
-  renderCard?: (event: Event) => ReactNode;
+  renderCard: (event: Event) => ReactNode;
   gridCols?: string;
 }
 
@@ -25,15 +24,11 @@ const EventsGrid = ({
 
   return (
     <div className={`grid ${gridCols} gap-6`}>
-      {events.map((event) =>
-        renderCard ? (
-          <div key={event.id} className="h-full">
-            {renderCard(event)}
-          </div>
-        ) : (
-          <UpcomingEventCard key={event.id} event={event} />
-        )
-      )}
+      {events.map((event) => (
+        <div key={event.id} className="h-full">
+          {renderCard(event)}
+        </div>
+      ))}
     </div>
   );
 };

@@ -1,6 +1,9 @@
-import CategoryFilter from "../components/CategoryFilter";
-import EventsGrid from "../components/EventsGrid";
-import PastEventCard from "../components/PastEventCard";
+import {
+  EventsGrid,
+  PastEventCard,
+  UpcomingEventCard,
+  CategoryFilter
+} from "../components"
 import Pagination from "@/shared/components/Pagination";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import { upcomingEvents, pastEvents } from "../data/dummyEvents";
@@ -51,6 +54,13 @@ const EventsPage = () => {
     hasMore: hasMorePast,
     toggleViewAll: toggleViewAllPast,
   } = useViewAll<Event>({ items: apiPastEvents, initialLimit: 6 });
+
+  const onBookNow = ()=>{
+    console.log("BookNow");
+  }
+    const onLearnMore = () => {
+      console.log("LearnMore");
+    };
 
   if (isLoading) {
     return (
@@ -110,6 +120,7 @@ const EventsPage = () => {
             <EventsGrid
               events={paginatedUpcomingEvents}
               emptyMessage="No upcoming events at the moment. Check back soon!"
+              renderCard={(event) => <UpcomingEventCard event={event} onBookNow={onBookNow} onLearnMore={onLearnMore} />}
               gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
             />
 
