@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { FiSearch, FiFilter, FiX, FiCalendar } from "react-icons/fi";
-import { Button } from "tccd-ui";
+import { FiFilter, FiX, FiCalendar } from "react-icons/fi";
+import { Button, SearchField } from "tccd-ui";
 import EVENT_TYPES from "@/constants/EventTypes";
+import { IoSearch } from "react-icons/io5";
 
 export interface GalleryFilterProps {
     searchKey: string;
@@ -26,14 +27,8 @@ export const GalleryFilter = ({
     const [tempSelectedTypes, setTempSelectedTypes] = useState<string[]>(selectedEventTypes);
     const [tempDateRange, setTempDateRange] = useState(selectedDateRange || { start: null, end: null });
 
-    const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onSearchChange(e.target.value);
-    };
-
-    const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            onSearch();
-        }
+    const handleSearchInput = (val: string) => {
+        onSearchChange(val);
     };
 
     const toggleEventType = (eventType: string) => {
@@ -83,17 +78,12 @@ export const GalleryFilter = ({
             <div className="w-full bg-white p-4 rounded-xl shadow-sm">
                 <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
                     {/* Search Input - Full width on mobile and desktop */}
-                    <div className="flex-1 relative">
-                        <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
-                        <input
-                            type="text"
-                            value={searchKey}
-                            onChange={handleSearchInput}
-                            onKeyPress={handleSearchKeyPress}
-                            placeholder="Search Gallery"
-                            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                        />
-                    </div>
+                    <SearchField
+                        value={searchKey}
+                        onChange={(val) => handleSearchInput(val)}
+                        placeholder="Search gallery..."
+                        className="flex-1"
+                    />
 
                     {/* Buttons Container - Side by side on mobile and desktop */}
                     <div className="flex gap-3 items-center w-full md:w-auto">
@@ -101,11 +91,11 @@ export const GalleryFilter = ({
                             <Button
                                 buttonText="Categories"
                                 onClick={() => setIsFilterModalOpen(true)}
-                                type={activeFiltersCount > 0 ? "primary" : "basic"}
+                                type={activeFiltersCount > 0 ? "secondary" : "basic"}
                                 width="full"
                             />
                             {activeFiltersCount > 0 && (
-                                <span className="absolute -top-2 -right-2 w-6 h-6 bg-primary text-white rounded-full text-xs font-bold flex items-center justify-center">
+                                <span className="absolute -top-2 -right-2 w-6 h-6 bg-primary text-text rounded-full text-xs font-bold flex items-center justify-center">
                                     {activeFiltersCount}
                                 </span>
                             )}
@@ -113,6 +103,7 @@ export const GalleryFilter = ({
 
                         <div className="flex-1 md:flex-initial">
                             <Button
+                                buttonIcon={<IoSearch className="size-3.5" />}
                                 buttonText="Search"
                                 onClick={onSearch}
                                 type="primary"
