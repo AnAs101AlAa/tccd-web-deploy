@@ -15,7 +15,6 @@ interface UsePaginationReturn<T> {
   isMobile: boolean;
 
   // Computed values
-  categories: string[];
   filteredItems: T[];
   paginatedItems: T[];
   totalPages: number;
@@ -52,13 +51,6 @@ export const usePagination = <T>({
   // Set items per page based on screen size
   const itemsPerPage = isMobile ? itemsPerPageMobile : itemsPerPageDesktop;
 
-  // Get unique categories from items
-  const categories = useMemo(() => {
-    if (!filterBy) return [];
-    const allCategories = items.map(filterBy);
-    return Array.from(new Set(allCategories)).sort();
-  }, [items, filterBy]);
-
   // Filter items by category
   const filteredItems = useMemo(() => {
     if (!filterBy || selectedCategory === "All") return items;
@@ -86,8 +78,6 @@ export const usePagination = <T>({
     currentPage,
     isMobile,
 
-    // Computed values
-    categories,
     filteredItems,
     paginatedItems,
     totalPages,

@@ -7,7 +7,6 @@ interface UseViewAllProps<T> {
 
 interface UseViewAllReturn<T> {
   displayedItems: T[];
-  hasMore: boolean;
   toggleViewAll: () => void;
 }
 
@@ -20,7 +19,6 @@ export const useViewAll = <T>({
     return items.slice(0, initialLimit);
   }, [items, initialLimit]);
 
-  const hasMore = items.length > initialLimit;
 
   const toggleViewAll = () => {
     //route to the view all page
@@ -28,7 +26,6 @@ export const useViewAll = <T>({
 
   return {
     displayedItems,
-    hasMore,
     toggleViewAll,
   };
 };

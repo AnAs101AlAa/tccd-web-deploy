@@ -1,5 +1,5 @@
 interface CategoryFilterProps {
-  categories: string[];
+  categories: { value: string; label: string }[];
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
 }
@@ -24,15 +24,15 @@ const CategoryFilter = ({
         </button>
         {categories.map((category) => (
           <button
-            key={category}
-            onClick={() => onCategoryChange(category)}
+            key={category.value}
+            onClick={() => onCategoryChange(category.value)}
             className={`md:px-4 px-3 py-1 md:py-2 rounded-full font-medium text-[12px] md:text-[14px] transition-colors whitespace-nowrap flex-shrink-0 ${
-              selectedCategory === category
+              selectedCategory === category.value
                 ? "bg-primary text-white"
                 : "bg-white text-secondary border border-gray-300 hover:border-primary"
             }`}
           >
-            {category}
+            {category.label}
           </button>
         ))}
       </div>
