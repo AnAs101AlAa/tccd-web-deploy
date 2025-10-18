@@ -15,6 +15,10 @@ export default function GalleryDisplayPage() {
     }
   }, [isError]);
 
+  if (isError) {
+    return <p className="text-red-500">Error loading gallery data.</p>;
+  }
+  
   return (
     <div className="w-full">
         <div className="bg-background p-4 shadow-lg flex justify-between items-center mb-2">
