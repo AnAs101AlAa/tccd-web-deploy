@@ -76,13 +76,13 @@ export const GalleryFilter = ({
     return (
         <>
             <div className="w-full bg-white p-4 rounded-xl shadow-sm">
-                <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
+                <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
                     {/* Search Input - Full width on mobile and desktop */}
                     <SearchField
                         value={searchKey}
                         onChange={(val) => handleSearchInput(val)}
                         placeholder="Search gallery..."
-                        className="flex-1"
+                        className="max-w-[750px] flex-1"
                     />
 
                     {/* Buttons Container - Side by side on mobile and desktop */}

@@ -92,7 +92,7 @@ const GalleryPage = () => {
           subtitle="Dive into the collection of our best and brightest moments shaped by our members and community."
         />
 
-        <main className="max-w-7xl mx-auto px-6 py-5">
+        <main className="w-[98%] md:w-[84%] lg:w-[80%] mx-auto px-6 py-5">
           <section className="mb-16">
             <div className="mb-6">
               <GalleryFilter
