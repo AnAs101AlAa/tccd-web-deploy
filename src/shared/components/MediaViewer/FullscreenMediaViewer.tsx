@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import { FaXmark, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { FiZoomIn, FiZoomOut } from "react-icons/fi";
 
 export type MediaItem = {
   id: string | number;
-  type: "image" | "video";
+  type: string;
   src: string;
   thumb?: string;
   alt?: string;
@@ -26,6 +28,24 @@ export default function FullscreenMediaViewer({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const startX = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [visibleCount, setVisibleCount] = useState(12);
+  const galleryRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 200
+      ) {
+        setTimeout(() => {
+          setVisibleCount(prev => Math.min(prev + 20, items.length));
+        }, 1000);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [items.length]);
 
   useEffect(() => {
     if (items.length === 0) return;
@@ -155,18 +175,22 @@ export default function FullscreenMediaViewer({
   }
 
   const Gallery = (
-    <div className="flex flex-wrap gap-3 p-3">
-      {items.map((it, i) => (
+    <div
+      ref={galleryRef}
+      className="flex flex-wrap gap-0 md:gap-[2%] lg:gap-[0.66%] space-y-4 p-2 md:p-3 overflow-y-auto"
+    >
+      {items.slice(0, visibleCount).map((it, i) => (
         <button
           key={it.id}
           onClick={() => openAt(i)}
-          className="group relative w-36 h-24 overflow-hidden rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="group relative w-full md:w-[32%] lg:w-[24.5%] h-[24vh] md:h-[32vh] lg:h-[28vh] overflow-hidden rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           <img
             src={it.thumb || it.src}
             alt={it.alt || `thumb-${i + 1}`}
             className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
             draggable={false}
+            loading="lazy"
           />
           {it.type === "video" && (
             <span className="absolute left-2 top-2 rounded-full bg-black/50 px-2 py-1 text-xs text-white">
@@ -175,12 +199,17 @@ export default function FullscreenMediaViewer({
           )}
         </button>
       ))}
+
+      {visibleCount < items.length && (
+        <div className="w-full text-center font-bold py-4 text-contrast text-[14px] md:text-[16px]">
+          Loading more...
+        </div>
+      )}
     </div>
   );
 
   return (
-
-    <div className="w-full">
+    <div>
       {Gallery}
 
       {open && (
@@ -201,75 +230,42 @@ export default function FullscreenMediaViewer({
             }}
           />
 
-          <div className="relative z-10 flex w-full max-w-6xl items-center justify-center">
-            {index > 0 &&
-            (<button
-              onClick={prev}
-              aria-label="Previous"
-              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-lg bg-white/6 p-3 shadow-md backdrop-blur-sm hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>)}
-
-            <div ref={contentRef} className="flex max-h-[85vh] items-center justify-center px-4" onClick={(e) => e.stopPropagation()}>
+          <div className="z-10 flex w-full max-w-6xl items-center justify-center">
+            <div ref={contentRef} className="flex max-h-[85vh] items-center justify-center md:px-4" onClick={(e) => e.stopPropagation()}>
               {renderCurrent()}
             </div>
 
-            
-            {index < items.length - 1 &&
-               ( <button
-              onClick={next}
-              aria-label="Next"
-              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-lg bg-white/6 p-3 shadow-md backdrop-blur-sm hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>)}
-            <button
-            onClick={handleClose}
-            aria-label="Close"
-            className="absolute right-15 top-0 w-10 h-10 rounded-md shadow-md hover:brightness-90 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center text-white font-bold text-lg"
-            style={{ backgroundColor: "#CD3A38" }} 
-            >
-             ×
-            </button>
-            <button
-            onClick={() => setZoom((z) => Math.min(z + 0.1, 3))}
-            aria-label="Zoom in"
-            className="absolute right-28 top-0 w-10 h-10 rounded-full shadow-md hover:brightness-90 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center text-white font-bold text-lg"
-            style={{ backgroundColor: "#295E7E" }} 
-            >
-            +
-            </button>
-            <button
-            onClick={() => setZoom((z) => Math.max(z - 0.1, 0.5))}
-            aria-label="Zoom out"
-            className="absolute right-40 top-0 w-10 h-10 rounded-full shadow-md hover:brightness-90 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center text-white font-bold text-lg"
-            style={{ backgroundColor: "#295E7E" }} 
-            >
-            -
-            </button>
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-3 py-1 text-sm text-white">
-              {index + 1} / {items.length}
+            <div className="absolute top-2 right-2 flex items-center gap-2 w-fit">
+              <button
+              onClick={() => setZoom((z) => Math.min(z + 0.1, 3))}
+              aria-label="Zoom in"
+              className="rounded-full p-2 md:p-3 bg-secondary/50 hover:bg-secondary cursor-pointer transition-colors text-text"
+              >
+                <FiZoomIn className="size-4" />
+              </button>
+              <button
+              onClick={() => setZoom((z) => Math.max(z - 0.1, 0.5))}
+              aria-label="Zoom out"
+              className="rounded-full p-2 md:p-3 bg-secondary/50 hover:bg-secondary cursor-pointer transition-colors text-text"
+              >
+                <FiZoomOut className="size-4" />
+              </button>
+              <button
+              onClick={handleClose}
+              aria-label="Close"
+              className="rounded-full p-2 md:p-3 bg-primary/50 hover:bg-primary cursor-pointer transition-colors text-text"
+              >
+                <FaXmark className="size-4" />
+              </button>
             </div>
-          </div>
-
-          <div className="absolute bottom-4 z-20 w-full max-w-4xl px-4">
-            <div className="mx-auto flex max-w-full items-center justify-center gap-3 overflow-x-auto rounded-full bg-black/40 py-2 px-3 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-              {items.map((it, i) => (
-                <button
-                  key={it.id}
-                  onClick={() => setIndex(i)}
-                  className={`h-12 w-20 flex-shrink-0 overflow-hidden rounded-md ring-2 ring-transparent transition-all focus:outline-none focus:ring-indigo-500 ${
-                    i === index ? "ring-white/40 scale-105" : "hover:scale-105"
-                  }`}
-                >
-                  <img src={it.thumb || it.src} alt={it.alt || `thumb-${i + 1}`} className="h-full w-full object-cover" draggable={false} />
+            <div className="absolute flex gap-2 items-center justify-center bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-3 py-1 text-[14px] md:text-[16px] text-white">
+                <button onClick={prev} disabled={index <= 0}>
+                  <FaChevronLeft className={`size-4 md:size-5 ${index > 0 ? 'text-text cursor-pointer' : 'text-text/50 cursor-not-allowed'}`} />
                 </button>
-              ))}
+              {index + 1} / {items.length}
+              <button onClick={next} disabled={index >= items.length - 1}>
+                <FaChevronRight className={`size-4 md:size-5 ${index < items.length - 1 ? 'text-text cursor-pointer' : 'text-text/50 cursor-not-allowed'}`} />
+              </button>
             </div>
           </div>
         </div>
