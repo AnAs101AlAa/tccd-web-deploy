@@ -2,7 +2,8 @@ export interface EventGalleryCardProps {
     id: string;
     eventName: string;
     eventType: string;
-    mediaUrl: string;
+    media?: string[];
+    eventPoster: string;
     eventDescription: string;
     eventDate: string;
 }

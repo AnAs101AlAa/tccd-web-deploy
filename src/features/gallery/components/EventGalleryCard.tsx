@@ -2,28 +2,27 @@ import type { EventGalleryCardProps } from "@/shared/types";
 import Format from "@/shared/utils/dateFormater";
 import { LazyImageLoader } from "tccd-ui";
 import { useNavigate } from "react-router-dom";
-
 export const EventGalleryCard = ({
     id,
     eventName,
     eventType,
-    mediaUrl,
+    eventPoster,
     eventDescription,
-    eventDate
+    eventDate,
 }: EventGalleryCardProps) => {
-    const navigate = useNavigate();
-
+    const navigator = useNavigate();
     const handleCardClick = () => {
-        navigate(`/gallery/view/${id}`);
+        navigator(`/gallery/view/${id}`);
     };
 
     return (
         <div
+            id={id}
             onClick={handleCardClick}
             className="w-full rounded-2xl overflow-hidden shadow-lg hover:scale-[102%] cursor-pointer transition-all duration-300 bg-white h-full"
         >
             <LazyImageLoader
-                src={mediaUrl}
+                src={eventPoster}
                 alt={eventName}
                 className="w-full"
                 height="16rem"

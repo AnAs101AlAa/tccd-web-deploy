@@ -12,6 +12,7 @@ const GalleryGrid = ({
   emptyMessage = "No gallery items to display.",
   gridCols = "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
 }: GalleryGridProps) => {
+
   if (gallery.length === 0) {
     return (
       <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
