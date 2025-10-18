@@ -2,7 +2,8 @@ export default interface Event {
     id: string;
     title: string;
     description: string;
-    media: string[];
+    eventPoster: string;
+    media?: string[];
     date: string;
     location: string;
     category: string; 
