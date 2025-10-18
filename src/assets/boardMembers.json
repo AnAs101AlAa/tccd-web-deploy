@@ -1,0 +1,77 @@
+[
+    {
+        "Name": "Ahmed Taha",
+        "ImgSrc": "https://res.cloudinary.com/dhvghbm7k/image/upload/c_pad,ar_1:1/v1745111903/Snapchat-1319693465_q2zz2x.jpg",
+        "Role": "President"
+    },
+    {
+        "Name": "Youssef Ekramy",
+        "Role": "Operations & Relations Director",
+        "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif"
+    },
+    {
+        "Name": "Yousef Ahmed Sayed",
+        "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif",
+        "Role": "Branding Director"
+    },
+    {
+        "Name": "Mohamed Khaled",
+        "Role": "Operations & Relations Co-Director",
+        "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif"
+    },
+    {
+        "Name": "Maya Mohamed",
+        "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif",
+        "Role": "Branding Co-Director"
+    },
+    {
+        "Name": "Camilia Hesham",
+        "Role": "IT & HR Co-Director",
+        "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif"
+    },
+    {
+        "Name": "Farouq Diaa",
+        "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif",
+        "Role": "Backend Head"
+    },
+    {
+        "Name": "Anas Alaa",
+        "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif",
+        "Role": "Frontend Head"
+    },
+    {
+      "Name": "Maram Mohsen",
+      "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif",
+      "Role": "Content Creation Head"
+    },
+    {
+      "Name": "Habiba Alaa",
+      "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif",
+      "Role": "ER Head"
+    },
+    {
+      "Name": "Gana Ramadan Lotfy",
+      "Role": "Multimedia Head",
+      "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif"
+    },
+    {
+      "Name": "Ahmed Essam Abdein",
+      "Role": "HR head",
+      "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif"
+    },
+    {
+      "Name": "Modather Mohamed",
+      "Role": "Logistics Head",
+      "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif"
+    },
+    {
+      "Name": "Abdelrahman mohamed abdelfatah sawy",
+      "Role": "content creation Vice head",
+      "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif"
+    },
+    {
+      "Name": "Rana Mohamed Mahmoud elmegharbi",
+      "Role": "marketing Vice Head",
+      "ImgSrc": "https://res.cloudinary.com/dckgwxu3c/image/upload/v1743589135/person_zgnta4.avif"
+    }
+  ]
