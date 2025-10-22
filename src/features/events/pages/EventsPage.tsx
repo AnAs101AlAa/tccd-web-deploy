@@ -52,7 +52,6 @@ const EventsPage = () => {
 
   const {
     displayedItems: displayedPastEvents,
-    hasMore: hasMorePast,
     toggleViewAll: toggleViewAllPast,
   } = useViewAll<Event>({ items: apiPastEvents, initialLimit: 6 });
 
@@ -147,7 +146,7 @@ const EventsPage = () => {
               gridCols="grid-cols-1 md:grid-cols-2"
             />
 
-            <ViewAllButton hasMore={hasMorePast} onClick={toggleViewAllPast} />
+            <ViewAllButton onClick={toggleViewAllPast} />
           </section>
         </main>
       </div>

@@ -35,8 +35,8 @@ const UpperHeader: React.FC<UpperHeaderProps> = ({ image, title, subtitle }) => 
           <div className="relative z-10 flex items-start flex-1">
           <div className="w-3 bg-[#CD3A38] mr-5 self-stretch "></div>            
             <div>
-              <h1 className="text-[42px] lg:text-[46px] font-bold mb-0 -mt-3 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)]">{title}</h1>
-              <p className="text-[16px] lg:text-[18px] font-semibold max-w-[700px] break-words ">
+              <h1 className="text-[42px] lg:text-[42px] font-bold mb-0 -mt-3 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)]">{title}</h1>
+              <p className="text-[16px] lg:text-[17px] font-semibold max-w-[700px] break-words ">
                 {subtitle}
               </p>
             </div>

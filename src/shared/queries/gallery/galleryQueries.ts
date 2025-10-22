@@ -21,7 +21,16 @@ export const useGetAllGallery = () => {
 export const useGetGalleryById = (id: string) => {
   return useQuery({
     queryKey: galleryKeys.detail(id),
-    queryFn: () => galleryApi.getGalleryById(id),
+    queryFn: async () => {
+      const response = await galleryApi.getGalleryById(id);
+      const mediaItems = response.media?.map((src, index) => ({
+        id: index,
+        type: src.endsWith(".mp4") ? "video" : "image",
+        src,
+        alt: `Gallery item ${index + 1}`,
+      }));
+      return { ...response, media: mediaItems };
+    },
     enabled: !!id,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
