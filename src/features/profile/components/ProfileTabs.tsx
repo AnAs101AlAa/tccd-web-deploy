@@ -17,17 +17,17 @@ const ProfileTabs: React.FC<ProfileTabsProps> = ({
 
   return (
     <div className="border-y border-gray-200">
-      <div className="flex">
+      <div className="flex overflow-x-auto scrollbar-hide">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
             className={`
-              flex-1 py-4 px-6 text-center text-sm font-medium transition-colors
+              flex-1 min-w-[100px] py-3 sm:py-4 px-3 sm:px-6 text-center text-xs sm:text-sm font-medium transition-colors whitespace-nowrap
               ${
                 activeTab === tab.id
-                  ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  ? "text-primary border-b-2 border-primary bg-background-primary"
+                  : "text-inactive-tab-text hover:text-contrast hover:bg-gray-50"
               }
             `}
           >

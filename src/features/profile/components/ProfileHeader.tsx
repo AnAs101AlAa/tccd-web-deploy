@@ -28,34 +28,33 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
   const avatarImage = getAvatarImage();
 
-  // Hardcoded banner for now
-  const bannerImage =
-    "https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=300&fit=crop";
 
   return (
     <div className="relative">
       {/* Cover/Banner Section */}
       <div className="relative">
-        <Cover coverImage={bannerImage} className="h-[200px]" />
+        <Cover
+          className="h-32 sm:h-40 md:h-48 lg:h-[200px]"
+        />
 
         {/* Avatar positioned to overlap cover */}
-        <div className="absolute left-6 bottom-0 transform translate-y-1/2">
+        <div className="absolute left-4 sm:left-6 bottom-0 transform translate-y-1/2">
           <div className="relative">
             <Avatar
               avatarImage={avatarImage}
               size="lg"
               position="relative"
-              className="border-4 border-white"
+              className="border-2 sm:border-4 border-white"
             />
             {isOwnProfile && (
               <div className="relative">
                 <button
                   ref={cameraButtonRef}
                   onClick={handleImageClick}
-                  className="absolute cursor-pointer bottom-2 right-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
+                  className="absolute cursor-pointer bottom-1 right-1 sm:bottom-2 sm:right-2 bg-background rounded-full p-1.5 sm:p-2 shadow-lg hover:bg-background-contrast transition-colors"
                   aria-label="Change profile picture"
                 >
-                  <HiCamera className="w-5 h-5 text-gray-700" />
+                  <HiCamera className="w-4 h-4 sm:w-5 sm:h-5 text-contrast" />
                 </button>
                 <DropdownMenuComponent
                   isOpen={showImageOptions}
@@ -73,9 +72,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       </div>
 
       {/* User Info Section */}
-      <div className="pt-16 px-6 pb-4">
-        <h1 className="text-2xl font-bold text-gray-900">{getDisplayName()}</h1>
-        <p className="text-sm text-gray-600 mt-1">{getBio()}</p>
+      <div className="pt-12 sm:pt-14 md:pt-16 px-4 sm:px-6 pb-4">
+        <h1 className="text-xl sm:text-2xl font-bold text-contrast break-words">
+          {getDisplayName()}
+        </h1>
+        <p className="text-xs sm:text-sm text-label mt-1 break-words">
+          {getBio()}
+        </p>
       </div>
     </div>
   );

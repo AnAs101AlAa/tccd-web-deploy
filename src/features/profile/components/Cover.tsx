@@ -1,5 +1,6 @@
 import React from "react";
 import { LazyImageLoader } from "tccd-ui";
+import coverImagePlaceholder from "@/assets/cover.png";
 
 interface CoverProps {
   coverImage?: string;
@@ -10,22 +11,13 @@ interface CoverProps {
 const Cover = ({ coverImage, children, className = "" }: CoverProps) => {
   return (
     <div className={`relative w-full overflow-hidden ${className}`}>
-      {coverImage ? (
-        <LazyImageLoader
-          src={coverImage}
-          alt="Cover"
-          className="w-full h-full object-cover"
-          width="100%"
-          height="200px"
-        />
-      ) : (
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundColor: "#333639",
-          }}
-        />
-      )}
+      <LazyImageLoader
+        src={coverImage || coverImagePlaceholder}
+        alt="Cover"
+        className="w-full h-full object-cover"
+        width="100%"
+        height="100%"
+      />
       <div className="absolute inset-0 flex flex-row items-start p-8">
         {children}
       </div>

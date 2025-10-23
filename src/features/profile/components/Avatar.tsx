@@ -19,16 +19,11 @@ const Avatar = ({
   customPosition = false,
 }: AvatarProps) => {
   const sizeClasses = {
-    sm: "w-[64px] h-[64px]",
-    md: "w-[96px] h-[96px]",
-    lg: "w-[132px] h-[132px]",
+    sm: "w-12 h-12 sm:w-16 sm:h-16",
+    md: "w-20 h-20 sm:w-24 sm:h-24",
+    lg: "w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-[132px] lg:h-[132px]",
   };
 
-  const sizes = {
-    sm: { width: 64, height: 64 },
-    md: { width: 96, height: 96 },
-    lg: { width: 132, height: 132 },
-  };
 
   const positionStyle =
     position === "absolute" && !customPosition
@@ -39,7 +34,7 @@ const Avatar = ({
 
   return (
     <div
-      className={`${position} ${sizeClasses[size]} rounded-full border-4 border-white overflow-hidden ${className}`}
+      className={`${position} ${sizeClasses[size]} rounded-full overflow-hidden ${className}`}
       style={positionStyle}
     >
       <div className="w-full h-full rounded-full relative overflow-hidden">
@@ -47,9 +42,9 @@ const Avatar = ({
           <LazyImageLoader
             src={avatarImage}
             alt="Profile"
-            className="w-full h-full rounded-full object-cover right-0.5 bottom-0.5"
-            width={sizes[size].width}
-            height={sizes[size].height}
+            className="w-full h-full rounded-full object-cover"
+            width="100%"
+            height="100%"
           />
         ) : (
           <div

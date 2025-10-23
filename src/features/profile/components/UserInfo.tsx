@@ -28,8 +28,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-xl font-bold text-gray-900">{getDisplayName()}</h1>
-      <span className="text-sm text-gray-500">{getUsername()}</span>
+      <h1 className="text-xl font-bold text-contrast">{getDisplayName()}</h1>
+      <span className="text-sm text-label">{getUsername()}</span>
     </div>
   );
 };
