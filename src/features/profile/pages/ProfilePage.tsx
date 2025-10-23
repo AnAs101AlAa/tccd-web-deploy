@@ -5,10 +5,10 @@ import WithNavbar from "@/shared/components/hoc/WithNavbar";
 import type { AnyUser } from "@/shared/types";
 
 const ProfilePage: React.FC = () => {
-  const { username } = useParams<{ username: string }>();
+  const { id } = useParams<{ id: string }>();
 
-  // TODO: Fetch user data based on username from API using the username parameter
-  console.log("Profile username:", username);
+  // TODO: Fetch user data based on id from API using the id parameter
+  console.log("Profile id:", id);
 
   // TODO: Check if this is the current user's profile
   const isOwnProfile = true; // Hardcoded for now - should check against logged-in user

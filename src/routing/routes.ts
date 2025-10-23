@@ -8,6 +8,6 @@ export const routes = [
   { path: "/aboutus", Component: AboutUsPage },
   { path: "/events", Component: EventsPage },
   { path: "/gallery", Component: GalleryPage },
-  { path: "/:username", Component: ProfilePage },
+  { path: "/profile/:id", Component: ProfilePage },
   { path: "/gallery/view/:id", Component: GalleryDisplayPage }
 ];

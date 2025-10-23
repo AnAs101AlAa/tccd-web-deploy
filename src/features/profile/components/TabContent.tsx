@@ -1,28 +1,27 @@
 import React from "react";
+import type { AnyUser } from "@/shared/types";
+import InfoTab from "./InfoTab";
 
 interface TabContentProps {
   activeTab: string;
+  user: AnyUser;
+  isOwnProfile?: boolean;
 }
 
-const TabContent: React.FC<TabContentProps> = ({ activeTab }) => {
+const TabContent: React.FC<TabContentProps> = ({
+  activeTab,
+  user,
+  isOwnProfile = false,
+}) => {
   const renderContent = () => {
     switch (activeTab) {
       case "info":
-        return (
-          <div className="p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-semibold text-contrast mb-4">
-              Information
-            </h2>
-            <p className="text-sm sm:text-base text-label">
-              Your detailed information is displayed below.
-            </p>
-          </div>
-        );
+        return <InfoTab user={user} isOwnProfile={isOwnProfile} />;
 
       case "tickets":
         return (
           <div className="p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-semibold text-contrast mb-4">
+            <h2 className="mb-4 text-lg sm:text-xl font-semibold text-contrast">
               Tickets
             </h2>
             <p className="text-sm sm:text-base text-label">
@@ -34,7 +33,7 @@ const TabContent: React.FC<TabContentProps> = ({ activeTab }) => {
       case "offerings":
         return (
           <div className="p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-semibold text-contrast mb-4">
+            <h2 className="mb-4 text-lg sm:text-xl font-semibold text-contrast">
               Offerings
             </h2>
             <p className="text-sm sm:text-base text-label">

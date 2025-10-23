@@ -24,7 +24,11 @@ const ProfileContainer: React.FC<ProfileContainerProps> = ({
           activeTab={activeTab}
           onTabChange={setActiveTab}
         />
-        <TabContent activeTab={activeTab} />
+        <TabContent
+          activeTab={activeTab}
+          user={user}
+          isOwnProfile={isOwnProfile}
+        />
       </div>
     </div>
   );
