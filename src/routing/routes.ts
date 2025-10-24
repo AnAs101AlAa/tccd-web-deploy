@@ -10,5 +10,5 @@ export const routes = [
   { path: "/gallery", Component: GalleryPage },
   { path: "/profile/:id", Component: ProfilePage },
   { path: "/gallery/view/:id", Component: GalleryDisplayPage },
-  { path: "/profile/:id/events/:eventId", Component: EventTicketPage },
+  { path: "/tickets/:id", Component: EventTicketPage },
 ];

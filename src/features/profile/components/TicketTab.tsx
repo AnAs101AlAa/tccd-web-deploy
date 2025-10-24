@@ -2,9 +2,9 @@ import { TicketFilterTabs, type Ticket } from "@/shared/types/profile";
 import { mockTickets } from "../mocks/mockTickets";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Button } from "tccd-ui";
 import TicketCard from "./TicketCard";
-import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import CategoryFilter from "@/shared/components/CategoryFilter";
+import Pagination from "@/shared/components/Pagination";
 export default function TicketTab() {
   const ticketsPerPage = 5; //We can adjust this as much as we want, really
   const [searchParams, setSearchParams] = useSearchParams();
@@ -52,64 +52,31 @@ export default function TicketTab() {
     );
   }
   return (
-    <div>
-      <h1 className="text-2xl sm:text-3xl font-bold text-secondary">Tickets</h1>
-      <div className="flex flex-row p-2">
-        {TicketFilterTabs.map((filter) => (
-          <Button
-            buttonText={filter}
-            onClick={() => filterTickets(filter)}
-            type={currentFilter == filter ? "primary" : "basic"}
-          />
-        ))}
-      </div>
+    <div className="mb-7 sm:mb-0">
+      <h1 className="text-2xl sm:text-3xl font-bold text-secondary mb-4 ">
+        Tickets
+      </h1>
+      <CategoryFilter
+        categories={TicketFilterTabs.filter((tab) => tab !== "All").map(
+          (tab) => ({
+            value: tab,
+            label: tab,
+          })
+        )}
+        selectedCategory={currentFilter}
+        onCategoryChange={filterTickets}
+      />
       <div className="grid grid-cols-1 gap-4">
         {currentTickets.map((ticket) => (
           <TicketCard ticket={ticket} />
         ))}
       </div>
-      <button
-        onClick={() => changePage(currentPage - 1)}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:translate-x-0 bg-white hover:bg-background-contrast rounded-full p-2 shadow-lg transition-colors duration-300 z-10"
-        aria-label="Previous post"
-      >
-        <LuChevronLeft className="w-6 h-6 text-contrast" />
-      </button>
 
-      <button
-        onClick={() => changePage(currentPage + 1)}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:-translate-x-0 bg-white hover:bg-background-contrast rounded-full p-2 shadow-lg transition-colors duration-300 z-10"
-        aria-label="Next post"
-      >
-        <LuChevronRight className="w-6 h-6 text-contrast" />
-      </button>
-
-      <div className="flex items-center justify-center gap-3 mt-6">
-        <span className="text-sm font-medium text-contrast">
-          {currentPage} / {filteredTickets.length / ticketsPerPage}
-        </span>
-      </div>
-
-      <div className="flex items-center justify-center gap-2 mt-3">
-        {Array.from(
-          { length: Math.ceil(filteredTickets.length / ticketsPerPage) },
-          (_, i) => {
-            const page = i + 1;
-            return (
-              <button
-                key={page}
-                onClick={() => changePage(page)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                  page === currentPage
-                    ? "bg-secondary"
-                    : "bg-background-contrast hover:bg-contrast"
-                }`}
-                aria-label={`Go to page ${page}`}
-              />
-            );
-          }
-        )}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(filteredTickets.length / ticketsPerPage)}
+        onPageChange={changePage}
+      />
     </div>
   );
 }
