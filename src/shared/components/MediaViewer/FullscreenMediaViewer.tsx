@@ -14,14 +14,25 @@ type Props = {
   items: MediaItem[];
   onClose?: () => void;
   trapScroll?: boolean;
+  isOpen?: boolean;
+  hideGallery?: boolean;
 };
 
 export default function FullscreenMediaViewer({
   items,
   onClose,
   trapScroll = true,
+  isOpen: externalOpen,
+  hideGallery = false,
 }: Props) {
-  const [open, setOpen] = useState<boolean>(false);
+  const [internalOpen, setInternalOpen] = useState<boolean>(false);
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen =
+    externalOpen !== undefined
+      ? (val: boolean) => {
+          if (!val) onClose?.();
+        }
+      : setInternalOpen;
   const [index, setIndex] = useState<number>(0);
   const [zoom, setZoom] = useState<number>(1);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -38,7 +49,7 @@ export default function FullscreenMediaViewer({
         document.body.offsetHeight - 200
       ) {
         setTimeout(() => {
-          setVisibleCount(prev => Math.min(prev + 20, items.length));
+          setVisibleCount((prev) => Math.min(prev + 20, items.length));
         }, 1000);
       }
     };
@@ -74,7 +85,8 @@ export default function FullscreenMediaViewer({
         if (v) v.paused ? v.play() : v.pause();
       }
       if (e.key === "+" || e.key === "=") setZoom((z) => Math.min(z + 0.1, 3));
-      if (e.key === "-" || e.key === "_") setZoom((z) => Math.max(z - 0.1, 0.5));
+      if (e.key === "-" || e.key === "_")
+        setZoom((z) => Math.max(z - 0.1, 0.5));
     }
 
     window.addEventListener("keydown", onKey);
@@ -166,7 +178,8 @@ export default function FullscreenMediaViewer({
           const v = videoRef.current;
           if (!v) return;
           if (e.button === 0) v.currentTime = Math.max(0, v.currentTime - 5);
-          if (e.button === 2) v.currentTime = Math.min(v.duration, v.currentTime + 5);
+          if (e.button === 2)
+            v.currentTime = Math.min(v.duration, v.currentTime + 5);
         }}
         onContextMenu={(e) => e.preventDefault()}
         onDoubleClick={handleDoubleClick}
@@ -210,7 +223,7 @@ export default function FullscreenMediaViewer({
 
   return (
     <div>
-      {Gallery}
+      {!hideGallery && Gallery}
 
       {open && (
         <div
@@ -231,40 +244,56 @@ export default function FullscreenMediaViewer({
           />
 
           <div className="z-10 flex w-full max-w-6xl items-center justify-center">
-            <div ref={contentRef} className="flex max-h-[85vh] items-center justify-center md:px-4" onClick={(e) => e.stopPropagation()}>
+            <div
+              ref={contentRef}
+              className="flex max-h-[85vh] items-center justify-center md:px-4"
+              onClick={(e) => e.stopPropagation()}
+            >
               {renderCurrent()}
             </div>
 
             <div className="absolute top-2 right-2 flex items-center gap-2 w-fit">
               <button
-              onClick={() => setZoom((z) => Math.min(z + 0.1, 3))}
-              aria-label="Zoom in"
-              className="rounded-full p-2 md:p-3 bg-secondary/50 hover:bg-secondary cursor-pointer transition-colors text-text"
+                onClick={() => setZoom((z) => Math.min(z + 0.1, 3))}
+                aria-label="Zoom in"
+                className="rounded-full p-2 md:p-3 bg-secondary/50 hover:bg-secondary cursor-pointer transition-colors text-text"
               >
                 <FiZoomIn className="size-4" />
               </button>
               <button
-              onClick={() => setZoom((z) => Math.max(z - 0.1, 0.5))}
-              aria-label="Zoom out"
-              className="rounded-full p-2 md:p-3 bg-secondary/50 hover:bg-secondary cursor-pointer transition-colors text-text"
+                onClick={() => setZoom((z) => Math.max(z - 0.1, 0.5))}
+                aria-label="Zoom out"
+                className="rounded-full p-2 md:p-3 bg-secondary/50 hover:bg-secondary cursor-pointer transition-colors text-text"
               >
                 <FiZoomOut className="size-4" />
               </button>
               <button
-              onClick={handleClose}
-              aria-label="Close"
-              className="rounded-full p-2 md:p-3 bg-primary/50 hover:bg-primary cursor-pointer transition-colors text-text"
+                onClick={handleClose}
+                aria-label="Close"
+                className="rounded-full p-2 md:p-3 bg-primary/50 hover:bg-primary cursor-pointer transition-colors text-text"
               >
                 <FaXmark className="size-4" />
               </button>
             </div>
             <div className="absolute flex gap-2 items-center justify-center bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-3 py-1 text-[14px] md:text-[16px] text-white">
-                <button onClick={prev} disabled={index <= 0}>
-                  <FaChevronLeft className={`size-4 md:size-5 ${index > 0 ? 'text-text cursor-pointer' : 'text-text/50 cursor-not-allowed'}`} />
-                </button>
+              <button onClick={prev} disabled={index <= 0}>
+                <FaChevronLeft
+                  className={`size-4 md:size-5 ${
+                    index > 0
+                      ? "text-text cursor-pointer"
+                      : "text-text/50 cursor-not-allowed"
+                  }`}
+                />
+              </button>
               {index + 1} / {items.length}
               <button onClick={next} disabled={index >= items.length - 1}>
-                <FaChevronRight className={`size-4 md:size-5 ${index < items.length - 1 ? 'text-text cursor-pointer' : 'text-text/50 cursor-not-allowed'}`} />
+                <FaChevronRight
+                  className={`size-4 md:size-5 ${
+                    index < items.length - 1
+                      ? "text-text cursor-pointer"
+                      : "text-text/50 cursor-not-allowed"
+                  }`}
+                />
               </button>
             </div>
           </div>
