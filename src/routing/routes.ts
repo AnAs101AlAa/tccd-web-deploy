@@ -1,4 +1,4 @@
-import { LoginPage, SignupPage, SignupConfirmation, AboutUsPage, EventsPage, GalleryPage, GalleryDisplayPage , ProfilePage,
+import { LoginPage, SignupPage, SignupConfirmation, AboutUsPage, EventsPage, GalleryPage, GalleryDisplayPage , ProfilePage, EventTicketPage
 } from "@/features";
 
 export const routes = [
@@ -9,5 +9,6 @@ export const routes = [
   { path: "/events", Component: EventsPage },
   { path: "/gallery", Component: GalleryPage },
   { path: "/profile/:id", Component: ProfilePage },
-  { path: "/gallery/view/:id", Component: GalleryDisplayPage }
+  { path: "/gallery/view/:id", Component: GalleryDisplayPage },
+  { path: "/profile/:id/events/:eventId", Component: EventTicketPage },
 ];
