@@ -7,6 +7,11 @@ import type Event from "@/shared/types/events";
 import PosterCard from "@/shared/components/PosterCard";
 import FullScreenViewer from "@/shared/components/MediaViewer/FullScreenDisplayer";
 
+const SPONSOR_GAP_PERCENT = 2;
+const AUTO_SCROLL_INTERVAL_MS = 3000;
+const TRANSITION_DURATION_MS = 500;
+const TRANSITION_RESET_DELAY_MS = 50;
+
 interface EventDetailsPageProps {
     event: Event;
     onRegister?: (event: Event) => void;
@@ -22,14 +27,25 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
         return [...poster, ...media];
     }, [event.media, event.eventPoster]);
 
-    
+
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
     const [isMediaViewerOpen, setIsMediaViewerOpen] = useState(false);
     const [sponsorIndex, setSponsorIndex] = useState(0);
     const [sponsorPerView, setSponsorPerView] = useState(3);
+    const [isTransitioning, setIsTransitioning] = useState(true);
 
     const hasMultipleMedia = mediaItems.length > 1;
     const currentMedia = mediaItems[currentMediaIndex];
+
+    const duplicatedSponsors = useMemo(() => {
+        if (!event.sponsors || event.sponsors.length === 0) return [];
+        return [...event.sponsors, ...event.sponsors];
+    }, [event.sponsors]);
+
+    const sponsorsToDisplay = useMemo(() => {
+        if (!event.sponsors) return [];
+        return event.sponsors.length > sponsorPerView ? duplicatedSponsors : event.sponsors;
+    }, [duplicatedSponsors, event.sponsors, sponsorPerView]);
 
     useEffect(() => {
         const updateSponsorPerView = () => {
@@ -47,26 +63,54 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
         return () => window.removeEventListener("resize", updateSponsorPerView);
     }, []);
 
+    const sponsorItemWidth = useMemo(() => {
+        const effectiveGap = SPONSOR_GAP_PERCENT * (sponsorPerView - 1);
+        return sponsorPerView > 0 ? (100 - effectiveGap) / sponsorPerView : 100;
+    }, [sponsorPerView]);
+
+    const translatePercentage = useMemo(
+        () => Number((sponsorIndex * (sponsorItemWidth + SPONSOR_GAP_PERCENT)).toFixed(4)),
+        [sponsorIndex, sponsorItemWidth]
+    );
+
     useEffect(() => {
-        if (!event.sponsors || event.sponsors.length < 3) return;
+        if (!event.sponsors || event.sponsors.length <= sponsorPerView) return;
 
         const interval = setInterval(() => {
-        setSponsorIndex((prevIndex) => {
-            if(!event.sponsors) return 0;
-            const maxIndex = event.sponsors.length - 2;
-            return prevIndex + 1 < maxIndex ? prevIndex + 1 : 0;
-        });
-        }, 3000);
+            setSponsorIndex((prevIndex) => prevIndex + 1);
+        }, AUTO_SCROLL_INTERVAL_MS);
 
         return () => clearInterval(interval);
-  }, [event.sponsors]);
+    }, [event.sponsors?.length, sponsorPerView]);
+
+    useEffect(() => {
+        setIsTransitioning(false);
+        setSponsorIndex(0);
+        const timeout = setTimeout(() => setIsTransitioning(true), TRANSITION_RESET_DELAY_MS);
+        return () => clearTimeout(timeout);
+    }, [sponsorPerView, event.sponsors?.length]);
+
+    useEffect(() => {
+        if (!event.sponsors || sponsorIndex < event.sponsors.length) return;
+
+        const resetTimeout = setTimeout(() => {
+            setIsTransitioning(false);
+            setSponsorIndex(0);
+            const reenableTimeout = setTimeout(() => {
+                setIsTransitioning(true);
+            }, TRANSITION_RESET_DELAY_MS);
+            return () => clearTimeout(reenableTimeout);
+        }, TRANSITION_DURATION_MS);
+
+        return () => clearTimeout(resetTimeout);
+    }, [sponsorIndex, event.sponsors?.length]);
 
     const canRegister = useMemo(() => {
         const eventDate = new Date(event.date);
         const now = new Date();
         return now <= eventDate;
     }, [event.date]);
-    
+
     const formattedDate = format(event.date, "date");
     const formattedTime = format(event.date, "hour");
 
@@ -124,21 +168,21 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                             Track The Event
                         </h2>
                         <p className="text-gray-600 font-medium text-[13px] md:text-[15px] lg:text-[17px] mb-4">Keep an eye on the event's whereabouts</p>
-                            <div className="flex md:gap-[2%] space-y-4 flex-wrap">
-                                <div className="md:w-[49%] w-full">
-                                    <PosterCard
-                                        title="Date"
-                                        data={formattedDate + " at " + formattedTime}
-                                        icon={<FaCalendar className="text-[#cd3a38] size-10 md:size-11 lg:size-12 transition-colors duration-300 ease-in-out group-hover:bg-sky-100 bg-sky-50 p-2 rounded-full" />}
-                                    />
-                                </div>
-                                <div className="md:w-[49%] w-full">
-                                    <PosterCard
-                                        title="Location"
-                                        data={event.location}
-                                        icon={<IoLocationSharp className="text-[#cd3a38] size-10 md:size-11 lg:size-12 transition-colors duration-300 ease-in-out group-hover:bg-sky-100 bg-sky-50 p-2 rounded-full" />}
-                                    />
-                                </div>
+                        <div className="flex md:gap-[2%] space-y-4 flex-wrap">
+                            <div className="md:w-[49%] w-full">
+                                <PosterCard
+                                    title="Date"
+                                    data={formattedDate + " at " + formattedTime}
+                                    icon={<FaCalendar className="text-[#cd3a38] size-10 md:size-11 lg:size-12 transition-colors duration-300 ease-in-out group-hover:bg-sky-100 bg-sky-50 p-2 rounded-full" />}
+                                />
+                            </div>
+                            <div className="md:w-[49%] w-full">
+                                <PosterCard
+                                    title="Location"
+                                    data={event.location}
+                                    icon={<IoLocationSharp className="text-[#cd3a38] size-10 md:size-11 lg:size-12 transition-colors duration-300 ease-in-out group-hover:bg-sky-100 bg-sky-50 p-2 rounded-full" />}
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -179,23 +223,40 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                     <div className={`flex flex-col flex-1 justify-end`}>
                         <p className="text-[21px] md:text-[23px] lg:text-[25px] font-semibold text-secondary text-center mb-4">Sponsored By</p>
                         <div className="overflow-hidden w-full">
-                        <div className="flex gap-[2%] transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${sponsorIndex * (100 / sponsorPerView + 2)}%)` }}>
-                            {event.sponsors?.length == 0 ? (
-                            <p className="text-center text-[14px] w-full md:text-[16px] lg:text-[18px] font-semibold">No sponsors for this event yet</p>
-                            ) : (
-                            <>
-                                {event.sponsors?.map((sponsor) => (
-                                <div key={sponsor.id} className="flex-none w-full md:w-[49%] lg:w-[32%] text-center">
-                                <img src={sponsor.banner} alt={sponsor.companyName} className="w-full object-contain mb-3 rounded-lg" />
-                                <p className="text-[14px] md:text-[16px] lg:text-[18px] font-semibold">{sponsor.companyName}</p>
-                                </div>
-                                ))}
-                            </>
-                            )}
-                        </div>
+                            <div
+                                className="flex"
+                                style={{
+                                    gap: `${SPONSOR_GAP_PERCENT}%`,
+                                    transform: `translateX(-${translatePercentage}%)`,
+                                    transition: isTransitioning ? `transform ${TRANSITION_DURATION_MS}ms ease-in-out` : "none"
+                                }}
+                            >
+                                {(event.sponsors?.length ?? 0) === 0 ? (
+                                    <p className="text-center text-[14px] w-full md:text-[16px] lg:text-[18px] font-semibold">No sponsors for this event yet</p>
+                                ) : (
+                                    sponsorsToDisplay.map((sponsor, idx) => (
+                                        <div
+                                            key={`${sponsor.id}-${idx}`}
+                                            className="flex-none text-center"
+                                            style={{ flex: `0 0 ${sponsorItemWidth}%` }}
+                                        >
+                                            <div className="aspect-[16/9] mb-3">
+                                                <LazyImageLoader
+                                                    src={sponsor.banner}
+                                                    alt={sponsor.companyName}
+                                                    width="100%"
+                                                    height="100%"
+                                                    className="w-full h-full object-contain rounded-lg"
+                                                />
+                                            </div>
+                                            <p className="text-[14px] md:text-[16px] lg:text-[18px] font-semibold">{sponsor.companyName}</p>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
                         </div>
                     </div>
-                    
+
                     {canRegister && (
                         <footer className="mt-10 flex flex-col gap-4 rounded-3xl border border-gray-200 bg-gray-50/70 p-6 sm:flex-row sm:items-center sm:justify-between">
                             <div className="flex items-center gap-3 text-sm text-gray-600">
