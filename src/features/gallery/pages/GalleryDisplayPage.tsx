@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import FullscreenMediaViewer from "@/shared/components/MediaViewer/FullscreenMediaViewer";
+import FullscreenMediaViewer from "@/shared/components/MediaViewer/MediaViewer";
 import { FaChevronLeft } from "react-icons/fa6";
 import tccdLogo from "@/assets/TCCD_logo.svg";
 import { useGetGalleryById } from "@/shared/queries/gallery";
@@ -8,6 +8,7 @@ import { useEffect } from "react";
 export default function GalleryDisplayPage() {
   const { id } = useParams();
   const { data: galleryData, isLoading, isError } = useGetGalleryById(id || "");
+  console.log(galleryData);
 
   useEffect (() => {
     if (isError) {

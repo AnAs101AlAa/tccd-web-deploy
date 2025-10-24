@@ -2,8 +2,6 @@ import { useRef, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaLinkedin, FaGithub } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import toast from "react-hot-toast";
-import Navbar from "@/features/navbar/Navbar";
-import MobileNavbar from "@/features/navbar/MobileNavbar";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import boardMembers from "@/assets/boardMembers.json";
 import websiteFounders from "@/assets/websiteFounders.json";
