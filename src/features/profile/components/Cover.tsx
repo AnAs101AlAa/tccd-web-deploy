@@ -14,7 +14,7 @@ const Cover = ({ coverImage, children, className = "" }: CoverProps) => {
       <LazyImageLoader
         src={coverImage || coverImagePlaceholder}
         alt="Cover"
-        className="w-full h-full object-cover"
+        className="object-fill"
         width="100%"
         height="100%"
       />

@@ -23,7 +23,7 @@ const ProfileTabs: React.FC<ProfileTabsProps> = ({
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
             className={`
-              flex-1 min-w-[100px] py-3 sm:py-4 px-3 sm:px-6 text-center text-xs sm:text-sm font-medium transition-colors whitespace-nowrap
+              flex-1 min-w-[100px] py-3 sm:py-4 px-3 sm:px-6 text-center text-xs sm:text-sm font-bold cursor-pointer transition-colors whitespace-nowrap
               ${
                 activeTab === tab.id
                   ? "text-primary border-b-2 border-primary bg-background-primary"

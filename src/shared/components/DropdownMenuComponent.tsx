@@ -159,7 +159,7 @@ const DropdownMenuComponent = ({
           return (
             <button
               key={item.title}
-              className={`w-full flex flex-row items-center px-4 py-2 gap-2 text-left text-sm hover:bg-gray-100 transition-colors ${
+              className={`w-full cursor-pointer flex flex-row items-center px-4 py-2 gap-2 text-left text-sm hover:bg-gray-100 transition-colors ${
                 !isLast ? "border-b border-gray-200" : ""
               }`}
               onClick={() => {
@@ -171,7 +171,7 @@ const DropdownMenuComponent = ({
               style={{ color: item.iconColor }}
             >
               {Icon && <Icon size={16} color={item.iconColor} />}
-              <span className={item.iconColor ? "" : "text-gray-700"}>
+              <span className={`${item.iconColor ? "" : "text-gray-700"} font-medium`}>
                 {item.title}
               </span>
             </button>

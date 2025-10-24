@@ -40,7 +40,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <WithNavbar>
-      <div className="min-h-screen bg-background-contrast py-4 sm:py-6 md:py-8">
+      <div className="min-h-screen bg-background-contrast -mb-5 md:mb-0">
         <ProfileContainer user={mockUser} isOwnProfile={isOwnProfile} />
       </div>
     </WithNavbar>

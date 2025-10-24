@@ -83,12 +83,12 @@ const StudentInfoDisplay: React.FC<StudentInfoDisplayProps> = ({ user }) => {
                     .map((detail) => (
                         <div
                             key={detail.label}
-                            className="rounded-lg border border-gray-200 bg-background px-4 py-3"
+                            className="rounded-xl border border-gray-200 bg-background px-3 md:px-4 py-1 md:py-3 text-[12px] md:text-[13px] lg:text-[14px]"
                         >
-                            <span className="text-xs font-semibold uppercase tracking-wide text-label">
+                            <span className="font-semibold uppercase tracking-wide text-label">
                                 {detail.label}
                             </span>
-                            <p className="mt-1 text-sm text-contrast break-words">
+                            <p className="mt-1 text-contrast break-words">
                                 {detail.value}
                             </p>
                         </div>
