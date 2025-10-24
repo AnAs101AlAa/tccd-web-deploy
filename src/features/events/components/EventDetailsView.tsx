@@ -167,7 +167,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                         <h2 className="text-[21px] md:text-[23px] lg:text-[25px] font-semibold text-secondary">
                             Track The Event
                         </h2>
-                        <p className="text-gray-600 font-medium text-[13px] md:text-[15px] lg:text-[17px] mb-4">Keep an eye on the event's whereabouts</p>
+                        <p className="text-gray-600 font-medium text-[13px] md:text-[15px] lg:text-[17px] mb-4 -mt-2">Keep an eye on the event's whereabouts</p>
                         <div className="flex md:gap-[2%] space-y-4 flex-wrap">
                             <div className="md:w-[49%] w-full">
                                 <PosterCard
@@ -190,8 +190,8 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                         <h2 className="text-[21px] md:text-[23px] lg:text-[25px] font-semibold text-secondary">
                             Event Highlights
                         </h2>
-                        <p className="text-gray-600 font-medium text-[13px] md:text-[15px] lg:text-[17px] mb-4">Showcase of some selected captures of our event preparations</p>
-                        <div className="relative mt-4 overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+                        <p className="text-gray-600 font-medium text-[13px] md:text-[15px] lg:text-[17px] mb-4 -mt-2">Showcase of some selected captures of our event preparations</p>
+                        <div className="relative mt-4 overflow-hidden rounded-lg border border-gray-200 p-2 shadow-md bg-gradient-to-bl from-primary to-secondary">
                             {currentMedia ? (
                                 <div className={`aspect-[16/9] lg:aspect-[19/9] w-full transition-opacity duration-300 cursor-pointer`} onClick={() => setIsMediaViewerOpen(true)}>
                                     <LazyImageLoader
