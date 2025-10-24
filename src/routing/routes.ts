@@ -1,4 +1,5 @@
 import { LoginPage, SignupPage, SignupConfirmation, AboutUsPage, EventsPage, GalleryPage, GalleryDisplayPage } from "@/features";
+import  EventRegistrationPage  from "@/features/event/pages/EventRegistrationPage";
 
 export const routes = [
   { path: "/login", Component: LoginPage },
@@ -8,4 +9,5 @@ export const routes = [
   { path: "/events", Component: EventsPage },
   { path: "/gallery", Component: GalleryPage },
   { path: "/gallery/view/:id", Component: GalleryDisplayPage }
+  { path: "/event/:eventName/register", Component: EventRegistrationPage },
 ];
