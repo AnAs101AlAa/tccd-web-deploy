@@ -4,6 +4,7 @@ export default interface Event {
     description: string;
     eventPoster: string;
     media?: string[];
+    sponsors?: { id: string; companyName: string; banner: string }[];
     date: string;
     location: string;
     category: string; 
