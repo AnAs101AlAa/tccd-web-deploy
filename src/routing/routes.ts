@@ -1,7 +1,5 @@
-import { LoginPage, SignupPage, SignupConfirmation, AboutUsPage, EventsPage, EventDetailsPage, GalleryPage, GalleryDisplayPage , ProfilePage, EventTicketPage
+import { LoginPage, SignupPage, SignupConfirmation, AboutUsPage, EventsPage, EventDetailsPage, GalleryPage, GalleryDisplayPage , ProfilePage, EventTicketPage, OTPPage
 } from "@/features";
-import OTP from "@/features/auth/pages/otp/otp";
-
 export const routes = [
   { path: "/login", Component: LoginPage },
   { path: "/sign-up", Component: SignupPage },
@@ -13,5 +11,5 @@ export const routes = [
   { path: "/profile/:id", Component: ProfilePage },
   { path: "/gallery/view/:id", Component: GalleryDisplayPage },
   { path: "/tickets/:id", Component: EventTicketPage },
-  { path: "/otp", Component: OTP },
+  { path: "/otp", Component: OTPPage },
 ];

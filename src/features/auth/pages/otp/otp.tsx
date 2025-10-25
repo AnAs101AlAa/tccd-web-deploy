@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { verifyOtp, resendOtp } from "../../../../shared/queries/otp/otp";
 
-const OTP: React.FC = () => {
+const OTPPage: React.FC = () => {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [isShaking, setIsShaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -125,4 +125,4 @@ const OTP: React.FC = () => {
   );
 };
 
-export default OTP;
+export { OTPPage };
