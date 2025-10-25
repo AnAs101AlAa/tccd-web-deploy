@@ -1,7 +1,7 @@
 import React from "react";
 import { LazyImageLoader } from "tccd-ui";
 import { HiOutlineQrCode } from "react-icons/hi2";
-import FullscreenMediaViewer from "@/shared/components/MediaViewer/FullscreenMediaViewer";
+import FullScreenViewer from "@/shared/components/MediaViewer/FullScreenDisplayer";
 
 interface TicketQRCodeProps {
   qrCodeSrc: string;
@@ -51,12 +51,12 @@ const TicketQRCode: React.FC<TicketQRCodeProps> = ({
         </p>
       </div>
 
-      <FullscreenMediaViewer
+      <FullScreenViewer
+        index={0}
+        setIndex={() => {}}
         items={[qrMediaItem]}
-        trapScroll={true}
         isOpen={isQROpen}
         onClose={handleCloseQR}
-        hideGallery={true}
       />
     </>
   );

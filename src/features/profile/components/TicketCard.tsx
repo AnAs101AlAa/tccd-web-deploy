@@ -1,49 +1,48 @@
 import type { Ticket } from "@/shared/types/profile";
 import { useNavigate } from "react-router-dom";
 import { LazyImageLoader } from "tccd-ui";
+import { FaCalendar } from "react-icons/fa";
+import format from "@/shared/utils/dateFormater";
 
 export default function TicketCard({ ticket }: { ticket: Ticket }) {
   const navigate = useNavigate();
   const statusStyles = () => {
     switch (ticket.status) {
       case "Active":
-        return "text-green-800";
+        return "bg-green-600/40 text-green-600";
       case "Scanned":
-        return "text-blue-800";
+        return "bg-secondary/30 text-secondary";
       case "Expired":
-        return "text-gray-800";
+        return "bg-gray-600/30 text-gray-600";
       case "Cancelled":
-        return "text-red-800";
+        return "bg-primary/30 text-primary";
       default:
         return "";
     }
   };
   return (
-    <div
-      onClick={() => navigate(`/tickets/${ticket.id}`)}
-      className="flex items-center m-auto gap-2 lg:gap-3 border-1 border-contrast/13 rounded-lg p-2 w-full h-full cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out"
-    >
-      <div className="max-w-[38%] min-w-[38%] xl:max-w-[42%] xl:min-w-[42%] md:block hidden">
+    <div onClick={() => navigate(`/tickets/${ticket.id}`)} className="relative flex items-center m-auto gap-2 lg:gap-3 border-1 border-gray-300 rounded-lg w-full lg:h-[320px] md:h-[280px] h-[240px] cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out">
+      <div className="absolute top-0 left-0 inset-0 rounded-lg">
         <LazyImageLoader
           src={ticket.eventPoster}
           alt={ticket.eventTitle}
-          className="rounded-l-lg"
+          width="100%"
+          height="100%"
+          className="rounded-lg"
         />
       </div>
-      <div className="md:block hidden w-[2px] bg-gray-300 self-stretch" />
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-secondary font-bold text-[20px] md:text-[22px] lg:text-[24px] md:mb-2">
+      <div className="bg-background w-full z-10 absolute bottom-0 p-2 border-t border-gray-200 rounded-b-lg pb-4">
+        <p className="text-secondary font-bold text-[22px] md:text-[23px] lg:text-[25px] md:mb-2">
           {ticket.eventTitle}
-        </h1>
-        <>
-          <span
-            className={`px-3 py-1 text-md lg:text-sm font-medium ${statusStyles()}
-            `}
-          >
-            {ticket.status}
-          </span>
-        </>
+        </p>
+        <div className="flex items-center gap-2">
+          <FaCalendar className="size-4 text-primary"/>
+          <p className="text-contrast text-[13px] md:text-[14px] lg:text-[15px]">{format(ticket.eventDate, "stringed")}</p>
+        </div>
       </div>
+      <span className={`absolute top-2 right-2 px-3 py-1 text-md lg:text-sm rounded-full font-medium ${statusStyles()} `}>
+        {ticket.status}
+      </span>
     </div>
   );
 }

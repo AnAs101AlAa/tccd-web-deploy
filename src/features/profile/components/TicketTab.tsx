@@ -34,6 +34,7 @@ export default function TicketTab() {
       )
     ); //To be replaced with an API call asking for next page
   }
+  
   function filterTickets(filter: string) {
     //This should be a different API call with a filter parameter, but for now we filter the mock tickets
     setCurrentFilter(filter);
@@ -66,7 +67,7 @@ export default function TicketTab() {
         selectedCategory={currentFilter}
         onCategoryChange={filterTickets}
       />
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {currentTickets.map((ticket) => (
           <TicketCard ticket={ticket} />
         ))}

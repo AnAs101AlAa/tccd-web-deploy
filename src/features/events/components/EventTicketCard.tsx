@@ -27,7 +27,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
         status={ticket.status}
       />
 
-      <div className="p-4 sm:p-4 md:p-8">
+      <div className="p-4 pt-2 sm:pt-2 sm:p-4 md:p-8 md:pt-2">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-contrast mb-6">
           {ticket.eventTitle}
         </h1>

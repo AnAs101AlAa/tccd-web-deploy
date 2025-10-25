@@ -1,6 +1,7 @@
 export interface Ticket {
   id: string;
   eventTitle: string;
+  eventDate: string;
   eventPoster: string;
   status: TicketStatus;
   qrCode: string;
