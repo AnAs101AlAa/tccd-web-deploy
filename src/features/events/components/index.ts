@@ -1,5 +1,10 @@
-export {default as EventsGrid} from "./EventsGrid";
-export {default as PastEventCard} from "./PastEventCard";
-export {default as UpcomingEventCard} from "./UpcomingEventCard";
-export {default as CategoryFilter} from "./CategoryFilter";
+export { default as EventsGrid } from "./EventsGrid";
+export { default as PastEventCard } from "./PastEventCard";
+export { default as UpcomingEventCard } from "./UpcomingEventCard";
+export { default as CategoryFilter } from "../../../shared/components/CategoryFilter";
 export {default as EventDetailsPage} from "./EventDetailsView";
+export { default as EventTicketCard } from "./EventTicketCard";
+export { default as TicketPoster } from "./TicketPoster";
+export { default as AttendeeInfo } from "./AttendeeInfo";
+export { default as TicketQRCode } from "./TicketQRCode";
+export { default as TicketDivider } from "./TicketDivider";

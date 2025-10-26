@@ -1,6 +1,5 @@
-import { LoginPage, SignupPage, SignupConfirmation, ForgotPasswordPage, AboutUsPage, EventsPage, EventDetailsPage, GalleryPage, GalleryDisplayPage , ProfilePage,
+import { LoginPage, SignupPage, SignupConfirmation, ForgotPasswordPage, AboutUsPage, EventsPage, EventDetailsPage, GalleryPage, GalleryDisplayPage , ProfilePage, EventTicketPage, OTPPage
 } from "@/features";
-
 export const routes = [
   { path: "/login", Component: LoginPage },
   { path: "/sign-up", Component: SignupPage },
@@ -11,5 +10,7 @@ export const routes = [
   { path: "/events", Component: EventsPage },
   { path: "/gallery", Component: GalleryPage },
   { path: "/profile/:id", Component: ProfilePage },
-  { path: "/gallery/view/:id", Component: GalleryDisplayPage }
+  { path: "/gallery/view/:id", Component: GalleryDisplayPage },
+  { path: "/tickets/:id", Component: EventTicketPage },
+  { path: "/otp", Component: OTPPage },
 ];

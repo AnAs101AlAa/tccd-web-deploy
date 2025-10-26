@@ -2,9 +2,9 @@ import React from "react";
 import type { AnyUser } from "@/shared/types";
 import Cover from "./Cover";
 import Avatar from "./Avatar";
-import DropdownMenuComponent from "@/shared/components/DropdownMenuComponent";
 import { HiCamera } from "react-icons/hi";
 import { useProfileHeader } from "../hooks";
+import { DropdownPopup } from "tccd-ui";
 
 interface ProfileHeaderProps {
   user: AnyUser;
@@ -56,7 +56,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 >
                   <HiCamera className="w-4 h-4 sm:w-5 sm:h-5 text-contrast" />
                 </button>
-                <DropdownMenuComponent
+                <DropdownPopup
                   isOpen={showImageOptions}
                   onClose={() => setShowImageOptions(false)}
                   items={imageMenuItems}
