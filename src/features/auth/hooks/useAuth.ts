@@ -9,7 +9,11 @@ import {
   useCurrentUser,
 } from "@/shared/queries/user/userHooks";
 import { useNavigate } from "react-router-dom";
-import type { LoginFormData, SignupFormData, ForgotPasswordFormData } from "../schemas";
+import type {
+  LoginFormData,
+  SignupFormData,
+  ForgotPasswordFormData,
+} from "../schemas";
 
 /**
  * Custom Auth Hook
@@ -90,7 +94,7 @@ export const useAuth = () => {
   const handleForgotPassword = async (data: ForgotPasswordFormData) => {
     try {
       await forgotPasswordMutation.mutateAsync(data);
-      navigate("/verify-otp", { state: { email: data.email } });
+      navigate("/otp", { state: { email: data.email } });
     } catch (error) {
       // Error is handled by the mutation's onError callback
       console.error("Forgot password error:", error);
