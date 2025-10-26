@@ -3,7 +3,7 @@ import { AuthApi } from "./authApi";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
 import { useUserActions } from "@/shared/queries/user/userHooks";
-import type { LoginCredentials, SignupCredentials } from "./types";
+import type { LoginCredentials, SignupCredentials, ForgotPasswordCredentials } from "./types";
 import type { AnyUser } from "@/shared/types/users";
 
 export const authKeys = {
@@ -11,6 +11,7 @@ export const authKeys = {
   login: () => [...authKeys.all, "login"] as const,
   logout: () => [...authKeys.all, "logout"] as const,
   signup: () => [...authKeys.all, "signup"] as const,
+  forgotPassword: () => [...authKeys.all, "forgotPassword"] as const,
 };
 
 const authApiInstance = new AuthApi();
@@ -67,6 +68,23 @@ export const useSignup = () => {
     onError: (error: unknown) => {
       const message = getErrorMessage(error);
       toast.error(message || "Signup failed. Please try again.");
+    },
+  });
+};
+
+export const useForgotPassword = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (credentials: ForgotPasswordCredentials) =>
+      authApiInstance.forgotPassword(credentials),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authKeys.forgotPassword() });
+      toast.success("Password reset email sent! Please check your inbox.");
+    },
+    onError: (error: unknown) => {
+      const message = getErrorMessage(error);
+      toast.error(message || "Failed to send reset email. Please try again.");
     },
   });
 };

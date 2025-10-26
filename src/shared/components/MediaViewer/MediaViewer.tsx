@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import FullScreenViewer from "./FullScreenDisplayer";
+import { type MediaItem, FullScreenViewer } from "tccd-ui";
 
-export type MediaItem = {
-  id: string | number;
-  type: string;
-  src: string;
-  thumb?: string;
-  alt?: string;
-};
 
 type Props = {
   items: MediaItem[];

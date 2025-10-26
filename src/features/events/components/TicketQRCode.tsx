@@ -1,7 +1,6 @@
 import React from "react";
-import { LazyImageLoader } from "tccd-ui";
+import { LazyImageLoader, FullScreenViewer } from "tccd-ui";
 import { HiOutlineQrCode } from "react-icons/hi2";
-import FullScreenViewer from "@/shared/components/MediaViewer/FullScreenDisplayer";
 
 interface TicketQRCodeProps {
   qrCodeSrc: string;

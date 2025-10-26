@@ -1,5 +1,5 @@
 import { systemApi } from "../AxoisInstance";
-import type { LoginCredentials, SignupCredentials } from "./types";
+import type { LoginCredentials, SignupCredentials, ForgotPasswordCredentials } from "./types";
 
 const AUTH_ROUTE = "/v1/Auth/";
 
@@ -16,6 +16,11 @@ export class AuthApi {
 
   async signup(credentials: SignupCredentials) {
     const { data } = await systemApi.post(AUTH_ROUTE + "sign-up", credentials);
+    return data;
+  }
+
+  async forgotPassword(credentials: ForgotPasswordCredentials) {
+    const { data } = await systemApi.post(AUTH_ROUTE + "forgot-password", credentials);
     return data;
   }
 }

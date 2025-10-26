@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { LazyImageLoader, Button } from "tccd-ui";
+import { LazyImageLoader, Button, FullScreenViewer } from "tccd-ui";
 import { FaChevronLeft, FaChevronRight, FaClock, FaCalendar } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
 import format from "@/shared/utils/dateFormater";
 import type Event from "@/shared/types/events";
 import PosterCard from "@/shared/components/PosterCard";
-import FullScreenViewer from "@/shared/components/MediaViewer/FullScreenDisplayer";
 
 const SPONSOR_GAP_PERCENT = 2;
 const AUTO_SCROLL_INTERVAL_MS = 3000;
