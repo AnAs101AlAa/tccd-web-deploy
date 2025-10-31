@@ -31,35 +31,37 @@ export default function EditPostModal({
 
   useEffect(() => {
     const fetchFiles = async () => {
-      for (const url of post.postMedia) {
-        try {
-          //momentarilly, until we configure our bucket for storage then it could be transferred to use our normal api calls
+      try {
+        const filePromises = post.postMedia.map(async (url) => {
           const response = await fetch(url);
           const blob = await response.blob();
           const urlParts = url.split("/");
           const fileName = urlParts[urlParts.length - 1];
           const fileType = blob.type;
-          const file = new File([blob], fileName, { type: fileType });
+          return new File([blob], fileName, { type: fileType });
+        });
 
-          setFiles((prevFiles) => [...prevFiles, file]);
-        } catch (error) {
-          console.error("Error fetching file:", error);
-        }
+        const fetchedFiles = await Promise.all(filePromises);
+        setFiles(fetchedFiles);
+      } catch (error) {
+        console.error("Error fetching files:", error);
       }
     };
 
     fetchFiles();
   }, [post.postMedia]);
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create a new Post">
-      <TextAreaField
-        id="PostText"
-        label=""
-        placeholder="What's new ?"
-        value={postText}
-        onChange={(e) => setPostText(e.target.value)}
-        maxLength={320}
-      />
+    <Modal isOpen={isOpen} onClose={onClose} title="Edit Post">
+      <div className="w-11/12 m-auto">
+        <TextAreaField
+          id="PostText"
+          label=""
+          placeholder="What's new ?"
+          value={postText}
+          onChange={(e) => setPostText(e.target.value)}
+          maxLength={320}
+        />
+      </div>
       <div className="my-4">
         <FileDropZone
           files={files}
