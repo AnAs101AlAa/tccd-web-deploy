@@ -146,7 +146,7 @@ const EventsPage = () => {
               gridCols="grid-cols-1 md:grid-cols-2"
             />
 
-            <ViewAllButton onClick={toggleViewAllPast} />
+            <ViewAllButton onClick={() => toggleViewAllPast({ route: "/past-events" })} />
           </section>
         </main>
       </div>
