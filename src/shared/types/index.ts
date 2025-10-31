@@ -1,3 +1,5 @@
 export * from "@/shared/types/users";
 export * from "@/shared/types/homeTypes";
-export * from "@/shared/types/galleyTypes";export * from "@/shared/types/aboutUsTypes";
+export * from "@/shared/types/galleyTypes";
+export * from "@/shared/types/aboutUsTypes";
+export * from "@/shared/types/qrScanner";
