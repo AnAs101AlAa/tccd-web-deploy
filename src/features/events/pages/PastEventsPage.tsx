@@ -8,6 +8,7 @@ import PastEventCard from "../components/PastEventCard";
 import { GenericFilter } from "@/shared/components/filters";
 import EVENT_TYPES from "@/constants/EventTypes";
 import type Event from "@/shared/types/events";
+import { LoadingPage, ErrorScreen } from "tccd-ui";
 // import { useEvents } from "../hooks";
 
 const PastEventsPage = () => {
@@ -42,7 +43,7 @@ const PastEventsPage = () => {
   } = useGenericFilter<Event>({
     items: apiPastEvents,
     searchFields: (event) => [event.title, event.description],
-    categoryField: (event) => event.category,
+    categoryField: (event) => event.eventType,
     dateField: (event) => event.date,
   });
 
@@ -59,35 +60,15 @@ const PastEventsPage = () => {
     });
 
   if (isLoading) {
-    return (
-      <WithNavbar>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
-            <p className="text-lg text-secondary">Loading past events...</p>
-          </div>
-        </div>
-      </WithNavbar>
-    );
+    return <LoadingPage />;
   }
 
   if (error) {
     return (
-      <WithNavbar>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-lg text-red-600 mb-4">
-              Failed to load past events
-            </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-contrast text-white rounded-lg hover:bg-contrast/90"
-            >
-              Retry
-            </button>
-          </div>
-        </div>
-      </WithNavbar>
+      <ErrorScreen
+        message="An error occurred while fetching past events. Please try again and contact our team if the problem persists."
+        title="Failed to load past events"
+      />
     );
   }
 
