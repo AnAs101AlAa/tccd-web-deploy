@@ -1,12 +1,13 @@
-import Pagination from "@/shared/components/Pagination";
+import { Pagination } from "@/shared/components/pagination";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import { galleryEvents } from "../data/dummyGallery";
 import WithNavbar from "@/shared/components/hoc/WithNavbar";
-import { usePagination } from "@/shared/hooks";
-import GalleryGrid from "../components/GalleryGrid";
-import GalleryFilter from "../components/GalleryFilter";
+import { usePagination, useGenericFilter } from "@/shared/hooks";
+import GenericGrid from "@/shared/components/GenericGrid";
+import EventGalleryCard from "../components/EventGalleryCard";
+import { GenericFilter } from "@/shared/components/filters";
+import EVENT_TYPES from "@/constants/EventTypes";
 import type { EventGalleryCardProps } from "@/shared/types/galleyTypes";
-import { useGalleryFilter } from "../hooks";
 // import { useGallery } from "../hooks";
 
 const GalleryPage = () => {
@@ -33,12 +34,17 @@ const GalleryPage = () => {
     searchInput,
     setSearchInput,
     handleSearch,
-    selectedEventTypes,
-    setSelectedEventTypes,
+    selectedTypes: selectedEventTypes,
+    setSelectedTypes: setSelectedEventTypes,
     selectedDateRange,
     setSelectedDateRange,
-    filteredGallery,
-  } = useGalleryFilter({ galleryItems: apiGalleryEvents });
+    filteredItems: filteredGallery,
+  } = useGenericFilter<EventGalleryCardProps>({
+    items: apiGalleryEvents,
+    searchFields: (item) => [item.eventName, item.eventDescription],
+    categoryField: (item) => item.eventType,
+    dateField: (item) => item.eventDate,
+  });
 
   const handleSearchWithPagination = () => {
     handleSearch();
@@ -95,21 +101,29 @@ const GalleryPage = () => {
         <main className="w-[98%] md:w-[84%] lg:w-[80%] mx-auto px-6 py-5">
           <section className="mb-16">
             <div className="mb-6">
-              <GalleryFilter
+              <GenericFilter
                 searchKey={searchInput}
                 onSearchChange={setSearchInput}
-                selectedEventTypes={selectedEventTypes}
-                onEventTypesChange={setSelectedEventTypes}
+                selectedTypes={selectedEventTypes}
+                onTypesChange={setSelectedEventTypes}
                 selectedDateRange={selectedDateRange}
                 onDateRangeChange={setSelectedDateRange}
                 onSearch={handleSearchWithPagination}
+                typeOptions={EVENT_TYPES}
+                searchPlaceholder="Search gallery..."
+                modalTitle="Filter Events"
+                typeLabel="Event Type"
               />
             </div>
 
-            <GalleryGrid
-              gallery={paginatedItems}
+            <GenericGrid
+              items={paginatedItems}
               emptyMessage="No gallery items at the moment. Check back soon!"
+              renderCard={(item: EventGalleryCardProps) => (
+                <EventGalleryCard {...item} />
+              )}
               gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              getKey={(item: EventGalleryCardProps) => item.id}
             />
 
             <Pagination

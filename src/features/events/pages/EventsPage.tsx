@@ -1,15 +1,15 @@
 import {
-  EventsGrid,
   PastEventCard,
   UpcomingEventCard,
-  CategoryFilter
-} from "../components"
-import Pagination from "@/shared/components/Pagination";
+  CategoryFilter,
+} from "../components";
+import { Pagination } from "@/shared/components/pagination";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import { upcomingEvents, pastEvents } from "../data/dummyEvents";
 import WithNavbar from "@/shared/components/hoc/WithNavbar";
 import { usePagination, useViewAll } from "@/shared/hooks";
-import ViewAllButton from "@/shared/components/ViewAllButton";
+import ViewAllButton from "@/shared/components/pagination/ViewAllButton";
+import GenericGrid from "@/shared/components/GenericGrid";
 import type Event from "@/shared/types/events";
 import EVENT_TYPES from "@/constants/EventTypes";
 // import { useEvents } from "../hooks";
@@ -55,12 +55,12 @@ const EventsPage = () => {
     toggleViewAll: toggleViewAllPast,
   } = useViewAll<Event>({ items: apiPastEvents, initialLimit: 6 });
 
-  const onBookNow = ()=>{
+  const onBookNow = () => {
     console.log("BookNow");
-  }
-    const onLearnMore = () => {
-      console.log("LearnMore");
-    };
+  };
+  const onLearnMore = () => {
+    console.log("LearnMore");
+  };
 
   if (isLoading) {
     return (
@@ -117,11 +117,18 @@ const EventsPage = () => {
               onCategoryChange={handleUpcomingCategoryChange}
             />
 
-            <EventsGrid
-              events={paginatedUpcomingEvents}
+            <GenericGrid
+              items={paginatedUpcomingEvents}
               emptyMessage="No upcoming events at the moment. Check back soon!"
-              renderCard={(event) => <UpcomingEventCard event={event} onBookNow={onBookNow} onLearnMore={onLearnMore} />}
+              renderCard={(event: Event) => (
+                <UpcomingEventCard
+                  event={event}
+                  onBookNow={onBookNow}
+                  onLearnMore={onLearnMore}
+                />
+              )}
               gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              getKey={(event: Event) => event.id}
             />
 
             <Pagination
@@ -139,14 +146,17 @@ const EventsPage = () => {
               </h2>
             </div>
 
-            <EventsGrid
-              events={displayedPastEvents}
+            <GenericGrid
+              items={displayedPastEvents}
               emptyMessage="No past events to display."
-              renderCard={(event) => <PastEventCard event={event} />}
+              renderCard={(event: Event) => <PastEventCard event={event} />}
               gridCols="grid-cols-1 md:grid-cols-2"
+              getKey={(event: Event) => event.id}
             />
 
-            <ViewAllButton onClick={() => toggleViewAllPast({ route: "/past-events" })} />
+            <ViewAllButton
+              onClick={() => toggleViewAllPast({ route: "/past-events" })}
+            />
           </section>
         </main>
       </div>
