@@ -3,8 +3,8 @@ import { mockTickets } from "../mocks/mockTickets";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import TicketCard from "./TicketCard";
-import CategoryFilter from "@/shared/components/CategoryFilter";
-import Pagination from "@/shared/components/Pagination";
+import CategoryFilter from "@/shared/components/filters/CategoryFilter";
+import Pagination from "@/shared/components/pagination/Pagination";
 export default function TicketTab() {
   const ticketsPerPage = 5; //We can adjust this as much as we want, really
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,7 +34,7 @@ export default function TicketTab() {
       )
     ); //To be replaced with an API call asking for next page
   }
-  
+
   function filterTickets(filter: string) {
     //This should be a different API call with a filter parameter, but for now we filter the mock tickets
     setCurrentFilter(filter);
