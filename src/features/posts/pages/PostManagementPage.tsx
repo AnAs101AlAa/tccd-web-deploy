@@ -3,7 +3,7 @@ import { PostSearchFilter } from '../components/PostSearchFilter';
 import type { CommunityPostCardProps } from '@/shared/types';
 import { useState, useEffect, useMemo } from 'react';
 import { usePagination } from '@/shared/hooks';
-import Pagination from '@/shared/components/Pagination';
+import Pagination from '@/shared/components/pagination/Pagination';
 import UpperHeader from '@/shared/components/mainpages/UpperHeader';
 import WithNavbar from '@/shared/components/hoc/WithNavbar';
 import { useGetAllPosts } from '@/shared/queries/posts';

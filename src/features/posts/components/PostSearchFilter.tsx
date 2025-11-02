@@ -126,8 +126,8 @@ export const PostSearchFilter = ({
             {isFilterModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-                        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                            <h3 className="text-2xl font-bold text-gray-800">Filter Posts</h3>
+                        <div className="flex items-center justify-between p-3 md:p-4 border-b border-gray-200">
+                            <h3 className="text-xl md:text-2xl font-bold text-gray-800">Filter Posts</h3>
                             <button
                                 onClick={() => setIsFilterModalOpen(false)}
                                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -136,7 +136,7 @@ export const PostSearchFilter = ({
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                        <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-4 md:space-y-6">
                             <div>
                                 <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
                                     <FiFilter className="text-primary" />
@@ -149,7 +149,7 @@ export const PostSearchFilter = ({
                                             <button
                                                 key={status.value}
                                                 onClick={() => toggleStatus(status.value)}
-                                                className={`px-4 py-3 rounded-xl border-2 font-medium transition-all ${isSelected
+                                                className={`px-3 py-2 rounded-xl border-2 font-medium transition-all text-[13px] md:text-[14px] lg:text-[15px] ${isSelected
                                                     ? "border-primary bg-primary text-white shadow-md"
                                                     : "border-gray-200 bg-white text-gray-700 hover:border-primary/50 hover:bg-primary/5"
                                                     }`}
