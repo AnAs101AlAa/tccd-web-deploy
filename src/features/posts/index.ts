@@ -1,3 +1,3 @@
 export { PostManagementPage } from './pages/PostManagementPage';
-export { PostManagmentCard } from './components/PostManagmentCard';
+export { PostManagementCard } from './components/PostManagementCard';
 export { PostSearchFilter } from './components/PostSearchFilter';

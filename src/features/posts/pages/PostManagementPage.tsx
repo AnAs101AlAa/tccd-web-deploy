@@ -1,5 +1,5 @@
-import { PostManagmentCard } from '../components/PostManagmentCard';
 import { PostSearchFilter } from '../components/PostSearchFilter';
+import { PostManagementCard } from '../components/PostManagementCard';
 import type { CommunityPostCardProps } from '@/shared/types';
 import { useState, useEffect, useMemo } from 'react';
 import { usePagination } from '@/shared/hooks';
@@ -122,7 +122,7 @@ export const PostManagementPage = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {paginatedItems.map(post => (
-                                <PostManagmentCard key={post.id} {...post} />
+                                <PostManagementCard key={post.id} {...post} />
                             ))}
                         </div>
 

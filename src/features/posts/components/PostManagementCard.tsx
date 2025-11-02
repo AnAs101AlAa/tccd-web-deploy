@@ -6,7 +6,7 @@ import coverImage from "@/assets/TCCD_logo.svg";
 // const placeholderImage = "../../../assets/cover.png"
 // 
 
-export const PostManagmentCard = ({ id, createdOn, name, description, postMedia }: CommunityPostCardProps) => {
+export const PostManagementCard = ({ id, createdOn, name, description, postMedia }: CommunityPostCardProps) => {
     const handleEdit = () => {
         console.log('Edit post', id);
         // TODO: Implement edit functionality
