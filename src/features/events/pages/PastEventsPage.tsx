@@ -1,35 +1,36 @@
 import { Pagination } from "@/shared/components/pagination";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
-import { galleryEvents } from "../data/dummyGallery";
+import { pastEvents } from "../data/dummyEvents";
 import WithNavbar from "@/shared/components/hoc/WithNavbar";
 import { usePagination, useGenericFilter } from "@/shared/hooks";
 import GenericGrid from "@/shared/components/GenericGrid";
-import EventGalleryCard from "../components/EventGalleryCard";
+import PastEventCard from "../components/PastEventCard";
 import { GenericFilter } from "@/shared/components/filters";
 import EVENT_TYPES from "@/constants/EventTypes";
-import type { EventGalleryCardProps } from "@/shared/types/galleyTypes";
-// import { useGallery } from "../hooks";
+import type Event from "@/shared/types/events";
+import { LoadingPage, ErrorScreen } from "tccd-ui";
+// import { useEvents } from "../hooks";
 
-const GalleryPage = () => {
+const PastEventsPage = () => {
   // ============================================
   // TODO: Uncomment when API is ready
   // ============================================
   // const {
-  //   galleryItems: apiGalleryEvents,
+  //   pastEvents: apiPastEvents,
   //   isLoading,
   //   error,
-  // } = useGallery();
+  // } = useEvents();
 
   // ============================================
   // Temporary: Using dummy data
   // Remove these lines when API is ready
   // ============================================
-  const apiGalleryEvents = galleryEvents;
+  const apiPastEvents = pastEvents;
   const isLoading = false;
   const error = null;
   // ============================================
 
-  // Gallery filtering
+  // Past events filtering
   const {
     searchInput,
     setSearchInput,
@@ -38,12 +39,12 @@ const GalleryPage = () => {
     setSelectedTypes: setSelectedEventTypes,
     selectedDateRange,
     setSelectedDateRange,
-    filteredItems: filteredGallery,
-  } = useGenericFilter<EventGalleryCardProps>({
-    items: apiGalleryEvents,
-    searchFields: (item) => [item.eventName, item.eventDescription],
-    categoryField: (item) => item.eventType,
-    dateField: (item) => item.eventDate,
+    filteredItems: filteredEvents,
+  } = useGenericFilter<Event>({
+    items: apiPastEvents,
+    searchFields: (event) => [event.title, event.description],
+    categoryField: (event) => event.eventType,
+    dateField: (event) => event.date,
   });
 
   const handleSearchWithPagination = () => {
@@ -52,40 +53,22 @@ const GalleryPage = () => {
   };
 
   const { currentPage, paginatedItems, totalPages, setPage } =
-    usePagination<EventGalleryCardProps>({
-      items: filteredGallery,
+    usePagination<Event>({
+      items: filteredEvents,
       itemsPerPageMobile: 6,
       itemsPerPageDesktop: 12,
     });
 
   if (isLoading) {
-    return (
-      <WithNavbar>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
-            <p className="text-lg text-secondary">Loading gallery...</p>
-          </div>
-        </div>
-      </WithNavbar>
-    );
+    return <LoadingPage />;
   }
 
   if (error) {
     return (
-      <WithNavbar>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-lg text-red-600 mb-4">Failed to load gallery</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-contrast text-white rounded-lg hover:bg-contrast/90"
-            >
-              Retry
-            </button>
-          </div>
-        </div>
-      </WithNavbar>
+      <ErrorScreen
+        message="An error occurred while fetching past events. Please try again and contact our team if the problem persists."
+        title="Failed to load past events"
+      />
     );
   }
 
@@ -94,8 +77,8 @@ const GalleryPage = () => {
       <div className="min-h-screen bg-gray-50">
         <UpperHeader
           image=""
-          title="Gallery"
-          subtitle="Dive into the collection of our best and brightest moments shaped by our members and community."
+          title="Past Events"
+          subtitle="Explore memorable moments from our previous events"
         />
 
         <main className="w-[98%] md:w-[84%] lg:w-[80%] mx-auto px-6 py-5">
@@ -110,7 +93,7 @@ const GalleryPage = () => {
                 onDateRangeChange={setSelectedDateRange}
                 onSearch={handleSearchWithPagination}
                 typeOptions={EVENT_TYPES}
-                searchPlaceholder="Search gallery..."
+                searchPlaceholder="Search past events..."
                 modalTitle="Filter Events"
                 typeLabel="Event Type"
               />
@@ -118,12 +101,10 @@ const GalleryPage = () => {
 
             <GenericGrid
               items={paginatedItems}
-              emptyMessage="No gallery items at the moment. Check back soon!"
-              renderCard={(item: EventGalleryCardProps) => (
-                <EventGalleryCard {...item} />
-              )}
-              gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-              getKey={(item: EventGalleryCardProps) => item.id}
+              emptyMessage="No past events found. Try adjusting your filters."
+              renderCard={(event: Event) => <PastEventCard event={event} />}
+              gridCols="grid-cols-1 md:grid-cols-2"
+              getKey={(event: Event) => event.id}
             />
 
             <Pagination
@@ -138,4 +119,4 @@ const GalleryPage = () => {
   );
 };
 
-export default GalleryPage;
+export default PastEventsPage;

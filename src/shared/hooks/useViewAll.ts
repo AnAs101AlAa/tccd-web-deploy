@@ -7,7 +7,7 @@ interface UseViewAllProps<T> {
 
 interface UseViewAllReturn<T> {
   displayedItems: T[];
-  toggleViewAll: () => void;
+  toggleViewAll: (params: { route: string }) => void;
 }
 
 export const useViewAll = <T>({
@@ -20,8 +20,8 @@ export const useViewAll = <T>({
   }, [items, initialLimit]);
 
 
-  const toggleViewAll = () => {
-    //route to the view all page
+  const toggleViewAll = ({ route }: { route: string }) => {
+    window.location.href = route;
   };
 
   return {
