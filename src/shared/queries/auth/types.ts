@@ -11,3 +11,7 @@ export interface SignupCredentials {
   englishFullName: string;
   phoneNumber: string;
 }
+
+export interface ForgotPasswordCredentials {
+  email: string;
+}

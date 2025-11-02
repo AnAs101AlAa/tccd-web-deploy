@@ -4,6 +4,7 @@ interface ViewAllButtonProps {
 
 const ViewAllButton = ({
   onClick,
+  
 }: ViewAllButtonProps) => {
   return (
     <div className="flex justify-center mt-5 md:mt-8">

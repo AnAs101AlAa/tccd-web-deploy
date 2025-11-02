@@ -2,13 +2,18 @@ import {
   useLogin,
   useLogout,
   useSignup,
+  useForgotPassword,
 } from "@/shared/queries/auth/authQueries";
 import {
   useIsAuthenticated,
   useCurrentUser,
 } from "@/shared/queries/user/userHooks";
 import { useNavigate } from "react-router-dom";
-import type { LoginFormData, SignupFormData } from "../schemas";
+import type {
+  LoginFormData,
+  SignupFormData,
+  ForgotPasswordFormData,
+} from "../schemas";
 
 /**
  * Custom Auth Hook
@@ -38,6 +43,7 @@ export const useAuth = () => {
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
   const signupMutation = useSignup();
+  const forgotPasswordMutation = useForgotPassword();
 
   /**
    * Handle login with form data
@@ -81,21 +87,38 @@ export const useAuth = () => {
     }
   };
 
+  /**
+   * Handle forgot password with form data
+   * Automatically navigates to OTP verification page on success
+   */
+  const handleForgotPassword = async (data: ForgotPasswordFormData) => {
+    try {
+      await forgotPasswordMutation.mutateAsync(data);
+      navigate("/otp", { state: { email: data.email } });
+    } catch (error) {
+      // Error is handled by the mutation's onError callback
+      console.error("Forgot password error:", error);
+    }
+  };
+
   return {
     // Auth operations
     handleLogin,
     handleLogout,
     handleSignup,
+    handleForgotPassword,
 
     // Loading states
     isLoggingIn: loginMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
     isSigningUp: signupMutation.isPending,
+    isSendingResetEmail: forgotPasswordMutation.isPending,
 
     // Error states
     loginError: loginMutation.error,
     logoutError: logoutMutation.error,
     signupError: signupMutation.error,
+    forgotPasswordError: forgotPasswordMutation.error,
 
     // User state
     isAuthenticated,
@@ -105,5 +128,6 @@ export const useAuth = () => {
     loginMutation,
     logoutMutation,
     signupMutation,
+    forgotPasswordMutation,
   };
 };

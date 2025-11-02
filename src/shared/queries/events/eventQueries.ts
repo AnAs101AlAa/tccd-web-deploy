@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { eventApi } from "./eventApi";
+import eventDetails from "@/features/events/data/dummyEventDetails";
 
 export const eventKeys = {
   all: ["events"] as const,
@@ -27,7 +28,15 @@ export const useGetAllPastEvents = () => {
 export const useGetEventById = (id: string) => {
   return useQuery({
     queryKey: eventKeys.detail(id),
-    queryFn: () => eventApi.getEventById(id),
+    // TODO: Replace with eventApi.getEventById(id) when backend endpoint is ready
+    queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const event = eventDetails.find((item) => item.id === id);
+      if (!event) {
+        throw new Error("Event not found");
+      }
+      return event;
+    },
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
   });
