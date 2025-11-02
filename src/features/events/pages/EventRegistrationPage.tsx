@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { EventRegisterApi } from "@/shared/queries/events/eventRegisterApi";
+import type { StudentUser } from "@/shared/types";
 
 const api = new EventRegisterApi();
 
@@ -13,7 +14,7 @@ const DataDisplayCard: React.FC<{ label: string; value: string | number }> = ({ 
 
 const EventRegistrationPage: React.FC = () => {
   const { eventName } = useParams<{ eventName: string }>();
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<StudentUser | null>({arabicFullName: '', englishFullName: '', phoneNumber: '', email: '', gender: "Female", university: '', faculty: '', graduationYear: '', department: '', gpa: '', id: '', createdAt: '', role: "Admin", status: "Approved", isDeleted: false, updatedAt: ''});
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -39,14 +40,14 @@ const EventRegistrationPage: React.FC = () => {
     return <div className="min-h-screen flex justify-center items-center">Loading user data...</div>;
 
   const displayFields = [
-    { label: "Full Name (Arabic)", value: userData.fullNameArabic },
-    { label: "Full Name (English)", value: userData.fullNameEnglish },
+    { label: "Full Name (Arabic)", value: userData.arabicFullName },
+    { label: "Full Name (English)", value: userData.englishFullName },
     { label: "Email Address", value: userData.email },
     { label: "Phone Number", value: userData.phoneNumber },
     { label: "University", value: userData.university },
     { label: "Faculty", value: userData.faculty },
     ...(userData.department ? [{ label: "Department", value: userData.department }] : []),
-    { label: "Graduation Year", value: userData.gradYear },
+    { label: "Graduation Year", value: userData.graduationYear },
   ];
 
   return (

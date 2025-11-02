@@ -10,7 +10,9 @@ export const routes = [
   { path: "/events", Component: EventsPage },
   { path: "/past-events", Component: PastEventsPage },
   { path: "/gallery", Component: GalleryPage },
+  { path: "/profile/:id", Component: ProfilePage },
   { path: "/gallery/view/:id", Component: GalleryDisplayPage },
-  { path: "/event-registration", Component: EventRegistrationPage }
-  {}  
+  { path: "/tickets/:id", Component: EventTicketPage },
+  { path: "/otp", Component: OTPPage },
+  { path: "/events/register/:id", Component: EventRegistrationPage },
 ];

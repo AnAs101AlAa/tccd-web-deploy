@@ -12,4 +12,5 @@ export default interface Event {
   capacity: number;
   registeredCount: number;
   attendeeCount: number;
+  timeSlot?: string;
 }
