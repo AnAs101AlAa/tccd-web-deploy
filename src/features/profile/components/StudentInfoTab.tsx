@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiPlus } from "react-icons/fi";
 import { Button, ButtonTypes, ButtonWidths } from "tccd-ui";
 import type { StudentUser, VolunteeringUser } from "@/shared/types";
+import type Event from "@/shared/types/events";
 import StudentInfoDisplay from "./StudentInfoDisplay";
 import EditStudentInfoModal from "./EditStudentInfoModal";
+import { AddEditEventModal } from "@/features/events/components";
 
 type StudentLikeUser = StudentUser | VolunteeringUser;
 
@@ -15,10 +17,22 @@ interface StudentInfoTabProps {
 const StudentInfoTab: React.FC<StudentInfoTabProps> = ({ user, isOwnProfile }) => {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [displayUser, setDisplayUser] = useState<StudentLikeUser>(user);
+    const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<Event | undefined>(undefined);
 
     useEffect(() => {
         setDisplayUser(user);
     }, [user]);
+
+    const handleAddEvent = () => {
+        setSelectedEvent(undefined);
+        setIsEventModalOpen(true);
+    };
+
+    const handleSaveEvent = (event: Event) => {
+        console.log("Event saved:", event);
+        setIsEventModalOpen(false);
+    };
 
     return (
         <section className="p-4 sm:p-6">
@@ -31,15 +45,24 @@ const StudentInfoTab: React.FC<StudentInfoTabProps> = ({ user, isOwnProfile }) =
                         Review your primary profile information at a glance.
                     </p>
                 </div>
-                {isOwnProfile && (
+                <div className="flex gap-2">
+                    {isOwnProfile && (
+                        <Button
+                            buttonText="Edit info"
+                            buttonIcon={<FiEdit className="h-4 w-4" />}
+                            onClick={() => setIsEditOpen(true)}
+                            type={ButtonTypes.PRIMARY}
+                            width={ButtonWidths.FIT}
+                        />
+                    )}
                     <Button
-                        buttonText="Edit info"
-                        buttonIcon={<FiEdit className="h-4 w-4" />}
-                        onClick={() => setIsEditOpen(true)}
-                        type={ButtonTypes.PRIMARY}
+                        buttonText="Test Event Modal"
+                        buttonIcon={<FiPlus className="h-4 w-4" />}
+                        onClick={handleAddEvent}
+                        type={ButtonTypes.BASIC}
                         width={ButtonWidths.FIT}
                     />
-                )}
+                </div>
             </header>
 
             <StudentInfoDisplay user={displayUser} />
@@ -52,6 +75,14 @@ const StudentInfoTab: React.FC<StudentInfoTabProps> = ({ user, isOwnProfile }) =
                         setDisplayUser(updatedUser);
                         setIsEditOpen(false);
                     }}
+                />
+            )}
+
+            {isEventModalOpen && (
+                <AddEditEventModal
+                    event={selectedEvent}
+                    onClose={() => setIsEventModalOpen(false)}
+                    onSave={handleSaveEvent}
                 />
             )}
         </section>
