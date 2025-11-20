@@ -1,13 +1,5 @@
 import type Event from "@/shared/types/events";
 
-
-export interface SponsorFormData {
-  id?: string;
-  companyName: string;
-  banner: File | string; // File for new upload, string for existing URL
-}
-
-
 export interface EventFormData {
   id?: string;
   title: string;
@@ -15,7 +7,7 @@ export interface EventFormData {
   eventPoster: File | string; // File for new upload, string for existing URL
   eventType: string;
   media?: (File | string)[]; // Array of Files for new uploads, strings for existing URLs
-  sponsors?: SponsorFormData[];
+  sponsors?: string[]; // Array of sponsor IDs
   date: string;
   location: string;
   category: string;
@@ -30,10 +22,7 @@ export interface CreateEventPayload {
   eventPoster: File;
   eventType: string;
   media?: File[];
-  sponsors?: {
-    companyName: string;
-    banner: File;
-  }[];
+  sponsors?: string[]; // Array of sponsor IDs
   date: string;
   location: string;
   category: string;
@@ -41,7 +30,6 @@ export interface CreateEventPayload {
   registeredCount: number;
   attendeeCount: number;
 }
-
 
 export interface UpdateEventPayload {
   id: string;
@@ -50,11 +38,7 @@ export interface UpdateEventPayload {
   eventPoster: File | string;
   eventType: string;
   media?: (File | string)[];
-  sponsors?: {
-    id?: string;
-    companyName: string;
-    banner: File | string;
-  }[];
+  sponsors?: string[]; // Array of sponsor IDs
   date: string;
   location: string;
   category: string;
@@ -63,20 +47,15 @@ export interface UpdateEventPayload {
   attendeeCount: number;
 }
 
-
 export const convertEventToFormData = (event: Event): EventFormData => {
   return {
     id: event.id,
     title: event.title,
     description: event.description,
-    eventPoster: event.eventPoster, 
+    eventPoster: event.eventPoster,
     eventType: event.eventType,
     media: event.media,
-    sponsors: event.sponsors?.map((sponsor) => ({
-      id: sponsor.id,
-      companyName: sponsor.companyName,
-      banner: sponsor.banner,
-    })),
+    sponsors: event.sponsors, // Array of sponsor IDs
     date: event.date,
     location: event.location,
     category: event.category,
@@ -85,7 +64,6 @@ export const convertEventToFormData = (event: Event): EventFormData => {
     attendeeCount: event.attendeeCount,
   };
 };
-
 
 export const convertFormDataToCreatePayload = (
   formData: EventFormData
@@ -99,23 +77,13 @@ export const convertFormDataToCreatePayload = (
   const mediaFiles =
     formData.media?.filter((item): item is File => item instanceof File) || [];
 
-  const sponsorsWithFiles = formData.sponsors
-    ?.filter((sponsor) => sponsor.banner instanceof File)
-    .map((sponsor) => ({
-      companyName: sponsor.companyName,
-      banner: sponsor.banner as File,
-    }));
-
   return {
     title: formData.title,
     description: formData.description,
     eventPoster: formData.eventPoster,
     eventType: formData.eventType,
     media: mediaFiles.length > 0 ? mediaFiles : undefined,
-    sponsors:
-      sponsorsWithFiles && sponsorsWithFiles.length > 0
-        ? sponsorsWithFiles
-        : undefined,
+    sponsors: formData.sponsors, // Array of sponsor IDs
     date: formData.date,
     location: formData.location,
     category: formData.category,
@@ -124,7 +92,6 @@ export const convertFormDataToCreatePayload = (
     attendeeCount: formData.attendeeCount,
   };
 };
-
 
 export const convertFormDataToUpdatePayload = (
   formData: EventFormData
@@ -141,11 +108,7 @@ export const convertFormDataToUpdatePayload = (
     eventPoster: formData.eventPoster,
     eventType: formData.eventType,
     media: formData.media,
-    sponsors: formData.sponsors?.map((sponsor) => ({
-      id: sponsor.id,
-      companyName: sponsor.companyName,
-      banner: sponsor.banner,
-    })),
+    sponsors: formData.sponsors, // Array of sponsor IDs
     date: formData.date,
     location: formData.location,
     category: formData.category,
@@ -154,7 +117,6 @@ export const convertFormDataToUpdatePayload = (
     attendeeCount: formData.attendeeCount,
   };
 };
-
 
 export const convertToMultipartFormData = (
   payload: CreateEventPayload | UpdateEventPayload
@@ -188,18 +150,8 @@ export const convertToMultipartFormData = (
   }
 
   if (payload.sponsors) {
-    payload.sponsors.forEach((sponsor, index) => {
-      formData.append(`sponsors[${index}][companyName]`, sponsor.companyName);
-
-      if ("id" in sponsor && sponsor.id) {
-        formData.append(`sponsors[${index}][id]`, sponsor.id);
-      }
-
-      if (sponsor.banner instanceof File) {
-        formData.append(`sponsors[${index}][banner]`, sponsor.banner);
-      } else if (typeof sponsor.banner === "string") {
-        formData.append(`sponsors[${index}][bannerUrl]`, sponsor.banner);
-      }
+    payload.sponsors.forEach((sponsorId, index) => {
+      formData.append(`sponsors[${index}]`, sponsorId);
     });
   }
 

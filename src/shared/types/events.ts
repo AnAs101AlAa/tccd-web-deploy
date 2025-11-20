@@ -5,7 +5,7 @@ export default interface Event {
   eventPoster: string;
   eventType: string;
   media?: string[];
-  sponsors?: { id: string; companyName: string; banner: string }[];
+  sponsors?: string[]; // Array of sponsor IDs
   date: string;
   location: string;
   category: string;

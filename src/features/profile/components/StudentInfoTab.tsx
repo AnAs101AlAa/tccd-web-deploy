@@ -29,19 +29,7 @@ const dummyEvent: Event = {
     "https://images.unsplash.com/photo-1511578314322-379afb476865?w=600",
     "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600",
   ],
-  sponsors: [
-    {
-      id: "sp-1",
-      companyName: "TechCorp Solutions",
-      banner:
-        "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=400",
-    },
-    {
-      id: "sp-2",
-      companyName: "Innovation Labs",
-      banner: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=400",
-    },
-  ],
+  sponsors: ["sp-1", "sp-2"], // Array of sponsor IDs
   date: "2024-12-15T14:00:00",
   location: "Grand Convention Center, Downtown",
   category: "Technology",

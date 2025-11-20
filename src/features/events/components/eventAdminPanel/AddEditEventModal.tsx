@@ -27,8 +27,8 @@ import {
 } from "./EventModalFormFields";
 import { FileUploadField } from "@/shared/components/FileUploadField";
 import { MediaManager } from "./MediaManager";
-import { SponsorsManager } from "./SponsorsManager";
-import type { MediaItem, SponsorItem } from "../../types/eventModalTypes";
+import type { MediaItem } from "../../types/eventModalTypes";
+import { AVAILABLE_SPONSORS } from "../../constants/sponsors";
 
 const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
   event,
@@ -106,8 +106,8 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     }
   };
 
-  const handleSponsorsChange = (sponsors: SponsorItem[]) => {
-    setFormValues((prev) => ({ ...prev, sponsors }));
+  const handleSponsorsChange = (selectedIds: string[]) => {
+    setFormValues((prev) => ({ ...prev, sponsors: selectedIds }));
 
     if (errors.sponsors) {
       setErrors((prev) => ({ ...prev, sponsors: undefined }));
@@ -186,13 +186,59 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
             />
           </div>
 
-          {/* Sponsors Manager */}
+          {/* Sponsors Selection */}
           <div className="md:col-span-2">
-            <SponsorsManager
-              sponsors={formValues.sponsors}
-              onChange={handleSponsorsChange}
-              error={errors.sponsors}
-            />
+            <FormFieldWithError error={errors.sponsors}>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-contrast">
+                  Event Sponsors (Optional)
+                </label>
+                <div className="border border-gray-200 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
+                  {AVAILABLE_SPONSORS.map((sponsor) => (
+                    <label
+                      key={sponsor.id}
+                      className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={formValues.sponsors.includes(sponsor.id)}
+                        onChange={(e) => {
+                          const isChecked = e.target.checked;
+                          if (isChecked) {
+                            handleSponsorsChange([
+                              ...formValues.sponsors,
+                              sponsor.id,
+                            ]);
+                          } else {
+                            handleSponsorsChange(
+                              formValues.sponsors.filter(
+                                (id) => id !== sponsor.id
+                              )
+                            );
+                          }
+                        }}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <div className="flex-1 flex items-center space-x-3">
+                        <img
+                          src={sponsor.banner}
+                          alt={sponsor.companyName}
+                          className="w-12 h-8 object-cover rounded"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          {sponsor.companyName}
+                        </span>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+                {formValues.sponsors.length > 0 && (
+                  <p className="text-xs text-gray-500">
+                    {formValues.sponsors.length} sponsor(s) selected
+                  </p>
+                )}
+              </div>
+            </FormFieldWithError>
           </div>
 
           {/* Event Date & Time */}

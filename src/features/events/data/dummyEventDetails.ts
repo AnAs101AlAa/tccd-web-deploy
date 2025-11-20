@@ -20,32 +20,7 @@ const eventDetails: Event[] = [
     capacity: 220,
     registeredCount: 168,
     attendeeCount: 0,
-    sponsors: [
-      {
-        id: "s1",
-        companyName: "TechCorp",
-        banner:
-          "https://images.unsplash.com/photo-1761165308046-174a56e73525?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470",
-      },
-      {
-        id: "s2",
-        companyName: "InnovateX",
-        banner:
-          "https://images.unsplash.com/photo-1761165308046-174a56e73525?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470",
-      },
-      {
-        id: "s3",
-        companyName: "FutureTech",
-        banner:
-          "https://images.unsplash.com/photo-1761165308046-174a56e73525?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470",
-      },
-      {
-        id: "s4",
-        companyName: "NextGen Solutions",
-        banner:
-          "https://images.unsplash.com/photo-1761165308046-174a56e73525?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470",
-      },
-    ],
+    sponsors: ["sp-1", "sp-2", "sp-3", "sp-4"],
   },
   {
     id: "2",

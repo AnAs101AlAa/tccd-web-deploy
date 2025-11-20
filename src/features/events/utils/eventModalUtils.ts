@@ -1,15 +1,11 @@
 import EVENT_TYPES from "@/constants/EventTypes";
 import type Event from "@/shared/types/events";
-import type {
-  EventFormValues,
-  FormErrors,
-} from "../types/eventModalTypes";
+import type { EventFormValues, FormErrors } from "../types/eventModalTypes";
 import type { EventFormData } from "../types/eventFormTypes";
 import {
   EVENT_FORM_CONSTRAINTS,
   ERROR_MESSAGES,
 } from "../constants/eventModalConstants";
-
 
 export const validateFile = (file: File): string | undefined => {
   // Check file size
@@ -24,7 +20,6 @@ export const validateFile = (file: File): string | undefined => {
 
   return undefined;
 };
-
 
 export const validateEventPoster = (
   value: File | string
@@ -243,22 +238,13 @@ export const convertEventToFormValues = (event?: Event): EventFormValues => {
       preview: url,
     })) || [];
 
-  // Convert sponsors array to SponsorItem[]
-  const sponsorItems =
-    event.sponsors?.map((sponsor) => ({
-      id: sponsor.id,
-      companyName: sponsor.companyName,
-      banner: sponsor.banner,
-      bannerPreview: sponsor.banner,
-    })) || [];
-
   return {
     title: event.title,
     description: event.description,
     eventPoster: event.eventPoster, // Keep as string URL
     eventPosterPreview: event.eventPoster, // Set preview to existing URL
     media: mediaItems,
-    sponsors: sponsorItems,
+    sponsors: event.sponsors || [], // Array of sponsor IDs
     date: new Date(event.date).toISOString().slice(0, 16),
     location: event.location,
     eventType: event.eventType,
@@ -280,13 +266,6 @@ export const convertFormValuesToEventFormData = (
   // Convert media items to File | string array
   const mediaArray = formValues.media.map((item) => item.file);
 
-  // Convert sponsors to SponsorFormData array
-  const sponsorsArray = formValues.sponsors.map((sponsor) => ({
-    id: sponsor.id,
-    companyName: sponsor.companyName.trim(),
-    banner: sponsor.banner,
-  }));
-
   return {
     id: existingEvent?.id,
     title: formValues.title.trim(),
@@ -294,7 +273,7 @@ export const convertFormValuesToEventFormData = (
     eventPoster: posterValue,
     eventType: formValues.eventType,
     media: mediaArray.length > 0 ? mediaArray : undefined,
-    sponsors: sponsorsArray.length > 0 ? sponsorsArray : undefined,
+    sponsors: formValues.sponsors.length > 0 ? formValues.sponsors : undefined, // Array of sponsor IDs
     date: new Date(formValues.date).toISOString(),
     location: formValues.location.trim(),
     category: formValues.category.trim(),
