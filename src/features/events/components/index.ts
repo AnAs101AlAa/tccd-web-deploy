@@ -7,5 +7,5 @@ export { default as TicketPoster } from "./TicketPoster";
 export { default as AttendeeInfo } from "./AttendeeInfo";
 export { default as TicketQRCode } from "./TicketQRCode";
 export { default as TicketDivider } from "./TicketDivider";
-export { default as AddEditEventModal } from "./AddEditEventModal";
-export * from "./EventModalFormFields";
+export { default as AddEditEventModal } from "./eventAdminPanel/AddEditEventModal";
+export * from "./eventAdminPanel/EventModalFormFields";

@@ -19,7 +19,26 @@ export const EVENT_FORM_CONSTRAINTS = {
     min: 1,
     max: 10000,
   },
+  file: {
+    maxSize: 5 * 1024 * 1024, // 5MB in bytes
+    allowedImageTypes: [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/webp",
+      "image/gif",
+    ] as const,
+    allowedImageExtensions: [".jpg", ".jpeg", ".png", ".webp", ".gif"] as const,
+  },
 } as const;
+
+export const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+] as const;
 
 export const ERROR_MESSAGES = {
   required: {
@@ -46,7 +65,10 @@ export const ERROR_MESSAGES = {
   },
   format: {
     eventPoster: "Must be a valid image URL (jpg, jpeg, png, webp, gif)",
+    eventPosterFile: "Must be a valid image file (jpg, jpeg, png, webp, gif)",
     invalidDate: "Invalid date format",
+    fileTooLarge: "File size must be less than 5MB",
+    invalidFileType: "Invalid file type",
   },
   validation: {
     invalidEventType: "Invalid event type",

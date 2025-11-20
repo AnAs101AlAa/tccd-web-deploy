@@ -13,18 +13,22 @@ import type {
   AddEditEventModalProps,
   EventFormValues,
   FormErrors,
-} from "../types/eventModalTypes";
-import { EVENT_FORM_CONSTRAINTS } from "../constants/eventModalConstants";
+} from "../../types/eventModalTypes";
+import { EVENT_FORM_CONSTRAINTS } from "../../constants/eventModalConstants";
 import {
   validateAllFields,
   convertEventToFormValues,
-  convertFormValuesToEvent,
-} from "../utils/eventModalUtils";
+  convertFormValuesToEventFormData,
+} from "../../utils/eventModalUtils";
 import {
   FormFieldWithError,
   NumberInputField,
   DateTimeInputField,
 } from "./EventModalFormFields";
+import { FileUploadField } from "@/shared/components/FileUploadField";
+import { MediaManager } from "./MediaManager";
+import { SponsorsManager } from "./SponsorsManager";
+import type { MediaItem, SponsorItem } from "../../types/eventModalTypes";
 
 const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
   event,
@@ -49,7 +53,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
       const value = event.target.value;
       setFormValues((prev) => ({ ...prev, [field]: value }));
 
-      if (errors[field]) {
+      if (errors[field as keyof FormErrors]) {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
       }
     };
@@ -73,6 +77,43 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     }
   };
 
+  const handleFileChange = (file: File | null) => {
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setFormValues((prev) => ({
+        ...prev,
+        eventPoster: file,
+        eventPosterPreview: previewUrl,
+      }));
+    } else {
+      setFormValues((prev) => ({
+        ...prev,
+        eventPoster: "",
+        eventPosterPreview: "",
+      }));
+    }
+
+    if (errors.eventPoster) {
+      setErrors((prev) => ({ ...prev, eventPoster: undefined }));
+    }
+  };
+
+  const handleMediaChange = (media: MediaItem[]) => {
+    setFormValues((prev) => ({ ...prev, media }));
+
+    if (errors.media) {
+      setErrors((prev) => ({ ...prev, media: undefined }));
+    }
+  };
+
+  const handleSponsorsChange = (sponsors: SponsorItem[]) => {
+    setFormValues((prev) => ({ ...prev, sponsors }));
+
+    if (errors.sponsors) {
+      setErrors((prev) => ({ ...prev, sponsors: undefined }));
+    }
+  };
+
   const handleSave = () => {
     const validationErrors = validateAllFields(formValues);
 
@@ -81,8 +122,8 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
       return;
     }
 
-    const savedEvent = convertFormValuesToEvent(formValues, event);
-    onSave(savedEvent);
+    const eventFormData = convertFormValuesToEventFormData(formValues, event);
+    onSave(eventFormData);
   };
 
   return (
@@ -123,18 +164,35 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
             </FormFieldWithError>
           </div>
 
-          {/* Event Poster URL */}
+          {/* Event Poster Upload */}
           <div className="md:col-span-2">
-            <FormFieldWithError error={errors.eventPoster}>
-              <InputField
-                label="Event Poster URL"
-                value={formValues.eventPoster}
-                placeholder="https://example.com/poster.jpg"
-                onChange={handleInputChange("eventPoster")}
-                id="eventPoster"
-                error={errors.eventPoster}
-              />
-            </FormFieldWithError>
+            <FileUploadField
+              id="eventPoster"
+              label="Event Poster"
+              value={formValues.eventPoster}
+              onChange={handleFileChange}
+              preview={formValues.eventPosterPreview}
+              error={errors.eventPoster}
+              accept="image/*"
+            />
+          </div>
+
+          {/* Media Manager */}
+          <div className="md:col-span-2">
+            <MediaManager
+              media={formValues.media}
+              onChange={handleMediaChange}
+              error={errors.media}
+            />
+          </div>
+
+          {/* Sponsors Manager */}
+          <div className="md:col-span-2">
+            <SponsorsManager
+              sponsors={formValues.sponsors}
+              onChange={handleSponsorsChange}
+              error={errors.sponsors}
+            />
           </div>
 
           {/* Event Date & Time */}

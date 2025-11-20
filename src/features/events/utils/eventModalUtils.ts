@@ -1,80 +1,136 @@
 import EVENT_TYPES from "@/constants/EventTypes";
 import type Event from "@/shared/types/events";
-import type { EventFormValues, FormErrors } from "../types/eventModalTypes";
+import type {
+  EventFormValues,
+  FormErrors,
+} from "../types/eventModalTypes";
+import type { EventFormData } from "../types/eventFormTypes";
 import {
   EVENT_FORM_CONSTRAINTS,
   ERROR_MESSAGES,
 } from "../constants/eventModalConstants";
 
+
+export const validateFile = (file: File): string | undefined => {
+  // Check file size
+  if (file.size > EVENT_FORM_CONSTRAINTS.file.maxSize) {
+    return ERROR_MESSAGES.format.fileTooLarge;
+  }
+  // Check file type
+  const allowedTypes = EVENT_FORM_CONSTRAINTS.file.allowedImageTypes;
+  if (!allowedTypes.some((type) => type === file.type)) {
+    return ERROR_MESSAGES.format.eventPosterFile;
+  }
+
+  return undefined;
+};
+
+
+export const validateEventPoster = (
+  value: File | string
+): string | undefined => {
+  if (!value) return ERROR_MESSAGES.required.eventPoster;
+
+  if (value instanceof File) {
+    return validateFile(value);
+  }
+
+  // If it's a string, validate as URL
+  if (typeof value === "string") {
+    if (!value.trim()) return ERROR_MESSAGES.required.eventPoster;
+    if (!/^https?:\/\/.+\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(value)) {
+      return ERROR_MESSAGES.format.eventPoster;
+    }
+  }
+
+  return undefined;
+};
+
 export const validateField = (
   field: keyof EventFormValues,
-  value: string,
+  value: string | File,
   formValues?: EventFormValues
 ): string | undefined => {
+  // Special handling for eventPoster which can be File or string
+  if (field === "eventPoster") {
+    return validateEventPoster(value);
+  }
+
+  // For all other fields, ensure value is a string
+  if (value instanceof File) {
+    return "Invalid field type";
+  }
+
+  const stringValue = value as string;
+
   switch (field) {
     case "title": {
-      if (!value.trim()) return ERROR_MESSAGES.required.title;
-      if (value.trim().length < EVENT_FORM_CONSTRAINTS.title.minLength) {
+      if (!stringValue.trim()) return ERROR_MESSAGES.required.title;
+      if (stringValue.trim().length < EVENT_FORM_CONSTRAINTS.title.minLength) {
         return ERROR_MESSAGES.length.titleMin;
       }
-      if (value.trim().length > EVENT_FORM_CONSTRAINTS.title.maxLength) {
+      if (stringValue.trim().length > EVENT_FORM_CONSTRAINTS.title.maxLength) {
         return ERROR_MESSAGES.length.titleMax;
       }
       break;
     }
 
     case "description": {
-      if (!value.trim()) return ERROR_MESSAGES.required.description;
-      if (value.trim().length < EVENT_FORM_CONSTRAINTS.description.minLength) {
+      if (!stringValue.trim()) return ERROR_MESSAGES.required.description;
+      if (
+        stringValue.trim().length < EVENT_FORM_CONSTRAINTS.description.minLength
+      ) {
         return ERROR_MESSAGES.length.descriptionMin;
       }
-      if (value.trim().length > EVENT_FORM_CONSTRAINTS.description.maxLength) {
+      if (
+        stringValue.trim().length > EVENT_FORM_CONSTRAINTS.description.maxLength
+      ) {
         return ERROR_MESSAGES.length.descriptionMax;
       }
       break;
     }
 
-    case "eventPoster": {
-      if (!value.trim()) return ERROR_MESSAGES.required.eventPoster;
-      if (!/^https?:\/\/.+\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(value)) {
-        return ERROR_MESSAGES.format.eventPoster;
-      }
-      break;
-    }
-
     case "date": {
-      if (!value.trim()) return ERROR_MESSAGES.required.date;
-      const eventDate = new Date(value);
+      if (!stringValue.trim()) return ERROR_MESSAGES.required.date;
+      const eventDate = new Date(stringValue);
       if (isNaN(eventDate.getTime())) return ERROR_MESSAGES.format.invalidDate;
       // Allow past dates for past events
       break;
     }
 
     case "location": {
-      if (!value.trim()) return ERROR_MESSAGES.required.location;
-      if (value.trim().length < EVENT_FORM_CONSTRAINTS.location.minLength) {
+      if (!stringValue.trim()) return ERROR_MESSAGES.required.location;
+      if (
+        stringValue.trim().length < EVENT_FORM_CONSTRAINTS.location.minLength
+      ) {
         return ERROR_MESSAGES.length.locationMin;
       }
-      if (value.trim().length > EVENT_FORM_CONSTRAINTS.location.maxLength) {
+      if (
+        stringValue.trim().length > EVENT_FORM_CONSTRAINTS.location.maxLength
+      ) {
         return ERROR_MESSAGES.length.locationMax;
       }
       break;
     }
 
     case "eventType": {
-      if (!value.trim()) return ERROR_MESSAGES.required.eventType;
+      if (!stringValue.trim()) return ERROR_MESSAGES.required.eventType;
       const validTypes = EVENT_TYPES.map((t) => t.value);
-      if (!validTypes.includes(value))
+      if (!validTypes.includes(stringValue))
         return ERROR_MESSAGES.validation.invalidEventType;
       break;
     }
 
     case "category": {
-      if (!value.trim()) return ERROR_MESSAGES.required.category;
-      if (value.trim().length < EVENT_FORM_CONSTRAINTS.category.minLength) {
+      if (!stringValue.trim()) return ERROR_MESSAGES.required.category;
+      if (
+        stringValue.trim().length < EVENT_FORM_CONSTRAINTS.category.minLength
+      ) {
         return ERROR_MESSAGES.length.categoryMin;
       }
-      if (value.trim().length > EVENT_FORM_CONSTRAINTS.category.maxLength) {
+      if (
+        stringValue.trim().length > EVENT_FORM_CONSTRAINTS.category.maxLength
+      ) {
         return ERROR_MESSAGES.length.categoryMax;
       }
       break;
@@ -139,11 +195,21 @@ export const validateField = (
 export const validateAllFields = (formValues: EventFormValues): FormErrors => {
   const newErrors: FormErrors = {};
 
+  // Validate each field, skip eventPosterPreview as it's just for display
   (Object.keys(formValues) as Array<keyof EventFormValues>).forEach((field) => {
+    if (
+      field === "eventPosterPreview" ||
+      field === "media" ||
+      field === "sponsors"
+    )
+      return; // Skip preview, media, and sponsors fields
+
     const value = formValues[field];
-    const error = validateField(field, value, formValues);
-    if (error) {
-      newErrors[field] = error;
+    if (value !== undefined) {
+      const error = validateField(field, value as string | File, formValues);
+      if (error) {
+        newErrors[field as keyof FormErrors] = error;
+      }
     }
   });
 
@@ -156,6 +222,9 @@ export const convertEventToFormValues = (event?: Event): EventFormValues => {
       title: "",
       description: "",
       eventPoster: "",
+      eventPosterPreview: "",
+      media: [],
+      sponsors: [],
       date: "",
       location: "",
       eventType: "",
@@ -166,10 +235,30 @@ export const convertEventToFormValues = (event?: Event): EventFormValues => {
     };
   }
 
+  // Convert media array to MediaItem[]
+  const mediaItems =
+    event.media?.map((url, index) => ({
+      id: `media-${index}`,
+      file: url,
+      preview: url,
+    })) || [];
+
+  // Convert sponsors array to SponsorItem[]
+  const sponsorItems =
+    event.sponsors?.map((sponsor) => ({
+      id: sponsor.id,
+      companyName: sponsor.companyName,
+      banner: sponsor.banner,
+      bannerPreview: sponsor.banner,
+    })) || [];
+
   return {
     title: event.title,
     description: event.description,
-    eventPoster: event.eventPoster,
+    eventPoster: event.eventPoster, // Keep as string URL
+    eventPosterPreview: event.eventPoster, // Set preview to existing URL
+    media: mediaItems,
+    sponsors: sponsorItems,
     date: new Date(event.date).toISOString().slice(0, 16),
     location: event.location,
     eventType: event.eventType,
@@ -180,23 +269,37 @@ export const convertEventToFormValues = (event?: Event): EventFormValues => {
   };
 };
 
-export const convertFormValuesToEvent = (
+export const convertFormValuesToEventFormData = (
   formValues: EventFormValues,
   existingEvent?: Event
-): Event => {
+): EventFormData => {
+  const eventPoster = formValues.eventPoster;
+  const posterValue =
+    typeof eventPoster === "string" ? eventPoster.trim() : eventPoster;
+
+  // Convert media items to File | string array
+  const mediaArray = formValues.media.map((item) => item.file);
+
+  // Convert sponsors to SponsorFormData array
+  const sponsorsArray = formValues.sponsors.map((sponsor) => ({
+    id: sponsor.id,
+    companyName: sponsor.companyName.trim(),
+    banner: sponsor.banner,
+  }));
+
   return {
-    id: existingEvent?.id || `temp-${Date.now()}`,
+    id: existingEvent?.id,
     title: formValues.title.trim(),
     description: formValues.description.trim(),
-    eventPoster: formValues.eventPoster.trim(),
-    media: existingEvent?.media || [],
+    eventPoster: posterValue,
+    eventType: formValues.eventType,
+    media: mediaArray.length > 0 ? mediaArray : undefined,
+    sponsors: sponsorsArray.length > 0 ? sponsorsArray : undefined,
     date: new Date(formValues.date).toISOString(),
     location: formValues.location.trim(),
-    eventType: formValues.eventType,
     category: formValues.category.trim(),
     capacity: parseInt(formValues.capacity, 10),
     registeredCount: parseInt(formValues.registeredCount, 10),
     attendeeCount: parseInt(formValues.attendeeCount, 10),
-    sponsors: existingEvent?.sponsors,
   };
 };
