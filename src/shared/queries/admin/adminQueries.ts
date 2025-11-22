@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { locationApi } from "./adminApi";
+// import { locationApi } from "./adminApi";
 import { getDataBlob } from "@/shared/utils";
 import type {
   Location,
