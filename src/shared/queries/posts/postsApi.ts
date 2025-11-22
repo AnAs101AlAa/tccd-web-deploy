@@ -1,28 +1,20 @@
 import { systemApi } from "../AxoisInstance";
-
-export interface PostData {
-  id: string;
-  createdOn: string;
-  name: string;
-  description: string;
-  postMedia: string[];
-  status: string;
-}
+import type { CommunityPost } from "@/shared/types/postTypes";
 
 const POSTS_ROUTE = "/v1/posts/";
 
 export class PostsApi {
-  async getAllPosts(): Promise<PostData[]> {
+  async getAllPosts(): Promise<CommunityPost[]> {
     const response = await systemApi.get(`${POSTS_ROUTE}`);
     return response.data;
   }
 
-  async getPostById(id: string): Promise<PostData> {
+  async getPostById(id: string): Promise<CommunityPost> {
     const response = await systemApi.get(`${POSTS_ROUTE}${id}`);
     return response.data;
   }
 
-  async getPostsByStatus(status: string): Promise<PostData[]> {
+  async getPostsByStatus(status: string): Promise<CommunityPost[]> {
     const response = await systemApi.get(`${POSTS_ROUTE}status/${status}`);
     return response.data;
   }
