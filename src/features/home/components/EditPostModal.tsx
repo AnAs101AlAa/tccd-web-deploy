@@ -62,7 +62,7 @@ export default function EditPostModal({
           maxLength={320}
         />
       </div>
-      <div className="my-4">
+      <div className="my-4 w-11/12 m-auto">
         <FileDropZone
           files={files}
           setFiles={setFiles}
