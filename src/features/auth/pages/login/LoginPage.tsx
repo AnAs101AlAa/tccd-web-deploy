@@ -24,7 +24,7 @@ export const LoginPage = () => {
     },
   });
 
-  // Redirect if already authenticated
+  // // Redirect if already authenticated
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -35,7 +35,7 @@ export const LoginPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-white to-[#f8f6f1] text-[#121212]">
-      <form className="mx-auto grid min-h-screen max-w-7xl place-items-center px-4 pb-16">
+      <div className="mx-auto grid min-h-screen max-w-7xl place-items-center px-4 pb-16">
         <section
           className="w-full max-w-md rounded-2xl border border-black/5 bg-white/80 p-8 shadow-[0_4px_30px_rgba(0,0,0,0.04)] backdrop-blur"
           aria-labelledby="login-title"
@@ -105,7 +105,7 @@ export const LoginPage = () => {
             </p>
           </footer>
         </section>
-      </form>
+      </div>
     </main>
   );
 };
