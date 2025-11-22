@@ -45,7 +45,7 @@ export default function FileDropZone({
   }
 
   return (
-    <div className="w-11/12 m-auto">
+    <>
       <div
         {...getRootProps()}
         className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-300 ${
@@ -117,6 +117,6 @@ export default function FileDropZone({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
