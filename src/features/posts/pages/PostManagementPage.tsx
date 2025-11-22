@@ -4,10 +4,11 @@ import type { CommunityPost } from '@/shared/types/postTypes';
 import { useState, useEffect } from 'react';
 import { usePagination } from '@/shared/hooks';
 import Pagination from '@/shared/components/pagination/Pagination';
-import UpperHeader from '@/shared/components/mainpages/UpperHeader';
 import WithNavbar from '@/shared/components/hoc/WithNavbar';
 import { useGetAllPosts } from '@/shared/queries/posts';
-import { LoadingPage, ErrorScreen } from 'tccd-ui';
+import { LoadingPage, ErrorScreen, Button } from 'tccd-ui';
+import ManagePostModal from '../components/components/EditPostModal';
+import PostDeleteModal from '../components/components/PostDeleteModal';
 
 const dummyPosts: CommunityPost[] = [
     {
@@ -40,6 +41,7 @@ export const PostManagementPage = () => {
     const [searchKey, setSearchKey] = useState('');
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const [editedPost, setEditedPost] = useState<string | null>(null);
+    const [createPost, setCreatePost ] = useState<boolean>(false);
     const [deletedPost, setDeletedPost] = useState<string | null>(null);
 
     const { data: apiPosts, isLoading, isError } = useGetAllPosts();
@@ -72,45 +74,46 @@ export const PostManagementPage = () => {
 
     return (
         <WithNavbar>
+            <PostDeleteModal isOpen={deletedPost != null} onClose={() => setDeletedPost(null)} postId={deletedPost} />
+            <ManagePostModal mode={editedPost != null} post={posts.find(post => post.id === editedPost)!} onClose={() => {setEditedPost(null); setCreatePost(false)}} isOpen={editedPost != null || createPost}  />
             <div className="min-h-screen bg-gray-50">
-                <UpperHeader
-                    image=""
-                    title="Post Management"
-                    subtitle="Manage and oversee all community posts with powerful search and filtering capabilities"
-                />
-
                 <main className="w-[98%] md:w-[92%] lg:w-[86%] mx-auto px-6 py-5">
-                    <section className="mb-16">
-                        <div className="mb-6">
-                            <PostSearchFilter
-                                searchKey={searchKey}
-                                onSearchChange={setSearchKey}
-                                selectedStatuses={selectedStatuses}
-                                onStatusesChange={setSelectedStatuses}
-                                onSearch={() => { }}
-                            />
+                    <div className='flex sm:flex-row flex-col justify-between mb-4 gap-y-2'>
+                        <div>
+                            <h1 className="text-[22px] md:text-[24px] lg:text-[26px] font-semibold">Post Management</h1>
+                            <p className="text-contrast/80 text-[14px] md:text-[15px] lg:text-[16px]">Manage community posts, edit content, and monitor post status.</p>
                         </div>
-
-                        <div className="flex flex-col md:flex-row md:flex-wrap gap-[2%] gap-y-5">
-                            {paginatedItems.map(post => (
-                                <div className='w-full md:w-[49%] xl:w-[32%]'>
-                                    <PostCard key={post.id} post={post} setEditing={setEditedPost} setDeleting={setDeletedPost} />
-                                </div>
-                            ))}
-                        </div>
-
-                        {paginatedItems.length === 0 && (
-                            <div className="text-center py-8">
-                                <p className="text-gray-500">No posts found matching your criteria.</p>
-                            </div>
-                        )}
-
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={setPage}
+                        <Button width='fit' type="primary" onClick={() => setCreatePost(true)} buttonText="New Post" />
+                    </div>
+                    <div className="mb-6">
+                        <PostSearchFilter
+                            searchKey={searchKey}
+                            onSearchChange={setSearchKey}
+                            selectedStatuses={selectedStatuses}
+                            onStatusesChange={setSelectedStatuses}
+                            onSearch={() => { }}
                         />
-                    </section>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row md:flex-wrap gap-[2%] gap-y-5">
+                        {paginatedItems.map(post => (
+                            <div className='w-full md:w-[49%] xl:w-[32%]'>
+                                <PostCard key={post.id} post={post} setEditing={setEditedPost} setDeleting={setDeletedPost} />
+                            </div>
+                        ))}
+                    </div>
+
+                    {paginatedItems.length === 0 && (
+                        <div className="text-center py-8">
+                            <p className="text-gray-500">No posts found matching your criteria.</p>
+                        </div>
+                    )}
+
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setPage}
+                    />
                 </main>
             </div>
         </WithNavbar>
