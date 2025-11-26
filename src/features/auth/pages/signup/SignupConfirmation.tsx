@@ -18,6 +18,7 @@ export default function SignupConfirmation() {
   );
 
   useEffect(() => {
+    console.log(userStatus,userFullName)
     if (userStatus === "Approved") {
       const timer = setTimeout(() => {
         navigate("/"); //speculatory home page sublink
