@@ -1,4 +1,4 @@
-import { LoginPage, SignupPage, SignupConfirmation, ForgotPasswordPage, AboutUsPage, EventsPage, EventDetailsPage, EventRegistrationPage, PastEventsPage, GalleryPage, GalleryDisplayPage , ProfilePage, EventTicketPage, OTPPage, PostManagementPage
+import { LoginPage, SignupPage, SignupConfirmation, ForgotPasswordPage, AboutUsPage, EventsPage, EventDetailsPage, EventRegistrationPage, PastEventsPage, GalleryPage, GalleryDisplayPage , ProfilePage, EventTicketPage, OTPPage, PostManagementPage, EventsAdminPage
 } from "@/features";
 export const routes = [
   { path: "/login", Component: LoginPage },
@@ -16,4 +16,5 @@ export const routes = [
   { path: "/otp", Component: OTPPage },
   { path: "/posts", Component: PostManagementPage },
   { path: "/events/register/:id", Component: EventRegistrationPage },
+  { path: '/admin/events', Component: EventsAdminPage }, // NOT A PROTECTED ROUTE, CAREFUL WITH INTEGRATION
 ];

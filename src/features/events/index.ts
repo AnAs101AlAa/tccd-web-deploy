@@ -3,3 +3,4 @@ export { default as EventDetailsPage } from "./pages/EventDetailsPage";
 export { default as EventTicketPage } from "./pages/EventTicketPage";
 export { default as PastEventsPage } from "./pages/PastEventsPage";
 export { default as EventRegistrationPage } from "./pages/page";
+export { default as EventsAdminPage } from "./pages/EventsAdminPage";
