@@ -8,9 +8,11 @@ import Format from "@/shared/utils/dateFormater";
 export default function PastEventCard({
   event,
   canEdit,
+  onEdit,
 }: {
   event: Event;
   canEdit?: boolean;
+  onEdit: (event: Event) => void;
 }) {
   const navigate = useNavigate();
   return (
@@ -42,7 +44,9 @@ export default function PastEventCard({
               buttonText=""
               buttonIcon={<MdEdit className="text-md md:text-lg" />}
               type="ghost"
-              onClick={() => {}}
+              onClick={() => {
+                onEdit(event);
+              }}
             />
           )}
         </div>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Pagination } from "@/shared/components/pagination";
 import { PastEventCard } from "../components";
+import AddEditEventModal from "@/features/events/components/eventAdminPanel/AddEditEventModal";
+import type { EventFormData } from "@/features/events/types/eventFormTypes";
 import { MdAdd } from "react-icons/md";
 import type Event from "@/shared/types/events";
 import { upcomingEvents } from "../data/dummyEvents";
@@ -21,6 +23,10 @@ export default function EventsAdminPage() {
     const end = Math.min(initialPage * eventsPerPage, upcomingEvents.length);
     return upcomingEvents.slice(start, end);
   });
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | undefined>(
+    undefined
+  );
   function changePage(newPageNumber: number) {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set("page", newPageNumber.toString());
@@ -45,7 +51,10 @@ export default function EventsAdminPage() {
               buttonText="Add Event"
               buttonIcon={<MdAdd className="text-lg md:text-xl" />}
               type="ghost"
-              onClick={() => {}}
+              onClick={() => {
+                setSelectedEvent(undefined);
+                setIsEventModalOpen(true);
+              }}
             />
           )}
         </div>
@@ -55,6 +64,10 @@ export default function EventsAdminPage() {
               key={event.id}
               event={event}
               canEdit={withAdminPriviliges}
+              onEdit={() => {
+                setSelectedEvent(event);
+                setIsEventModalOpen(true);
+              }}
             />
           ))}
         </div>
@@ -65,6 +78,16 @@ export default function EventsAdminPage() {
             onPageChange={changePage}
           />
         </div>
+        {isEventModalOpen && (
+          <AddEditEventModal
+            event={selectedEvent}
+            onClose={() => setIsEventModalOpen(false)}
+            onSave={(eventFormData: EventFormData) => {
+              console.log("Saved event form data:", eventFormData);
+              setIsEventModalOpen(false);
+            }}
+          />
+        )}
       </div>
     </WithNavbar>
   );
