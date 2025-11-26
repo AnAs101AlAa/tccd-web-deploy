@@ -13,6 +13,7 @@ import {
   EventTicketPage,
   OTPPage,
   LocationsManagementPage,
+   PostManagementPage
 } from "@/features";
 
 export const routes = [
@@ -29,5 +30,6 @@ export const routes = [
   { path: "/gallery/view/:id", Component: GalleryDisplayPage },
   { path: "/tickets/:id", Component: EventTicketPage },
   { path: "/otp", Component: OTPPage },
+  { path: "/posts", Component: PostManagementPage },
   { path: "/admin/locations", Component: LocationsManagementPage },
 ];
