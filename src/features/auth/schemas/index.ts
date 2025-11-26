@@ -7,6 +7,7 @@ export {
   basicInfoSchema,
   studentInfoSchema,
   companyRepInfoSchema,
+  facultyInfoSchema,
   userTypeSchema,
   type LoginFormData,
   type SignupFormData,
@@ -16,5 +17,6 @@ export {
   type BasicInfoFormData,
   type StudentInfoFormData,
   type CompanyRepInfoFormData,
+  type FacultyInfoFormData,
   type UserType,
 } from "./authSchemas";

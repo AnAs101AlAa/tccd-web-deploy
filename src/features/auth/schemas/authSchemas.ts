@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const emailSchema = z
+  .string()
   .email("Please enter a valid email address")
   .min(1, "Email is required");
 
@@ -9,8 +10,8 @@ const passwordSchema = z
   .min(1, "Password is required")
   .min(8, "Password must be at least 8 characters")
   .regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-    "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])/,
+    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
   );
 
 const phoneNumberSchema = z
@@ -39,15 +40,12 @@ const arabicNameSchema = z
     "Arabic name must contain only Arabic characters"
   );
 
+const genderSchema = z.enum(["Male", "Female"], {
+  message: "Please select your gender",
+});
+
 /**
  * Login Form Schema
- *
- * Validates login credentials
- *
- * @example
- * const { register, handleSubmit } = useForm({
- *   resolver: zodResolver(loginSchema)
- * });
  */
 export const loginSchema = z.object({
   email: emailSchema,
@@ -73,7 +71,7 @@ export const accountTypeSchema = z.object({
 export type AccountTypeFormData = z.infer<typeof accountTypeSchema>;
 
 /**
- * Step 2: Basic Info Schema
+ * Step 2: Basic Info Schema (with gender)
  */
 export const basicInfoSchema = z
   .object({
@@ -84,6 +82,7 @@ export const basicInfoSchema = z
     arabicFullName: arabicNameSchema,
     phoneNumber: phoneNumberSchema,
     email: emailSchema,
+    gender: genderSchema,
     linkedinUrl: z
       .string()
       .url("Please enter a valid URL")
@@ -109,22 +108,59 @@ export const studentInfoSchema = z.object({
   university: z.string().min(1, "University is required"),
   faculty: z.string().min(1, "Faculty is required"),
   department: z.string().optional(),
-  graduationYear: z
-    .number()
-    .min(2000, "Graduation year must be after 2000")
-    .max(2050, "Graduation year must be before 2050"),
 });
 
 export type StudentInfoFormData = z.infer<typeof studentInfoSchema>;
 
 /**
- * Step 4: Company Rep Info Schema
+ * Step 3/4: Company Rep Info Schema
  */
 export const companyRepInfoSchema = z.object({
-  companyId: z.string().min(1, "Please select a company"),
-});
+  companyId: z.string().optional(),
+  position: z.string().min(1, "Position is required"),
+  proofFile: z.instanceof(File, { message: "Proof file is required" }),
+  // New company fields (conditional)
+  isNewCompany: z.boolean(),
+  newCompany: z.object({
+    companyName: z.string().min(1, "Company name is required"),
+    businessType: z.string().min(1, "Business type is required"),
+    description: z.string()
+      .min(20, "Description should be between 20 and 1000 characters")
+      .max(1000, "Description should be between 20 and 1000 characters"),
+    website: z.string().url("Please enter a valid website URL"),
+    brief: z.string()
+      .min(20, "Brief should be between 20 and 500 characters")
+      .max(500, "Brief should be between 20 and 500 characters"),
+  }).optional(),
+}).refine(
+  (data) => {
+    // Either companyId or newCompany fields must be provided
+    if (data.isNewCompany) {
+      return data.newCompany !== undefined;
+    } else {
+      return data.companyId !== undefined && data.companyId !== "";
+    }
+  },
+  {
+    message: "Please select a company or register a new one",
+    path: ["companyId"],
+  }
+);
 
 export type CompanyRepInfoFormData = z.infer<typeof companyRepInfoSchema>;
+
+/**
+ * Step 3/4: Faculty Info Schema
+ */
+export const facultyInfoSchema = z.object({
+  universityName: z.string().min(1, "University is required"),
+  facultyName: z.string().min(1, "Faculty is required"),
+  department: z.string().min(1, "Department is required"),
+  role: z.string().min(1, "Role is required"),
+  proofFile: z.instanceof(File, { message: "Proof file is required" }),
+});
+
+export type FacultyInfoFormData = z.infer<typeof facultyInfoSchema>;
 
 /**
  * Complete Signup Schema
@@ -135,6 +171,7 @@ export const signupSchema = z.object({
   arabicFullName: arabicNameSchema,
   phoneNumber: phoneNumberSchema,
   email: emailSchema,
+  gender: genderSchema,
   linkedinUrl: z.string().optional(),
   password: passwordSchema,
   confirmPassword: z.string(),
@@ -142,20 +179,32 @@ export const signupSchema = z.object({
   university: z.string().optional(),
   faculty: z.string().optional(),
   department: z.string().optional(),
-  graduationYear: z.number().optional(),
   // Company rep fields (optional)
   companyId: z.string().optional(),
+  position: z.string().optional(),
+  proofFile: z.string().optional(),
+  isNewCompany: z.boolean().optional(),
+  newCompany: z.object({
+    companyName: z.string(),
+    businessType: z.string(),
+    description: z.string(),
+    website: z.string(),
+    brief: z.string(),
+  }).optional(),
+  // Faculty fields (optional)
+  universityName: z.string().optional(),
+  facultyName: z.string().optional(),
+  role: z.string().optional(),
 });
 
 /**
  * Type inference from schemas
- * Use these types in your components for type safety
  */
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
 
 /**
- * Password Reset Schema (for future use)
+ * Password Reset Schema
  */
 export const forgotPasswordSchema = z.object({
   email: emailSchema,
@@ -164,7 +213,7 @@ export const forgotPasswordSchema = z.object({
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 /**
- * Reset Password Schema (for future use)
+ * Reset Password Schema
  */
 export const resetPasswordSchema = z
   .object({
