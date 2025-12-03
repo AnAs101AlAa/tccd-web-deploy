@@ -14,6 +14,7 @@ import Avatar from "@/shared/components/Avatar";
 interface SidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
+  onToggle?: () => void;
 }
 
 interface NavItem {
@@ -25,7 +26,7 @@ interface NavItem {
   path?: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen = true }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState<string>("events");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
@@ -69,6 +70,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true }) => {
 
   return (
     <>
+      {/* Backdrop overlay for mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
         className={`
@@ -77,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true }) => {
           m-2
           h-[calc(100vh-1rem)]
           ${isExpanded ? "w-64" : "w-[88px]"}
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
         {/* Glass morphism background */}
@@ -94,9 +103,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true }) => {
           "
         >
           {/* Toggle Arrow Button */}
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="
+          {isOpen && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="
               absolute -right-3 top-[78px]
               w-6 h-6
               bg-background-primary/90
@@ -109,14 +119,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true }) => {
               shadow-md
               z-50
             "
-            title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
-          >
-            {isExpanded ? (
-              <FiChevronLeft className="w-3 h-3 text-contrast/50" />
-            ) : (
-              <FiChevronRight className="w-3 h-3 text-contrast/50" />
-            )}
-          </button>
+              title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
+            >
+              {isExpanded ? (
+                <FiChevronLeft className="w-3 h-3 text-contrast/50" />
+              ) : (
+                <FiChevronRight className="w-3 h-3 text-contrast/50" />
+              )}
+            </button>
+          )}
 
           {/* Header with Avatar and Info */}
           <div

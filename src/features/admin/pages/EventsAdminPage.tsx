@@ -41,54 +41,56 @@ export default function EventsAdminPage() {
   }
   return (
     <WithLayout>
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-secondary">
-            Event Management
-          </h1>
-          {withAdminPriviliges && (
-            <Button
-              buttonText="Add Event"
-              buttonIcon={<MdAdd className="text-lg md:text-xl" />}
-              type="ghost"
-              onClick={() => {
-                setSelectedEvent(undefined);
-                setIsEventModalOpen(true);
-              }}
+      <div className="w-full max-w-7xl mx-auto space-y-4 md:space-y-6 px-2 sm:px-4 md:px-6">
+        <div className="bg-white rounded-2xl md:rounded-4xl shadow-lg md:shadow-xl p-4 sm:p-5 md:p-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-5">
+            <h1 className="text-2xl sm:text-3xl font-bold text-secondary">
+              Event Management
+            </h1>
+            {withAdminPriviliges && (
+              <Button
+                buttonText="Add Event"
+                buttonIcon={<MdAdd className="text-lg md:text-xl" />}
+                type="ghost"
+                onClick={() => {
+                  setSelectedEvent(undefined);
+                  setIsEventModalOpen(true);
+                }}
+              />
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {currentEvents.map((event) => (
+              <PastEventCard
+                key={event.id}
+                event={event}
+                canEdit={withAdminPriviliges}
+                onEdit={() => {
+                  setSelectedEvent(event);
+                  setIsEventModalOpen(true);
+                }}
+              />
+            ))}
+          </div>
+          <div className="mt-4 md:mt-6">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(upcomingEvents.length / eventsPerPage)}
+              onPageChange={changePage}
             />
-          )}
+          </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {currentEvents.map((event) => (
-            <PastEventCard
-              key={event.id}
-              event={event}
-              canEdit={withAdminPriviliges}
-              onEdit={() => {
-                setSelectedEvent(event);
-                setIsEventModalOpen(true);
-              }}
-            />
-          ))}
-        </div>
-        <div className="mt-6">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(upcomingEvents.length / eventsPerPage)}
-            onPageChange={changePage}
-          />
-        </div>
-        {isEventModalOpen && (
-          <AddEditEventModal
-            event={selectedEvent}
-            onClose={() => setIsEventModalOpen(false)}
-            onSave={(eventFormData: EventFormData) => {
-              console.log("Saved event form data:", eventFormData);
-              setIsEventModalOpen(false);
-            }}
-          />
-        )}
       </div>
+      {isEventModalOpen && (
+        <AddEditEventModal
+          event={selectedEvent}
+          onClose={() => setIsEventModalOpen(false)}
+          onSave={(eventFormData: EventFormData) => {
+            console.log("Saved event form data:", eventFormData);
+            setIsEventModalOpen(false);
+          }}
+        />
+      )}
     </WithLayout>
   );
 }
