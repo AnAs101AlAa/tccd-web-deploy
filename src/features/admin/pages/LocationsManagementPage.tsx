@@ -8,6 +8,7 @@ import GenericGrid from "@/shared/components/GenericGrid";
 import LocationFilter from "../components/LocationFilter";
 import type { Location } from "@/shared/queries/admin";
 import { FiPlus } from "react-icons/fi";
+import { WithLayout } from "@/shared/components/hoc";
 
 /**
  * LocationsManagementPage Component
@@ -78,6 +79,8 @@ const LocationsManagementPage = () => {
   }
 
   return (
+    <WithLayout>
+
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -129,6 +132,7 @@ const LocationsManagementPage = () => {
         />
       </div>
     </div>
+    </WithLayout>
   );
 };
 

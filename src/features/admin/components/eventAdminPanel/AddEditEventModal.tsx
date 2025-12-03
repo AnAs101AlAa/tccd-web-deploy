@@ -13,6 +13,7 @@ import type {
   AddEditEventModalProps,
   EventFormValues,
   FormErrors,
+  MediaItem,
 } from "../../types/eventModalTypes";
 import { EVENT_FORM_CONSTRAINTS } from "../../constants/eventModalConstants";
 import {
@@ -27,7 +28,6 @@ import {
 } from "./EventModalFormFields";
 import { FileUploadField } from "@/shared/components/FileUploadField";
 import { MediaManager } from "./MediaManager";
-import type { MediaItem } from "../../types/eventModalTypes";
 import { AVAILABLE_SPONSORS } from "../../constants/sponsors";
 
 const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
@@ -51,10 +51,10 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     (field: keyof EventFormValues) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
-      setFormValues((prev) => ({ ...prev, [field]: value }));
+      setFormValues((prev: EventFormValues) => ({ ...prev, [field]: value }));
 
       if (errors[field as keyof FormErrors]) {
-        setErrors((prev) => ({ ...prev, [field]: undefined }));
+        setErrors((prev: FormErrors) => ({ ...prev, [field]: undefined }));
       }
     };
 
@@ -62,31 +62,31 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const { value } = event.target;
-    setFormValues((prev) => ({ ...prev, description: value }));
+    setFormValues((prev: EventFormValues) => ({ ...prev, description: value }));
 
     if (errors.description) {
-      setErrors((prev) => ({ ...prev, description: undefined }));
+      setErrors((prev: FormErrors) => ({ ...prev, description: undefined }));
     }
   };
 
   const handleEventTypeChange = (value: string) => {
-    setFormValues((prev) => ({ ...prev, eventType: value }));
+    setFormValues((prev: EventFormValues) => ({ ...prev, eventType: value }));
 
     if (errors.eventType) {
-      setErrors((prev) => ({ ...prev, eventType: undefined }));
+      setErrors((prev: FormErrors) => ({ ...prev, eventType: undefined }));
     }
   };
 
   const handleFileChange = (file: File | null) => {
     if (file) {
       const previewUrl = URL.createObjectURL(file);
-      setFormValues((prev) => ({
+      setFormValues((prev: EventFormValues) => ({
         ...prev,
         eventPoster: file,
         eventPosterPreview: previewUrl,
       }));
     } else {
-      setFormValues((prev) => ({
+      setFormValues((prev: EventFormValues) => ({
         ...prev,
         eventPoster: "",
         eventPosterPreview: "",
@@ -94,23 +94,26 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     }
 
     if (errors.eventPoster) {
-      setErrors((prev) => ({ ...prev, eventPoster: undefined }));
+      setErrors((prev: FormErrors) => ({ ...prev, eventPoster: undefined }));
     }
   };
 
   const handleMediaChange = (media: MediaItem[]) => {
-    setFormValues((prev) => ({ ...prev, media }));
+    setFormValues((prev: EventFormValues) => ({ ...prev, media }));
 
     if (errors.media) {
-      setErrors((prev) => ({ ...prev, media: undefined }));
+      setErrors((prev: FormErrors) => ({ ...prev, media: undefined }));
     }
   };
 
   const handleSponsorsChange = (selectedIds: string[]) => {
-    setFormValues((prev) => ({ ...prev, sponsors: selectedIds }));
+    setFormValues((prev: EventFormValues) => ({
+      ...prev,
+      sponsors: selectedIds,
+    }));
 
     if (errors.sponsors) {
-      setErrors((prev) => ({ ...prev, sponsors: undefined }));
+      setErrors((prev: FormErrors) => ({ ...prev, sponsors: undefined }));
     }
   };
 
@@ -212,7 +215,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                           } else {
                             handleSponsorsChange(
                               formValues.sponsors.filter(
-                                (id) => id !== sponsor.id
+                                (id: string) => id !== sponsor.id
                               )
                             );
                           }

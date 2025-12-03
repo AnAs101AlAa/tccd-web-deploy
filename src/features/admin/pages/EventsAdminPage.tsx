@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Pagination } from "@/shared/components/pagination";
-import { PastEventCard } from "../components";
-import AddEditEventModal from "@/features/events/components/eventAdminPanel/AddEditEventModal";
-import type { EventFormData } from "@/features/events/types/eventFormTypes";
+import { PastEventCard } from "@/features/events/components";
+import AddEditEventModal from "../components/eventAdminPanel/AddEditEventModal";
+import type { EventFormData } from "../types/eventFormTypes";
 import { MdAdd } from "react-icons/md";
 import type Event from "@/shared/types/events";
-import { upcomingEvents } from "../data/dummyEvents";
-import WithNavbar from "@/shared/components/hoc/WithNavbar";
+import { upcomingEvents } from "@/features/events/data/dummyEvents";
 import { Button } from "tccd-ui";
+import { WithLayout } from "@/shared/components/hoc";
 
 export default function EventsAdminPage() {
   const eventsPerPage = 5; //We can adjust this as much as we want, really
@@ -40,11 +40,11 @@ export default function EventsAdminPage() {
     ); //To be replaced with an API call asking for next page
   }
   return (
-    <WithNavbar>
-      <div className="mb-7 sm:mb-0">
-        <div className="flex items-center justify-between p-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-secondary">
-            Events
+    <WithLayout>
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-secondary">
+            Event Management
           </h1>
           {withAdminPriviliges && (
             <Button
@@ -58,7 +58,7 @@ export default function EventsAdminPage() {
             />
           )}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {currentEvents.map((event) => (
             <PastEventCard
               key={event.id}
@@ -71,7 +71,7 @@ export default function EventsAdminPage() {
             />
           ))}
         </div>
-        <div className="mb-4">
+        <div className="mt-6">
           <Pagination
             currentPage={currentPage}
             totalPages={Math.ceil(upcomingEvents.length / eventsPerPage)}
@@ -89,6 +89,6 @@ export default function EventsAdminPage() {
           />
         )}
       </div>
-    </WithNavbar>
+    </WithLayout>
   );
 }

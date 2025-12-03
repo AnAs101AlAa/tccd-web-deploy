@@ -5,8 +5,11 @@ import {
   FiTrendingUp,
   FiShoppingBag,
   FiSettings,
+  FiChevronLeft,
+  FiChevronRight,
 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import Avatar from "@/shared/components/Avatar";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -19,269 +22,210 @@ interface NavItem {
   icon: React.ReactNode;
   subItems?: { label: string; path: string }[];
   badge?: number;
+  path?: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen = true }) => {
   const navigate = useNavigate();
-  const [activeItem, setActiveItem] = useState<string>("dashboard");
+  const [activeItem, setActiveItem] = useState<string>("events");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const navItems: NavItem[] = [
     {
-      id: "dashboard",
-      label: "Main",
-      icon: <FiGrid className="w-6 h-6" />,
-      subItems: [
-        { label: "Activity", path: "/dashboard/activity" },
-        { label: "Traffic", path: "/dashboard/traffic" },
-        { label: "Statistic", path: "/dashboard/statistic" },
-      ],
+      id: "events",
+      label: "Events",
+      icon: <FiGrid className="w-5 h-5" />,
+      path: "/admin/events",
     },
     {
-      id: "analytics",
-      label: "Analytics",
-      icon: <FiTrendingUp className="w-6 h-6" />,
+      id: "locations",
+      label: "Locations",
+      icon: <FiTrendingUp className="w-5 h-5" />,
+      path: "/admin/locations",
     },
     {
-      id: "products",
-      label: "Products",
-      icon: <FiShoppingBag className="w-6 h-6" />,
+      id: "posts",
+      label: "Posts",
+      icon: <FiShoppingBag className="w-5 h-5" />,
+      path: "/posts",
     },
     {
       id: "settings",
       label: "Settings",
-      icon: <FiSettings className="w-6 h-6" />,
+      icon: <FiSettings className="w-5 h-5" />,
     },
   ];
 
-  const contacts = [
-    { id: 1, name: "John Doe", avatar: "JD", status: "online" },
-    { id: 2, name: "Jane Smith", avatar: "JS", status: "offline" },
-    { id: 3, name: "Alex Johnson", avatar: "AJ", status: "online" },
-  ];
-
   const handleNavClick = (item: NavItem) => {
+    setActiveItem(item.id);
+    if (item.path) {
+      navigate(item.path);
+    }
     if (item.subItems) {
       setExpandedItem(expandedItem === item.id ? null : item.id);
     }
-    setActiveItem(item.id);
-  };
-
-  const handleSubItemClick = (path: string) => {
-    navigate(path);
   };
 
   return (
     <>
-      {/* Backdrop for mobile */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-contrast/40 backdrop-blur-sm z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
-
       {/* Sidebar */}
       <aside
         className={`
-          fixed left-0 top-0 h-screen z-50
-          w-[104px] 
-          transition-transform duration-300 ease-in-out
-          ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          fixed left-0 top-0 z-40
+          transition-all duration-300 ease-in-out
+          m-2
+          h-[calc(100vh-1rem)]
+          ${isExpanded ? "w-64" : "w-[88px]"}
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         {/* Glass morphism background */}
         <div
           className="
             h-full 
-            bg-background-primary/80
+            bg-background-primary/90
             backdrop-blur-[80px]
-            border-[0.5px] border-muted-primary/40
-            shadow-[0px_64px_64px_-32px_rgba(205,58,56,0.3)]
-            rounded-[28px]
-            m-4
+            border border-muted-primary/40
+            shadow-[0px_64px_64px_-32px_rgba(102,37,0,0.56)]
             flex flex-col
+            py-6
+            rounded-[28px]
           "
         >
-          {/* Header with Avatar */}
-          <div className="flex flex-col items-center pt-16 pb-8">
-            <div className="relative w-12 h-12 mb-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-muted-primary to-primary flex items-center justify-center text-background font-semibold text-sm shadow-lg">
-                U
-              </div>
-            </div>
+          {/* Toggle Arrow Button */}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="
+              absolute -right-3 top-[78px]
+              w-6 h-6
+              bg-background-primary/90
+              border border-muted-primary/30
+              backdrop-blur-[90px]
+              rounded-full
+              flex items-center justify-center
+              transition-all duration-200
+              hover:bg-background-primary
+              shadow-md
+              z-50
+            "
+            title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
+          >
+            {isExpanded ? (
+              <FiChevronLeft className="w-3 h-3 text-contrast/50" />
+            ) : (
+              <FiChevronRight className="w-3 h-3 text-contrast/50" />
+            )}
+          </button>
 
-            {/* Collapse button */}
-            <button
-              className="
-                w-6 h-6 
-                rounded-full 
-                bg-background-primary/70
-                backdrop-blur-[90px]
-                border-[0.5px] border-muted-primary/30
-                flex items-center justify-center
-                hover:bg-background-primary transition-colors
-              "
-              onClick={onClose}
-            >
-              <svg
-                className="w-3 h-3 text-contrast/50 rotate-180"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
+          {/* Header with Avatar and Info */}
+          <div
+            className={`flex items-center pb-6 mb-4 transition-all duration-300 ${
+              isExpanded ? "px-6 gap-3" : "flex-col px-4"
+            }`}
+          >
+            <Avatar
+              size={48}
+              backgroundColor="#F2C7BA"
+              fallback="A"
+              className="flex-shrink-0"
+            />
+            {isExpanded && (
+              <div className="flex flex-col overflow-hidden">
+                <span className="text-xs font-medium tracking-wide uppercase text-contrast/40 whitespace-nowrap">
+                  Product Designer
+                </span>
+                <span className="text-sm font-medium text-contrast whitespace-nowrap">
+                  Andrew Smith
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Divider */}
-          <div className="h-[0.5px] mx-0 bg-gradient-to-r from-transparent via-contrast/20 to-transparent" />
+          <div className="h-[0.5px] mx-4 mb-4 bg-gradient-to-r from-transparent via-[#432C2C]/24 to-transparent" />
 
           {/* Main Navigation */}
-          <nav className="flex-1 px-6 py-4">
-            <div className="mb-2">
-              <span className="text-[11px] font-medium uppercase tracking-wider text-inactive-tab-text px-1">
-                Main
-              </span>
-            </div>
-
+          <nav className="flex-1 px-4">
             <div className="space-y-1">
               {navItems.map((item) => (
                 <div key={item.id} className="relative">
                   <button
                     onClick={() => handleNavClick(item)}
                     className={`
-                      w-14 h-14 
-                      flex items-center justify-center 
-                      rounded-xl 
+                      w-full h-14
+                      flex items-center gap-4
+                      rounded-xl
                       transition-all duration-200
+                      ${isExpanded ? "px-5" : "justify-center"}
                       ${
                         activeItem === item.id
-                          ? "bg-active-tab-bg border-[0.5px] border-muted-primary/20 shadow-md"
-                          : "hover:bg-background-contrast/30"
+                          ? "bg-contrast/4 border border-muted-primary/16 text-contrast shadow-[0px_4px_24px_rgba(204,100,6,0.1)]"
+                          : "text-contrast/56 hover:bg-contrast/2 hover:text-contrast"
                       }
                     `}
+                    title={!isExpanded ? item.label : undefined}
                   >
-                    <div
-                      className={`${
-                        activeItem === item.id
-                          ? "text-primary"
-                          : "text-contrast/60"
+                    <span
+                      className={`flex-shrink-0 ${
+                        activeItem === item.id ? "" : ""
                       }`}
                     >
                       {item.icon}
-                    </div>
+                    </span>
+                    {isExpanded && (
+                      <span className="text-sm font-medium whitespace-nowrap flex-1 text-left">
+                        {item.label}
+                      </span>
+                    )}
+                    {/* Active indicator glow effect */}
+                    {activeItem === item.id && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-[rgba(204,139,139,0.48)] to-transparent opacity-48 blur-[20px] -z-10 pointer-events-none" />
+                    )}
                   </button>
-
-                  {/* Expanded submenu */}
-                  {expandedItem === item.id && item.subItems && (
-                    <div
-                      className="
-                        absolute left-[60px] top-0
-                        w-[166px]
-                        bg-background-primary/90
-                        backdrop-blur-[80px]
-                        border-[0.5px] border-muted-primary/40
-                        shadow-[0px_64px_64px_-32px_rgba(205,58,56,0.3)]
-                        rounded-2xl
-                        p-1
-                        z-10
-                      "
-                    >
-                      {item.subItems.map((subItem, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => handleSubItemClick(subItem.path)}
-                          className={`
-                            w-full px-3.5 py-2 
-                            text-left text-xs font-medium
-                            rounded-lg
-                            transition-colors
-                            ${
-                              idx === 2
-                                ? "bg-active-tab-bg text-active-tab-text"
-                                : "text-inactive-tab-text hover:bg-background-contrast/40"
-                            }
-                          `}
-                        >
-                          {subItem.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
           </nav>
 
           {/* Divider */}
-          <div className="h-[0.5px] mx-0 bg-gradient-to-r from-transparent via-contrast/20 to-transparent" />
+          {isExpanded && (
+            <div className="h-[0.5px] mx-4 mb-4 bg-gradient-to-r from-transparent via-[#432C2C]/24 to-transparent" />
+          )}
 
-          {/* Messages Section */}
-          <div className="px-6 py-4">
-            <div className="mb-2">
-              <span className="text-[11px] font-medium uppercase tracking-wider text-inactive-tab-text">
-                Messages
-              </span>
-            </div>
-
-            <div className="space-y-1">
-              {contacts.map((contact) => (
-                <button
-                  key={contact.id}
-                  className="
-                    w-16 h-14 
-                    flex items-center justify-center 
-                    rounded-xl 
-                    hover:bg-background-contrast/30
-                    transition-colors
-                    relative
-                  "
-                >
-                  {/* Status indicator */}
-                  <span
-                    className={`
-                      absolute top-2 left-9 
-                      w-1.5 h-1.5 rounded-full 
-                      ${
-                        contact.status === "online"
-                          ? "bg-success"
-                          : "bg-label border border-contrast/30"
-                      }
-                    `}
-                  />
-
-                  {/* Avatar */}
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-muted-primary to-muted-secondary flex items-center justify-center text-background text-[10px] font-semibold">
-                    {contact.avatar}
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Add Button */}
-          <div className="p-7">
-            <button
-              className="
-                w-12 h-12 
-                bg-primary
-                hover:bg-primary/90
-                shadow-[0px_4px_24px_rgba(205,58,56,0.3)]
-                rounded-xl
-                flex items-center justify-center
-                transition-all duration-200
-                hover:scale-105
-              "
+          {/* Promo Block */}
+          <div className="px-4 mb-4">
+            <div
+              className={`bg-background/12 border border-muted-primary/16 ${
+                isExpanded ? "rounded-[28px] p-6" : "rounded-xl p-3"
+              } flex flex-col items-center ${isExpanded ? "gap-5" : "gap-0"}`}
             >
-              <FiPlus className="w-6 h-6 text-background" strokeWidth={2.4} />
-            </button>
+              {isExpanded && (
+                <div className="text-center space-y-1.5">
+                  <h4 className="text-base font-semibold text-contrast tracking-tight">
+                    Let's start!
+                  </h4>
+                  <p className="text-[13px] font-medium text-contrast/56 leading-relaxed">
+                    Creating or adding new Events couldn't be easier
+                  </p>
+                </div>
+              )}
+              <button
+                className={`bg-gradient-to-b from-primary to-primary hover:from-primary/90 hover:to-primary/90 shadow-[0px_4px_24px_rgba(204,100,6,0.3)] flex items-center justify-center gap-2 transition-all ${
+                  isExpanded
+                    ? "w-full h-12 rounded-xl"
+                    : "w-12 h-12 rounded-full"
+                }`}
+                title={!isExpanded ? "Add New Event" : undefined}
+              >
+                <FiPlus className="w-5 h-5 text-background" />
+                {isExpanded && (
+                  <span className="text-sm font-semibold text-background">
+                    Add New Event
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </aside>

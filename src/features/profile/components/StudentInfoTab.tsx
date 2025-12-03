@@ -3,7 +3,7 @@ import { FiEdit, FiPlus } from "react-icons/fi";
 import { Button, ButtonTypes, ButtonWidths } from "tccd-ui";
 import type { StudentUser, VolunteeringUser } from "@/shared/types";
 import type Event from "@/shared/types/events";
-import type { EventFormData } from "@/features/events/types/eventFormTypes";
+import type { EventFormData } from "@/features/admin/types/eventFormTypes";
 import StudentInfoDisplay from "./StudentInfoDisplay";
 import EditStudentInfoModal from "./EditStudentInfoModal";
 import { AddEditEventModal } from "@/features/events/components";

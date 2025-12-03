@@ -8,11 +8,11 @@ import Format from "@/shared/utils/dateFormater";
 export default function PastEventCard({
   event,
   canEdit,
-  onEdit,
+  onEdit = () => {},
 }: {
   event: Event;
   canEdit?: boolean;
-  onEdit: (event: Event) => void;
+  onEdit?: (event: Event) => void;
 }) {
   const navigate = useNavigate();
   return (

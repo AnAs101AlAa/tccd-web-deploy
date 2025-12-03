@@ -16,10 +16,10 @@ export interface MediaItem {
 export interface EventFormValues {
   title: string;
   description: string;
-  eventPoster: File | string; 
+  eventPoster: File | string;
   eventPosterPreview?: string;
-  media: MediaItem[]; 
-  sponsors: string[]; 
+  media: MediaItem[];
+  sponsors: string[];
   date: string;
   location: string;
   eventType: string;
