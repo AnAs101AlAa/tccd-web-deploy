@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { FiPlus, FiGrid, FiTrendingUp, FiShoppingBag, FiSettings } from "react-icons/fi";
+import {
+  FiPlus,
+  FiGrid,
+  FiTrendingUp,
+  FiShoppingBag,
+  FiSettings,
+} from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
@@ -163,7 +169,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                     `}
                   >
                     <div
-                      className={`${activeItem === item.id ? "text-primary" : "text-contrast/60"}`}
+                      className={`${
+                        activeItem === item.id
+                          ? "text-primary"
+                          : "text-contrast/60"
+                      }`}
                     >
                       {item.icon}
                     </div>
@@ -239,7 +249,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                     className={`
                       absolute top-2 left-9 
                       w-1.5 h-1.5 rounded-full 
-                      ${contact.status === "online" ? "bg-success" : "bg-label border border-contrast/30"}
+                      ${
+                        contact.status === "online"
+                          ? "bg-success"
+                          : "bg-label border border-contrast/30"
+                      }
                     `}
                   />
 
