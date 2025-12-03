@@ -70,15 +70,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
 
   return (
     <>
-      {/* Backdrop overlay for mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/20 z-30 lg:hidden"
           onClick={onClose}
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`
           fixed left-0 top-0 z-40
@@ -89,20 +87,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
-        {/* Glass morphism background */}
         <div
           className="
             h-full 
             bg-background-primary/90
             backdrop-blur-[80px]
             border border-muted-primary/40
-            shadow-[0px_64px_64px_-32px_rgba(102,37,0,0.56)]
+            shadow-[0px_32px_32px_-16px_rgba(102,37,0,0.3)]
             flex flex-col
             py-6
             rounded-[28px]
           "
         >
-          {/* Toggle Arrow Button */}
           {isOpen && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
@@ -116,7 +112,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
               flex items-center justify-center
               transition-all duration-200
               hover:bg-background-primary
-              shadow-md
+              shadow-sm
               z-50
             "
               title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
@@ -129,7 +125,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
             </button>
           )}
 
-          {/* Header with Avatar and Info */}
           <div
             className={`flex items-center pb-6 mb-4 transition-all duration-300 ${
               isExpanded ? "px-6 gap-3" : "flex-col px-4"
@@ -171,7 +166,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                       ${isExpanded ? "px-5" : "justify-center"}
                       ${
                         activeItem === item.id
-                          ? "bg-contrast/4 border border-muted-primary/16 text-contrast shadow-[0px_4px_24px_rgba(204,100,6,0.1)]"
+                          ? "bg-contrast/4 border border-muted-primary/16 text-contrast shadow-[0px_2px_12px_rgba(204,100,6,0.08)]"
                           : "text-contrast/56 hover:bg-contrast/2 hover:text-contrast"
                       }
                     `}
@@ -191,7 +186,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                     )}
                     {/* Active indicator glow effect */}
                     {activeItem === item.id && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-[rgba(204,139,139,0.48)] to-transparent opacity-48 blur-[20px] -z-10 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-[rgba(204,139,139,0.24)] to-transparent opacity-30 blur-[12px] -z-10 pointer-events-none" />
                     )}
                   </button>
                 </div>
@@ -204,7 +199,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
             <div className="h-[0.5px] mx-4 mb-4 bg-gradient-to-r from-transparent via-[#432C2C]/24 to-transparent" />
           )}
 
-          {/* Promo Block */}
           <div className="px-4 mb-4">
             <div
               className={`bg-background/12 border border-muted-primary/16 ${
@@ -222,7 +216,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                 </div>
               )}
               <button
-                className={`bg-gradient-to-b from-primary to-primary hover:from-primary/90 hover:to-primary/90 shadow-[0px_4px_24px_rgba(204,100,6,0.3)] flex items-center justify-center gap-2 transition-all ${
+                className={`bg-gradient-to-b from-primary to-primary hover:from-primary/90 hover:to-primary/90 shadow-[0px_2px_12px_rgba(204,100,6,0.2)] flex items-center justify-center gap-2 transition-all ${
                   isExpanded
                     ? "w-full h-12 rounded-xl"
                     : "w-12 h-12 rounded-full"
