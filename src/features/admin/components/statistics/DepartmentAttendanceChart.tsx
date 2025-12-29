@@ -48,7 +48,7 @@ const DepartmentAttendanceChart: React.FC = () => {
         type: "bar",
         stack: "total",
         emphasis: { focus: "series" },
-        itemStyle: { color: colors.success }, // success/green
+        itemStyle: { color: colors.success }, 
         data: attended,
       },
       {
@@ -57,8 +57,8 @@ const DepartmentAttendanceChart: React.FC = () => {
         stack: "total",
         emphasis: { focus: "series" },
         itemStyle: {
-          color: colors.error, // error/red
-          borderRadius: [4, 4, 0, 0], // Rounded top
+          color: colors.error,
+          borderRadius: [4, 4, 0, 0], 
         },
         data: noShow,
       },

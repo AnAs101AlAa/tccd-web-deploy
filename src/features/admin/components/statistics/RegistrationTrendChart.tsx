@@ -5,7 +5,6 @@ import { useThemeColors } from "@/shared/hooks/useThemeColors";
 const RegistrationTrendChart: React.FC = () => {
   const colors = useThemeColors();
 
-  // Mock last 7 days
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const counts = [120, 132, 101, 134, 90, 230, 210];
 
