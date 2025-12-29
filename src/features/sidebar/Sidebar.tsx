@@ -56,6 +56,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       label: "Settings",
       icon: <FiSettings className="w-5 h-5" />,
     },
+    {
+      id: "statistics",
+      label: "Statistics",
+      icon: <FiTrendingUp className="w-5 h-5" />,
+      path: "/admin/statistics",
+    },
   ];
 
   const handleNavClick = (item: NavItem) => {
@@ -83,7 +89,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           transition-all duration-300 ease-in-out
           m-2
           h-[calc(100vh-1rem)]
-          ${isExpanded ? "w-64" : "w-[88px]"}
+          ${isExpanded ? "w-64" : "w-[88px] lg:w-64"}
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
@@ -114,6 +120,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
               hover:bg-background-primary
               shadow-sm
               z-50
+              lg:hidden
             "
               title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
             >
@@ -127,7 +134,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
 
           <div
             className={`flex items-center pb-6 mb-4 transition-all duration-300 ${
-              isExpanded ? "px-6 gap-3" : "flex-col px-4"
+              isExpanded
+                ? "px-6 gap-3"
+                : "flex-col px-4 lg:flex-row lg:px-6 lg:gap-3"
             }`}
           >
             <Avatar
@@ -136,16 +145,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
               fallback="A"
               className="flex-shrink-0"
             />
-            {isExpanded && (
-              <div className="flex flex-col overflow-hidden">
-                <span className="text-xs font-medium tracking-wide uppercase text-contrast/40 whitespace-nowrap">
-                  Product Designer
-                </span>
-                <span className="text-sm font-medium text-contrast whitespace-nowrap">
-                  Andrew Smith
-                </span>
-              </div>
-            )}
+            <div
+              className={`flex flex-col overflow-hidden ${
+                isExpanded ? "" : "hidden lg:flex"
+              }`}
+            >
+              <span className="text-xs font-medium tracking-wide uppercase text-contrast/40 whitespace-nowrap">
+                Product Designer
+              </span>
+              <span className="text-sm font-medium text-contrast whitespace-nowrap">
+                Andrew Smith
+              </span>
+            </div>
           </div>
 
           {/* Divider */}
@@ -163,7 +174,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                       flex items-center gap-4
                       rounded-xl
                       transition-all duration-200
-                      ${isExpanded ? "px-5" : "justify-center"}
+                      ${
+                        isExpanded
+                          ? "px-5"
+                          : "justify-center lg:justify-start lg:px-5"
+                      }
                       ${
                         activeItem === item.id
                           ? "bg-contrast/4 border border-muted-primary/16 text-contrast shadow-[0px_2px_12px_rgba(204,100,6,0.08)]"
@@ -179,11 +194,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                     >
                       {item.icon}
                     </span>
-                    {isExpanded && (
-                      <span className="text-sm font-medium whitespace-nowrap flex-1 text-left">
-                        {item.label}
-                      </span>
-                    )}
+                    <span
+                      className={`text-sm font-medium whitespace-nowrap flex-1 text-left ${
+                        isExpanded ? "" : "hidden lg:block"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
                     {/* Active indicator glow effect */}
                     {activeItem === item.id && (
                       <div className="absolute inset-0 bg-gradient-to-r from-[rgba(204,139,139,0.24)] to-transparent opacity-30 blur-[12px] -z-10 pointer-events-none" />
@@ -195,40 +212,50 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           </nav>
 
           {/* Divider */}
-          {isExpanded && (
-            <div className="h-[0.5px] mx-4 mb-4 bg-gradient-to-r from-transparent via-[#432C2C]/24 to-transparent" />
-          )}
+          <div
+            className={`h-[0.5px] mx-4 mb-4 bg-gradient-to-r from-transparent via-[#432C2C]/24 to-transparent ${
+              isExpanded ? "" : "hidden lg:block"
+            }`}
+          />
 
           <div className="px-4 mb-4">
             <div
               className={`bg-background/12 border border-muted-primary/16 ${
-                isExpanded ? "rounded-[28px] p-6" : "rounded-xl p-3"
-              } flex flex-col items-center ${isExpanded ? "gap-5" : "gap-0"}`}
+                isExpanded
+                  ? "rounded-[28px] p-6"
+                  : "rounded-xl p-3 lg:rounded-[28px] lg:p-6"
+              } flex flex-col items-center ${
+                isExpanded ? "gap-5" : "gap-0 lg:gap-5"
+              }`}
             >
-              {isExpanded && (
-                <div className="text-center space-y-1.5">
-                  <h4 className="text-base font-semibold text-contrast tracking-tight">
-                    Let's start!
-                  </h4>
-                  <p className="text-[13px] font-medium text-contrast/56 leading-relaxed">
-                    Creating or adding new Events couldn't be easier
-                  </p>
-                </div>
-              )}
+              <div
+                className={`text-center space-y-1.5 ${
+                  isExpanded ? "" : "hidden lg:block"
+                }`}
+              >
+                <h4 className="text-base font-semibold text-contrast tracking-tight">
+                  Let's start!
+                </h4>
+                <p className="text-[13px] font-medium text-contrast/56 leading-relaxed">
+                  Creating or adding new Events couldn't be easier
+                </p>
+              </div>
               <button
                 className={`bg-gradient-to-b from-primary to-primary hover:from-primary/90 hover:to-primary/90 shadow-[0px_2px_12px_rgba(204,100,6,0.2)] flex items-center justify-center gap-2 transition-all ${
                   isExpanded
                     ? "w-full h-12 rounded-xl"
-                    : "w-12 h-12 rounded-full"
+                    : "w-12 h-12 rounded-full lg:w-full lg:h-12 lg:rounded-xl"
                 }`}
                 title={!isExpanded ? "Add New Event" : undefined}
               >
                 <FiPlus className="w-5 h-5 text-background" />
-                {isExpanded && (
-                  <span className="text-sm font-semibold text-background">
-                    Add New Event
-                  </span>
-                )}
+                <span
+                  className={`text-sm font-semibold text-background ${
+                    isExpanded ? "" : "hidden lg:block"
+                  }`}
+                >
+                  Add New Event
+                </span>
               </button>
             </div>
           </div>

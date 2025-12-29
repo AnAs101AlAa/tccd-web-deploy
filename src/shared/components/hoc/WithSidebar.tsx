@@ -23,7 +23,7 @@ const WithSidebar = ({ children }: { children: React.ReactNode }) => {
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
       />
 
-      <div className="lg:ml-[88px] min-h-screen p-4 sm:p-5 md:p-6 pt-20 lg:pt-6">
+      <div className="lg:ml-64 min-h-screen p-4 sm:p-5 md:p-6 pt-20 lg:pt-6">
         {children}
       </div>
     </main>
