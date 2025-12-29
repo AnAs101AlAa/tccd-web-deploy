@@ -13,7 +13,10 @@ import {
   EventTicketPage,
   OTPPage,
   LocationsManagementPage,
-   PostManagementPage, EventRegistrationPage ,EventsAdminPage
+  PostManagementPage,
+  EventRegistrationPage,
+  EventsAdminPage,
+  StatisticsPage,
 } from "@/features";
 
 export const routes = [
@@ -33,5 +36,6 @@ export const routes = [
   { path: "/posts", Component: PostManagementPage },
   { path: "/admin/locations", Component: LocationsManagementPage },
   { path: "/events/register/:id", Component: EventRegistrationPage },
-  { path: '/admin/events', Component: EventsAdminPage }, // NOT A PROTECTED ROUTE, CAREFUL WITH INTEGRATION
+  { path: "/admin/events", Component: EventsAdminPage }, // NOT A PROTECTED ROUTE, CAREFUL WITH INTEGRATION
+  { path: "/admin/statistics", Component: StatisticsPage },
 ];

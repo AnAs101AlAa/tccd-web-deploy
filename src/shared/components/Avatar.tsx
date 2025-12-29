@@ -23,6 +23,8 @@ interface AvatarProps {
   showShadow?: boolean;
   /** Shadow color */
   shadowColor?: string;
+  /** Text color */
+  textColor?: string;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -31,6 +33,7 @@ const Avatar: React.FC<AvatarProps> = ({
   size = 48,
   fallback,
   backgroundColor = "#F2C7BA",
+  textColor,
   borderColor,
   borderWidth = "1px",
   className = "",
@@ -76,7 +79,12 @@ const Avatar: React.FC<AvatarProps> = ({
           {src ? (
             <img src={src} alt={alt} className="w-full h-full object-cover" />
           ) : (
-            <div className="flex items-center justify-center w-full h-full text-contrast">
+            <div
+              className={`flex items-center justify-center w-full h-full ${
+                !textColor ? "text-contrast" : ""
+              }`}
+              style={{ color: textColor }}
+            >
               {fallback}
             </div>
           )}
