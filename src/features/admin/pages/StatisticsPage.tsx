@@ -42,7 +42,7 @@ const StatisticsPage: React.FC = () => {
           >
             <GenderDistributionChart />
           </motion.div>
-
+{/* 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -50,7 +50,7 @@ const StatisticsPage: React.FC = () => {
             className="md:col-span-2 lg:col-span-1"
           >
             <FeedbackCarousel />
-          </motion.div>
+          </motion.div> */}
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -71,7 +71,7 @@ const StatisticsPage: React.FC = () => {
           </motion.div>
         </div>
 
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {showAll && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
@@ -91,7 +91,7 @@ const StatisticsPage: React.FC = () => {
               </div>
             </motion.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
 
         <div className="flex justify-center mt-8">
           <button

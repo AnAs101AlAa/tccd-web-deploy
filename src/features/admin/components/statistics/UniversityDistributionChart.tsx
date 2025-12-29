@@ -1,21 +1,22 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 import { useThemeColors } from "@/shared/hooks/useThemeColors";
+import UniversityList from "@/constants/universityList";
 
 const UniversityDistributionChart: React.FC = () => {
   const colors = useThemeColors();
 
-  const data = [
-    { name: "Cairo University", value: 450 },
-    { name: "Ain Shams University", value: 380 },
-    { name: "Helwan University", value: 210 },
-    { name: "AUC", value: 150 },
-    { name: "GUC", value: 120 },
-  ];
+  const data = useMemo(() => {
+    return UniversityList.map((uni) => ({
+      name: uni,
+      // Mock random consistent value for demo
+      value: Math.floor(Math.random() * 400) + 50,
+    })).sort((a, b) => b.value - a.value);
+  }, []);
 
   const option = {
     grid: {
-      top: "10%",
+      top: "5%",
       left: "3%",
       right: "4%",
       bottom: "3%",
@@ -23,6 +24,7 @@ const UniversityDistributionChart: React.FC = () => {
     },
     tooltip: {
       trigger: "axis",
+      axisPointer: { type: "shadow" },
     },
     xAxis: {
       type: "value",
@@ -38,6 +40,9 @@ const UniversityDistributionChart: React.FC = () => {
       axisLabel: {
         color: colors.contrast,
         fontWeight: 500,
+        interval: 0,
+        width: 140,
+        overflow: "truncate",
       },
     },
     series: [
@@ -53,8 +58,8 @@ const UniversityDistributionChart: React.FC = () => {
             x2: 1,
             y2: 0,
             colorStops: [
-              { offset: 0, color: colors.mutedPrimary }, // light primary
-              { offset: 1, color: colors.primary }, // primary
+              { offset: 0, color: colors.mutedPrimary },
+              { offset: 1, color: colors.primary },
             ],
           },
           borderRadius: [0, 4, 4, 0],
@@ -65,14 +70,16 @@ const UniversityDistributionChart: React.FC = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-muted-primary/20 shadow-sm h-full">
+    <div className="bg-white p-6 rounded-2xl border border-muted-primary/20 shadow-sm h-full flex flex-col">
       <h3 className="text-lg font-semibold text-contrast mb-4">
-        Top 5 Universities
+        University Distribution
       </h3>
-      <ReactECharts
-        option={option}
-        style={{ height: "350px", width: "100%" }}
-      />
+      <div className="flex-1 h-[600px] overflow-y-auto">
+        <ReactECharts
+          option={option}
+          style={{ height: "800px", width: "100%" }}
+        />
+      </div>
     </div>
   );
 };
