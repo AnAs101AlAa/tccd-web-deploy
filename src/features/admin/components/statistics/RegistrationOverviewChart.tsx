@@ -42,6 +42,7 @@ const RegistrationOverviewChart: React.FC = () => {
             fontWeight: "bold",
             color: colors.contrast,
           },
+          scale: false,
         },
         labelLine: {
           show: false,
@@ -49,11 +50,17 @@ const RegistrationOverviewChart: React.FC = () => {
         data: [
           {
             value: 1048,
+            name: "Attended",
             itemStyle: { color: colors.secondary },
+            label: { show: false },
+            emphasis: { label: { show: false } },
           },
           {
             value: 300,
+            name: "No Show",
             itemStyle: { color: colors.primary },
+            label: { show: false },
+            emphasis: { label: { show: false } },
           },
         ],
       },
