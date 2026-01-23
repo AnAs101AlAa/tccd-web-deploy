@@ -98,7 +98,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
             <img
               src={TCCDLogo}
               alt="TCCD Logo"
-              className="h-12 w-auto object-contain"
+              className="h-9 md:h-10 w-auto object-contain"
             />
           </div>
 
@@ -118,8 +118,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                     transition-all duration-200
                     ${
                       isActive(item.path)
-                        ? "bg-secondary/10 text-secondary font-medium"
-                        : "text-contrast/60 hover:bg-contrast/5 hover:text-contrast"
+                        ? "bg-secondary/10 text-secondary font-semibold"
+                        : "text-contrast/60 hover:bg-contrast/5 hover:text-contrast font-medium"
                     }
                   `}
                 >

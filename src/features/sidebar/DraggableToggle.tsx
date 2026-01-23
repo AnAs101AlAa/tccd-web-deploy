@@ -127,7 +127,7 @@ const DraggableToggle: React.FC<DraggableToggleProps> = ({
         className="flex p-3 gap-2 border border-secondary/10 items-center rounded-full bg-background/90 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:bg-background transition-colors select-none"
         onClick={handleClick}
       >
-        <CiMenuBurger className="w-6 h-6 text-contrast stroke-2" />
+        <CiMenuBurger className="w-5 h-5 text-contrast stroke-2" />
       </div>
     </div>
   );
