@@ -1,3 +1,13 @@
+/* DraggableToggle mobile-only visibility */
+.draggable-toggle-mobile {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .draggable-toggle-mobile {
+    display: block;
+  }
+}
 @import "tailwindcss";
 @source "./src/**/*.{js,jsx,ts,tsx}";
 @source "../node_modules/tccd-ui/dist/**/*.{js,jsx,ts,tsx}";

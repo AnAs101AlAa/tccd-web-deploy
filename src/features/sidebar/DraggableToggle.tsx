@@ -14,7 +14,7 @@ const DraggableToggle: React.FC<DraggableToggleProps> = ({
   const [position, setPosition] = useState({
     x:
       typeof window !== "undefined"
-        ? Math.min(window.innerWidth - 140, window.innerWidth - 20)
+        ? Math.min(window.innerWidth - 70, window.innerWidth - 20)
         : 200,
     y: 20,
   });
@@ -109,11 +109,12 @@ const DraggableToggle: React.FC<DraggableToggleProps> = ({
     }
   };
 
+
   if (isOpen) return null;
 
   return (
     <div
-      className="fixed z-50"
+      className="z-50 fixed draggable-toggle-mobile"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
