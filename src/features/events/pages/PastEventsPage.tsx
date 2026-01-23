@@ -1,7 +1,7 @@
 import { Pagination } from "@/shared/components/pagination";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import { pastEvents } from "../data/dummyEvents";
-import WithNavbar from "@/shared/components/hoc/WithNavbar";
+import WithLayout from "@/shared/components/hoc/WithLayout";
 import { usePagination, useGenericFilter } from "@/shared/hooks";
 import GenericGrid from "@/shared/components/GenericGrid";
 import PastEventCard from "../components/PastEventCard";
@@ -73,7 +73,7 @@ const PastEventsPage = () => {
   }
 
   return (
-    <WithNavbar>
+    <WithLayout>
       <div className="min-h-screen bg-gray-50">
         <UpperHeader
           image=""
@@ -115,7 +115,7 @@ const PastEventsPage = () => {
           </section>
         </main>
       </div>
-    </WithNavbar>
+    </WithLayout>
   );
 };
 

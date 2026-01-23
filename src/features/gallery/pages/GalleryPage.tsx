@@ -1,7 +1,7 @@
 import { Pagination } from "@/shared/components/pagination";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import { galleryEvents } from "../data/dummyGallery";
-import WithNavbar from "@/shared/components/hoc/WithNavbar";
+import WithLayout from "@/shared/components/hoc/WithLayout";
 import { usePagination, useGenericFilter } from "@/shared/hooks";
 import GenericGrid from "@/shared/components/GenericGrid";
 import EventGalleryCard from "../components/EventGalleryCard";
@@ -60,20 +60,20 @@ const GalleryPage = () => {
 
   if (isLoading) {
     return (
-      <WithNavbar>
+      <WithLayout>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
             <p className="text-lg text-secondary">Loading gallery...</p>
           </div>
         </div>
-      </WithNavbar>
+      </WithLayout>
     );
   }
 
   if (error) {
     return (
-      <WithNavbar>
+      <WithLayout>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <p className="text-lg text-red-600 mb-4">Failed to load gallery</p>
@@ -85,12 +85,12 @@ const GalleryPage = () => {
             </button>
           </div>
         </div>
-      </WithNavbar>
+      </WithLayout>
     );
   }
 
   return (
-    <WithNavbar>
+    <WithLayout>
       <div className="min-h-screen bg-gray-50">
         <UpperHeader
           image=""
@@ -134,7 +134,7 @@ const GalleryPage = () => {
           </section>
         </main>
       </div>
-    </WithNavbar>
+    </WithLayout>
   );
 };
 

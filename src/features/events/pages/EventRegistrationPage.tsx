@@ -1,102 +1,259 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { EventRegisterApi } from "@/shared/queries/events/eventRegisterApi";
+import { useState, useRef, Activity } from "react";
+import { FaX } from "react-icons/fa6";
+import type Event from "@/shared/types/events";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Checkbox } from "tccd-ui";
+import WithLayout from "@/shared/components/hoc/WithLayout";
 import type { StudentUser } from "@/shared/types";
+import { TextDisplayEdit, DropdownMenu, Button } from "tccd-ui";
+import { TicketRulesModal } from "../components";
 
-const api = new EventRegisterApi();
+export default function EventRegisterForm() {
+  const storedUser = useSelector((state: { user: StudentUser }) => state.user);
+  const event: Event = {
+    id: "1",
+    title: "Web Development Workshop",
+    description:
+      "Learn modern web development with React and TypeScript. This hands-on workshop will cover the fundamentals of building responsive web applications.",
+    media: [],
+    eventPoster:
+      "https://images.unsplash.com/photo-1760340769739-653d00200baf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470",
+    date: "2025-10-25T14:00:00Z",
+    location: "Tech Lab, Building A",
+    eventType: "Workshop",
+    category: "Workshop",
+    capacity: 50,
+    registeredCount: 35,
+    attendeeCount: 0,
+  }; //useSelector((state: {event: Event}) => state.event);
 
-const DataDisplayCard: React.FC<{ label: string; value: string | number }> = ({ label, value }) => (
-  <div className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
-    <span className="text-sm sm:text-base font-medium text-[#CD3A38]">{label}</span>
-    <span className="text-sm sm:text-base font-semibold text-[#295E7E] text-right dir-ltr break-words max-w-[60%] sm:max-w-[70%]">{value}</span>
-  </div>
-);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>(
+    event.timeSlot || "Afternoon (2:00 PM - 6:00PM)"
+  );
+  const [checkboxes, setCheckboxes] = useState<boolean[]>([false, false]);
 
-const EventRegistrationPage: React.FC = () => {
-  const { eventName } = useParams<{ eventName: string }>();
-  const [userData, setUserData] = useState<StudentUser | null>({arabicFullName: '', englishFullName: '', phoneNumber: '', email: '', gender: "Female", university: '', faculty: '', graduationYear: '', department: '', gpa: '', id: '', createdAt: '', role: "Admin", status: "Approved", isDeleted: false, updatedAt: ''});
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [showRules, setShowRules] = useState<boolean>(false);
+  const fileBrowseRef = useRef<HTMLInputElement>(null);
+  const [files, setFiles] = useState<File[]>([]);
 
-  useEffect(() => {
-    api.getCurrentUser().then(setUserData);
-  }, []);
-
-  const handleRegister = async () => {
-    if (!userData) return;
-    setLoading(true);
-    try {
-      await api.registerForEvent(eventName!, userData);
-      alert("Registration successful!");
-    } catch {
-      alert("Registration failed. Please try again.");
-    } finally {
-      setLoading(false);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFiles([...files, ...Array.from(e.target.files)]);
     }
   };
 
-  const handleCancel = () => window.history.back();
-
-  if (!userData)
-    return <div className="min-h-screen flex justify-center items-center">Loading user data...</div>;
-
-  const displayFields = [
-    { label: "Full Name (Arabic)", value: userData.arabicFullName },
-    { label: "Full Name (English)", value: userData.englishFullName },
-    { label: "Email Address", value: userData.email },
-    { label: "Phone Number", value: userData.phoneNumber },
-    { label: "University", value: userData.university },
-    { label: "Faculty", value: userData.faculty },
-    ...(userData.department ? [{ label: "Department", value: userData.department }] : []),
-    { label: "Graduation Year", value: userData.graduationYear },
-  ];
-
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center px-4 sm:px-6 py-6 sm:py-8">
-      <div className="w-full max-w-md sm:max-w-lg bg-white shadow-lg rounded-xl p-5 sm:p-6 md:p-8">
-        <header className="mb-5 text-center">
-          <h1 className="text-lg sm:text-xl md:text-2xl font-extrabold mb-2 text-[#CD3A38]">
-            {eventName} Registration
-          </h1>
-          <p className="text-sm sm:text-base text-[#295E7E] leading-relaxed">
-            Please make sure all data are correct before confirming. <br />
-            You won’t be able to edit them afterward.
-          </p>
-        </header>
+    <WithLayout>
+      <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
+      <div className="w-full lg:w-[80%] xl:w-2/3 mx-auto shadow-lg p-4 rounded-lg md:mt-10">
+        <h2 className="text-2xl font-bold text-center mb-4 text-contrast">
+          Event Registration Form
+        </h2>
+        <p className="text-center text-gray-700">
+          Please fill out the form below to register for the event:{" "}
+          <span className="font-semibold">{event.title}</span>
+        </p>
+        <hr className="my-3 border-gray-400" />
+        {/*registration form grid flexes on overflow into one column*/}
+        <div
+          id="registrationForm"
+          className="flex my-auto flex-wrap w-full h-fit md:gap-[4%] p-3"
+        >
+          {/*student main info section*/}
+          <div className="text-sm flex flex-none flex-col md:w-[48%] gap-5 md:gap-7 w-full h-fit mb-6 xl:mb-0">
+            <TextDisplayEdit
+              label="Full Name in Arabic"
+              value={storedUser.arabicFullName}
+              disabled={true}
+              placeholder="Please fill as shown in your ID"
+            />
+            <TextDisplayEdit
+              label="Email Address"
+              value={storedUser.email}
+              disabled={true}
+              placeholder="academic email preferred"
+            />
+            <TextDisplayEdit
+              label="Graduation Year"
+              value={storedUser.graduationYear}
+              disabled={true}
+              placeholder="e.g. 2024"
+            />
+            <TextDisplayEdit
+              label="University"
+              value={storedUser.university}
+              disabled={true}
+              placeholder="Please select your university"
+            />
+            {event.category === "JobFair" && (
+              <DropdownMenu
+                label="Time Slot"
+                value={selectedTimeSlot}
+                options={[
+                  {
+                    label: "Morning (10:00 AM - 1:00 PM)",
+                    value: "Morning (10:00 AM - 1:00 PM)",
+                  },
+                  {
+                    label: "Afternoon (2:00 PM - 6:00PM)",
+                    value: "Afternoon (2:00 PM - 6:00PM)",
+                  },
+                ]}
+                onChange={(val) => setSelectedTimeSlot(val)}
+              />
+            )}
+          </div>
 
-        <div className="border border-gray-200 rounded-lg p-4 sm:p-5 mb-6 bg-white">
-          <h2 className="text-base sm:text-lg font-bold mb-3 border-b pb-2 text-[#CD3A38]">
-            Your Registered Data
-          </h2>
-          {displayFields.map((field, index) => (
-            <DataDisplayCard key={index} label={field.label} value={field.value} />
-          ))}
+          {/*student university info section*/}
+          <div className="text-sm flex flex-none flex-col md:w-[48%] gap-5 lg:gap-7 w-full h-fit mb-6 xl:mb-0">
+            <TextDisplayEdit
+              label="Full Name in English"
+              value={storedUser.englishFullName}
+              disabled={true}
+              placeholder="Please fill as shown in your ID"
+            />
+            <TextDisplayEdit
+              label="Phone Number"
+              value={storedUser.phoneNumber}
+              disabled={true}
+              placeholder="include country code e.g. +20xxxxxxxxxx"
+            />
+            <TextDisplayEdit
+              label="GPA"
+              value={storedUser.gpa}
+              disabled={true}
+              placeholder="on a 4.0 scale"
+            />
+            <TextDisplayEdit
+              label="Faculty"
+              value={storedUser.faculty}
+              disabled={true}
+              placeholder="Please select your faculty"
+            />
+            <Activity
+              mode={storedUser.faculty === "Engineering" ? "visible" : "hidden"}
+            >
+              <TextDisplayEdit
+                label="Department"
+                value={storedUser.department}
+                disabled={true}
+                placeholder="Please select your department"
+              />
+            </Activity>
+          </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-3 mt-4 items-center">
-          <button
-            type="button"
-            onClick={handleRegister}
-            disabled={loading}
-            className={`w-full sm:w-auto px-4 py-2 text-white rounded-md font-semibold text-sm sm:text-base transition duration-150 shadow-md ${
-              loading ? "opacity-60 cursor-not-allowed" : "hover:opacity-90 active:scale-95"
-            }`}
-            style={{ backgroundColor: "#CD3A38", borderColor: "#CD3A38" }}
-          >
-            {loading ? "Registering..." : "Confirm Registration"}
-          </button>
+        <div className="w-full mb-6 md:mb-10 p-3">
+          <p className="font-semibold">Attachments</p>
+          <p className="text-[12px] font-semibold mb-1">
+            Please upload the following (ID picture, CV, some stuff)
+          </p>
+          <div className="flex w-full border-2 border-[#a79d9d] rounded-lg">
+            <div
+              id="fileDisplay"
+              className={`flex gap-[2%] overflow-x-auto w-full p-2 rounded-l-lg ${
+                !files ? "bg-gray-100" : ""
+              }`}
+            >
+              {files.length == 0 ? (
+                <div className="text-[13px] px-2">No files selected</div>
+              ) : (
+                files.map((file, index) => (
+                  <div
+                    className="flex justify-between items-center bg-gray-300 whitespace-nowrap w-fit gap-1 md:gap-2 border rounded-sm text-[12px] px-2"
+                    key={index}
+                  >
+                    <div>
+                      {file.name.slice(0, Math.min(12, file.name.length))}
+                    </div>
+                    <FaX
+                      strokeWidth={3}
+                      onClick={() =>
+                        setFiles(files.filter((_, i) => i !== index))
+                      }
+                      className="cursor-pointer size-2"
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+            <input
+              ref={fileBrowseRef}
+              id="fileInput"
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            <button
+              type="button"
+              className="whitespace-nowrap cursor-pointer rounded-r-md bg-[#cd3a38] text-white font-semibold px-2 text-[12px] border-l-1 border-[#a79d9d]"
+              onClick={() => fileBrowseRef.current?.click()}
+            >
+              Browse files
+            </button>
+          </div>
+        </div>
 
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="w-full sm:w-auto px-4 py-2 border rounded-md font-semibold text-sm sm:text-base transition duration-150 cursor-pointer hover:bg-gray-100"
-            style={{ borderColor: "#295E7E", color: "#295E7E" }}
-          >
-            Cancel
-          </button>
+        {/*terms and conditions agreements*/}
+        <div className="flex flex-col gap-2 px-3 border-b-2 pb-6 mb-6 border-gray-600">
+          <Checkbox
+            checked={checkboxes[0]}
+            onChange={() => {
+              const temp = [...checkboxes];
+              temp[0] = !temp[0];
+              setCheckboxes(temp);
+            }}
+            label="I agree to have my professional data shared with relevant companies for development and recruiting purposes"
+          />
+          <Checkbox
+            checked={checkboxes[1]}
+            onChange={() => {
+              const temp = [...checkboxes];
+              temp[1] = !temp[1];
+              setCheckboxes(temp);
+            }}
+            label={
+              <p className="text-sm leading-snug">
+                I agree to the{" "}
+                <span
+                  onClick={() => setShowRules(true)}
+                  className="text-secondary underline hover:text-secondary/80 cursor-pointer"
+                  style={{
+                    display: "inline",
+                    whiteSpace: "normal",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  Ticket Admission And Cancellation Policy
+                </span>
+              </p>
+            }
+          />
+        </div>
+
+        {/*submit and clear buttons*/}
+        <div className="w-fit mx-auto mb-4 flex gap-4">
+          <Button
+            type="primary"
+            onClick={() => setIsSubmitting(true)}
+            buttonText="Submit"
+            width="small"
+            loading={isSubmitting}
+          />
+          {!isSubmitting && (
+            <Button
+              type="secondary"
+              onClick={() => navigate(-1)}
+              buttonText="Cancel"
+              width="small"
+            />
+          )}
         </div>
       </div>
-    </div>
+    </WithLayout>
   );
-};
-
-export default EventRegistrationPage;
+}

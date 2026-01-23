@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { ProfileContainer } from "../components";
-import WithNavbar from "@/shared/components/hoc/WithNavbar";
+import WithLayout from "@/shared/components/hoc/WithLayout";
 import { mockUser } from "../mocks/mockUser";
 
 const ProfilePage: React.FC = () => {
@@ -14,11 +14,11 @@ const ProfilePage: React.FC = () => {
   const isOwnProfile = true; // Hardcoded for now - should check against logged-in user
 
   return (
-    <WithNavbar>
+    <WithLayout>
       <div className="min-h-screen bg-background-contrast -mb-5 md:mb-0">
         <ProfileContainer user={mockUser} isOwnProfile={isOwnProfile} />
       </div>
-    </WithNavbar>
+    </WithLayout>
   );
 };
 
