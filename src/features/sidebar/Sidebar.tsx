@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import {
-  FiPlus,
-  FiGrid,
-  FiTrendingUp,
-  FiShoppingBag,
-  FiSettings,
-  FiChevronLeft,
-  FiChevronRight,
+  FiCalendar,
+  FiMapPin,
+  FiUsers,
+  FiBarChart2,
+  FiLogOut,
 } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
-import Avatar from "@/shared/components/Avatar";
+import TCCDLogo from "@/assets/TCCD_logo.svg";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -21,58 +19,52 @@ interface NavItem {
   id: string;
   label: string;
   icon: React.ReactNode;
-  subItems?: { label: string; path: string }[];
-  badge?: number;
-  path?: string;
+  path: string;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   const navigate = useNavigate();
-  const [activeItem, setActiveItem] = useState<string>("events");
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const location = useLocation();
 
   const navItems: NavItem[] = [
     {
       id: "events",
       label: "Events",
-      icon: <FiGrid className="w-5 h-5" />,
+      icon: <FiCalendar className="w-5 h-5" />,
       path: "/admin/events",
     },
     {
       id: "locations",
       label: "Locations",
-      icon: <FiTrendingUp className="w-5 h-5" />,
+      icon: <FiMapPin className="w-5 h-5" />,
       path: "/admin/locations",
     },
     {
-      id: "posts",
-      label: "Posts",
-      icon: <FiShoppingBag className="w-5 h-5" />,
-      path: "/posts",
-    },
-    {
-      id: "settings",
-      label: "Settings",
-      icon: <FiSettings className="w-5 h-5" />,
+      id: "users",
+      label: "Users",
+      icon: <FiUsers className="w-5 h-5" />,
+      path: "/admin/users",
     },
     {
       id: "statistics",
       label: "Statistics",
-      icon: <FiTrendingUp className="w-5 h-5" />,
+      icon: <FiBarChart2 className="w-5 h-5" />,
       path: "/admin/statistics",
     },
   ];
 
   const handleNavClick = (item: NavItem) => {
-    setActiveItem(item.id);
-    if (item.path) {
-      navigate(item.path);
-    }
-    if (item.subItems) {
-      setExpandedItem(expandedItem === item.id ? null : item.id);
+    navigate(item.path);
+    if (onClose) {
+      onClose();
     }
   };
+
+  const handleLogout = () => {
+    navigate("/login");
+  };
+
+  const isActive = (path: string) => location.pathname.startsWith(path);
 
   return (
     <>
@@ -87,177 +79,75 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
         className={`
           fixed left-0 top-0 z-40
           transition-all duration-300 ease-in-out
-          m-2
-          h-[calc(100vh-1rem)]
-          ${isExpanded ? "w-64" : "w-[88px] lg:w-64"}
+          h-screen w-64
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
         <div
           className="
             h-full 
-            bg-background-primary/90
-            backdrop-blur-[80px]
-            border border-muted-primary/40
-            shadow-[0px_32px_32px_-16px_rgba(102,37,0,0.3)]
+            bg-secondary/5
+            shadow-[4px_0_16px_rgba(0,0,0,0.08)]
             flex flex-col
             py-6
-            rounded-[28px]
           "
         >
-          {isOpen && (
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="
-              absolute -right-3 top-[78px]
-              w-6 h-6
-              bg-background-primary/90
-              border border-muted-primary/30
-              backdrop-blur-[90px]
-              rounded-full
-              flex items-center justify-center
-              transition-all duration-200
-              hover:bg-background-primary
-              shadow-sm
-              z-50
-              lg:hidden
-            "
-              title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
-            >
-              {isExpanded ? (
-                <FiChevronLeft className="w-3 h-3 text-contrast/50" />
-              ) : (
-                <FiChevronRight className="w-3 h-3 text-contrast/50" />
-              )}
-            </button>
-          )}
-
-          <div
-            className={`flex items-center pb-6 mb-4 transition-all duration-300 ${
-              isExpanded
-                ? "px-6 gap-3"
-                : "flex-col px-4 lg:flex-row lg:px-6 lg:gap-3"
-            }`}
-          >
-            <Avatar
-              size={48}
-              backgroundColor="#F2C7BA"
-              fallback="A"
-              className="flex-shrink-0"
+          {/* Logo / Brand Area */}
+          <div className="px-6 pb-8 flex justify-center">
+            <img
+              src={TCCDLogo}
+              alt="TCCD Logo"
+              className="h-12 w-auto object-contain"
             />
-            <div
-              className={`flex flex-col overflow-hidden ${
-                isExpanded ? "" : "hidden lg:flex"
-              }`}
-            >
-              <span className="text-xs font-medium tracking-wide uppercase text-contrast/40 whitespace-nowrap">
-                Product Designer
-              </span>
-              <span className="text-sm font-medium text-contrast whitespace-nowrap">
-                Andrew Smith
-              </span>
-            </div>
           </div>
 
-          {/* Divider */}
-          <div className="h-[0.5px] mx-4 mb-4 bg-gradient-to-r from-transparent via-[#432C2C]/24 to-transparent" />
-
           {/* Main Navigation */}
-          <nav className="flex-1 px-4">
+          <nav className="flex-1 px-3">
             <div className="space-y-1">
               {navItems.map((item) => (
-                <div key={item.id} className="relative">
-                  <button
-                    onClick={() => handleNavClick(item)}
-                    className={`
-                      w-full h-14
-                      flex items-center gap-4
-                      rounded-xl
-                      transition-all duration-200
-                      ${
-                        isExpanded
-                          ? "px-5"
-                          : "justify-center lg:justify-start lg:px-5"
-                      }
-                      ${
-                        activeItem === item.id
-                          ? "bg-contrast/4 border border-muted-primary/16 text-contrast shadow-[0px_2px_12px_rgba(204,100,6,0.08)]"
-                          : "text-contrast/56 hover:bg-contrast/2 hover:text-contrast"
-                      }
-                    `}
-                    title={!isExpanded ? item.label : undefined}
-                  >
-                    <span
-                      className={`flex-shrink-0 ${
-                        activeItem === item.id ? "" : ""
-                      }`}
-                    >
-                      {item.icon}
-                    </span>
-                    <span
-                      className={`text-sm font-medium whitespace-nowrap flex-1 text-left ${
-                        isExpanded ? "" : "hidden lg:block"
-                      }`}
-                    >
-                      {item.label}
-                    </span>
-                    {/* Active indicator glow effect */}
-                    {activeItem === item.id && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-[rgba(204,139,139,0.24)] to-transparent opacity-30 blur-[12px] -z-10 pointer-events-none" />
-                    )}
-                  </button>
-                </div>
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item)}
+                  className={`
+                    w-full h-12
+                    flex items-center gap-3
+                    px-4
+                    rounded-lg
+                    cursor-pointer
+                    transition-all duration-200
+                    ${
+                      isActive(item.path)
+                        ? "bg-secondary/10 text-secondary font-medium"
+                        : "text-contrast/60 hover:bg-contrast/5 hover:text-contrast"
+                    }
+                  `}
+                >
+                  <span className="flex-shrink-0">{item.icon}</span>
+                  <span className="text-sm">{item.label}</span>
+                </button>
               ))}
             </div>
           </nav>
 
-          {/* Divider */}
-          <div
-            className={`h-[0.5px] mx-4 mb-4 bg-gradient-to-r from-transparent via-[#432C2C]/24 to-transparent ${
-              isExpanded ? "" : "hidden lg:block"
-            }`}
-          />
-
-          <div className="px-4 mb-4">
-            <div
-              className={`bg-background/12 border border-muted-primary/16 ${
-                isExpanded
-                  ? "rounded-[28px] p-6"
-                  : "rounded-xl p-3 lg:rounded-[28px] lg:p-6"
-              } flex flex-col items-center ${
-                isExpanded ? "gap-5" : "gap-0 lg:gap-5"
-              }`}
+          {/* Logout Button */}
+          <div className="px-3 mt-auto pt-6 border-t border-contrast/5">
+            <button
+              onClick={handleLogout}
+              className="
+                w-full h-12
+                flex items-center gap-3
+                px-4
+                rounded-lg
+                cursor-pointer
+                transition-all duration-200
+                text-red-500/80 hover:bg-red-500/10 hover:text-red-500
+              "
             >
-              <div
-                className={`text-center space-y-1.5 ${
-                  isExpanded ? "" : "hidden lg:block"
-                }`}
-              >
-                <h4 className="text-base font-semibold text-contrast tracking-tight">
-                  Let's start!
-                </h4>
-                <p className="text-[13px] font-medium text-contrast/56 leading-relaxed">
-                  Creating or adding new Events couldn't be easier
-                </p>
-              </div>
-              <button
-                className={`bg-gradient-to-b from-primary to-primary hover:from-primary/90 hover:to-primary/90 shadow-[0px_2px_12px_rgba(204,100,6,0.2)] flex items-center justify-center gap-2 transition-all ${
-                  isExpanded
-                    ? "w-full h-12 rounded-xl"
-                    : "w-12 h-12 rounded-full lg:w-full lg:h-12 lg:rounded-xl"
-                }`}
-                title={!isExpanded ? "Add New Event" : undefined}
-              >
-                <FiPlus className="w-5 h-5 text-background" />
-                <span
-                  className={`text-sm font-semibold text-background ${
-                    isExpanded ? "" : "hidden lg:block"
-                  }`}
-                >
-                  Add New Event
-                </span>
-              </button>
-            </div>
+              <span className="flex-shrink-0">
+                <FiLogOut className="w-5 h-5" />
+              </span>
+              <span className="text-sm font-medium">Log Out</span>
+            </button>
           </div>
         </div>
       </aside>
