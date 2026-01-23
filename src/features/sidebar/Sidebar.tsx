@@ -86,7 +86,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
         <div
           className="
             h-full 
-            bg-secondary/5
+            bg-background
+            border-r border-secondary/10
             shadow-[4px_0_16px_rgba(0,0,0,0.08)]
             flex flex-col
             py-6
