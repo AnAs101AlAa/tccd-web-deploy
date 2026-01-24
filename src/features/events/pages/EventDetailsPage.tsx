@@ -1,11 +1,12 @@
 import { ErrorScreen, LoadingPage } from "tccd-ui";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import WithNavbar from "@/shared/components/hoc/WithNavbar";
 import EventDetailsPageComponent from "../components/EventDetailsView";
 import { useGetEventById } from "@/shared/queries/events";
 
 const EventDetailsPage = () => {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const eventId = id ?? "";
     const {
         data: event,
@@ -15,7 +16,7 @@ const EventDetailsPage = () => {
 
     const handleRegister = () => {
         if (!event) return;
-        console.log("Register for event", event.id);
+        navigate(`/events/register/${event.id}`);
     };
 
     if (isLoading) {
