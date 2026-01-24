@@ -144,7 +144,9 @@ export const selectHasCommitteeAffiliation = createSelector(
  */
 export const selectUserStatus = createSelector(
   [selectCurrentUser],
-  (user) => user?.status
+  (user) => {
+    console.log(user)
+    return user?.status}
 );
 
 /**

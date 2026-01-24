@@ -1,7 +1,9 @@
 import {
   useLogin,
   useLogout,
-  useSignup,
+  useSignupStudent,
+  useSignupBusinessRep,
+  useSignupFaculty,
   useForgotPassword,
 } from "@/shared/queries/auth/authQueries";
 import {
@@ -11,8 +13,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import type {
   LoginFormData,
-  SignupFormData,
   ForgotPasswordFormData,
+  BasicInfoFormData,
+  StudentInfoFormData,
+  CompanyRepInfoFormData,
+  FacultyInfoFormData,
+  UserType,
 } from "../schemas";
 
 /**
@@ -20,20 +26,6 @@ import type {
  *
  * This hook provides a unified interface for authentication operations.
  * It combines auth queries, user state, and navigation logic.
- *
- * BENEFITS:
- * - Single source of truth for auth operations
- * - Handles navigation automatically
- * - Provides loading and error states
- * - Easy to use in components
- *
- * @example
- * const { handleLogin, isLoggingIn, loginError } = useAuth();
- *
- * const onSubmit = async (data) => {
- *   await handleLogin(data);
- *   // User will be redirected automatically
- * };
  */
 export const useAuth = () => {
   const navigate = useNavigate();
@@ -42,7 +34,9 @@ export const useAuth = () => {
 
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
-  const signupMutation = useSignup();
+  const signupStudentMutation = useSignupStudent();
+  const signupBusinessRepMutation = useSignupBusinessRep();
+  const signupFacultyMutation = useSignupFaculty();
   const forgotPasswordMutation = useForgotPassword();
 
   /**
@@ -54,7 +48,6 @@ export const useAuth = () => {
       await loginMutation.mutateAsync(data);
       navigate("/dashboard");
     } catch (error) {
-      // Error is handled by the mutation's onError callback
       console.error("Login error:", error);
     }
   };
@@ -68,21 +61,62 @@ export const useAuth = () => {
       await logoutMutation.mutateAsync();
       navigate("/login");
     } catch (error) {
-      // Error is handled by the mutation's onError callback
       console.error("Logout error:", error);
     }
   };
 
   /**
    * Handle signup with form data
-   * Automatically navigates to dashboard on success
+   * Automatically navigates to confirmation page on success
    */
-  const handleSignup = async (data: SignupFormData) => {
+  const handleSignup = async (
+    userType: UserType,
+    basicData: BasicInfoFormData,
+    additionalData: StudentInfoFormData | CompanyRepInfoFormData | FacultyInfoFormData
+  ) => {
     try {
-      await signupMutation.mutateAsync(data);
-      navigate("/confirmation");
+      if (userType === "student") {
+        // const studentData = additionalData as StudentInfoFormData;
+        await signupStudentMutation.mutateAsync({
+          email: basicData.email,
+          password: basicData.password,
+          englishName: basicData.englishFullName,
+          arabicName: basicData.arabicFullName,
+          gender: basicData.gender,
+          phoneNumber: basicData.phoneNumber,
+        });
+      } else if (userType === "company_representative") {
+        const companyData = additionalData as CompanyRepInfoFormData;
+        await signupBusinessRepMutation.mutateAsync({
+          englishName: basicData.englishFullName,
+          arabicName: basicData.arabicFullName,
+          email: basicData.email,
+          phoneNumber: basicData.phoneNumber,
+          password: basicData.password,
+          gender: basicData.gender,
+          companyId: companyData.isNewCompany ? undefined : companyData.companyId,
+          newCompany: companyData.isNewCompany ? companyData.newCompany : undefined,
+          position: companyData.position,
+          proofFile: companyData.proofFile,
+        });
+      } else if (userType === "academic") {
+        const facultyData = additionalData as FacultyInfoFormData;
+        await signupFacultyMutation.mutateAsync({
+          englishName: basicData.englishFullName,
+          arabicName: basicData.arabicFullName,
+          email: basicData.email,
+          phoneNumber: basicData.phoneNumber,
+          password: basicData.password,
+          role: facultyData.role,
+          gender: basicData.gender,
+          universityName: facultyData.universityName,
+          facultyName: facultyData.facultyName,
+          department: facultyData.department,
+          proofFile: facultyData.proofFile,
+        });
+      }
+      navigate("/sign-up/confirmation");
     } catch (error) {
-      // Error is handled by the mutation's onError callback
       console.error("Signup error:", error);
     }
   };
@@ -96,7 +130,6 @@ export const useAuth = () => {
       await forgotPasswordMutation.mutateAsync(data);
       navigate("/otp", { state: { email: data.email } });
     } catch (error) {
-      // Error is handled by the mutation's onError callback
       console.error("Forgot password error:", error);
     }
   };
@@ -111,13 +144,13 @@ export const useAuth = () => {
     // Loading states
     isLoggingIn: loginMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
-    isSigningUp: signupMutation.isPending,
+    isSigningUp: signupStudentMutation.isPending || signupBusinessRepMutation.isPending || signupFacultyMutation.isPending,
     isSendingResetEmail: forgotPasswordMutation.isPending,
 
     // Error states
     loginError: loginMutation.error,
     logoutError: logoutMutation.error,
-    signupError: signupMutation.error,
+    signupError: signupStudentMutation.error || signupBusinessRepMutation.error || signupFacultyMutation.error,
     forgotPasswordError: forgotPasswordMutation.error,
 
     // User state
@@ -127,7 +160,9 @@ export const useAuth = () => {
     // Raw mutations (for advanced use cases)
     loginMutation,
     logoutMutation,
-    signupMutation,
+    signupStudentMutation,
+    signupBusinessRepMutation,
+    signupFacultyMutation,
     forgotPasswordMutation,
   };
 };

@@ -1,11 +1,19 @@
 import type Event from "@/shared/types/events";
 import { FaRegUser } from "react-icons/fa6";
-import { MdCalendarMonth } from "react-icons/md";
+import { MdCalendarMonth, MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { LazyImageLoader } from "tccd-ui";
+import { Button, LazyImageLoader } from "tccd-ui";
 import Format from "@/shared/utils/dateFormater";
 
-export default function PastEventCard({ event }: { event: Event }) {
+export default function PastEventCard({
+  event,
+  canEdit,
+  onEdit = () => {},
+}: {
+  event: Event;
+  canEdit?: boolean;
+  onEdit?: (event: Event) => void;
+}) {
   const navigate = useNavigate();
   return (
     <div
@@ -21,9 +29,27 @@ export default function PastEventCard({ event }: { event: Event }) {
       </div>
       <div className="md:block hidden w-[2px] bg-gray-300 self-stretch" />
       <div className="flex flex-col space-y-2">
-        <h1 className="text-secondary font-bold text-[20px] md:text-[22px] lg:text-[24px] md:mb-2">
-          {event.title}
-        </h1>
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="flex items-center justify-between"
+        >
+          <h1 className="text-2xl sm:text-3xl font-bold text-secondary">
+            {event.title}
+          </h1>
+          {/*small nitpick here: the button if it doesn't have a text doesn't resize to the icon only
+          instead it's an ellipse, can be a future improvement to the UI package 
+          also the icons are very small*/}
+          {canEdit && (
+            <Button
+              buttonText=""
+              buttonIcon={<MdEdit className="text-md md:text-lg" />}
+              type="ghost"
+              onClick={() => {
+                onEdit(event);
+              }}
+            />
+          )}
+        </div>
         <>
           <div className="flex flex-row text-inactive-tab-text font-medium text-[13px] md:text-[14px] lg:text-[15px] items-center">
             <MdCalendarMonth className="text-inactive-tab-text mr-1 size-4.5 lg:size-5 -mt-0.5" />

@@ -1,6 +1,7 @@
 import type { Control } from "react-hook-form";
 import type { BasicInfoFormData } from "../../schemas";
 import { FormInput } from "../FormInput";
+import { Controller } from "react-hook-form";
 
 interface BasicInfoStepProps {
   control: Control<BasicInfoFormData>;
@@ -62,6 +63,32 @@ export const BasicInfoStep = ({ control }: BasicInfoStepProps) => {
         placeholder="+201234567890"
         autoComplete="tel"
         helperText="Include country code (e.g., +20 for Egypt)"
+      />
+
+      {/* Gender */}
+      <Controller
+        name="gender"
+        control={control}
+        render={({ field, fieldState: { error } }) => (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Gender <span className="text-red-500">*</span>
+            </label>
+            <select
+              {...field}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-colors"
+            >
+              <option value="">Select your gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+            {error && (
+              <p className="mt-1 text-sm text-red-600" role="alert">
+                {error.message}
+              </p>
+            )}
+          </div>
+        )}
       />
 
       {/* LinkedIn URL */}

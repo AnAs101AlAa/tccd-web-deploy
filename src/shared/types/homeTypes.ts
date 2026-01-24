@@ -1,4 +1,4 @@
-export interface CommunityPostCardProps {
+export interface CommunityPost {
     id: string;
     createdOn: string;
     name: string;
