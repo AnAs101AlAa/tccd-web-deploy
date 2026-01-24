@@ -15,6 +15,8 @@ export interface GenericFilterProps {
   searchPlaceholder?: string;
   modalTitle?: string;
   typeLabel?: string;
+  isLoading?: boolean;
+  maxEndDate?: Date;
 }
 
 const GenericFilter = ({
@@ -29,6 +31,8 @@ const GenericFilter = ({
   searchPlaceholder = "Search...",
   modalTitle = "Filter",
   typeLabel = "Type",
+  isLoading = false,
+  maxEndDate,
 }: GenericFilterProps) => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [tempSelectedTypes, setTempSelectedTypes] =
@@ -116,6 +120,7 @@ const GenericFilter = ({
                 buttonText="Search"
                 onClick={onSearch}
                 type="primary"
+                loading={isLoading}
                 width="full"
               />
             </div>
@@ -201,11 +206,10 @@ const GenericFilter = ({
                       <button
                         key={option.value}
                         onClick={() => toggleType(option.value)}
-                        className={`px-4 py-3 rounded-xl border-2 font-medium transition-all ${
-                          isSelected
-                            ? "border-primary bg-primary text-white shadow-md"
-                            : "border-gray-200 bg-white text-gray-700 hover:border-primary/50 hover:bg-primary/5"
-                        }`}
+                        className={`px-4 py-3 rounded-xl border-2 font-medium transition-all ${isSelected
+                          ? "border-primary bg-primary text-white shadow-md"
+                          : "border-gray-200 bg-white text-gray-700 hover:border-primary/50 hover:bg-primary/5"
+                          }`}
                       >
                         {option.label}
                       </button>
@@ -244,6 +248,7 @@ const GenericFilter = ({
                       <input
                         type="date"
                         value={formatDate(tempDateRange.end)}
+                        max={maxEndDate ? maxEndDate.toISOString().split('T')[0] : undefined}
                         onChange={(e) =>
                           setTempDateRange((prev) => ({
                             ...prev,

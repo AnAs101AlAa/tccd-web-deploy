@@ -1,69 +1,92 @@
 import { Pagination } from "@/shared/components/pagination";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
-import { pastEvents } from "../data/dummyEvents";
 import WithNavbar from "@/shared/components/hoc/WithNavbar";
-import { usePagination, useGenericFilter } from "@/shared/hooks";
 import GenericGrid from "@/shared/components/GenericGrid";
 import PastEventCard from "../components/PastEventCard";
 import { GenericFilter } from "@/shared/components/filters";
 import EVENT_TYPES from "@/constants/EventTypes";
 import type Event from "@/shared/types/events";
 import { LoadingPage, ErrorScreen } from "tccd-ui";
-// import { useEvents } from "../hooks";
+import { useGetAllPastEvents } from "@/shared/queries/events";
+import { useState, useEffect } from "react";
 
 const PastEventsPage = () => {
-  // ============================================
-  // TODO: Uncomment when API is ready
-  // ============================================
-  // const {
-  //   pastEvents: apiPastEvents,
-  //   isLoading,
-  //   error,
-  // } = useEvents();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  // Filter state
+  const [searchInput, setSearchInput] = useState("");
+  const [selectedEventTypes, setSelectedEventTypes] = useState<string[]>([]);
+  const [selectedDateRange, setSelectedDateRange] = useState<{
+    start: Date | null;
+    end: Date | null;
+  }>();
 
-  // ============================================
-  // Temporary: Using dummy data
-  // Remove these lines when API is ready
-  // ============================================
-  const apiPastEvents = pastEvents;
-  const isLoading = false;
-  const error = null;
-  // ============================================
+  // Active filters (applied when user clicks search)
+  const [activeFilters, setActiveFilters] = useState<{
+    searchQuery?: string;
+    eventTypes?: string[];
+    startDate?: string;
+    endDate?: string;
+  }>({});
 
-  // Past events filtering
-  const {
-    searchInput,
-    setSearchInput,
-    handleSearch,
-    selectedTypes: selectedEventTypes,
-    setSelectedTypes: setSelectedEventTypes,
-    selectedDateRange,
-    setSelectedDateRange,
-    filteredItems: filteredEvents,
-  } = useGenericFilter<Event>({
-    items: apiPastEvents,
-    searchFields: (event) => [event.title, event.description],
-    categoryField: (event) => event.eventType,
-    dateField: (event) => event.date,
-  });
+  // Detect screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const pageSize = isMobile ? 6 : 12;
+
+  const { data, isLoading, error } = useGetAllPastEvents(currentPage, pageSize, activeFilters);
+
+  const apiPastEvents = data?.events || [];
+  const totalPages = data?.totalPages || 0;
+
+  useEffect(() => {
+    if (!isLoading && (data)) {
+      setIsInitialLoad(false);
+    }
+  }, [isLoading]);
 
   const handleSearchWithPagination = () => {
-    handleSearch();
-    setPage(1);
+    // Build filter object
+    const filters: any = {};
+
+    if (searchInput.trim()) {
+      filters.searchQuery = searchInput.trim();
+    }
+
+    if (selectedEventTypes.length > 0) {
+      filters.eventTypes = selectedEventTypes;
+    }
+
+    if (selectedDateRange) {
+      if (selectedDateRange.start) {
+        filters.startDate = selectedDateRange.start.toISOString();
+      }
+      if (selectedDateRange.end) {
+        filters.endDate = selectedDateRange.end.toISOString();
+      }
+    }
+
+    setActiveFilters(filters);
+    setCurrentPage(1); // Reset to page 1 when applying filters
   };
 
-  const { currentPage, paginatedItems, totalPages, setPage } =
-    usePagination<Event>({
-      items: filteredEvents,
-      itemsPerPageMobile: 6,
-      itemsPerPageDesktop: 12,
-    });
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
-  if (isLoading) {
+  if (isInitialLoad && isLoading) {
     return <LoadingPage />;
   }
 
-  if (error) {
+  if (isInitialLoad && error) {
     return (
       <ErrorScreen
         message="An error occurred while fetching past events. Please try again and contact our team if the problem persists."
@@ -96,22 +119,38 @@ const PastEventsPage = () => {
                 searchPlaceholder="Search past events..."
                 modalTitle="Filter Events"
                 typeLabel="Event Type"
+                isLoading={isLoading}
+                maxEndDate={new Date()}
               />
             </div>
 
-            <GenericGrid
-              items={paginatedItems}
-              emptyMessage="No past events found. Try adjusting your filters."
-              renderCard={(event: Event) => <PastEventCard event={event} />}
-              gridCols="grid-cols-1 md:grid-cols-2"
-              getKey={(event: Event) => event.id}
-            />
+            {isLoading ? (
+              <div className="flex justify-center items-center py-20">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              </div>
+            ) : error ? (
+              <div className="text-center py-20">
+                <p className="text-red-600 text-lg">
+                  An error occurred Please try again later.
+                </p>
+              </div>
+            ) : (
+              <>
+                <GenericGrid
+                  items={apiPastEvents}
+                  emptyMessage="No past events found. Try adjusting your filters."
+                  renderCard={(event: Event) => <PastEventCard event={event} />}
+                  gridCols="grid-cols-1 md:grid-cols-2"
+                  getKey={(event: Event) => event.id}
+                />
 
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setPage}
-            />
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </>
+            )}
           </section>
         </main>
       </div>
