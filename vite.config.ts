@@ -14,7 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://backendgoeshere.com", // replace with your backend URL
+        target: "https://tccd-web-backend.runasp.net", // replace with your backend URL
         changeOrigin: true,
         secure: true, // because target is https
         // IMPORTANT: do NOT rewrite /api -> "" because your backend expects /api/...

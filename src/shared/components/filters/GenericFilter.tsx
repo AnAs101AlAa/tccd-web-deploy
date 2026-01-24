@@ -15,6 +15,8 @@ export interface GenericFilterProps {
   searchPlaceholder?: string;
   modalTitle?: string;
   typeLabel?: string;
+  isLoading?: boolean;
+  maxEndDate?: Date;
 }
 
 const GenericFilter = ({
@@ -29,6 +31,8 @@ const GenericFilter = ({
   searchPlaceholder = "Search...",
   modalTitle = "Filter",
   typeLabel = "Type",
+  isLoading = false,
+  maxEndDate,
 }: GenericFilterProps) => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [tempSelectedTypes, setTempSelectedTypes] =
@@ -116,6 +120,7 @@ const GenericFilter = ({
                 buttonText="Search"
                 onClick={onSearch}
                 type="primary"
+                loading={isLoading}
                 width="full"
               />
             </div>
@@ -244,6 +249,7 @@ const GenericFilter = ({
                       <input
                         type="date"
                         value={formatDate(tempDateRange.end)}
+                        max={maxEndDate ? maxEndDate.toISOString().split('T')[0] : undefined}
                         onChange={(e) =>
                           setTempDateRange((prev) => ({
                             ...prev,
