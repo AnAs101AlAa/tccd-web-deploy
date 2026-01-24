@@ -1,18 +1,19 @@
 import { ErrorScreen, LoadingPage } from "tccd-ui";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import EventDetailsPageComponent from "../components/EventDetailsView";
 import { useGetEventById } from "@/shared/queries/events";
 
 const EventDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
   const eventId = id ?? "";
   const { data: event, error, isLoading } = useGetEventById(eventId);
 
-  const handleRegister = () => {
-    if (!event) return;
-    console.log("Register for event", event.id);
-  };
+    const handleRegister = () => {
+        if (!event) return;
+        navigate(`/events/register/${event.id}`);
+    };
 
   if (isLoading) {
     return <LoadingPage />;

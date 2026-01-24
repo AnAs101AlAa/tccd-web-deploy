@@ -38,15 +38,7 @@ export const useGetAllPastEvents = (
 export const useGetEventById = (id: string) => {
   return useQuery({
     queryKey: eventKeys.detail(id),
-    // TODO: Replace with eventApi.getEventById(id) when backend endpoint is ready
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const event = eventDetails.find((item) => item.id === id);
-      if (!event) {
-        throw new Error("Event not found");
-      }
-      return event;
-    },
+    queryFn: () => eventApi.getEventById(id),
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
   });

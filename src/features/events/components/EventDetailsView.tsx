@@ -267,7 +267,9 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                                         Seats Remaining
                                     </p>
                                     <p>
-                                        {Math.max(event.capacity - event.registeredCount, 0)} of {event.capacity} spots available
+                                        {/* choose one of them according to what we want to calculate */}
+                                        {Math.max(event.capacity - event.attendeeCount, 0)} of {event.capacity} spots available
+                                        {/* {Math.max(event.capacity - event.registeredCount, 0)} of {event.capacity} spots available */}
                                     </p>
                                 </div>
                             </div>
