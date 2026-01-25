@@ -11,7 +11,6 @@ const CategoryFilter = ({
 }: CategoryFilterProps) => {
   return (
     <div className="mb-4">
-      <div className="bg-white p-3 rounded-xl shadow-sm">
         <div className="flex gap-2 overflow-x-auto scrollbar-hide">
           <button
             onClick={() => onCategoryChange("All")}
@@ -37,7 +36,6 @@ const CategoryFilter = ({
             </button>
           ))}
         </div>
-      </div>
     </div>
   );
 };

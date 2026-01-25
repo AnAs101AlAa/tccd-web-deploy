@@ -103,10 +103,10 @@ const EventsPage = () => {
           subtitle="Explore the catalogue of our latest and history of events on full display"
         />
 
-        <main className="w-full xl:w-[80%] xl:mx-auto px-6 py-5">
+        <main className="w-full xl:w-[80%] xl:mx-auto px-0 md:px-6 py-5">
           {/* Upcoming Events Section */}
-          <section className="mb-12">
-            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-4">
+          <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background">
+            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-2">
               <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
                 Upcoming Events
               </h2>
@@ -137,16 +137,12 @@ const EventsPage = () => {
               totalPages={upcomingTotalPages}
               onPageChange={setUpcomingPage}
             />
+            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
           </section>
 
-          {/* Separator */}
-          <div className="w-full my-12">
-            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full"></div>
-          </div>
-
           {/* Past Events Section */}
-          <section>
-            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-6">
+          <section className="shadow-lg p-2 md:p-3 relative pb-3 md:pb-4 bg-background">
+            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-3 md:mb-6">
               <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
                 Past Events
               </h2>
@@ -163,6 +159,7 @@ const EventsPage = () => {
             <ViewAllButton
               onClick={() => toggleViewAllPast({ route: "/past-events" })}
             />
+            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div> 
           </section>
         </main>
       </div>
