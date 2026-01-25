@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { eventApi } from "./eventApi";
 import eventDetails from "@/features/events/data/dummyEventDetails";
+import type { EventQueryParams } from "@/shared/types";
 
 export const eventKeys = {
   all: ["events"] as const,
@@ -9,10 +10,10 @@ export const eventKeys = {
   detail: (id: string) => [...eventKeys.all, "detail", id] as const,
 };
 
-export const useGetAllUpcomingEvents = () => {
+export const useGetAllUpcomingEvents = (params?: EventQueryParams) => {
   return useQuery({
-    queryKey: eventKeys.upcoming(),
-    queryFn: () => eventApi.getAllUpcomingEvents(),
+    queryKey: [eventKeys.upcoming(), params],
+    queryFn: () => eventApi.getAllUpcomingEvents(params),
     staleTime: 5 * 60 * 1000, 
   });
 };

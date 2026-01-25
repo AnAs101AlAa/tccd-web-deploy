@@ -1,6 +1,6 @@
 import type Event from "@/shared/types/events";
-import { FaRegUser } from "react-icons/fa6";
-import { MdCalendarMonth, MdEdit } from "react-icons/md";
+import { FaUser, FaCalendar } from "react-icons/fa6";
+import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { Button, LazyImageLoader } from "tccd-ui";
 import Format from "@/shared/utils/dateFormater";
@@ -22,8 +22,8 @@ export default function PastEventCard({
     >
       <div className="max-w-[38%] min-w-[38%] xl:max-w-[42%] xl:min-w-[42%] md:block hidden">
         <LazyImageLoader
-          src={event.eventPoster}
-          alt={event.title}
+          src={event.eventImage}
+          alt={event.name}
           className="rounded-l-lg"
         />
       </div>
@@ -34,7 +34,7 @@ export default function PastEventCard({
           className="flex items-center justify-between"
         >
           <h1 className="text-2xl sm:text-3xl font-bold text-secondary">
-            {event.title}
+            {event.name}
           </h1>
           {/*small nitpick here: the button if it doesn't have a text doesn't resize to the icon only
           instead it's an ellipse, can be a future improvement to the UI package 
@@ -52,13 +52,13 @@ export default function PastEventCard({
         </div>
         <>
           <div className="flex flex-row text-inactive-tab-text font-medium text-[13px] md:text-[14px] lg:text-[15px] items-center">
-            <MdCalendarMonth className="text-inactive-tab-text mr-1 size-4.5 lg:size-5 -mt-0.5" />
+            <FaCalendar className="text-inactive-tab-text mr-1 size-4.5 lg:size-5 -mt-0.5" />
             {Format(event.date, "stringed")}
           </div>
         </>
         <>
           <span className="flex flex-row text-inactive-tab-text font-medium text-[13px] md:text-[14px] lg:text-[15px] items-center">
-            <FaRegUser className="text-inactive-tab-text mr-1 size-4 lg:size-4.5 -mt-0.5" />
+            <FaUser className="text-inactive-tab-text mr-1 size-4 lg:size-4.5 -mt-0.5" />
             {event.attendeeCount}
           </span>
         </>
