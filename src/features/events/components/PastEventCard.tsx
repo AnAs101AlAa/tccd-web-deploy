@@ -18,7 +18,7 @@ export default function PastEventCard({
   return (
     <div
       onClick={() => navigate(`/events/${event.id}`)}
-      className="flex items-center m-auto gap-2 lg:gap-3 border-1 border-contrast/13 rounded-lg p-2 w-full h-full cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out"
+      className="flex items-start m-auto gap-2 lg:gap-3 border-1 border-contrast/13 rounded-lg p-3 w-full h-full cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out"
     >
       <div className="max-w-[38%] min-w-[38%] xl:max-w-[42%] xl:min-w-[42%] md:block hidden">
         <LazyImageLoader
@@ -52,13 +52,13 @@ export default function PastEventCard({
         </div>
         <>
           <div className="flex flex-row text-inactive-tab-text font-medium text-[13px] md:text-[14px] lg:text-[15px] items-center">
-            <MdCalendarMonth className="text-inactive-tab-text mr-1 size-4.5 lg:size-5 -mt-0.5" />
+            <MdCalendarMonth className="text-inactive-tab-text mr-1 size-4 lg:size-4.5 -mt-0.5" />
             {Format(event.date, "stringed")}
           </div>
         </>
         <>
           <span className="flex flex-row text-inactive-tab-text font-medium text-[13px] md:text-[14px] lg:text-[15px] items-center">
-            <FaRegUser className="text-inactive-tab-text mr-1 size-4 lg:size-4.5 -mt-0.5" />
+            <FaRegUser className="text-inactive-tab-text mr-1 size-3.5 lg:size-4 -mt-0.5" />
             {event.attendeeCount}
           </span>
         </>
