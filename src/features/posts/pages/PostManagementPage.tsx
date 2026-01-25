@@ -2,73 +2,61 @@ import { PostSearchFilter } from "../components/PostSearchFilter";
 import PostCard from "../components/PostListingCard";
 import type { CommunityPost } from "@/shared/types/postTypes";
 import { useState, useEffect } from "react";
-import { usePagination } from "@/shared/hooks";
 import Pagination from "@/shared/components/pagination/Pagination";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import { useGetAllPosts } from "@/shared/queries/posts";
-import { LoadingPage, ErrorScreen, Button } from "tccd-ui";
+import { LoadingPage, Button } from "tccd-ui";
 import ManagePostModal from "../components/components/EditPostModal";
 import PostDeleteModal from "../components/components/PostDeleteModal";
-
-const dummyPosts: CommunityPost[] = [
-  {
-    id: "1",
-    createdAt: "2023-10-01T00:00:00Z",
-    title: "Community Event Announcement",
-    description:
-      "Join us for an exciting community event where we will discuss the latest trends in technology and innovation. This is a great opportunity to network with like-minded individuals and share ideas about the future of our industry.",
-    postMedia: [
-      "https://fastly.picsum.photos/id/16/2500/1667.jpg?hmac=uAkZwYc5phCRNFTrV_prJ_0rP0EdwJaZ4ctje2bY7aE",
-    ],
-    status: "posted",
-  },
-  {
-    id: "2",
-    createdAt: "2023-09-15T00:00:00Z",
-    title: "Volunteer Opportunity",
-    description:
-      "We are looking for volunteers to help with our upcoming charity drive. Your contribution can make a real difference in the lives of those in need. If you are interested in giving back to the community, please sign up today.",
-    postMedia: [
-      "https://fastly.picsum.photos/id/17/2500/1667.jpg?hmac=HD-JrnNUZjFiP2UZQvWcKrgLoC_pc_ouUSWv8kHsJJY",
-    ],
-    status: "expired",
-  },
-  {
-    id: "3",
-    createdAt: "2023-08-20T00:00:00Z",
-    title: "New Member Welcome",
-    description:
-      "Welcome our newest members to the community! We are thrilled to have you join us and look forward to your contributions. Let's work together to make this community even better.",
-    postMedia: [
-      "https://fastly.picsum.photos/id/17/2500/1667.jpg?hmac=HD-JrnNUZjFiP2UZQvWcKrgLoC_pc_ouUSWv8kHsJJY",
-    ],
-    status: "disabled",
-  },
-];
+import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 
 export const PostManagementPage = () => {
   const [searchKey, setSearchKey] = useState("");
-  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [editedPost, setEditedPost] = useState<string | null>(null);
   const [createPost, setCreatePost] = useState<boolean>(false);
   const [deletedPost, setDeletedPost] = useState<string | null>(null);
-
-  const { data: apiPosts, isLoading, isError } = useGetAllPosts();
-
-  const posts = apiPosts || dummyPosts;
-
-  const { currentPage, paginatedItems, totalPages, setPage } =
-    usePagination<CommunityPost>({
-      items: posts,
-      itemsPerPageMobile: 3,
-      itemsPerPageDesktop: 6,
-    });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
-    setPage(1);
-  }, [searchKey, selectedStatuses, setPage]);
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
-  if (isLoading) {
+  const pageSize = isMobile ? 3 : 6;
+
+  const [activeFilters, setActiveFilters] = useState<{
+    name?: string;
+  }>({});
+
+  const { data, isLoading, error } = useGetAllPosts(currentPage, pageSize, activeFilters);
+
+  const posts = data?.posts || [];
+  const totalPages = data?.totalPages || 0;
+
+  useEffect(() => {
+    if (!isLoading && (data || error)) {
+      setIsInitialLoad(false);
+    }
+  }, [isLoading, data, error]);
+
+  const handleSearch = () => {
+    const filters: any = {};
+
+    if (searchKey.trim()) {
+      filters.name = searchKey.trim();
+    }
+
+    setActiveFilters(filters);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Show full-page loading only on initial load
+  if (isInitialLoad && isLoading) {
     return <LoadingPage />;
   }
 
@@ -89,7 +77,7 @@ export const PostManagementPage = () => {
       />
       <ManagePostModal
         mode={editedPost != null}
-        post={posts.find((post) => post.id === editedPost)!}
+        post={posts.find((post: CommunityPost) => post.id === editedPost)!}
         onClose={() => {
           setEditedPost(null);
           setCreatePost(false);
@@ -97,16 +85,13 @@ export const PostManagementPage = () => {
         isOpen={editedPost != null || createPost}
       />
       <div className="min-h-screen bg-gray-50">
+        <UpperHeader
+          image=""
+          title="Post Management"
+          subtitle="Manage community posts, edit content, and monitor post status."
+        />
         <main className="w-[98%] md:w-[92%] lg:w-[86%] mx-auto px-6 py-5">
-          <div className="flex sm:flex-row flex-col justify-between mb-4 gap-y-2">
-            <div>
-              <h1 className="text-[22px] md:text-[24px] lg:text-[26px] font-semibold">
-                Post Management
-              </h1>
-              <p className="text-contrast/80 text-[14px] md:text-[15px] lg:text-[16px]">
-                Manage community posts, edit content, and monitor post status.
-              </p>
-            </div>
+          <div className="flex justify-end mb-4">
             <Button
               width="fit"
               type="primary"
@@ -118,38 +103,49 @@ export const PostManagementPage = () => {
             <PostSearchFilter
               searchKey={searchKey}
               onSearchChange={setSearchKey}
-              selectedStatuses={selectedStatuses}
-              onStatusesChange={setSelectedStatuses}
-              onSearch={() => {}}
+              onSearch={handleSearch}
             />
           </div>
 
-          <div className="flex flex-col md:flex-row md:flex-wrap gap-[2%] gap-y-5">
-            {paginatedItems.map((post) => (
-              <div className="w-full md:w-[49%] xl:w-[32%]">
-                <PostCard
-                  key={post.id}
-                  post={post}
-                  setEditing={setEditedPost}
-                  setDeleting={setDeletedPost}
-                />
-              </div>
-            ))}
-          </div>
-
-          {paginatedItems.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-gray-500">
-                No posts found matching your criteria.
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+          ) : error ? (
+            <div className="text-center py-20">
+              <p className="text-red-600 text-lg">
+                An error occurred while fetching posts. Please try again.
               </p>
             </div>
-          )}
+          ) : (
+            <>
+              <div className="flex flex-col md:flex-row md:flex-wrap gap-[2%] gap-y-5">
+                {posts.map((post: CommunityPost) => (
+                  <div key={post.id} className="w-full md:w-[49%] xl:w-[32%]">
+                    <PostCard
+                      post={post}
+                      setEditing={setEditedPost}
+                      setDeleting={setDeletedPost}
+                    />
+                  </div>
+                ))}
+              </div>
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
+              {posts.length === 0 && (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">
+                    No posts found matching your criteria.
+                  </p>
+                </div>
+              )}
+
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
         </main>
       </div>
     </WithLayout>
