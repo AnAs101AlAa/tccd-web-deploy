@@ -2,6 +2,7 @@ import type { CommunityPost } from "@/shared/types/postTypes";
 import { Button, LazyImageLoader } from "tccd-ui";
 import format from "@/shared/utils/dateFormater";
 import { FaImage } from "react-icons/fa";
+import { convertGoogleDriveUrl } from "@/shared/utils";
 
 export interface PostCardProps {
   post: CommunityPost;
@@ -10,11 +11,14 @@ export interface PostCardProps {
 }
 
 export default function PostCard({ post, setEditing, setDeleting }: PostCardProps) {
+  const imageUrl = post.media && post.media.length > 0 && post.media[0]
+    ? convertGoogleDriveUrl(post.media[0])
+    : null;
 
   return (
     <div className="w-full max-w-xl mx-auto bg-white shadow-md rounded-2xl transition hover:shadow-lg relative h-full flex flex-col">
-      {post.media && post.media.length > 0 && post.media[0] ? (
-        <LazyImageLoader src={post.media[0]} alt={post.name} className="rounded-t-lg" height="250px" />
+      {imageUrl ? (
+        <LazyImageLoader src={imageUrl} alt={post.name} className="rounded-t-lg" height="250px" />
       ) : (
         <div className="h-[250px] flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 rounded-t-lg border-b-2 border-dashed border-gray-300">
           <FaImage className="text-gray-300 text-5xl sm:text-6xl mb-2" aria-hidden="true" />
