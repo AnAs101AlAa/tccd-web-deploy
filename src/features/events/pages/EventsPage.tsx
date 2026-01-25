@@ -5,47 +5,38 @@ import WithLayout from "@/shared/components/hoc/WithLayout";
 import GenericGrid from "@/shared/components/GenericGrid";
 import type Event from "@/shared/types/events";
 import { useEvents } from "../hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { EventQueryParams, EventTypes } from "@/shared/types/events";
+import EVENT_TYPES from "@/constants/EventTypes";
+import { GenericFilter } from "@/shared/components/filters";
+import toast from "react-hot-toast";
 
 const EventsPage = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [queryParams, setQueryParams] = useState<EventQueryParams>({
+    PageNumber: 1,
+    PageSize: 10,
+  });
+  const [searchInput, setSearchInput] = useState(queryParams.Name || "");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setQueryParams((prev) => ({
+        ...prev,
+        Name: searchInput,
+        PageNumber: 1,
+      }));
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   const {
     upcomingEvents: apiUpcomingEvents,
     pastEvents: apiPastEvents,
     isLoading,
     error,
     refetchUpcoming,
-  } = useEvents({ PageNumber: currentPage });
-
-  // ============================================
-  // Temporary: Using dummy data
-  // Remove these lines when API is ready
-  // ============================================
-  //const apiUpcomingEvents = upcomingEvents;
-  //const apiPastEvents = pastEvents;
-  //const isLoading = false;
-  //const error = null;
-  // ============================================
-
-  //const {
-  //  selectedCategory: upcomingCategory,
-  //  currentPage: upcomingPage,
-  //  paginatedItems: paginatedUpcomingEvents,
-  //  totalPages: upcomingTotalPages,
-  //  handleCategoryChange: handleUpcomingCategoryChange,
-  //  setPage: setUpcomingPage,
-  //} = usePagination<Event>({
-  //  items: apiUpcomingEvents,
-  //  itemsPerPageMobile: 1,
-  //  itemsPerPageDesktop: 3,
-  //  filterBy: (event) => event.category,
-  //});
-  //const upcomingCategories = EVENT_TYPES;
-
-  //const {
-  //  displayedItems: displayedPastEvents,
-  //  toggleViewAll: toggleViewAllPast,
-  //} = useViewAll<Event>({ items: apiPastEvents, initialLimit: 6 });
+  } = useEvents(queryParams);
 
   const onBookNow = () => {
     console.log("BookNow");
@@ -53,19 +44,6 @@ const EventsPage = () => {
   const onLearnMore = () => {
     console.log("LearnMore");
   };
-
-  if (isLoading) {
-    return (
-      <WithLayout>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
-            <p className="text-lg text-secondary">Loading events...</p>
-          </div>
-        </div>
-      </WithLayout>
-    );
-  }
 
   if (error) {
     return (
@@ -96,41 +74,100 @@ const EventsPage = () => {
 
         <main className="w-[96%] md:w-[92%] lg:w-[85%] mx-auto px-6 py-5">
           {/* Upcoming Events Section */}
-          {apiUpcomingEvents && (
-            <section className="mb-16">
-              <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-3 sm:mb-6">
-                <h2 className="text-2xl sm:text-3xl font-bold text-contrast">
-                  Upcoming Events
-                </h2>
+          <section className="mb-16">
+            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-3 sm:mb-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-contrast">
+                Upcoming Events
+              </h2>
+            </div>
+            <div className="mb-3">
+              <GenericFilter
+                searchKey={searchInput}
+                onSearchChange={(value: string) => setSearchInput(value)}
+                searchPlaceholder="Search events by name..."
+                selectedTypes={queryParams.Type ? [queryParams.Type] : []}
+                onTypesChange={(types: string[]) =>
+                  setQueryParams((prev) => ({
+                    ...prev,
+                    Type: types[0] as EventTypes | undefined,
+                    PageNumber: 1,
+                  }))
+                }
+                typeOptions={EVENT_TYPES}
+                typeLabel="Event Type"
+                selectedDateRange={{
+                  start: queryParams.StartDate
+                    ? new Date(queryParams.StartDate)
+                    : null,
+                  end: queryParams.EndDate
+                    ? new Date(queryParams.EndDate)
+                    : null,
+                }}
+                onDateRangeChange={(range: {
+                  start: Date | null;
+                  end: Date | null;
+                }) => {
+                  const now = new Date();
+                  now.setHours(0, 0, 0, 0);
+
+                  if (range.start && range.start < now) {
+                    toast.error(
+                      "Star date cannot be in the past, Please head to the Past Events section",
+                    );
+                    return;
+                  }
+
+                  setQueryParams((prev) => ({
+                    ...prev,
+                    StartDate: range.start?.toISOString().split("T")[0],
+                    EndDate: range.end?.toISOString().split("T")[0],
+                    PageNumber: 1,
+                  }));
+                }}
+                //We don't need anything here, the queryParams is a queryKey forcing refetch
+                onSearch={() => {}}
+                modalTitle="Filter Events"
+              />
+            </div>
+            {isLoading && (
+              <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
+                  <p className="text-lg text-secondary font-medium">
+                    Loading events...
+                  </p>
+                </div>
               </div>
+            )}
+            {apiUpcomingEvents && (
+              <>
+                <GenericGrid
+                  items={apiUpcomingEvents.items}
+                  emptyMessage="No upcoming events at the moment. Check back soon!"
+                  renderCard={(event: Event) => (
+                    <UpcomingEventCard
+                      event={event}
+                      onBookNow={onBookNow}
+                      onLearnMore={onLearnMore}
+                    />
+                  )}
+                  gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  getKey={(event: Event) => event.id}
+                />
 
-              {/*<CategoryFilter
-              categories={upcomingCategories}
-              selectedCategory={upcomingCategory}
-              onCategoryChange={handleUpcomingCategoryChange}
-            />*/}
-
-              <GenericGrid
-                items={apiUpcomingEvents.items}
-                emptyMessage="No upcoming events at the moment. Check back soon!"
-                renderCard={(event: Event) => (
-                  <UpcomingEventCard
-                    event={event}
-                    onBookNow={onBookNow}
-                    onLearnMore={onLearnMore}
-                  />
-                )}
-                gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                getKey={(event: Event) => event.id}
-              />
-
-              <Pagination
-                currentPage={apiUpcomingEvents.pageIndex}
-                totalPages={apiUpcomingEvents.totalPages}
-                onPageChange={setCurrentPage}
-              />
-            </section>
-          )}
+                <Pagination
+                  currentPage={apiUpcomingEvents.pageIndex}
+                  totalPages={apiUpcomingEvents.totalPages}
+                  onPageChange={(page: number) => {
+                    setQueryParams((prev) => ({
+                      ...prev,
+                      PageNumber: page,
+                    }));
+                  }}
+                />
+              </>
+            )}
+          </section>
           {/* Past Events Section */}
           {apiPastEvents && (
             <section>
