@@ -10,18 +10,42 @@ export interface Sponsor {
 
 export default interface Event {
   id: string;
-  title: string;
+  name: string;
   description: string;
-  eventPoster: string;
-  eventType: string;
-  media?: string[];
-  sponsors?: string[]; // Array of sponsor IDs
-  sponsorDetails?: Sponsor[]; // Array of sponsor objects with full details
   date: string;
   location: string;
-  category: string;
-  capacity: number;
-  registeredCount: number;
+  isApproved: boolean;
+  type: EventTypes;
   attendeeCount: number;
-  timeSlot?: string;
+  capacity: number;
+  eventImage: string;
+  registrationDeadline: string;
+  createdBy: string;
+  createdAt: string;
+  updatedOn: string;
 }
+
+export interface EventResponse {
+  items: Event[];
+  pageIndex: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+export interface EventQueryParams {
+  Name?: string;
+  Type?: EventTypes;
+  StartDate?: string;
+  EndDate?: string;
+  Location?: string;
+  OrderBy?: EventOrderBy;
+  Descending?: boolean;
+  PageNumber?: number;
+  PageSize?: number;
+}
+
+export type EventTypes = "Workshop" | "Jobfair" | "Researchday" | "Fieldtrip" | "Sessions" | "Recruitment" | "Orientation"
+export type EventOrderBy = "Name" | "Date" | "Location" | "Type";

@@ -1,8 +1,9 @@
 import { LazyImageLoader, Button } from "tccd-ui";
 import type Event from "@/shared/types/events";
 import format from "@/shared/utils/dateFormater";
-import { FaClock, FaCalendar } from "react-icons/fa";
+import { FaClock, FaCalendar, FaLocationDot, FaUser } from "react-icons/fa6";
 import { useRef, useEffect, useState } from "react";
+import { EVENT_TYPE_MAP } from "@/constants/EventTypes";
 
 interface Props {
   event: Event;
@@ -19,7 +20,7 @@ const UpcomingEventCard: React.FC<Props> = ({
   const mainInfoRef = useRef<HTMLDivElement>(null);
   const [translateValue, setTranslateValue] = useState(260);
   const [isTapped, setIsTapped] = useState(false);
-  
+
   useEffect(() => {
     const wholeEl = wholeInfoRef.current;
     const mainEl = mainInfoRef.current;
@@ -63,21 +64,17 @@ const UpcomingEventCard: React.FC<Props> = ({
   }, []);
 
   return (
-    <div
-      className="relative w-full h-[240px] md:h-[270px] lg:h-[300px] group bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer transition-transform duration-300 flex flex-col"
-    >
+    <div className="relative w-full h-[240px] md:h-[270px] lg:h-[300px] group bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer transition-transform duration-300 flex flex-col">
       <LazyImageLoader
-        src={event.eventPoster}
-        alt={event.title}
+        src={event.eventImage}
+        alt={event.name}
         width="100%"
         height="100%"
         className="absolute top-0 inset-0"
       />
 
-      <span
-        className="absolute top-2 left-2 text-white text-xs px-3 py-1 rounded-2xl bg-secondary"
-      >
-        Workshops
+      <span className="absolute top-2 left-2 text-white text-xs px-3 py-1 rounded-2xl bg-secondary">
+        {EVENT_TYPE_MAP[event.type]}
       </span>
 
       <div
@@ -90,17 +87,38 @@ const UpcomingEventCard: React.FC<Props> = ({
       >
         <div className="space-y-3" ref={mainInfoRef}>
           <h2 className="font-bold text-[#285D7E] text-[20px] md:text[22px] lg:text-[24px]">
-            {event.title}
+            {event.name}
           </h2>
-
+          {/*Nitpick: the colors here are different from the past event card,
+          suggest choosing one for both for better consistency*/}
           <div className="flex items-center gap-6 text-gray-600">
             <div className="flex items-center gap-2">
               <FaCalendar className="size-3.5 md:size-4" />
-              <span className="text-[13px] md:text-[14px] lg:text-[15px]">{format(event.date, "date")}</span>
+              <span className="text-[13px] md:text-[14px] lg:text-[15px]">
+                {format(event.date, "date")}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <FaClock className="size-3.5 md:size-4" />
-              <span className="text-[13px] md:text-[14px] lg:text-[15px]">{format(event.date, "hour")}</span>
+              <span className="text-[13px] md:text-[14px] lg:text-[15px]">
+                {format(event.date, "hour")}
+              </span>
+            </div>
+          </div>
+          {/*This is extra stuff I thought useful to be added to the card,
+          You can remove it if not approved*/}
+          <div className="flex items-center gap-6 text-gray-600">
+            <div className="flex items-center gap-2">
+              <FaLocationDot className="size-3.5 md:size-4" />
+              <span className="text-[13px] md:text-[14px] lg:text-[15px]">
+                {event.location}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <FaUser className="size-3.5 md:size-4" />
+              <span className="text-[13px] md:text-[14px] lg:text-[15px]">
+                {event.attendeeCount}
+              </span>
             </div>
           </div>
         </div>

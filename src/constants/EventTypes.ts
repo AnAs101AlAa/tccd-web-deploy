@@ -1,13 +1,21 @@
 const EVENT_TYPES = [
   { value: "Workshop", label: "Workshop" },
-  { value: "JobFair", label: "Job Fair" },
-  { value: "ResearchDay", label: "Research Day" },
-  { value: "FieldTrip", label: "Field Trip" },
-  { value: "Session", label: "Session" },
+  { value: "Jobfair", label: "Job Fair" },
+  { value: "Researchday", label: "Research Day" },
+  { value: "Fieldtrip", label: "Field Trip" },
+  { value: "Sessions", label: "Session" },
   { value: "Recruitment", label: "Recruitment" },
   { value: "Orientation", label: "Orientation" },
-  // { value: "Meeting", label: "Meeting" },
-  // { value: "Other", label: "Other" },
 ];
+
+export const EVENT_TYPE_MAP = {
+  Workshop: "Workshop",
+  Jobfair: "Job Fair",
+  Researchday: "Research Day",
+  Fieldtrip: "Field Trip",
+  Sessions: "Session",
+  Recruitment: "Recruitment",
+  Orientation: "Orientation",
+};
 
 export default EVENT_TYPES;

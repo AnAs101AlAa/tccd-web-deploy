@@ -1,3 +1,4 @@
+import type { EventQueryParams, EventResponse } from "@/shared/types/events";
 import { systemApi } from "../AxoisInstance";
 import type Event from "@/shared/types/events";
 import type { Sponsor } from "@/shared/types/events";
@@ -6,9 +7,20 @@ const EVENT_ROUTE = "/v1/Event";
 const SPONSOR_ROUTE = "/v1/Sponsors";
 
 export class EventApi {
-  async getAllUpcomingEvents(): Promise<Event[]> {
-    const response = await systemApi.get(`${EVENT_ROUTE}/upcoming`);
-    return response.data;
+  async getAllUpcomingEvents(params?: EventQueryParams): Promise<EventResponse> {
+    if (params?.StartDate) {
+      const startDateTime = new Date(params.StartDate);
+      const now = new Date();
+      if (startDateTime < now) {
+        throw new Error("Start date cannot be in the past, Please head to the past events section.");
+      }
+    } else {
+      params = { ...params, StartDate: new Date().toISOString() };
+    }
+    const response = await systemApi.get(`${EVENT_ROUTE}`, {
+      params,
+    });
+    return response.data.data;
   }
 
   async getAllPastEvents(
