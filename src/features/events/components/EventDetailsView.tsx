@@ -135,7 +135,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
     };
 
     return (
-        <article className="bg-white md:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+        <article className="bg-white md:rounded-3xl shadow-lg border border-gray-200 overflow-hidden pb-4 -mb-4">
             {isMediaViewerOpen && (
                 <FullScreenViewer
                     isOpen={isMediaViewerOpen}
@@ -150,52 +150,52 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                 />
             )}
             <section className="px-4 sm:px-6 md:px-10 py-6 sm:py-8 md:py-10">
-                <div className="space-y-2 sm:space-y-4 md:space-y-6">
+                <div className="space-y-6 md:space-y-10">
                     <div className="border-b border-slate-200 pb-4 sm:pb-5">
-                        <div className="flex items-start justify-between gap-3 sm:gap-4">
-                            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-secondary leading-tight flex-1">
+                        <div className="flex items-start justify-between gap-1 sm:gap-2">
+                            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-secondary leading-tight flex-1">
                                 {event.title}
-                            </h1>
+                            </p>
                             {event.category && (
-                                <span className="inline-block bg-secondary/10 text-secondary text-[10px] sm:text-xs font-semibold uppercase tracking-wide px-2.5 sm:px-3 py-1 rounded-full flex-shrink-0">
+                                <span className="inline-block bg-secondary/10 text-secondary text-[12px] sm:text-xs font-semibold uppercase tracking-wide px-2.5 sm:px-3 py-1 mt-1 rounded-full flex-shrink-0">
                                     {event.category}
                                 </span>
                             )}
                         </div>
-                        <p className="mt-2 sm:mt-3 text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed">
+                        <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed">
                             {event.description}
                         </p>
                     </div>
 
-                    <div className="space-y-3 sm:space-y-4">
-                        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-[25px] font-semibold text-secondary">
+                    <div className="-mt-4 md:-mt-8">
+                        <p className="text-lg sm:text-xl md:text-2xl lg:text-[25px] font-semibold text-secondary">
                             Track The Event
-                        </h2>
-                        <p className="text-gray-600 font-medium text-xs sm:text-sm md:text-base lg:text-[17px]">Keep an eye on the event's whereabouts</p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        </p>
+                        <p className="text-gray-600 font-medium text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px]">Keep an eye on the event's whereabouts</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-3">
                             <div className="w-full">
                                 <PosterCard
                                     title="Date"
                                     data={formattedDate + " at " + formattedTime}
-                                    icon={<FaCalendar className="text-[#cd3a38] size-9 sm:size-10 md:size-11 lg:size-12 transition-colors duration-300 ease-in-out group-hover:bg-sky-100 bg-sky-50 p-2 rounded-full" />}
+                                    icon={<FaCalendar className="text-primary size-10 md:size-12 transition-colors duration-300 ease-in-out group-hover:bg-sky-100 bg-sky-50 p-2 rounded-full" />}
                                 />
                             </div>
                             <div className="w-full">
                                 <PosterCard
                                     title="Location"
                                     data={event.location}
-                                    icon={<IoLocationSharp className="text-[#cd3a38] size-9 sm:size-10 md:size-11 lg:size-12 transition-colors duration-300 ease-in-out group-hover:bg-sky-100 bg-sky-50 p-2 rounded-full" />}
+                                    icon={<IoLocationSharp className="text-primary size-10 md:size-12 transition-colors duration-300 ease-in-out group-hover:bg-sky-100 bg-sky-50 p-2 rounded-full" />}
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="space-y-3 sm:space-y-4">
+                    <div>
                         <h2 className="text-lg sm:text-xl md:text-2xl lg:text-[25px] font-semibold text-secondary">
                             Event Highlights
                         </h2>
-                        <p className="text-gray-600 font-medium text-xs sm:text-sm md:text-base lg:text-[17px]">Showcase of some selected captures of our event preparations</p>
-                        <div className="relative mt-3 sm:mt-4 overflow-hidden rounded-lg sm:rounded-xl border border-gray-200 p-1.5 sm:p-2 shadow-md bg-gradient-to-bl from-primary to-secondary">
+                        <p className="text-gray-600 font-medium text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px]">Showcase of some selected captures of our event preparations</p>
+                        <div className="relative mt-2 sm:mt-3 overflow-hidden rounded-lg sm:rounded-xl border border-gray-200 p-1.5 sm:p-2 shadow-md bg-gradient-to-bl from-primary to-secondary">
                             {currentMedia ? (
                                 <div className="aspect-[16/9] sm:aspect-[16/9] lg:aspect-[19/9] w-full cursor-pointer active:scale-[0.99] sm:hover:scale-[1.01] transition-all duration-300" onClick={() => setIsMediaViewerOpen(true)}>
                                     <LazyImageLoader
