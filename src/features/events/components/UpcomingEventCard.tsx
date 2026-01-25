@@ -83,7 +83,7 @@ const UpcomingEventCard: React.FC<Props> = ({
       <div
         ref={wholeInfoRef}
         onClick={() => setIsTapped(!isTapped)}
-        className={`absolute bottom-0 flex flex-col justify-start p-2 transition-all duration-500 ease-in-out group-hover:translate-y-0 ${
+        className={`absolute bottom-0 flex flex-col justify-start p-2 px-3 transition-all duration-500 ease-in-out group-hover:translate-y-0 ${
           isTapped ? "translate-y-0" : "translate-y-[var(--y)]"
         } bg-background space-y-3`}
         style={{ "--y": `${translateValue}px` } as React.CSSProperties}

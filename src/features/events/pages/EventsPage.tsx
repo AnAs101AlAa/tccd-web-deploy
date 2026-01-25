@@ -45,6 +45,7 @@ const EventsPage = () => {
   } = usePagination<Event>({
     items: apiUpcomingEvents,
     itemsPerPageMobile: 1,
+    itemsPerPageTablet: 2,
     itemsPerPageDesktop: 3,
     filterBy: (event) => event.category,
   });
@@ -102,10 +103,10 @@ const EventsPage = () => {
           subtitle="Explore the catalogue of our latest and history of events on full display"
         />
 
-        <main className="w-[96%] md:w-[92%] lg:w-[85%] mx-auto px-6 py-5">
+        <main className="w-full xl:w-[80%] xl:mx-auto px-6 py-5">
           {/* Upcoming Events Section */}
-          <section className="mb-16">
-            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-3 sm:mb-6">
+          <section className="mb-16 bg-white rounded-lg p-6 shadow-sm">
+            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-6">
               <h2 className="text-2xl sm:text-3xl font-bold text-contrast">
                 Upcoming Events
               </h2>
@@ -139,8 +140,8 @@ const EventsPage = () => {
           </section>
 
           {/* Past Events Section */}
-          <section>
-            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-6 sm:mb-8">
+          <section className="bg-white rounded-lg p-6 shadow-sm">
+            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-6">
               <h2 className="text-2xl sm:text-3xl font-bold text-contrast">
                 Past Events
               </h2>
