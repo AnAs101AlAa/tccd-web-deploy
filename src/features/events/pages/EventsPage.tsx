@@ -5,7 +5,7 @@ import WithLayout from "@/shared/components/hoc/WithLayout";
 import GenericGrid from "@/shared/components/GenericGrid";
 import type Event from "@/shared/types/events";
 import { useEvents } from "../hooks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { EventQueryParams, EventTypes } from "@/shared/types/events";
 import EVENT_TYPES from "@/constants/EventTypes";
 import { GenericFilter } from "@/shared/components/filters";
@@ -16,19 +16,30 @@ const EventsPage = () => {
     PageNumber: 1,
     PageSize: 10,
   });
-  const [searchInput, setSearchInput] = useState(queryParams.Name || "");
+  const [searchInput, setSearchInput] = useState("");
+  const [stagingParams, setStagingParams] = useState<EventQueryParams>({
+    PageNumber: 1,
+    PageSize: 10,
+  });
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setQueryParams((prev) => ({
-        ...prev,
-        Name: searchInput,
-        PageNumber: 1,
-      }));
-    }, 500);
+  const handleApplyFilters = () => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
 
-    return () => clearTimeout(timer);
-  }, [searchInput]);
+    const start = stagingParams.StartDate
+      ? new Date(stagingParams.StartDate)
+      : null;
+
+    if (start && start < now) {
+      toast.error(
+        "Start date cannot be in the past, Please head to the Past Events section",
+      );
+      return;
+    }
+
+    setQueryParams(stagingParams);
+  };
+
 
   const {
     upcomingEvents: apiUpcomingEvents,
@@ -85,9 +96,9 @@ const EventsPage = () => {
                 searchKey={searchInput}
                 onSearchChange={(value: string) => setSearchInput(value)}
                 searchPlaceholder="Search events by name..."
-                selectedTypes={queryParams.Type ? [queryParams.Type] : []}
+                selectedTypes={stagingParams.Type ? [stagingParams.Type] : []}
                 onTypesChange={(types: string[]) =>
-                  setQueryParams((prev) => ({
+                  setStagingParams((prev) => ({
                     ...prev,
                     Type: types[0] as EventTypes | undefined,
                     PageNumber: 1,
@@ -96,38 +107,28 @@ const EventsPage = () => {
                 typeOptions={EVENT_TYPES}
                 typeLabel="Event Type"
                 selectedDateRange={{
-                  start: queryParams.StartDate
-                    ? new Date(queryParams.StartDate)
+                  start: stagingParams.StartDate
+                    ? new Date(stagingParams.StartDate)
                     : null,
-                  end: queryParams.EndDate
-                    ? new Date(queryParams.EndDate)
+                  end: stagingParams.EndDate
+                    ? new Date(stagingParams.EndDate)
                     : null,
                 }}
                 onDateRangeChange={(range: {
                   start: Date | null;
                   end: Date | null;
-                }) => {
-                  const now = new Date();
-                  now.setHours(0, 0, 0, 0);
-
-                  if (range.start && range.start < now) {
-                    toast.error(
-                      "Star date cannot be in the past, Please head to the Past Events section",
-                    );
-                    return;
-                  }
-
-                  setQueryParams((prev) => ({
+                }) =>
+                  setStagingParams((prev) => ({
                     ...prev,
                     StartDate: range.start?.toISOString().split("T")[0],
                     EndDate: range.end?.toISOString().split("T")[0],
                     PageNumber: 1,
-                  }));
-                }}
-                //We don't need anything here, the queryParams is a queryKey forcing refetch
-                onSearch={() => {}}
+                  }))
+                }
+                onSearch={handleApplyFilters}
                 modalTitle="Filter Events"
               />
+
             </div>
             {isLoading && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
