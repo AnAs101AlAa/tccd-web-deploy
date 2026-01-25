@@ -105,9 +105,9 @@ const EventsPage = () => {
 
         <main className="w-full xl:w-[80%] xl:mx-auto px-6 py-5">
           {/* Upcoming Events Section */}
-          <section className="mb-16 bg-white rounded-lg p-6 shadow-sm">
-            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-contrast">
+          <section className="mb-12">
+            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
                 Upcoming Events
               </h2>
             </div>
@@ -139,10 +139,15 @@ const EventsPage = () => {
             />
           </section>
 
+          {/* Separator */}
+          <div className="w-full my-12">
+            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full"></div>
+          </div>
+
           {/* Past Events Section */}
-          <section className="bg-white rounded-lg p-6 shadow-sm">
+          <section>
             <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-contrast">
+              <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
                 Past Events
               </h2>
             </div>
