@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 interface UsePaginationProps<T> {
   items: T[];
   itemsPerPageMobile?: number;
+  itemsPerPageTablet?: number;
   itemsPerPageDesktop?: number;
   filterBy?: (item: T) => string; // Function to extract category/filter value from item
   initialCategory?: string;
@@ -13,6 +14,7 @@ interface UsePaginationReturn<T> {
   selectedCategory: string;
   currentPage: number;
   isMobile: boolean;
+  isTablet: boolean;
 
   // Computed values
   filteredItems: T[];
@@ -29,6 +31,7 @@ interface UsePaginationReturn<T> {
 export const usePagination = <T>({
   items,
   itemsPerPageMobile = 6,
+  itemsPerPageTablet,
   itemsPerPageDesktop = 12,
   filterBy,
   initialCategory = "All",
@@ -36,20 +39,27 @@ export const usePagination = <T>({
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [currentPage, setCurrentPage] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   // Detect screen size
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+    const checkScreenSize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 768); // < md
+      setIsTablet(width >= 768 && width < 1024); // md to lg
     };
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   // Set items per page based on screen size
-  const itemsPerPage = isMobile ? itemsPerPageMobile : itemsPerPageDesktop;
+  const itemsPerPage = isMobile 
+    ? itemsPerPageMobile 
+    : isTablet && itemsPerPageTablet !== undefined
+    ? itemsPerPageTablet
+    : itemsPerPageDesktop;
 
   // Filter items by category
   const filteredItems = useMemo(() => {
@@ -77,6 +87,7 @@ export const usePagination = <T>({
     selectedCategory,
     currentPage,
     isMobile,
+    isTablet,
 
     filteredItems,
     paginatedItems,
