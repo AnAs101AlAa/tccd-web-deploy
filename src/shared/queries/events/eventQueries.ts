@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { eventApi } from "./eventApi";
-import eventDetails from "@/features/events/data/dummyEventDetails";
+// import eventDetails from "@/features/events/data/dummyEventDetails";
 
 export const eventKeys = {
   all: ["events"] as const,
@@ -8,6 +8,7 @@ export const eventKeys = {
   past: (page?: number, pageSize?: number, filters?: any) => 
     [...eventKeys.all, "past", page, pageSize, filters] as const,
   detail: (id: string) => [...eventKeys.all, "detail", id] as const,
+  sponsors: (eventId: string) => [...eventKeys.all, "sponsors", eventId] as const,
 };
 
 export const useGetAllUpcomingEvents = () => {
@@ -40,6 +41,15 @@ export const useGetEventById = (id: string) => {
     queryKey: eventKeys.detail(id),
     queryFn: () => eventApi.getEventById(id),
     enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetEventSponsors = (eventId: string) => {
+  return useQuery({
+    queryKey: eventKeys.sponsors(eventId),
+    queryFn: () => eventApi.getSponsorsByEventId(eventId),
+    enabled: !!eventId,
     staleTime: 5 * 60 * 1000,
   });
 };

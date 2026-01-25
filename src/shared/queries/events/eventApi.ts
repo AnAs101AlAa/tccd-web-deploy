@@ -1,7 +1,9 @@
 import { systemApi } from "../AxoisInstance";
 import type Event from "@/shared/types/events";
+import type { Sponsor } from "@/shared/types/events";
 
 const EVENT_ROUTE = "/v1/Event";
+const SPONSOR_ROUTE = "/v1/Sponsors";
 
 export class EventApi {
   async getAllUpcomingEvents(): Promise<Event[]> {
@@ -90,6 +92,7 @@ export class EventApi {
         title: item.name,
         description: item.description,
         eventPoster: item.eventImage || "",
+        eventType: item.type,
         media: [],
         sponsors: [],
         date: item.date,
@@ -102,6 +105,24 @@ export class EventApi {
     }
     
     throw new Error("Event not found");
+  }
+
+  async getSponsorsByEventId(eventId: string): Promise<Sponsor[]> {
+    const response = await systemApi.get(`${SPONSOR_ROUTE}/sponsor/${eventId}/companies`);
+    
+    if (response.data.success && response.data.data) {
+      return response.data.data.map((item: any): Sponsor => ({
+        id: item.id,
+        companyName: item.companyName,
+        businessType: item.businessType,
+        description: item.description,
+        website: item.website,
+        brief: item.brief,
+        logo: item.logo,
+      }));
+    }
+    
+    return [];
   }
 }
 
