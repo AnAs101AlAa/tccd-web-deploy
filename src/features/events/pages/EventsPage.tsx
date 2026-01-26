@@ -10,8 +10,11 @@ import type { EventQueryParams, EventTypes } from "@/shared/types/events";
 import EVENT_TYPES from "@/constants/EventTypes";
 import { GenericFilter } from "@/shared/components/filters";
 import toast from "react-hot-toast";
+import { ViewAllButton } from "@/shared/components/pagination";
+import { useNavigate } from "react-router-dom";
 
 const EventsPage = () => {
+  const navigate = useNavigate();
   const [queryParams, setQueryParams] = useState<EventQueryParams>({
     PageNumber: 1,
     PageSize: 10,
@@ -39,7 +42,6 @@ const EventsPage = () => {
 
     setQueryParams(stagingParams);
   };
-
 
   const {
     upcomingEvents: apiUpcomingEvents,
@@ -83,15 +85,18 @@ const EventsPage = () => {
           subtitle="Explore the catalogue of our latest and history of events on full display"
         />
 
-        <main className="w-[96%] md:w-[92%] lg:w-[85%] mx-auto px-6 py-5">
+        <main className="w-full xl:w-[80%] xl:mx-auto px-0 md:px-6 py-5">
           {/* Upcoming Events Section */}
-          <section className="mb-16">
-            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-3 sm:mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-contrast">
-                Upcoming Events
-              </h2>
-            </div>
-            <div className="mb-3">
+          <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
+              <div className="flex flex-col md:gap-1 gap-0 mb-2 sm:mb-4">
+                <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
+                  Upcoming Events
+                </h2>
+                <p className="text-sm md:text-base text-inactive-tab-text">
+                  Stay updated with our upcoming events and never miss out!
+                </p>
+              </div>
+            <div className="mb-3 px-2 md:px-2">
               <GenericFilter
                 searchKey={searchInput}
                 onSearchChange={(value: string) => setSearchInput(value)}
@@ -128,7 +133,6 @@ const EventsPage = () => {
                 onSearch={handleApplyFilters}
                 modalTitle="Filter Events"
               />
-
             </div>
             {isLoading && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
@@ -168,16 +172,19 @@ const EventsPage = () => {
                 />
               </>
             )}
+            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
           </section>
           {/* Past Events Section */}
           {apiPastEvents && (
-            <section>
-              <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-6 sm:mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold text-contrast">
+            <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
+              <div className="flex flex-col md:gap-1 gap-0 mb-2 sm:mb-4">
+                <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
                   Past Events
                 </h2>
+                <p className="text-sm md:text-base text-inactive-tab-text">
+                  A small collection of our memorable past milestones and achievements.
+                </p>
               </div>
-
               <GenericGrid
                 items={apiPastEvents.events}
                 emptyMessage="No past events to display."
@@ -185,6 +192,8 @@ const EventsPage = () => {
                 gridCols="grid-cols-1 md:grid-cols-2"
                 getKey={(event: Event) => event.id}
               />
+              {apiPastEvents.events.length === 6 && <ViewAllButton onClick={() => navigate("past-events")} />}
+              <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
             </section>
           )}
         </main>
