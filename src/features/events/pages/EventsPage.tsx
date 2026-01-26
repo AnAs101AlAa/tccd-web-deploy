@@ -6,23 +6,17 @@ import GenericGrid from "@/shared/components/GenericGrid";
 import type Event from "@/shared/types/events";
 import { useEvents } from "../hooks";
 import { useState } from "react";
-import type { EventQueryParams, EventTypes } from "@/shared/types/events";
-import EVENT_TYPES from "@/constants/EventTypes";
-import { GenericFilter } from "@/shared/components/filters";
+import type { EventQueryParams } from "@/shared/types/events";
 import toast from "react-hot-toast";
+import EventsFilter from "../components/EventsFilter";
 
 const EventsPage = () => {
   const [queryParams, setQueryParams] = useState<EventQueryParams>({
     PageNumber: 1,
     PageSize: 10,
   });
-  const [searchInput, setSearchInput] = useState("");
-  const [stagingParams, setStagingParams] = useState<EventQueryParams>({
-    PageNumber: 1,
-    PageSize: 10,
-  });
 
-  const handleApplyFilters = () => {
+  const handleApplyFilters = (stagingParams: EventQueryParams) => {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
@@ -39,7 +33,6 @@ const EventsPage = () => {
 
     setQueryParams(stagingParams);
   };
-
 
   const {
     upcomingEvents: apiUpcomingEvents,
@@ -92,43 +85,10 @@ const EventsPage = () => {
               </h2>
             </div>
             <div className="mb-3">
-              <GenericFilter
-                searchKey={searchInput}
-                onSearchChange={(value: string) => setSearchInput(value)}
-                searchPlaceholder="Search events by name..."
-                selectedTypes={stagingParams.Type ? [stagingParams.Type] : []}
-                onTypesChange={(types: string[]) =>
-                  setStagingParams((prev) => ({
-                    ...prev,
-                    Type: types[0] as EventTypes | undefined,
-                    PageNumber: 1,
-                  }))
-                }
-                typeOptions={EVENT_TYPES}
-                typeLabel="Event Type"
-                selectedDateRange={{
-                  start: stagingParams.StartDate
-                    ? new Date(stagingParams.StartDate)
-                    : null,
-                  end: stagingParams.EndDate
-                    ? new Date(stagingParams.EndDate)
-                    : null,
-                }}
-                onDateRangeChange={(range: {
-                  start: Date | null;
-                  end: Date | null;
-                }) =>
-                  setStagingParams((prev) => ({
-                    ...prev,
-                    StartDate: range.start?.toISOString().split("T")[0],
-                    EndDate: range.end?.toISOString().split("T")[0],
-                    PageNumber: 1,
-                  }))
-                }
-                onSearch={handleApplyFilters}
-                modalTitle="Filter Events"
+              <EventsFilter
+                searchParams={queryParams}
+                onSearch={(params) => handleApplyFilters(params)}
               />
-
             </div>
             {isLoading && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
