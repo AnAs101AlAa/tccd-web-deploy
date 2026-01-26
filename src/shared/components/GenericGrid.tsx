@@ -18,7 +18,7 @@ const GenericGrid = <T,>({
   if (items.length === 0) {
     return (
       <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-        <p className="text-secondary text-lg">{emptyMessage}</p>
+        <p className="text-secondary font-semibold text-md px-3 md:text-lg">{emptyMessage}</p>
       </div>
     );
   }
