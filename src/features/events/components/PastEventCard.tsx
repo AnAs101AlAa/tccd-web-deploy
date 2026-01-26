@@ -3,7 +3,7 @@ import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { Button, LazyImageLoader } from "tccd-ui";
 import Format from "@/shared/utils/dateFormater";
-import { MdCalendarMonth } from "react-icons/md";
+import { MdCalendarMonth, MdImage } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 
 export default function PastEventCard({
@@ -23,11 +23,17 @@ export default function PastEventCard({
       className="flex items-start m-auto gap-2 lg:gap-3 border-1 border-contrast/13 rounded-lg p-3 w-full h-full cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out"
     >
       <div className="max-w-[38%] min-w-[38%] xl:max-w-[42%] xl:min-w-[42%] md:block hidden">
-        <LazyImageLoader
-          src={event.eventImage}
-          alt={event.name}
-          className="rounded-l-lg"
-        />
+        {event.eventImage ? (
+          <LazyImageLoader
+            src={event.eventImage}
+            alt={event.name}
+            className="rounded-l-lg"
+          />
+        ) : (
+          <div className="w-full h-full aspect-[4/3] flex items-center justify-center bg-gray-100 rounded-l-lg">
+            <MdImage className="text-gray-400 text-5xl lg:text-6xl" />
+          </div>
+        )}
       </div>
       <div className="md:block hidden w-[2px] bg-gray-300 self-stretch" />
       <div className="flex flex-col space-y-1 md:space-y-2">
@@ -38,9 +44,7 @@ export default function PastEventCard({
           <p className="text-[24px] md:text-[26px] lg:text-[28px] font-bold text-secondary">
             {event.name}
           </p>
-          {/*small nitpick here: the button if it doesn't have a text doesn't resize to the icon only
-          instead it's an ellipse, can be a future improvement to the UI package 
-          also the icons are very small*/}
+
           {canEdit && (
             <Button
               buttonText=""

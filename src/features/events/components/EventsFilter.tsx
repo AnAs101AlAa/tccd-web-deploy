@@ -13,9 +13,10 @@ import { DropdownMenu } from "tccd-ui";
 export interface EventsFilterProps {
   searchParams: EventQueryParams;
   onSearch: (params: EventQueryParams) => void;
+  maxDate?: string; // Optional max date in YYYY-MM-DD format
 }
 
-const EventsFilter = ({ searchParams, onSearch }: EventsFilterProps) => {
+const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [tempSelectedParams, setTempSelectedParams] =
     useState<EventQueryParams>(searchParams);
@@ -271,6 +272,7 @@ const EventsFilter = ({ searchParams, onSearch }: EventsFilterProps) => {
                     </label>
                     <input
                       type="date"
+                      max={maxDate}
                       value={formatDate(
                         tempSelectedParams.StartDate
                           ? new Date(tempSelectedParams.StartDate)
@@ -293,6 +295,7 @@ const EventsFilter = ({ searchParams, onSearch }: EventsFilterProps) => {
                     </label>
                     <input
                       type="date"
+                      max={maxDate}
                       value={formatDate(
                         tempSelectedParams.EndDate
                           ? new Date(tempSelectedParams.EndDate)
