@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { eventApi } from "./eventApi";
-import eventDetails from "@/features/events/data/dummyEventDetails";
 import type { EventQueryParams } from "@/shared/types";
 
 export const eventKeys = {

@@ -38,7 +38,7 @@ export class EventApi {
     
     const params: any = {
       EndDate: filters?.endDate || currentDateISO,
-      OrderBy: "date",
+      OrderBy: "Date",
       Descending: true,
       PageNumber: pageNumber,
       PageSize: pageSize,
@@ -63,34 +63,41 @@ export class EventApi {
 
     // Map API response to Event type and return pagination data
     if (response.data.success && response.data.data) {
-      const { items, pageIndex, totalPages, totalCount } = response.data.data;
+      const { items, pageIndex, pageSize, totalCount, totalPages, hasPreviousPage, hasNextPage } = response.data.data;
       return {
         events: items.map((item: any): Event => ({
           id: item.id,
-          title: item.name,
+          name: item.name,
           description: item.description,
-          eventPoster: item.eventImage || "",
-          eventType: item.type,
-          media: [],
-          sponsors: [],
+          eventImage: item.eventImage || "",
+          type: item.type,
           date: item.date,
           location: item.location,
-          category: item.type,
+          isApproved: item.isApproved,
           capacity: item.capacity,
-          registeredCount: 0,
           attendeeCount: item.attendeeCount,
+          registrationDeadline: item.registrationDeadline,
+          createdBy: item.createdBy,
+          createdAt: item.createdAt,
+          updatedOn: item.updatedOn,
         })),
         pageIndex,
-        totalPages,
+        pageSize,
         totalCount,
+        totalPages,
+        hasPreviousPage,
+        hasNextPage,
       };
     }
     
     return {
       events: [],
       pageIndex: 1,
-      totalPages: 0,
+      pageSize: pageSize,
       totalCount: 0,
+      totalPages: 0,
+      hasPreviousPage: false,
+      hasNextPage: false,
     };
   }
 
@@ -101,18 +108,19 @@ export class EventApi {
       const item = response.data.data;
       return {
         id: item.id,
-        title: item.name,
+        name: item.name,
         description: item.description,
-        eventPoster: item.eventImage || "",
-        eventType: item.type,
-        media: [],
-        sponsors: [],
+        eventImage: item.eventImage || "",
+        type: item.type,
         date: item.date,
         location: item.location,
-        category: item.type,
+        isApproved: item.isApproved,
         capacity: item.capacity,
-        registeredCount: 0,
         attendeeCount: item.attendeeCount,
+        registrationDeadline: item.registrationDeadline,
+        createdBy: item.createdBy,
+        createdAt: item.createdAt,
+        updatedOn: item.updatedOn,
       };
     }
     
