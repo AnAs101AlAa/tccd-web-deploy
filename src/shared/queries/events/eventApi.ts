@@ -1,8 +1,10 @@
 import type { EventQueryParams, EventResponse } from "@/shared/types/events";
 import { systemApi } from "../AxoisInstance";
 import type Event from "@/shared/types/events";
+import type { Sponsor } from "@/shared/types/events";
 
-const EVENT_ROUTE = "/v1/event/";
+const EVENT_ROUTE = "/v1/Event";
+const SPONSOR_ROUTE = "/v1/Sponsors";
 
 export class EventApi {
   async getAllUpcomingEvents(params?: EventQueryParams): Promise<EventResponse> {
@@ -21,14 +23,118 @@ export class EventApi {
     return response.data.data;
   }
 
-  async getAllPastEvents(): Promise<EventResponse> {
-    const response = await systemApi.get(`${EVENT_ROUTE}`);
-    return response.data.data;
+  async getAllPastEvents(
+    pageNumber: number = 1,
+    pageSize: number = 12,
+    filters?: {
+      searchQuery?: string;
+      eventTypes?: string[];
+      startDate?: string;
+      endDate?: string;
+    }
+  ) {
+    const currentDate = new Date();
+    const currentDateISO = currentDate.toISOString();
+    
+    const params: any = {
+      EndDate: filters?.endDate || currentDateISO,
+      OrderBy: "date",
+      Descending: true,
+      PageNumber: pageNumber,
+      PageSize: pageSize,
+    };
+
+    if (filters?.searchQuery) {
+      params.Name = filters.searchQuery;
+    }
+
+    if (filters?.eventTypes && filters.eventTypes.length > 0) {
+      params.Type = filters.eventTypes.join(',');
+    }
+
+    if (filters?.startDate) {
+      params.StartDate = filters.startDate;
+    }
+    
+    const response = await systemApi.get(
+      EVENT_ROUTE,
+      { params }
+    );
+
+    // Map API response to Event type and return pagination data
+    if (response.data.success && response.data.data) {
+      const { items, pageIndex, totalPages, totalCount } = response.data.data;
+      return {
+        events: items.map((item: any): Event => ({
+          id: item.id,
+          title: item.name,
+          description: item.description,
+          eventPoster: item.eventImage || "",
+          eventType: item.type,
+          media: [],
+          sponsors: [],
+          date: item.date,
+          location: item.location,
+          category: item.type,
+          capacity: item.capacity,
+          registeredCount: 0,
+          attendeeCount: item.attendeeCount,
+        })),
+        pageIndex,
+        totalPages,
+        totalCount,
+      };
+    }
+    
+    return {
+      events: [],
+      pageIndex: 1,
+      totalPages: 0,
+      totalCount: 0,
+    };
   }
 
   async getEventById(id: string): Promise<Event> {
-    const response = await systemApi.get(`${EVENT_ROUTE}${id}`);
-    return response.data;
+    const response = await systemApi.get(`${EVENT_ROUTE}/${id}`);
+    
+    if (response.data.success && response.data.data) {
+      const item = response.data.data;
+      return {
+        id: item.id,
+        title: item.name,
+        description: item.description,
+        eventPoster: item.eventImage || "",
+        eventType: item.type,
+        media: [],
+        sponsors: [],
+        date: item.date,
+        location: item.location,
+        category: item.type,
+        capacity: item.capacity,
+        registeredCount: 0,
+        attendeeCount: item.attendeeCount,
+      };
+    }
+    
+    throw new Error("Event not found");
+  }
+
+  async getSponsorsByEventId(eventId: string): Promise<Sponsor[]> {
+    const response = await systemApi.get(`${SPONSOR_ROUTE}/sponsor/${eventId}/companies`);
+    
+    if (response.data.success && response.data.data) {
+      return response.data.data.map((item: any): Sponsor => ({
+        id: item.id,
+        companyName: item.companyName,
+        businessType: item.businessType,
+        description: item.description,
+        website: item.website,
+        brief: item.brief,
+        logo: item.logo,
+      }));
+    }
+    
+    return [];
   }
 }
 
