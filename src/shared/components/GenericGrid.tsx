@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface GenericGridProps<T> {
   items: T[];
@@ -25,14 +26,23 @@ const GenericGrid = <T,>({
 
   return (
     <div className={`grid ${gridCols} gap-6`}>
-      {items.map((item, index) => {
-        const key = getKey ? getKey(item) : index;
-        return (
-          <div key={key} className="h-full">
-            {renderCard(item)}
-          </div>
-        );
-      })}
+      <AnimatePresence mode="wait">
+        {items.map((item, index) => {
+          const key = getKey ? getKey(item) : index;
+          return (
+            <motion.div
+              key={key}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="h-full"
+            >
+              {renderCard(item)}
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
     </div>
   );
 };

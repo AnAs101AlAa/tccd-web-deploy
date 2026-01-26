@@ -64,7 +64,7 @@ const UpcomingEventCard: React.FC<Props> = ({
 
   return (
     <div
-      className="relative w-full h-[240px] md:h-[270px] lg:h-[300px] group bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer transition-transform duration-300 flex flex-col"
+      className="relative w-full h-[240px] md:h-[270px] lg:h-[300px] group bg-white rounded-md shadow-md overflow-hidden cursor-pointer transition-transform duration-300 flex flex-col"
     >
       <LazyImageLoader
         src={event.eventPoster}
@@ -83,7 +83,7 @@ const UpcomingEventCard: React.FC<Props> = ({
       <div
         ref={wholeInfoRef}
         onClick={() => setIsTapped(!isTapped)}
-        className={`absolute bottom-0 flex flex-col justify-start p-2 transition-all duration-500 ease-in-out group-hover:translate-y-0 ${
+        className={`absolute bottom-0 flex flex-col justify-start p-2 px-3 transition-all duration-500 ease-in-out group-hover:translate-y-0 ${
           isTapped ? "translate-y-0" : "translate-y-[var(--y)]"
         } bg-background space-y-3`}
         style={{ "--y": `${translateValue}px` } as React.CSSProperties}

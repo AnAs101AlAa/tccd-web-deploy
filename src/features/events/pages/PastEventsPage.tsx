@@ -55,7 +55,12 @@ const PastEventsPage = () => {
 
   const handleSearchWithPagination = () => {
     // Build filter object
-    const filters: any = {};
+    const filters: {
+      searchQuery?: string;
+      eventTypes?: string[];
+      startDate?: string;
+      endDate?: string;
+    } = {};
 
     if (searchInput.trim()) {
       filters.searchQuery = searchInput.trim();
@@ -104,7 +109,7 @@ const PastEventsPage = () => {
           subtitle="Explore memorable moments from our previous events"
         />
 
-        <main className="w-[98%] md:w-[84%] lg:w-[80%] mx-auto px-6 py-5">
+        <main className="w-full xl:w-[80%] xl:mx-auto px-6 py-5">
           <section className="mb-16">
             <div className="mb-6">
               <GenericFilter
