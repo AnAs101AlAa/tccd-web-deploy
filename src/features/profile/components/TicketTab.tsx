@@ -53,10 +53,10 @@ export default function TicketTab() {
     );
   }
   return (
-    <div className="mb-7 sm:mb-0">
-      <h1 className="text-2xl sm:text-3xl font-bold text-secondary mb-4 ">
+    <div className="mb-7 sm:mb-0 p-1 sm:p-6">
+      <h2 className="text-lg sm:text-xl font-semibold text-contrast mb-4">
         Tickets
-      </h1>
+      </h2>
       <CategoryFilter
         categories={TicketFilterTabs.filter((tab) => tab !== "All").map(
           (tab) => ({
