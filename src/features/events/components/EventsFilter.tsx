@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiX, FiCalendar, FiFilter } from "react-icons/fi";
-import { Button, Checkbox, SearchField } from "tccd-ui";
+import { Button, SearchField, DatePicker } from "tccd-ui";
 import { IoSearch } from "react-icons/io5";
 import type {
   EventOrderBy,
@@ -20,6 +20,11 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [tempSelectedParams, setTempSelectedParams] =
     useState<EventQueryParams>(searchParams);
+
+  // Sync tempSelectedParams when searchParams changes from parent
+  useEffect(() => {
+    setTempSelectedParams(searchParams);
+  }, [searchParams]);
 
   const handleSearchInput = (val: string) => {
     val != ""
@@ -141,11 +146,11 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
 
         {activeFiltersCount > 0 && (
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="text-sm font-medium text-gray-600">Filters:</span>
+            <span className="text-base md:text-sm font-medium text-gray-600">Filters:</span>
             {tempSelectedParams.Type && (
               <div
                 key={tempSelectedParams.Type}
-                className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm font-medium"
+                className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-base md:text-sm font-medium"
               >
                 <span>{tempSelectedParams.Type}</span>
                 <button
@@ -157,7 +162,7 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
               </div>
             )}
             {(tempSelectedParams.StartDate || tempSelectedParams.EndDate) && (
-              <div className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm font-medium">
+              <div className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-base md:text-sm font-medium">
                 <FiCalendar className="text-xs" />
                 <span>
                   {tempSelectedParams.StartDate
@@ -185,7 +190,7 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-3 md:p-4 border-b border-gray-200">
-              <h3 className="txt-xl md:text-2xl font-bold text-gray-800">
+              <h3 className="text-base md:text-2xl font-bold text-gray-800">
                 Filter Events
               </h3>
               <button
@@ -197,9 +202,9 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-4 md:space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              <div className="space-y-4">
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <h4 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2 mb-2">
                     <FiFilter className="text-primary" />
                     Event Type
                   </h4>
@@ -218,98 +223,89 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
                     }}
                   />
                 </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                    <FiFilter className="text-primary" />
-                    Sort By
-                  </h4>
-                  <DropdownMenu
-                    label=""
-                    placeholder="None"
-                    options={EVENT_SORT_OPTIONS}
-                    value={tempSelectedParams.OrderBy}
-                    onChange={(value) => {
-                      if (
-                        value &&
-                        EVENT_SORT_OPTIONS.some((t) => t.value === value)
-                      ) {
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2 mb-2">
+                      <FiFilter className="text-primary" />
+                      Sort By
+                    </h4>
+                    <DropdownMenu
+                      label=""
+                      placeholder="None"
+                      options={EVENT_SORT_OPTIONS}
+                      value={tempSelectedParams.OrderBy}
+                      onChange={(value) => {
+                        if (
+                          value &&
+                          EVENT_SORT_OPTIONS.some((t) => t.value === value)
+                        ) {
+                          setTempSelectedParams({
+                            ...tempSelectedParams,
+                            OrderBy: value as EventOrderBy,
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <h4 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2 mb-2">
+                      <FiFilter className="text-primary" />
+                      Sort Order
+                    </h4>
+                    <DropdownMenu
+                      label=""
+                      placeholder="Select order"
+                      options={[
+                        { value: "true", label: "Descending" },
+                        { value: "false", label: "Ascending" },
+                      ]}
+                      value={tempSelectedParams.Descending !== undefined ? tempSelectedParams.Descending.toString() : "true"}
+                      onChange={(value) => {
                         setTempSelectedParams({
                           ...tempSelectedParams,
-                          OrderBy: value as EventOrderBy,
+                          Descending: value === "true",
                         });
-                      }
-                    }}
-                  />
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                    <FiFilter className="text-primary" />
-                    Sort Descendingly
-                  </h4>
-                  <Checkbox
-                    label=""
-                    checked={tempSelectedParams.Descending || false}
-                    onChange={() =>
-                      setTempSelectedParams({
-                        ...tempSelectedParams,
-                        Descending: tempSelectedParams.Descending
-                          ? false
-                          : true,
-                      })
-                    }
-                  />
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               <div>
-                <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <h4 className="text-base md:text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
                   <FiCalendar className="text-primary" />
                   Date Range
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Start Date
-                    </label>
-                    <input
-                      type="date"
-                      max={maxDate}
-                      value={formatDate(
-                        tempSelectedParams.StartDate
-                          ? new Date(tempSelectedParams.StartDate)
-                          : null,
-                      )}
-                      onChange={(e) =>
-                        setTempSelectedParams({
-                          ...tempSelectedParams,
-                          StartDate: e.target.value
-                            ? e.target.value
-                            : undefined,
-                        })
-                      }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      End Date
-                    </label>
-                    <input
-                      type="date"
-                      max={maxDate}
-                      value={formatDate(
-                        tempSelectedParams.EndDate
-                          ? new Date(tempSelectedParams.EndDate)
-                          : null,
-                      )}
-                      onChange={(e) =>
-                        setTempSelectedParams({
-                          ...tempSelectedParams,
-                          EndDate: e.target.value ? e.target.value : undefined,
-                        })
-                      }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                    />
-                  </div>
+                  <DatePicker
+                    label="Start Date"
+                    value={formatDate(
+                      tempSelectedParams.StartDate
+                        ? new Date(tempSelectedParams.StartDate)
+                        : null,
+                    )}
+                    onChange={(date) =>
+                      setTempSelectedParams({
+                        ...tempSelectedParams,
+                        StartDate: date || undefined,
+                      })
+                    }
+                    maxDate={maxDate}
+                  />
+                  <DatePicker
+                    label="End Date"
+                    value={formatDate(
+                      tempSelectedParams.EndDate
+                        ? new Date(tempSelectedParams.EndDate)
+                        : null,
+                    )}
+                    onChange={(date) =>
+                      setTempSelectedParams({
+                        ...tempSelectedParams,
+                        EndDate: date || undefined,
+                      })
+                    }
+                    maxDate={maxDate}
+                  />
                 </div>
               </div>
             </div>

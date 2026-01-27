@@ -8,7 +8,7 @@ import type Event from "@/shared/types/events";
 import type { EventQueryParams } from "@/shared/types/events";
 import { LoadingPage, ErrorScreen } from "tccd-ui";
 import { useGetAllPastEvents } from "@/shared/queries/events";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 const PastEventsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +16,7 @@ const PastEventsPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const currentDate = new Date();
-  const todayFormatted = currentDate.toISOString().split('T')[0];
+  const todayFormatted = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
   const [searchParams, setSearchParams] = useState<EventQueryParams>({
     EndDate: currentDate.toISOString(),
     OrderBy: "Date",
@@ -36,14 +36,16 @@ const PastEventsPage = () => {
   const pageSize = isMobile ? 6 : 12;
 
   // Convert EventQueryParams to the format expected by getAllPastEvents
-  const filters = {
+  const filters = useMemo(() => ({
     searchQuery: searchParams.Name,
     eventTypes: searchParams.Type ? [searchParams.Type] : undefined,
     startDate: searchParams.StartDate,
     endDate: searchParams.EndDate,
-  };
+    orderBy: searchParams.OrderBy,
+    descending: searchParams.Descending,
+  }), [searchParams.Name, searchParams.Type, searchParams.StartDate, searchParams.EndDate, searchParams.OrderBy, searchParams.Descending]);
 
-  const { data, isLoading, error } = useGetAllPastEvents(currentPage, pageSize, filters);
+  const { data, isLoading, error, refetch } = useGetAllPastEvents(currentPage, pageSize, filters);
 
   const apiPastEvents = data?.events || [];
   const totalPages = data?.totalPages || 0;
@@ -64,6 +66,9 @@ const PastEventsPage = () => {
     };
     setSearchParams(updatedParams);
     setCurrentPage(1); // Reset to page 1 when applying filters
+
+    // Force refetch with new filters
+    setTimeout(() => refetch(), 0);
   };
 
   const handlePageChange = (page: number) => {

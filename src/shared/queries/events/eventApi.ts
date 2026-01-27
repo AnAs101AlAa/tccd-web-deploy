@@ -31,6 +31,8 @@ export class EventApi {
       eventTypes?: string[];
       startDate?: string;
       endDate?: string;
+      orderBy?: string;
+      descending?: boolean;
     }
   ) {
     const currentDate = new Date();
@@ -38,8 +40,8 @@ export class EventApi {
     
     const params: any = {
       EndDate: filters?.endDate || currentDateISO,
-      OrderBy: "Date",
-      Descending: true,
+      OrderBy: filters?.orderBy || "Date",
+      Descending: filters?.descending !== undefined ? filters.descending : true,
       PageNumber: pageNumber,
       PageSize: pageSize,
     };

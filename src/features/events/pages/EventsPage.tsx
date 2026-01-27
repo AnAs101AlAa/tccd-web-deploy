@@ -185,9 +185,11 @@ const EventsPage = () => {
                   gridCols="grid-cols-1 md:grid-cols-2"
                   getKey={(event: Event) => event.id}
                 />
-                {apiPastEvents.totalPages > 1 && (
+                {/* {apiPastEvents.totalPages > 1 && (
                   <ViewAllButton onClick={() => navigate("past-events")} />
-                )}
+                )} */}
+                <ViewAllButton onClick={() => navigate("/past-events")} />
+
               </>
             )}
             <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
