@@ -72,13 +72,16 @@ const EventsPage = () => {
           subtitle="Explore the catalogue of our latest and history of events on full display"
         />
 
-        <main className="w-full xl:w-[80%] xl:mx-auto px-0 md:px-6 py-5">
+        <main className="w-[96%] md:w-[94%] lg:w-[88%] xl:w-[80%] mx-auto px-0 md:px-6 py-2 md:pt-5 md:py-5">
           {/* Upcoming Events Section */}
-          <section className="mb-16">
-            <div className="flex flex-row items-center justify-between gap-3 sm:gap-0 mb-3 sm:mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-contrast">
+          <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
+            <div className="flex flex-col md:gap-1 gap-0 mb-1">
+              <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
                 Upcoming Events
               </h2>
+              <p className="text-sm md:text-base text-inactive-tab-text">
+                Stay updated with our upcoming events and workshops.
+              </p>
             </div>
             <div className="mb-3">
               <EventsFilter
@@ -139,6 +142,7 @@ const EventsPage = () => {
                 />
               </>
             )}
+            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
           </section>
           {/* Past Events Section */}
           <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
@@ -185,11 +189,9 @@ const EventsPage = () => {
                   gridCols="grid-cols-1 md:grid-cols-2"
                   getKey={(event: Event) => event.id}
                 />
-                {/* {apiPastEvents.totalPages > 1 && (
+                {apiPastEvents.totalPages > 1 && (
                   <ViewAllButton onClick={() => navigate("past-events")} />
-                )} */}
-                <ViewAllButton onClick={() => navigate("/past-events")} />
-
+                )}
               </>
             )}
             <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>

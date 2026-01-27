@@ -97,9 +97,9 @@ const PastEventsPage = () => {
           subtitle="Explore memorable moments from our previous events"
         />
 
-        <main className="w-full xl:w-[80%] xl:mx-auto px-6 py-5">
+        <main className="w-[96%] md:w-[94%] lg:w-[88%] xl:w-[80%] mx-auto py-2 md:py-5">
           <section className="mb-16">
-            <div className="mb-6">
+            <div className="mb-6 bg-white shadow-lg p-3 pb-2 rounded-lg border-b-4 border-secondary">
               <EventsFilter
                 searchParams={searchParams}
                 onSearch={handleSearch}

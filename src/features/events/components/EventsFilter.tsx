@@ -1,19 +1,30 @@
 import { useState, useEffect } from "react";
-import { FiX, FiCalendar, FiFilter } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
+import { MdCalendarMonth } from "react-icons/md";
 import { Button, SearchField, DatePicker } from "tccd-ui";
 import { IoSearch } from "react-icons/io5";
 import type {
-  EventOrderBy,
   EventQueryParams,
   EventTypes,
 } from "@/shared/types";
-import EVENT_TYPES, { EVENT_SORT_OPTIONS } from "@/constants/EventTypes";
+import EVENT_TYPES from "@/constants/EventTypes";
 import { DropdownMenu } from "tccd-ui";
+
+const COMBINED_SORT_OPTIONS = [
+  { value: { orderBy: "Name", descending: false }, label: "Name (A-Z)" },
+  { value: { orderBy: "Name", descending: true }, label: "Name (Z-A)" },
+  { value: { orderBy: "Date", descending: true }, label: "Date (Newest)" },
+  { value: { orderBy: "Date", descending: false }, label: "Date (Oldest)" },
+  { value: { orderBy: "Type", descending: false }, label: "Type (A-Z)" },
+  { value: { orderBy: "Type", descending: true }, label: "Type (Z-A)" },
+  { value: { orderBy: "Location", descending: false }, label: "Location (A-Z)" },
+  { value: { orderBy: "Location", descending: true }, label: "Location (Z-A)" },
+];
 
 export interface EventsFilterProps {
   searchParams: EventQueryParams;
   onSearch: (params: EventQueryParams) => void;
-  maxDate?: string; // Optional max date in YYYY-MM-DD format
+  maxDate?: string;
 }
 
 const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) => {
@@ -21,19 +32,18 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
   const [tempSelectedParams, setTempSelectedParams] =
     useState<EventQueryParams>(searchParams);
 
-  // Sync tempSelectedParams when searchParams changes from parent
   useEffect(() => {
     setTempSelectedParams(searchParams);
   }, [searchParams]);
 
   const handleSearchInput = (val: string) => {
-    val != ""
-      ? setTempSelectedParams({ ...tempSelectedParams, Name: val })
-      : setTempSelectedParams({ ...tempSelectedParams, Name: undefined });
+    if(val != "")
+      setTempSelectedParams({ ...tempSelectedParams, Name: val })
+    else
+      setTempSelectedParams({ ...tempSelectedParams, Name: undefined });
   };
 
   const handleApplyFilters = () => {
-    // Convert date strings to ISO format before sending
     const paramsToSend = {
       ...tempSelectedParams,
       StartDate: tempSelectedParams.StartDate
@@ -60,7 +70,6 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
   };
 
   const handleCancelModal = () => {
-    // Reset tempSelectedParams to match searchParams when canceling
     setTempSelectedParams(searchParams);
     setIsFilterModalOpen(false);
   };
@@ -95,7 +104,7 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
 
   return (
     <>
-      <div className="w-full bg-white p-4 rounded-xl shadow-sm">
+      <div className="w-full py-2 px-1">
         <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
           {/* Search Input - Full width on mobile and desktop */}
           <SearchField
@@ -146,11 +155,11 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
 
         {activeFiltersCount > 0 && (
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="text-base md:text-sm font-medium text-gray-600">Filters:</span>
+            <span className="text-sm md:text-[15px] font-medium text-inactive-tab-text">Filters:</span>
             {tempSelectedParams.Type && (
               <div
                 key={tempSelectedParams.Type}
-                className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-base md:text-sm font-medium"
+                className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm md:text-[15px] font-medium"
               >
                 <span>{tempSelectedParams.Type}</span>
                 <button
@@ -162,8 +171,8 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
               </div>
             )}
             {(tempSelectedParams.StartDate || tempSelectedParams.EndDate) && (
-              <div className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-base md:text-sm font-medium">
-                <FiCalendar className="text-xs" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm md:text-[15px] font-medium">
+                <MdCalendarMonth className="text-xs" />
                 <span>
                   {tempSelectedParams.StartDate
                     ? formatDate(new Date(tempSelectedParams.StartDate))
@@ -195,7 +204,7 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
               </h3>
               <button
                 onClick={handleCancelModal}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-1.5 hover:bg-gray-100 cursor-pointer rounded-full transition-colors"
               >
                 <FiX className="text-2xl text-gray-600" />
               </button>
@@ -204,9 +213,8 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
             <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-4 md:space-y-6">
               <div className="space-y-4">
                 <div>
-                  <h4 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2 mb-2">
-                    <FiFilter className="text-primary" />
-                    Event Type
+                  <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
+                    Event type
                   </h4>
                   <DropdownMenu
                     label=""
@@ -223,56 +231,33 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
                     }}
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2 mb-2">
-                      <FiFilter className="text-primary" />
-                      Sort By
-                    </h4>
-                    <DropdownMenu
-                      label=""
-                      placeholder="None"
-                      options={EVENT_SORT_OPTIONS}
-                      value={tempSelectedParams.OrderBy}
-                      onChange={(value) => {
-                        if (
-                          value &&
-                          EVENT_SORT_OPTIONS.some((t) => t.value === value)
-                        ) {
-                          setTempSelectedParams({
-                            ...tempSelectedParams,
-                            OrderBy: value as EventOrderBy,
-                          });
-                        }
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <h4 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2 mb-2">
-                      <FiFilter className="text-primary" />
-                      Sort Order
-                    </h4>
-                    <DropdownMenu
-                      label=""
-                      placeholder="Select order"
-                      options={[
-                        { value: "true", label: "Descending" },
-                        { value: "false", label: "Ascending" },
-                      ]}
-                      value={tempSelectedParams.Descending !== undefined ? tempSelectedParams.Descending.toString() : "true"}
-                      onChange={(value) => {
+                <div>
+                  <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
+                    Sort by
+                  </h4>
+                  <DropdownMenu
+                    label=""
+                    placeholder="Select sort option"
+                    options={COMBINED_SORT_OPTIONS.map(opt => ({ value: JSON.stringify(opt.value), label: opt.label }))}
+                    value={JSON.stringify({ orderBy: tempSelectedParams.OrderBy || "Name", descending: tempSelectedParams.Descending ?? true })}
+                    onChange={(value) => {
+                      try {
+                        const parsed = JSON.parse(value);
                         setTempSelectedParams({
                           ...tempSelectedParams,
-                          Descending: value === "true",
+                          OrderBy: parsed.orderBy,
+                          Descending: parsed.descending,
                         });
-                      }}
-                    />
-                  </div>
+                      } catch {
+                        // fallback: do nothing
+                      }
+                    }}
+                  />
                 </div>
               </div>
               <div>
-                <h4 className="text-base md:text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                  <FiCalendar className="text-primary" />
+                <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mt-2 mb-2 flex items-center gap-2">
+                  <MdCalendarMonth className="size-4 text-primary" />
                   Date Range
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -310,7 +295,7 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
               </div>
             </div>
 
-            <div className="flex items-center justify-between gap-3 p-6 border-t border-gray-200 bg-gray-50">
+            <div className="flex items-center justify-between gap-3 py-3 px-5 border-t border-gray-200 bg-gray-50">
               <Button
                 buttonText="Clear All"
                 onClick={handleClearFilters}
