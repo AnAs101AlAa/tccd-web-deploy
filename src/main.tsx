@@ -4,6 +4,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
 import App from "./App";
 import { ReduxProvider } from "./shared/providers";
+import { setDarkModeConfig } from "tccd-ui";
+
+setDarkModeConfig({ enableDarkMode: false });
 
 const queryClient = new QueryClient({
   defaultOptions: {
