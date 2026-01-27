@@ -1,5 +1,5 @@
 import { PastEventCard, UpcomingEventCard } from "../components";
-import { Pagination } from "@/shared/components/pagination";
+import { Pagination, ViewAllButton } from "@/shared/components/pagination";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import GenericGrid from "@/shared/components/GenericGrid";
@@ -10,12 +10,14 @@ import type { EventQueryParams } from "@/shared/types/events";
 import toast from "react-hot-toast";
 import EventsFilter from "../components/EventsFilter";
 import { ErrorScreen } from "tccd-ui";
+import { useNavigate } from "react-router-dom";
 
 const EventsPage = () => {
   const [queryParams, setQueryParams] = useState<EventQueryParams>({
     PageNumber: 1,
     PageSize: 10,
   });
+  const navigate = useNavigate();
 
   const handleApplyFilters = (stagingParams: EventQueryParams) => {
     const now = new Date();
@@ -183,7 +185,7 @@ const EventsPage = () => {
                   gridCols="grid-cols-1 md:grid-cols-2"
                   getKey={(event: Event) => event.id}
                 />
-                {apiPastEvents.events.length === 6 && (
+                {apiPastEvents.totalPages > 1 && (
                   <ViewAllButton onClick={() => navigate("past-events")} />
                 )}
               </>
