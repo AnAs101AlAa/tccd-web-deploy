@@ -88,7 +88,7 @@ const GenericFilter = ({
 
   return (
     <>
-      <div className="w-full bg-white p-4 rounded-xl shadow-sm">
+      <div className="w-full bg-white ">
         <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
           {/* Search Input - Full width on mobile and desktop */}
           <SearchField
