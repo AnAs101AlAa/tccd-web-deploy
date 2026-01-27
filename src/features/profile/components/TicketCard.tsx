@@ -31,16 +31,16 @@ export default function TicketCard({ ticket }: { ticket: Ticket }) {
           className="rounded-lg"
         />
       </div>
-      <div className="bg-background w-full z-10 absolute bottom-0 p-2 border-t border-gray-200 rounded-b-lg pb-4">
-        <p className="text-secondary font-bold text-[22px] md:text-[23px] lg:text-[25px] md:mb-2">
+      <div className="bg-background w-full absolute bottom-0 p-4 border-t border-gray-200 rounded-b-lg pb-5">
+        <p className="text-secondary font-bold text-[20px] md:text-[21px] lg:text-[23px] md:mb-2">
           {ticket.eventTitle}
         </p>
         <div className="flex items-center gap-2">
           <FaCalendar className="size-4 text-primary"/>
-          <p className="text-contrast text-[13px] md:text-[14px] lg:text-[15px]">{format(ticket.eventDate, "stringed")}</p>
+          <p className="text-contrast text-[11px] md:text-[12px] lg:text-[13px]">{format(ticket.eventDate, "stringed")}</p>
         </div>
       </div>
-      <span className={`absolute top-2 right-2 px-3 py-1 text-md lg:text-sm rounded-full font-medium ${statusStyles()} `}>
+      <span className={`absolute top-2 right-2 px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-full font-medium ${statusStyles()} !text-white`}>
         {ticket.status}
       </span>
     </div>
