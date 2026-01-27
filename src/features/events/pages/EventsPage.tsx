@@ -9,6 +9,7 @@ import { useState } from "react";
 import type { EventQueryParams } from "@/shared/types/events";
 import toast from "react-hot-toast";
 import EventsFilter from "../components/EventsFilter";
+import { ErrorScreen } from "tccd-ui";
 
 const EventsPage = () => {
   const [queryParams, setQueryParams] = useState<EventQueryParams>({
@@ -37,9 +38,12 @@ const EventsPage = () => {
   const {
     upcomingEvents: apiUpcomingEvents,
     pastEvents: apiPastEvents,
-    isLoading,
-    error,
+    isLoadingUpcoming,
+    isLoadingPast,
+    upcomingError,
+    pastError,
     refetchUpcoming,
+    refetchPast,
   } = useEvents(queryParams);
 
   const onBookNow = () => {
@@ -49,20 +53,10 @@ const EventsPage = () => {
     console.log("LearnMore");
   };
 
-  if (error) {
+  if (upcomingError && pastError) {
     return (
       <WithLayout>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-lg text-red-600 mb-4">Failed to load events</p>
-            <button
-              onClick={() => refetchUpcoming()}
-              className="px-4 py-2 bg-contrast text-white rounded-lg hover:bg-contrast/90"
-            >
-              Retry
-            </button>
-          </div>
-        </div>
+        <ErrorScreen title="Failed to load Events" message={upcomingError.message} />
       </WithLayout>
     );
   }
@@ -90,13 +84,28 @@ const EventsPage = () => {
                 onSearch={(params) => handleApplyFilters(params)}
               />
             </div>
-            {isLoading && (
+            {isLoadingUpcoming && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
                 <div className="text-center">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
                   <p className="text-lg text-secondary font-medium">
                     Loading events...
                   </p>
+                </div>
+              </div>
+            )}
+            {upcomingError && (
+              <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
+                <div className="text-center">
+                  <p className="text-lg text-red-600 mb-4">
+                    Failed to load events
+                  </p>
+                  <button
+                    onClick={() => refetchUpcoming()}
+                    className="px-4 py-2 bg-contrast text-white rounded-lg hover:bg-contrast/90"
+                  >
+                    Retry
+                  </button>
                 </div>
               </div>
             )}
@@ -130,27 +139,57 @@ const EventsPage = () => {
             )}
           </section>
           {/* Past Events Section */}
-          {apiPastEvents && (
-            <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
-              <div className="flex flex-col md:gap-1 gap-0 mb-2 sm:mb-4">
-                <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
-                  Past Events
-                </h2>
-                <p className="text-sm md:text-base text-inactive-tab-text">
-                  A small collection of our memorable past milestones and achievements.
-                </p>
+          <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
+            <div className="flex flex-col md:gap-1 gap-0 mb-2 sm:mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
+                Past Events
+              </h2>
+              <p className="text-sm md:text-base text-inactive-tab-text">
+                A small collection of our memorable past milestones and
+                achievements.
+              </p>
+            </div>
+            {isLoadingPast && (
+              <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
+                  <p className="text-lg text-secondary font-medium">
+                    Loading events...
+                  </p>
+                </div>
               </div>
-              <GenericGrid
-                items={apiPastEvents.events}
-                emptyMessage="No past events to display."
-                renderCard={(event: Event) => <PastEventCard event={event} />}
-                gridCols="grid-cols-1 md:grid-cols-2"
-                getKey={(event: Event) => event.id}
-              />
-              {apiPastEvents.events.length === 6 && <ViewAllButton onClick={() => navigate("past-events")} />}
-              <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
-            </section>
-          )}
+            )}
+            {pastError && (
+              <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
+                <div className="text-center">
+                  <p className="text-lg text-red-600 mb-4">
+                    Failed to load events
+                  </p>
+                  <button
+                    onClick={() => refetchPast()}
+                    className="px-4 py-2 bg-contrast text-white rounded-lg hover:bg-contrast/90"
+                  >
+                    Retry
+                  </button>
+                </div>
+              </div>
+            )}
+            {apiPastEvents && (
+              <>
+                <GenericGrid
+                  items={apiPastEvents.events}
+                  emptyMessage="No past events to display."
+                  renderCard={(event: Event) => <PastEventCard event={event} />}
+                  gridCols="grid-cols-1 md:grid-cols-2"
+                  getKey={(event: Event) => event.id}
+                />
+                {apiPastEvents.events.length === 6 && (
+                  <ViewAllButton onClick={() => navigate("past-events")} />
+                )}
+              </>
+            )}
+            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
+          </section>
         </main>
       </div>
     </WithLayout>
