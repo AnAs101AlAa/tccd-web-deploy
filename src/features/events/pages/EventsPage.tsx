@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 import EventsFilter from "../components/EventsFilter";
 
 const EventsPage = () => {
-  const navigate = useNavigate();
   const [queryParams, setQueryParams] = useState<EventQueryParams>({
     PageNumber: 1,
     PageSize: 10,
@@ -129,7 +128,6 @@ const EventsPage = () => {
                 />
               </>
             )}
-            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
           </section>
           {/* Past Events Section */}
           {apiPastEvents && (
