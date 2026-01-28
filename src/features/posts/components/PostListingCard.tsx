@@ -1,6 +1,8 @@
-import type { CommunityPost, PostStatus } from "@/shared/types/postTypes";
+import type { CommunityPost } from "@/shared/types/postTypes";
 import { Button, LazyImageLoader } from "tccd-ui";
 import format from "@/shared/utils/dateFormater";
+import { FaImage } from "react-icons/fa";
+import { convertGoogleDriveUrl } from "@/shared/utils";
 
 export interface PostCardProps {
   post: CommunityPost;
@@ -8,28 +10,28 @@ export interface PostCardProps {
   setDeleting: (postId: string) => void;
 }
 
-const statusColors: Record<PostStatus, { bg: string; dot: string; text: string }> = {
-  posted: { bg: "bg-green-100", dot: "bg-green-500", text: "text-green-700" },
-  disabled: { bg: "bg-gray-200", dot: "bg-gray-500", text: "text-gray-800" },
-  expired: { bg: "bg-red-100", dot: "bg-[#CD3A38]", text: "text-[#CD3A38]" },
-};
-
 export default function PostCard({ post, setEditing, setDeleting }: PostCardProps) {
+  const imageUrl = post.media && post.media.length > 0 && post.media[0]
+    ? convertGoogleDriveUrl(post.media[0])
+    : null;
 
   return (
     <div className="w-full max-w-xl mx-auto bg-white shadow-md rounded-2xl transition hover:shadow-lg relative h-full flex flex-col">
-      <LazyImageLoader src={post.postMedia[0]} alt={post.title} className="rounded-t-lg" height="250px" />
-      <span className={`absolute top-3 right-3 flex items-center gap-1 px-3 py-1 rounded-full text-[11px] md:text-[12px] lg:text-[13px] font-medium ${statusColors[post.status].bg} ${statusColors[post.status].text}`}>
-        <span className={`w-1.5 h-1.5 rounded-full ${statusColors[post.status].dot}`}></span>
-        {post.status}
-      </span>
+      {imageUrl ? (
+        <LazyImageLoader src={imageUrl} alt={post.name} className="rounded-t-lg" height="250px" />
+      ) : (
+        <div className="h-[250px] flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 rounded-t-lg border-b-2 border-dashed border-gray-300">
+          <FaImage className="text-gray-300 text-5xl sm:text-6xl mb-2" aria-hidden="true" />
+          <p className="text-gray-400 text-sm font-medium">No Image</p>
+        </div>
+      )}
       <div className="p-2.5 md:p-4 pt-2 md:pt-3 flex flex-col flex-grow justify-between gap-5">
         <div className="space-y-2">
           <h3 className="text-[18px] md:text-[20px] lg:text-[22px] font-semibold mb-3 text-primary">
-            {post.title}
+            {post.name}
           </h3>
           <p className="text-[14px] md:text-[15px] lg:text-[16px] text-contrast mt-1">
-            <strong>Created:</strong> {format(new Date(post.createdAt),"full")}
+            <strong>Created:</strong> {format(new Date(post.createdAt), "full")}
           </p>
 
           <p className="text-contrast/80 text-[13px] md:text-[14px] lg:text-[15px]">
