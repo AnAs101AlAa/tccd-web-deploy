@@ -1,3 +1,5 @@
+import type { MediaItem } from "tccd-ui";
+
 export interface Sponsor {
   id: string;
   companyName: string;
@@ -23,6 +25,7 @@ export default interface Event {
   createdBy: string;
   createdAt: string;
   updatedOn: string;
+  eventMedia?: MediaItem[];
 }
 
 export interface EventResponse {

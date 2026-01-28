@@ -183,7 +183,7 @@ const EventsPage = () => {
             {apiPastEvents && (
               <>
                 <GenericGrid
-                  items={apiPastEvents.events}
+                  items={apiPastEvents.items}
                   emptyMessage="No past events to display."
                   renderCard={(event: Event) => <PastEventCard event={event} />}
                   gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
