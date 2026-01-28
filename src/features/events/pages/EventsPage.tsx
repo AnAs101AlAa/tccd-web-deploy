@@ -72,7 +72,7 @@ const EventsPage = () => {
           subtitle="Explore the catalogue of our latest and history of events on full display"
         />
 
-        <main className="w-[96%] md:w-[94%] lg:w-[88%] xl:w-[80%] mx-auto px-0 md:px-6 py-2 md:pt-5 md:py-5">
+        <main className="w-[97%] md:w-[95%] lg:w-[92%] xl:w-[84%] mx-auto px-0 md:px-6 py-2 md:pt-5 md:py-5">
           {/* Upcoming Events Section */}
           <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
             <div className="flex flex-col md:gap-1 gap-0 mb-1">
@@ -186,7 +186,7 @@ const EventsPage = () => {
                   items={apiPastEvents.events}
                   emptyMessage="No past events to display."
                   renderCard={(event: Event) => <PastEventCard event={event} />}
-                  gridCols="grid-cols-1 md:grid-cols-2"
+                  gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                   getKey={(event: Event) => event.id}
                 />
                 {apiPastEvents.totalPages > 1 && (
