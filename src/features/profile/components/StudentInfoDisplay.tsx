@@ -125,7 +125,7 @@ const StudentInfoDisplay: React.FC<StudentInfoDisplayProps> = ({ user }) => {
           .map((detail) => (
             <div
               key={detail.label}
-              className="rounded-lg border border-gray-200 bg-background px-4 py-3"
+              className="rounded-lg border border-gray-200 bg-gray-50/50 px-4 py-3"
             >
               <span className="text-xs font-semibold uppercase tracking-wide text-label">
                 {detail.label}
