@@ -19,7 +19,7 @@ export const EventGalleryCard = ({
         <div
             id={id}
             onClick={handleCardClick}
-            className="w-full rounded-2xl overflow-hidden shadow-lg hover:scale-[102%] cursor-pointer transition-all duration-300 bg-white h-full"
+            className="w-full rounded-lg overflow-hidden shadow-lg hover:scale-[102%] cursor-pointer transition-all duration-300 bg-white h-full"
         >
             <LazyImageLoader
                 src={eventPoster}
