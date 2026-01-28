@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Pagination } from "@/shared/components/pagination";
-import { PastEventCard } from "@/features/events/components";
 import AddEditEventModal from "../components/eventAdminPanel/AddEditEventModal";
 import type { EventFormData } from "../types/eventFormTypes";
 import { MdAdd } from "react-icons/md";
@@ -9,6 +8,7 @@ import type Event from "@/shared/types/events";
 import { upcomingEvents } from "@/features/events/data/dummyEvents";
 import { Button } from "tccd-ui";
 import { WithLayout } from "@/shared/components/hoc";
+import AdminEventCard from "../components/eventAdminPanel/AdminEventCard";
 
 export default function EventsAdminPage() {
   const eventsPerPage = 5; //We can adjust this as much as we want, really
@@ -41,7 +41,7 @@ export default function EventsAdminPage() {
   }
   return (
     <WithLayout>
-      <div className="w-full max-w-7xl mx-auto space-y-4 md:space-y-6 px-2 sm:px-4 md:px-6">
+      <div className="w-full mx-auto space-y-4 md:space-y-6">
         <div className="bg-white rounded-2xl md:rounded-4xl shadow-lg md:shadow-xl p-4 sm:p-5 md:p-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-5">
             <h1 className="text-2xl sm:text-3xl font-bold text-secondary">
@@ -59,15 +59,17 @@ export default function EventsAdminPage() {
               />
             )}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {currentEvents.map((event) => (
-              <PastEventCard
+              <AdminEventCard
                 key={event.id}
                 event={event}
-                canEdit={withAdminPriviliges}
                 onEdit={() => {
                   setSelectedEvent(event);
                   setIsEventModalOpen(true);
+                }}
+                onDelete={() => {
+                  // Implement delete functionality here
                 }}
               />
             ))}

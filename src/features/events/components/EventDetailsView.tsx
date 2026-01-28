@@ -21,13 +21,8 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
     const { data: sponsors, isLoading: isLoadingSponsors } = useGetEventSponsors(event.id);
 
     const mediaItems = useMemo(() => {
-        const poster = event.eventPoster ? [event.eventPoster] : [];
-        const media = (event.media || []).filter(Boolean);
-        if (poster.length === 0) {
-            return media;
-        }
-        return [...poster, ...media];
-    }, [event.media, event.eventPoster]);
+        return event.eventImage ? [event.eventImage] : [];
+    }, [event.eventImage]);
 
 
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
@@ -154,11 +149,11 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                     <div className="border-b border-slate-200 pb-4 sm:pb-5">
                         <div className="flex items-start justify-between gap-1 sm:gap-2">
                             <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-secondary leading-tight flex-1">
-                                {event.title}
+                                {event.name}
                             </p>
-                            {event.category && (
+                            {event.type && (
                                 <span className="inline-block bg-secondary/10 text-secondary text-[12px] sm:text-xs font-semibold uppercase tracking-wide px-2.5 sm:px-3 py-1 mt-1 rounded-full flex-shrink-0">
-                                    {event.category}
+                                    {event.type}
                                 </span>
                             )}
                         </div>
@@ -201,7 +196,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                                     <LazyImageLoader
                                         key={currentMedia}
                                         src={currentMedia}
-                                        alt={event.title}
+                                        alt={event.name}
                                         width="100%"
                                         height="100%"
                                         className="h-full w-full rounded-md sm:rounded-lg"

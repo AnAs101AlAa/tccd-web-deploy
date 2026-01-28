@@ -21,9 +21,7 @@ const TabContent: React.FC<TabContentProps> = ({
 
       case "tickets":
         return (
-          <div className="p-4 sm:p-6">
             <TicketTab />
-          </div>
         );
 
       case "offerings":

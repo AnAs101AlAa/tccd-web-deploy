@@ -1,11 +1,8 @@
-export type PostStatus = "posted" | "disabled" | "expired";
-
 export interface CommunityPost {
     id: string;
-    title: string;
+    name: string;
     description: string;
+    media: string[];
+    priority: number;
     createdAt: string;
-    expirationDate?: string;
-    status: PostStatus;
-    postMedia: string[];
 }
