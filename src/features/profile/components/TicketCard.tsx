@@ -9,13 +9,13 @@ export default function TicketCard({ ticket }: { ticket: Ticket }) {
   const statusStyles = () => {
     switch (ticket.status) {
       case "Active":
-        return "bg-green-600/40 text-green-600";
+        return "bg-green-500";
       case "Scanned":
-        return "bg-secondary/30 text-secondary";
+        return "bg-secondary";
       case "Expired":
-        return "bg-gray-600/30 text-gray-600";
+        return "bg-inactive-tab-text";
       case "Cancelled":
-        return "bg-primary/30 text-primary";
+        return "bg-primary";
       default:
         return "";
     }
