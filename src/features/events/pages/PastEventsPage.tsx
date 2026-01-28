@@ -3,32 +3,25 @@ import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import WithNavbar from "@/shared/components/hoc/WithNavbar";
 import GenericGrid from "@/shared/components/GenericGrid";
 import PastEventCard from "../components/PastEventCard";
-import { GenericFilter } from "@/shared/components/filters";
-import EVENT_TYPES from "@/constants/EventTypes";
+import EventsFilter from "../components/EventsFilter";
 import type Event from "@/shared/types/events";
+import type { EventQueryParams } from "@/shared/types/events";
 import { LoadingPage, ErrorScreen } from "tccd-ui";
 import { useGetAllPastEvents } from "@/shared/queries/events";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 const PastEventsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  // Filter state
-  const [searchInput, setSearchInput] = useState("");
-  const [selectedEventTypes, setSelectedEventTypes] = useState<string[]>([]);
-  const [selectedDateRange, setSelectedDateRange] = useState<{
-    start: Date | null;
-    end: Date | null;
-  }>();
 
-  // Active filters (applied when user clicks search)
-  const [activeFilters, setActiveFilters] = useState<{
-    searchQuery?: string;
-    eventTypes?: string[];
-    startDate?: string;
-    endDate?: string;
-  }>({});
+  const currentDate = new Date();
+  const todayFormatted = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+  const [searchParams, setSearchParams] = useState<EventQueryParams>({
+    EndDate: currentDate.toISOString(),
+    OrderBy: "Date",
+    Descending: true,
+  });
 
   // Detect screen size
   useEffect(() => {
@@ -42,7 +35,17 @@ const PastEventsPage = () => {
 
   const pageSize = isMobile ? 6 : 12;
 
-  const { data, isLoading, error } = useGetAllPastEvents(currentPage, pageSize, activeFilters);
+  // Convert EventQueryParams to the format expected by getAllPastEvents
+  const filters = useMemo(() => ({
+    searchQuery: searchParams.Name,
+    eventTypes: searchParams.Type ? [searchParams.Type] : undefined,
+    startDate: searchParams.StartDate,
+    endDate: searchParams.EndDate,
+    orderBy: searchParams.OrderBy,
+    descending: searchParams.Descending,
+  }), [searchParams.Name, searchParams.Type, searchParams.StartDate, searchParams.EndDate, searchParams.OrderBy, searchParams.Descending]);
+
+  const { data, isLoading, error, refetch } = useGetAllPastEvents(currentPage, pageSize, filters);
 
   const apiPastEvents = data?.events || [];
   const totalPages = data?.totalPages || 0;
@@ -53,29 +56,19 @@ const PastEventsPage = () => {
     }
   }, [isLoading]);
 
-  const handleSearchWithPagination = () => {
-    // Build filter object
-    const filters: any = {};
-
-    if (searchInput.trim()) {
-      filters.searchQuery = searchInput.trim();
-    }
-
-    if (selectedEventTypes.length > 0) {
-      filters.eventTypes = selectedEventTypes;
-    }
-
-    if (selectedDateRange) {
-      if (selectedDateRange.start) {
-        filters.startDate = selectedDateRange.start.toISOString();
-      }
-      if (selectedDateRange.end) {
-        filters.endDate = selectedDateRange.end.toISOString();
-      }
-    }
-
-    setActiveFilters(filters);
+  const handleSearch = (params: EventQueryParams) => {
+    // Ensure EndDate is set for past events if not provided
+    const updatedParams = {
+      ...params,
+      EndDate: params.EndDate || currentDate.toISOString(),
+      OrderBy: params.OrderBy || "Date",
+      Descending: params.Descending !== undefined ? params.Descending : true,
+    };
+    setSearchParams(updatedParams);
     setCurrentPage(1); // Reset to page 1 when applying filters
+
+    // Force refetch with new filters
+    setTimeout(() => refetch(), 0);
   };
 
   const handlePageChange = (page: number) => {
@@ -104,23 +97,13 @@ const PastEventsPage = () => {
           subtitle="Explore memorable moments from our previous events"
         />
 
-        <main className="w-[98%] md:w-[84%] lg:w-[80%] mx-auto px-6 py-5">
+        <main className="w-[96%] md:w-[94%] lg:w-[88%] xl:w-[80%] mx-auto py-2 md:py-5">
           <section className="mb-16">
-            <div className="mb-6">
-              <GenericFilter
-                searchKey={searchInput}
-                onSearchChange={setSearchInput}
-                selectedTypes={selectedEventTypes}
-                onTypesChange={setSelectedEventTypes}
-                selectedDateRange={selectedDateRange}
-                onDateRangeChange={setSelectedDateRange}
-                onSearch={handleSearchWithPagination}
-                typeOptions={EVENT_TYPES}
-                searchPlaceholder="Search past events..."
-                modalTitle="Filter Events"
-                typeLabel="Event Type"
-                isLoading={isLoading}
-                maxEndDate={new Date()}
+            <div className="mb-6 bg-white shadow-lg p-3 pb-2 rounded-lg border-b-4 border-secondary">
+              <EventsFilter
+                searchParams={searchParams}
+                onSearch={handleSearch}
+                maxDate={todayFormatted}
               />
             </div>
 

@@ -1,3 +1,4 @@
+import type { EventQueryParams, EventResponse } from "@/shared/types/events";
 import { systemApi } from "../AxoisInstance";
 import type Event from "@/shared/types/events";
 import type { Sponsor } from "@/shared/types/events";
@@ -6,9 +7,20 @@ const EVENT_ROUTE = "/v1/Event";
 const SPONSOR_ROUTE = "/v1/Sponsors";
 
 export class EventApi {
-  async getAllUpcomingEvents(): Promise<Event[]> {
-    const response = await systemApi.get(`${EVENT_ROUTE}/upcoming`);
-    return response.data;
+  async getAllUpcomingEvents(params?: EventQueryParams): Promise<EventResponse> {
+    if (params?.StartDate) {
+      const startDateTime = new Date(params.StartDate);
+      const now = new Date();
+      if (startDateTime < now) {
+        throw new Error("Start date cannot be in the past, Please head to the past events section.");
+      }
+    } else {
+      params = { ...params, StartDate: new Date().toISOString() };
+    }
+    const response = await systemApi.get(`${EVENT_ROUTE}`, {
+      params,
+    });
+    return response.data.data;
   }
 
   async getAllPastEvents(
@@ -19,6 +31,8 @@ export class EventApi {
       eventTypes?: string[];
       startDate?: string;
       endDate?: string;
+      orderBy?: string;
+      descending?: boolean;
     }
   ) {
     const currentDate = new Date();
@@ -26,8 +40,8 @@ export class EventApi {
     
     const params: any = {
       EndDate: filters?.endDate || currentDateISO,
-      OrderBy: "date",
-      Descending: true,
+      OrderBy: filters?.orderBy || "Date",
+      Descending: filters?.descending !== undefined ? filters.descending : true,
       PageNumber: pageNumber,
       PageSize: pageSize,
     };
@@ -51,34 +65,41 @@ export class EventApi {
 
     // Map API response to Event type and return pagination data
     if (response.data.success && response.data.data) {
-      const { items, pageIndex, totalPages, totalCount } = response.data.data;
+      const { items, pageIndex, pageSize, totalCount, totalPages, hasPreviousPage, hasNextPage } = response.data.data;
       return {
         events: items.map((item: any): Event => ({
           id: item.id,
-          title: item.name,
+          name: item.name,
           description: item.description,
-          eventPoster: item.eventImage || "",
-          eventType: item.type,
-          media: [],
-          sponsors: [],
+          eventImage: item.eventImage || "",
+          type: item.type,
           date: item.date,
           location: item.location,
-          category: item.type,
+          isApproved: item.isApproved,
           capacity: item.capacity,
-          registeredCount: 0,
           attendeeCount: item.attendeeCount,
+          registrationDeadline: item.registrationDeadline,
+          createdBy: item.createdBy,
+          createdAt: item.createdAt,
+          updatedOn: item.updatedOn,
         })),
         pageIndex,
-        totalPages,
+        pageSize,
         totalCount,
+        totalPages,
+        hasPreviousPage,
+        hasNextPage,
       };
     }
     
     return {
       events: [],
       pageIndex: 1,
-      totalPages: 0,
+      pageSize: pageSize,
       totalCount: 0,
+      totalPages: 0,
+      hasPreviousPage: false,
+      hasNextPage: false,
     };
   }
 
@@ -89,18 +110,19 @@ export class EventApi {
       const item = response.data.data;
       return {
         id: item.id,
-        title: item.name,
+        name: item.name,
         description: item.description,
-        eventPoster: item.eventImage || "",
-        eventType: item.type,
-        media: [],
-        sponsors: [],
+        eventImage: item.eventImage || "",
+        type: item.type,
         date: item.date,
         location: item.location,
-        category: item.type,
+        isApproved: item.isApproved,
         capacity: item.capacity,
-        registeredCount: 0,
         attendeeCount: item.attendeeCount,
+        registrationDeadline: item.registrationDeadline,
+        createdBy: item.createdBy,
+        createdAt: item.createdAt,
+        updatedOn: item.updatedOn,
       };
     }
     
