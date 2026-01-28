@@ -2,17 +2,21 @@ import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import { BlogPostCard } from "./BlogPostCard";
 import { useState, useEffect, useRef } from "react";
 import type { CommunityPost } from "@/shared/types";
+import { useGetAllPosts } from "@/shared/queries/posts";
 
 const BlogSection = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [postsPerPage, setPostsPerPage] = useState<number>(3);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const [latestPosts, setLatestPosts] = useState<CommunityPost[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [componentHeight, setComponentHeight] = useState<number>(0);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  const { data, isLoading } = useGetAllPosts(currentPage, postsPerPage);
+
+  const latestPosts = data?.posts || [];
+  const totalPages = data?.totalPages || 0;
 
   useEffect(() => {
     if (gridRef.current) {
@@ -26,25 +30,7 @@ const BlogSection = () => {
     }
   }, [latestPosts, postsPerPage, currentPage]);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      try {
-        const response = []; // Fetch more posts for carousel
-        if (response) {
-          setLatestPosts(response);
-        } else {
-          console.error("Failed to fetch posts");
-        }
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchPosts();
-  }, []);
 
   // Set posts per page based on screen size
   useEffect(() => {
@@ -58,20 +44,17 @@ const BlogSection = () => {
       }
     };
 
-    // Set initial value
     handleResize();
 
-    // Add event listener
     window.addEventListener("resize", handleResize);
 
-    // Clean up
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handlePrev = () => {
     setCurrentPage((prev) => {
-      if (prev === 0) {
-        return Math.ceil(latestPosts.length / postsPerPage) - 1;
+      if (prev === 1) {
+        return totalPages;
       }
       return prev - 1;
     });
@@ -79,18 +62,11 @@ const BlogSection = () => {
 
   const handleNext = () => {
     setCurrentPage((prev) => {
-      if (prev >= Math.ceil(latestPosts.length / postsPerPage) - 1) {
-        return 0;
+      if (prev >= totalPages) {
+        return 1;
       }
       return prev + 1;
     });
-  };
-
-  // Get current posts based on pagination
-  const getCurrentPosts = () => {
-    const startIndex = currentPage * postsPerPage;
-    const endIndex = startIndex + postsPerPage;
-    return latestPosts.slice(startIndex, endIndex);
   };
 
   useEffect(() => {
@@ -118,9 +94,8 @@ const BlogSection = () => {
     <section className="py-10 md:py-16 bg-gray-50 transition-transform duration-700 ease-out">
       <div
         ref={sectionRef}
-        className={`container px-4 md:px-6 mx-auto ${
-          isVisible ? "fade-in-right" : ""
-        }`}
+        className={`container px-4 md:px-6 mx-auto ${isVisible ? "fade-in-right" : ""
+          }`}
       >
         {/* Latest Blog Posts */}
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-5 md:mb-8 lg:mb-12">
@@ -139,7 +114,7 @@ const BlogSection = () => {
         </div>
 
         {/* Loading state */}
-        {loading ? (
+        {isLoading ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(postsPerPage)].map((_, index) => (
               <div
@@ -161,23 +136,19 @@ const BlogSection = () => {
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 overflow-x-hidden"
               ref={gridRef}
               style={{
-              height: Math.max(500, componentHeight),
+                height: Math.max(500, componentHeight),
               }}
             >
-              {getCurrentPosts().map((post) => (
-              <BlogPostCard
-                key={post.id}
-                id={post.id}
-                createdOn={post.createdOn}
-                name={post.name}
-                description={post.description}
-                postMedia={post.postMedia}
-              />
+              {latestPosts.map((post: CommunityPost) => (
+                <BlogPostCard
+                  key={post.id}
+                  post={post}
+                />
               ))}
             </div>
 
             {/* Navigation arrows - only show if there are multiple pages */}
-            {latestPosts.length > postsPerPage && (
+            {totalPages > 1 && (
               <div className="flex justify-center mt-5 md:mt-8 items-center gap-4">
                 <button
                   onClick={handlePrev}
@@ -188,8 +159,7 @@ const BlogSection = () => {
                 </button>
 
                 <span className="text-sm font-medium text-gray-600">
-                  {currentPage + 1} /{" "}
-                  {Math.ceil(latestPosts.length / postsPerPage)}
+                  {currentPage} / {totalPages}
                 </span>
 
                 <button
