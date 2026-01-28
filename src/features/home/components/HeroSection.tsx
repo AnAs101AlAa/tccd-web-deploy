@@ -31,7 +31,7 @@ const HeroSection = () => {
 
     const handleActiveUsers = async () => {
     try {
-      const response = [];
+      const response = {pictures: [], activeUserCount: 25};
       setActiveUsers([
         ...response.pictures,
         ...Array(Math.max(0, 5 - response.pictures.length)).fill(

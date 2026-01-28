@@ -62,7 +62,7 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
           />
         </div>
       ) : (
-        <div className="h-48 w-full bg-gray-200 flex items-center justify-center rounded-t-xl">
+        <div className="flex-1 w-full bg-gray-200 flex items-center justify-center rounded-t-xl">
           <span className="text-gray-500">No Image Available</span>
         </div>
       )}
