@@ -22,7 +22,6 @@ interface LocationCardProps {
 const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
   const handleEditClick = () => {
     setIsEditModalOpen(true);
@@ -32,9 +31,6 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleImageError = () => {
-    setImageError(true);
-  };
 
   return (
     <>
@@ -45,45 +41,34 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
       >
         {/* Image Container - 16:9 Aspect Ratio */}
         <div className="relative w-full aspect-video overflow-hidden bg-gray-200">
-          {imageError ? (
-            // Fallback Placeholder
-            <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-              <div className="text-center">
-                <FaMapMarkerAlt className="w-12 h-12 text-gray-500 mx-auto mb-2 opacity-50" />
-                <p className="text-sm text-gray-600 font-medium">No image</p>
-              </div>
-            </div>
-          ) : (
-            <LazyImageLoader
-              src={location.image}
-              alt={`${location.name} venue`}
-              width="100%"
-              height="100%"
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              onError={handleImageError}
-            />
-          )}
+          <LazyImageLoader
+            src={location.image}
+            alt={`${location.name} venue`}
+            width="100%"
+            height="100%"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
 
           {/* Gradient Overlay - Visible on Hover */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Action Buttons - Desktop (Top-Right, Visible on Hover) */}
-          <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden lg:flex">
+          <div className="absolute top-2 right-2 sm:top-3 sm:right-3 gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden lg:flex">
             <button
               onClick={handleEditClick}
-              className="p-2 sm:p-2.5 bg-secondary hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+              className="p-2 px-2.5 bg-secondary hover:brightness-125 text-white rounded-full shadow-lg transition-all duration-200 cursor-pointer"
               aria-label="Edit location"
               title="Edit location"
             >
-              <FaEdit className="w-4 h-4" />
+              <FaEdit className="size-3" />
             </button>
             <button
               onClick={handleDeleteClick}
-              className="p-2 sm:p-2.5 bg-primary hover:bg-red-700 text-white rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+              className="p-2 sm:p-2.5 bg-primary hover:brightness-125 text-white rounded-full shadow-lg transition-all duration-200 cursor-pointer"
               aria-label="Delete location"
               title="Delete location"
             >
-              <FaTrash className="w-4 h-4" />
+              <FaTrash className="size-3" />
             </button>
           </div>
         </div>
@@ -91,7 +76,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
         {/* Content Section */}
         <div className="p-3 sm:p-4 md:p-5 flex flex-col flex-grow">
           {/* Location Name */}
-          <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-secondary transition-colors duration-200">
+          <h3 className="text-[18px] sm:text-lg md:text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-secondary transition-colors duration-200">
             {location.name}
           </h3>
 
@@ -99,12 +84,12 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
           <div className="space-y-2 mb-4 flex-grow">
             {/* Address */}
             {location.address && (
-              <div className="flex items-start gap-2 text-gray-600">
+              <div className="flex items-start gap-1 md:gap-2 text-gray-600">
                 <FaMapMarkerAlt
-                  className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary"
+                  className="size-4 flex-shrink-0 text-primary"
                   aria-hidden="true"
                 />
-                <p className="text-xs sm:text-sm line-clamp-2">
+                <p className="text-[13px] sm:text-sm line-clamp-2 font-semibold">
                   {location.address}
                 </p>
               </div>
@@ -113,10 +98,10 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
             {/* Capacity */}
             <div className="flex items-center gap-2 text-gray-700">
               <FaUsers
-                className="w-4 h-4 flex-shrink-0 text-secondary"
+                className="size-4 flex-shrink-0 text-secondary"
                 aria-hidden="true"
               />
-              <p className="text-xs sm:text-sm font-semibold">
+              <p className="text-[13px] sm:text-sm font-semibold">
                 Capacity:{" "}
                 <span className="text-secondary font-bold">
                   {location.capacity.toLocaleString()}
@@ -140,7 +125,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
               className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-secondary hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium"
               aria-label="Edit location"
             >
-              <FaEdit className="w-4 h-4" />
+              <FaEdit className="size-4" />
               <span className="hidden sm:inline">Edit</span>
             </button>
             <button

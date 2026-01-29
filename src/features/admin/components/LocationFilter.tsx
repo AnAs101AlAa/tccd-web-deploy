@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FiFilter, FiX } from "react-icons/fi";
-import { Button, SearchField } from "tccd-ui";
+import { FiX } from "react-icons/fi";
+import { Button, SearchField, NumberField } from "tccd-ui";
 import { IoSearch } from "react-icons/io5";
 
 export interface LocationFilterProps {
@@ -115,7 +115,7 @@ const LocationFilter = ({
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden flex flex-col">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                             <h3 className="text-2xl font-bold text-gray-800">
                                 Filter Locations
                             </h3>
@@ -127,36 +127,19 @@ const LocationFilter = ({
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                            <div>
-                                <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                    <FiFilter className="text-primary" />
-                                    Minimum Capacity
-                                </h4>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Minimum number of people
-                                    </label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        step="1"
+                        <div className="flex-1 overflow-y-auto p-6 space-y-2">
+                                    <NumberField
+                                        label="Minimum number of people"
+                                        placeholder="0"
                                         value={tempMinCapacity}
-                                        onChange={(e) => setTempMinCapacity(e.target.value)}
-                                        onKeyDown={(e) => {
-                                            if (e.key === "Enter") {
-                                                handleApplyFilters();
-                                            }
-                                        }}
-                                        placeholder="e.g., 100"
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                        onChange={(val) => setTempMinCapacity(val.toString())}
+                                        min={0}
+                                        step={1}
                                     />
                                     <p className="text-xs text-gray-500 mt-2">
                                         Only show locations with capacity equal to or above this
                                         number
                                     </p>
-                                </div>
-                            </div>
                         </div>
 
                         <div className="flex items-center justify-between gap-3 p-6 border-t border-gray-200 bg-gray-50">

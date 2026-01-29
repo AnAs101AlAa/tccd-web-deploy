@@ -113,9 +113,8 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
                         render={({ field }) => (
                             <NumberField
                                 label="Capacity"
-                                id="location-capacity"
                                 value={field.value?.toString() || ""}
-                                onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                onChange={(val) => field.onChange(val || 0)}
                                 placeholder="e.g., 500"
                                 error={errors.capacity?.message}
                             />
@@ -193,13 +192,13 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
                         width={ButtonWidths.AUTO}
                         disabled={createLocationMutation.isPending}
                     />
-                    <button
-                        type="submit"
+                    <Button
+                        buttonText="Submit"
+                        type="primary"
+                        onClick={() => handleSubmit}
+                        width={ButtonWidths.AUTO}
                         disabled={createLocationMutation.isPending}
-                        className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {createLocationMutation.isPending ? "Creating..." : "Create Location"}
-                    </button>
+                    />
                 </div>
             </form>
         </Modal>
