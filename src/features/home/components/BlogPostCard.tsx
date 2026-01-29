@@ -7,7 +7,7 @@ import { Button, LazyImageLoader } from "tccd-ui";
 export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`/post/${post.id}`);
+    navigate(`/posts/${post.id}`);
   };
 
   const [insideMedia, setInsideMedia] = React.useState(false);
