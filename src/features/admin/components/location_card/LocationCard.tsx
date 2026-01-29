@@ -11,8 +11,13 @@ interface LocationCardProps {
 
 /**
  * LocationCard Component
- * Displays location information with edit and delete capabilities
- * Responsive design that adapts to all screen sizes
+ * Reusable component for displaying location entities with edit/delete capabilities.
+ * Features:
+ * - Fixed 16:9 aspect ratio with object-fit: cover for responsive image handling
+ * - Placeholder support for missing images
+ * - Distinctive action buttons (Edit in blue, Delete in red/warning color)
+ * - Fully responsive design (mobile-first approach)
+ * - Accessibility support with ARIA labels
  */
 const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -26,64 +31,65 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
     setIsDeleteModalOpen(true);
   };
 
+
   return (
     <>
       <article
-        className="relative w-full bg-white rounded-2xl shadow-lg hover:shadow-xl overflow-hidden transition-all duration-300 group"
+        className="relative w-full h-full bg-white rounded-lg shadow-md hover:shadow-lg overflow-hidden transition-all duration-300 group flex flex-col"
         role="article"
         aria-label={`Location: ${location.name}`}
       >
-        {/* Image Container with Overlay */}
-        <div className="relative w-full h-48 md:h-56 lg:h-64 overflow-hidden bg-gray-200">
+        {/* Image Container - 16:9 Aspect Ratio */}
+        <div className="relative w-full aspect-video overflow-hidden bg-gray-200">
           <LazyImageLoader
             src={location.image}
             alt={`${location.name} venue`}
             width="100%"
             height="100%"
-            className="absolute top-0 inset-0 object-cover transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
 
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Gradient Overlay - Visible on Hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-          {/* Action Buttons - Visible on Hover */}
-          <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {/* Action Buttons - Desktop (Top-Right, Visible on Hover) */}
+          <div className="absolute top-2 right-2 sm:top-3 sm:right-3 gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden lg:flex">
             <button
               onClick={handleEditClick}
-              className="p-2.5 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+              className="p-2 px-2.5 bg-secondary hover:brightness-125 text-white rounded-full shadow-lg transition-all duration-200 cursor-pointer"
               aria-label="Edit location"
               title="Edit location"
             >
-              <FaEdit className="w-4 h-4 text-secondary" />
+              <FaEdit className="size-3" />
             </button>
             <button
               onClick={handleDeleteClick}
-              className="p-2.5 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+              className="p-2 sm:p-2.5 bg-primary hover:brightness-125 text-white rounded-full shadow-lg transition-all duration-200 cursor-pointer"
               aria-label="Delete location"
               title="Delete location"
             >
-              <FaTrash className="w-4 h-4 text-primary" />
+              <FaTrash className="size-3" />
             </button>
           </div>
         </div>
 
         {/* Content Section */}
-        <div className="p-4 md:p-5 lg:p-6">
+        <div className="p-3 sm:p-4 md:p-5 flex flex-col flex-grow">
           {/* Location Name */}
-          <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-primary transition-colors duration-200">
+          <h3 className="text-[18px] sm:text-lg md:text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-secondary transition-colors duration-200">
             {location.name}
           </h3>
 
           {/* Location Details */}
-          <div className="space-y-2.5 mb-4">
+          <div className="space-y-2 mb-4 flex-grow">
             {/* Address */}
             {location.address && (
-              <div className="flex items-start gap-2 text-gray-600">
+              <div className="flex items-start gap-1 md:gap-2 text-gray-600">
                 <FaMapMarkerAlt
-                  className="w-4 h-4 mt-1 flex-shrink-0 text-primary"
+                  className="size-4 flex-shrink-0 text-primary"
                   aria-hidden="true"
                 />
-                <p className="text-sm md:text-base line-clamp-2">
+                <p className="text-[13px] sm:text-sm line-clamp-2 font-semibold">
                   {location.address}
                 </p>
               </div>
@@ -92,12 +98,12 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
             {/* Capacity */}
             <div className="flex items-center gap-2 text-gray-700">
               <FaUsers
-                className="w-4 h-4 flex-shrink-0 text-secondary"
+                className="size-4 flex-shrink-0 text-secondary"
                 aria-hidden="true"
               />
-              <p className="text-sm md:text-base font-semibold">
+              <p className="text-[13px] sm:text-sm font-semibold">
                 Capacity:{" "}
-                <span className="text-secondary">
+                <span className="text-secondary font-bold">
                   {location.capacity.toLocaleString()}
                 </span>{" "}
                 people
@@ -107,33 +113,30 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
 
           {/* Description */}
           {location.description && (
-            <p className="text-sm md:text-base text-gray-600 line-clamp-2 mb-4">
+            <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 mb-3">
               {location.description}
             </p>
           )}
 
-          {/* Action Buttons - Mobile/Tablet View */}
-          <div className="flex gap-2 md:gap-3 mt-4 pt-4 border-t border-gray-200 lg:hidden">
+          {/* Action Buttons - Mobile/Tablet View (Below content) */}
+          <div className="flex gap-2 md:gap-3 mt-auto pt-3 border-t border-gray-200 lg:hidden">
             <button
               onClick={handleEditClick}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-secondary hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-secondary hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium"
               aria-label="Edit location"
             >
-              <FaEdit className="w-4 h-4" />
-              <span className="text-sm font-medium">Edit</span>
+              <FaEdit className="size-4" />
+              <span className="hidden sm:inline">Edit</span>
             </button>
             <button
               onClick={handleDeleteClick}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-red-700 text-white rounded-lg transition-colors duration-200"
+              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-primary hover:bg-red-700 text-white rounded-lg transition-colors duration-200 text-xs sm:text-sm font-medium"
               aria-label="Delete location"
             >
               <FaTrash className="w-4 h-4" />
-              <span className="text-sm font-medium">Delete</span>
+              <span className="hidden sm:inline">Delete</span>
             </button>
           </div>
-
-          {/* Bottom Gradient Indicator */}
-          <div className="absolute bottom-0 left-0 w-0 group-hover:w-full h-1 bg-gradient-to-r from-primary to-secondary transition-all duration-300 ease-in-out rounded-b-2xl" />
         </div>
       </article>
 

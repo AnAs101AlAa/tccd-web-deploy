@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { LoadingPage, ErrorScreen } from "tccd-ui";
+import { LoadingPage, ErrorScreen, Button } from "tccd-ui";
 import { useGetLocations } from "@/shared/queries/admin";
 import { LocationCard, AddLocationModal } from "../components/location_card";
 import { usePagination } from "@/shared/hooks";
@@ -40,7 +40,7 @@ const LocationsManagementPage = () => {
         (location) =>
           location.name.toLowerCase().includes(search) ||
           location.address?.toLowerCase().includes(search) ||
-          location.description?.toLowerCase().includes(search)
+          location.description?.toLowerCase().includes(search),
       );
     }
 
@@ -80,25 +80,22 @@ const LocationsManagementPage = () => {
 
   return (
     <WithLayout>
-
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-1 md:mb-2">
               Locations Management
             </h1>
-            <p className="text-gray-600 text-sm md:text-base">
+            <p className="text-gray-600 text-[16px] md:text-[18px]">
               Manage event locations and venues
             </p>
           </div>
-          <button
+          <Button
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg font-medium"
-          >
-            <FiPlus className="text-xl" />
-            <span>Add Location</span>
-          </button>
+            type="primary"
+            buttonText="Add location"
+            buttonIcon={<FiPlus className="size-4" />}
+          />
         </div>
 
         <LocationFilter
@@ -131,7 +128,6 @@ const LocationsManagementPage = () => {
           onClose={() => setIsAddModalOpen(false)}
         />
       </div>
-    </div>
     </WithLayout>
   );
 };
