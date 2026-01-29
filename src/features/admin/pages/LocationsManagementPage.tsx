@@ -94,9 +94,9 @@ const LocationsManagementPage = () => {
           </div>
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg font-medium"
+            className="flex items-center gap-2 px-6 py-3 bg-primary w-fit text-sm text-white rounded-full hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg font-medium"
           >
-            <FiPlus className="text-xl" />
+            <FiPlus className="text-lg" />
             <span>Add Location</span>
           </button>
         </div>
