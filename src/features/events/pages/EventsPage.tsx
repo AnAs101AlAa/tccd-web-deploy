@@ -89,6 +89,7 @@ const EventsPage = () => {
                 onSearch={(params) => handleApplyFilters(params)}
               />
             </div>
+            <hr className="mb-4 mt-0 border-t border-gray-400/80" />
             {isLoadingUpcoming && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
                 <div className="text-center">
@@ -129,7 +130,6 @@ const EventsPage = () => {
                   gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                   getKey={(event: Event) => event.id}
                 />
-
                 <Pagination
                   currentPage={apiUpcomingEvents.pageIndex}
                   totalPages={apiUpcomingEvents.totalPages}
