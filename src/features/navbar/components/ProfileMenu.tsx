@@ -1,15 +1,15 @@
 import profileImage from "@/assets/placeholders/profileImage.jpeg";
 import { getProfileMenuItems } from "@/constants/ProfileMenuItems";
 import { useEffect, useRef } from "react";
-import { useAppSelector, useAppDispatch } from "@/shared/store/hooks";
+import { useAppSelector } from "@/shared/store/hooks";
 import {
   selectUserFullName,
   selectUserEmail,
   selectUserProfileImage,
   selectCurrentUser,
 } from "@/shared/store/selectors/userSelectors";
-import { clearUser } from "@/shared/store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { useLogout } from "@/shared/queries/auth";
 
 interface ProfileMenuProps {
   isOpen: boolean;
@@ -25,22 +25,28 @@ const ProfileMenu = ({
   position = "top",
 }: ProfileMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { mutateAsync: logoutAsync } = useLogout();
 
   // Get user data from Redux store
   const currentUser = useAppSelector(selectCurrentUser);
   const userFullName = useAppSelector(selectUserFullName);
   const userEmail = useAppSelector(selectUserEmail);
   const userProfileImage = useAppSelector(selectUserProfileImage);
-  
+
   const menuItems = getProfileMenuItems(currentUser);
 
   const handleMenuItemClick = (action?: string) => {
     if (action === "logout") {
-      dispatch(clearUser());
-      navigate("/login");
-      onClose();
+      (async () => {
+        try {
+          await logoutAsync();
+          navigate("/login");
+          onClose();
+        } catch (err) {
+          console.error("Logout failed:", err);
+        }
+      })();
     } else if (action) {
       navigate(action);
       onClose();
@@ -73,33 +79,33 @@ const ProfileMenu = ({
 
   const horizontalPosition =
     position === "top"
-      ? "left-1/2 -translate-x-1/2" 
-      : "right-0"; 
+      ? "left-1/2 -translate-x-1/2"
+      : "right-0";
 
   const triangleHorizontalPosition =
     position === "top"
-      ? "left-1/2 -translate-x-1/2" 
-      : "right-[15px]"; 
+      ? "left-1/2 -translate-x-1/2"
+      : "right-[15px]";
 
   const positionClasses =
     position === "top"
-      ? "bottom-[calc(100%+22px)]" 
-      : "top-[calc(100%+20px)]"; 
+      ? "bottom-[calc(100%+22px)]"
+      : "top-[calc(100%+20px)]";
 
   const triangleStyle =
     position === "top"
       ? {
-          bottom: "-12px",
-          borderLeft: "12px solid transparent",
-          borderRight: "12px solid transparent",
-          borderTop: "12px solid white",
-        }
+        bottom: "-12px",
+        borderLeft: "12px solid transparent",
+        borderRight: "12px solid transparent",
+        borderTop: "12px solid white",
+      }
       : {
-          top: "-12px",
-          borderLeft: "12px solid transparent",
-          borderRight: "12px solid transparent",
-          borderBottom: "12px solid white",
-        };
+        top: "-12px",
+        borderLeft: "12px solid transparent",
+        borderRight: "12px solid transparent",
+        borderBottom: "12px solid white",
+      };
 
   return (
     <div
@@ -138,21 +144,20 @@ const ProfileMenu = ({
               return (
                 <div
                   key={item.title}
-                  className={`flex flex-row items-center px-2 md:px-4 py-3 gap-2 md:gap-[8px] cursor-pointer hover:bg-secondary/10 transition-colors ${
-                    !isLast ? "border-b border-gray-400" : ""
-                  }`}
+                  className={`flex flex-row items-center px-2 md:px-4 py-3 gap-2 md:gap-[8px] cursor-pointer hover:bg-secondary/10 transition-colors ${!isLast ? "border-b border-gray-400" : ""
+                    }`}
                   onClick={() => handleMenuItemClick(item.action)}
                 >
-                    <Icon
-                      size={position === "top" ? 16 : 22}
-                      color={item.iconColor}
-                    />
-                    <h3
-                      className={`text-[12px] md:text-[13px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold`}
-                      style={{ color: item.iconColor }}
-                    >
-                      {item.title}
-                    </h3>
+                  <Icon
+                    size={position === "top" ? 16 : 22}
+                    color={item.iconColor}
+                  />
+                  <h3
+                    className={`text-[12px] md:text-[13px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold`}
+                    style={{ color: item.iconColor }}
+                  >
+                    {item.title}
+                  </h3>
                 </div>
               );
             })}

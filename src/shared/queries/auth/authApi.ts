@@ -16,8 +16,8 @@ export class AuthApi {
   }
 
   async logout() {
-    const { data } = await systemApi.post(AUTH_ROUTE + "logout");
-    return data;
+    const response = await systemApi.post(AUTH_ROUTE + "logout");
+    return response.data;
   }
 
   async signupStudent(credentials: StudentSignupCredentials) {

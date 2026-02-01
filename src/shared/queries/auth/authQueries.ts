@@ -46,11 +46,11 @@ export const useLogout = () => {
   const { logout } = useUserActions();
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: () => authApiInstance.logout(),
     onSuccess: () => {
+      queryClient.removeQueries({ queryKey: authKeys.all });
       logout();
-      queryClient.clear();
       toast.success("Logged out successfully!");
     },
     onError: (error: unknown) => {
@@ -58,6 +58,11 @@ export const useLogout = () => {
       toast.error(message || "Logout failed. Please try again.");
     },
   });
+
+  return {
+    ...mutation,
+    isLoading: mutation.isPending,
+  };
 };
 
 export const useSignupStudent = () => {
