@@ -7,7 +7,7 @@ export class EventsApi {
   async createEvent(data: Event) {
     await systemApi.post(
       `/v2/Event`,
-      data
+      {...data, eventImageId: data.eventImage}
     );
   }
   async updateEvent(id: string, data: Event) {
