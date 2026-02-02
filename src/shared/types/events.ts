@@ -13,16 +13,18 @@ export default interface Event {
   name: string;
   description: string;
   date: string;
-  location: string;
+  locations: string[];
   isApproved: boolean;
   type: EventTypes;
   attendeeCount: number;
+  registeredCount: number;
   capacity: number;
   eventImage: string;
   registrationDeadline: string;
-  createdBy: string;
-  createdAt: string;
-  updatedOn: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedOn?: string;
+  media?: string[];
 }
 
 export interface EventResponse {
@@ -40,7 +42,7 @@ export interface EventQueryParams {
   Type?: EventTypes;
   StartDate?: string;
   EndDate?: string;
-  Location?: string;
+  Locations?: string[];
   OrderBy?: EventOrderBy;
   Descending?: boolean;
   PageNumber?: number;
