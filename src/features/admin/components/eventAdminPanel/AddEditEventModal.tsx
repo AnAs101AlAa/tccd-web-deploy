@@ -44,8 +44,6 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     handleSave,
   } = useEventModalUtils({ event, onClose });
 
-  console.log(event);
-  
   return (
     <Modal
       title={isEditMode ? "Edit Event" : "Add New Event"}
@@ -277,12 +275,12 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
               />
             </div>
             <div className="max-h-48 overflow-y-auto border border-gray-400 rounded-2xl p-2 space-y-2">
-              {(formValues.media && formValues.media.length > 0) || isAddingMedia ? (
+              {(formValues.eventMedia && formValues.eventMedia.length > 0) || isAddingMedia ? (
                 <>
-                  {formValues?.media?.map((mediaUrl, index) => (
+                  {formValues?.eventMedia?.map((mediaUrl, index) => (
                     <div key={index} className="p-2 border border-gray-300 rounded-2xl">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-700">{mediaUrl}</span>
+                        <span className="text-sm text-gray-700">{mediaUrl as string}</span>
                         <button onClick={() => handleRemoveMedia(index)} className="text-contrast hover:text-primary cursor-pointer">
                           <TbTrash className="size-4"/>
                         </button>

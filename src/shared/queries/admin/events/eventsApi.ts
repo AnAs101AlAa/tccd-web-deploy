@@ -40,7 +40,7 @@ export class EventsApi {
       `${EVENTS_ROUTE}`,
       { params: queryParams }
     );
-    return data.data.items.map((item: any) => ({...item, locations: item.rooms} as Event)) as Event[];
+    return data.data.items.map((item: any) => ({...item, locations: item.rooms, eventMedia: item.medias} as Event)) as Event[];
   }
 }
 

@@ -21,10 +21,10 @@ export default interface Event {
   capacity: number;
   eventImage: string;
   registrationDeadline: string;
-  createdBy: string;
-  createdAt: string;
-  updatedOn: string;
-  eventMedia?: EventMedia[];
+  createdBy?: string;
+  createdAt?: string;
+  updatedOn?: string;
+  eventMedia?: EventMedia[] | string[];
 }
 
 export interface EventResponse {

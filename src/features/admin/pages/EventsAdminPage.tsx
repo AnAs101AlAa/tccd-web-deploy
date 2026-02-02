@@ -20,6 +20,8 @@ export default function EventsAdminPage() {
     undefined
   );
   
+  console.log("Fetched Events:", currentEvents);
+  
   return (
     <WithLayout>
       <div className="w-full mx-auto space-y-4 md:space-y-6">

@@ -33,7 +33,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     eventImage: "",
     type: EVENT_TYPES[0].value,
     registrationDeadline: "",
-    media: [],
+    eventMedia: [] as string[],
     date: "",
     locations: [],
     capacity: 0,
@@ -66,14 +66,16 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   const handleAddMedia = (url: string) => {
     setFormValues((prev) => ({
       ...prev,
-      media: prev.media ? [...prev.media, url] : [url],
+      eventMedia: Array.isArray(prev.eventMedia) ? [...(prev.eventMedia as string[]), url] : [url],
     }));
   };
 
   const handleRemoveMedia = (index: number) => {
     setFormValues((prev) => ({
       ...prev,
-      media: prev.media ? prev.media.filter((_, i) => i !== index) : [],
+      eventMedia: Array.isArray(prev.eventMedia)
+        ? (prev.eventMedia as string[]).filter((_, i) => i !== index)
+        : [],
     }));
   }
 
@@ -91,6 +93,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     const finalizedValue = {
       ...formValues,
       date: eventDate.toISOString(),
+      media: formValues.eventMedia,
       registrationDeadline: registrationDeadlineDate.toISOString(),
     };
     createEventMutation.mutate(finalizedValue, {
