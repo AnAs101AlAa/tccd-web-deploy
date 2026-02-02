@@ -10,7 +10,7 @@ import AdminEventCard from "../components/eventAdminPanel/AdminEventCard";
 import { useFetchEvents } from "@/shared/queries/admin/events/eventsQueries";
 
 export default function EventsAdminPage() {
-  const eventsPerPage = 12;
+  const eventsPerPage = 20;
   const withAdminPriviliges: boolean = true;
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -21,7 +21,7 @@ export default function EventsAdminPage() {
   );
   
   console.log("Fetched Events:", currentEvents);
-  
+
   return (
     <WithLayout>
       <div className="w-full mx-auto space-y-4 md:space-y-6">
