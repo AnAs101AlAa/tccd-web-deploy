@@ -46,7 +46,7 @@ const EventsPage = () => {
     pastError,
     refetchUpcoming,
     refetchPast,
-  } = useEvents(queryParams, false);
+  } = useEvents(queryParams, true);
 
   const onBookNow = () => {
     console.log("BookNow");

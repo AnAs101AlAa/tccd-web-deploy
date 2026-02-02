@@ -8,7 +8,7 @@ import type { EventQueryParams } from "@/shared/types";
  * Custom hook to fetch upcoming and past events
  * Returns loading states, error states, and event data
  */
-export const useEvents = (params? : EventQueryParams, filterOnPast?: boolean) => {
+export const useEvents = (params? : EventQueryParams, dontFilterOnPast?: boolean) => {
   // Fetch upcoming events
   const {
     data: upcomingEvents,
@@ -23,7 +23,7 @@ export const useEvents = (params? : EventQueryParams, filterOnPast?: boolean) =>
     isLoading: isLoadingPast,
     error: pastError,
     refetch: refetchPast,
-  } = useGetAllPastEvents(filterOnPast ? params : {PageSize: 6});
+  } = useGetAllPastEvents(dontFilterOnPast ? {PageSize: 6} : params);
 
   // Combined loading state
   const isLoading = isLoadingUpcoming || isLoadingPast;
