@@ -21,10 +21,10 @@ export default interface Event {
   capacity: number;
   eventImage: string;
   registrationDeadline: string;
-  createdBy?: string;
-  createdAt?: string;
-  updatedOn?: string;
-  media?: string[];
+  createdBy: string;
+  createdAt: string;
+  updatedOn: string;
+  eventMedia?: EventMedia[];
 }
 
 export interface EventResponse {
@@ -35,6 +35,14 @@ export interface EventResponse {
   totalPages: number;
   hasPreviousPage: boolean;
   hasNextPage: boolean;
+}
+
+export interface EventMedia {
+  id: string;
+  eventId: string;
+  mediaUrl: string;
+  isApproved: boolean;
+  createdBy: string;
 }
 
 export interface EventQueryParams {
