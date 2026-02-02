@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 const GalleryPage = () => {
   const [queryParams, setQueryParams] = useState<EventQueryParams>({
     PageNumber: 1,
-    PageSize: 10,
+    PageSize: 6,
   });
 
   const handleApplyFilters = (stagingParams: EventQueryParams) => {
@@ -38,7 +38,7 @@ const GalleryPage = () => {
     isLoading,
     error,
     refetch,
-  } = useGallery();
+  } = useGallery(queryParams);
 
   if (error) {
     return (
