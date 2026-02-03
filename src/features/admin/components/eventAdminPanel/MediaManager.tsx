@@ -2,7 +2,12 @@ import React from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { Button, ButtonTypes, ButtonWidths } from "tccd-ui";
 import { FileUploadField } from "@/shared/components/FileUploadField";
-import type { MediaItem } from "../../types/eventModalTypes";
+
+export interface MediaItem {
+  id: string;
+  file: File | string;
+  preview: string;
+}
 
 interface MediaManagerProps {
   media: MediaItem[];

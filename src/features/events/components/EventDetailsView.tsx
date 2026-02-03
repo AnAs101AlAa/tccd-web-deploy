@@ -178,7 +178,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                             <div className="w-full">
                                 <PosterCard
                                     title="Location"
-                                    data={event.location}
+                                    data={event.locations ? event.locations.join(", ") : "TBD"}
                                     icon={<IoLocationSharp className="text-primary size-10 md:size-12 transition-colors duration-300 ease-in-out group-hover:bg-sky-100 bg-sky-50 p-2 rounded-full" />}
                                 />
                             </div>

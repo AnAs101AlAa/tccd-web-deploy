@@ -106,7 +106,7 @@ export const SignupPage = () => {
   });
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   // Get step labels

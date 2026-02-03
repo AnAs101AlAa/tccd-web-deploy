@@ -10,7 +10,7 @@ const HeroSection = () => {
   const [eventsCount, setEventsCounter] = useState<number>(0);
   const [companyCount, setCompanyCount] = useState<number>(0);
   const [activeUsers, setActiveUsers] = useState<string[]>([...Array(5).fill(
-    "user.png")
+    "user.jpg")
   ]);
   const [usersCount, setUsersCount] = useState<number>(30);
 
@@ -35,7 +35,7 @@ const HeroSection = () => {
       setActiveUsers([
         ...response.pictures,
         ...Array(Math.max(0, 5 - response.pictures.length)).fill(
-          "user.png"
+          "user.jpg"
         ),
       ]);
       const inflation = response.activeUserCount + Math.floor(Math.random() * 21) + 10;
@@ -44,7 +44,7 @@ const HeroSection = () => {
       console.error("Error fetching active users:", error);
       setActiveUsers([
         ...Array(5).fill(
-          "user.png"
+          "user.jpg"
         ),
       ]);
       setUsersCount(30);
@@ -181,7 +181,7 @@ const HeroSection = () => {
               <div className="aspect-[4/3] overflow-hidden rounded-xl">
                 <img
                   className="w-full h-full inset-0"
-                  src="https://res.cloudinary.com/dckgwxu3c/image/upload/v1743691588/group_vak7ew.jpg"
+                  src="home.jpeg"
                 />
               </div>
 

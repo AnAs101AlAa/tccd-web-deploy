@@ -33,9 +33,8 @@ export default function ManagePostModal({ mode, isOpen, onClose, post }: { mode:
 
     const fetchFiles = async () => {
       try {
-        const filePromises = postState.postMedia.map(async (url) => {
+        const filePromises = postState.media.map(async (url) => {
           const response = await fetch(url);
-          console.log(response);
           const blob = await response.blob();
           const urlParts = url.split("/");
           const fileName = urlParts[urlParts.length - 1];
@@ -51,7 +50,7 @@ export default function ManagePostModal({ mode, isOpen, onClose, post }: { mode:
     };
 
     fetchFiles();
-  }, [postState?.postMedia]);
+  }, [postState?.media]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={mode ? `Edit Post` : `Create Post`}>
@@ -61,8 +60,8 @@ export default function ManagePostModal({ mode, isOpen, onClose, post }: { mode:
           id="post-title-field"
           label="Post Title"
           placeholder="Job offering announcement"
-          value={postState?.title}
-          onChange={(e) => setPostState({ ...postState, title: e.target.value })}
+          value={postState?.name}
+          onChange={(e) => setPostState({ ...postState, name: e.target.value })}
         />
 
         <TextAreaField

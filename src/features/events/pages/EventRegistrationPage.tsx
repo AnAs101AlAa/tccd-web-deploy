@@ -13,24 +13,23 @@ export default function EventRegisterForm() {
   const storedUser = useSelector((state: { user: StudentUser }) => state.user);
   const event: Event = {
     id: "1",
-    title: "Web Development Workshop",
+    name: "Web Development Workshop",
     description:
       "Learn modern web development with React and TypeScript. This hands-on workshop will cover the fundamentals of building responsive web applications.",
-    media: [],
-    eventPoster:
+    eventMedia: [],
+    registrationDeadline: "2025-10-20T23:59:00Z",
+    eventImage:
       "https://images.unsplash.com/photo-1760340769739-653d00200baf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470",
     date: "2025-10-25T14:00:00Z",
-    location: "Tech Lab, Building A",
-    eventType: "Workshop",
-    category: "Workshop",
+    locations: ["Tech Lab, Building A"],
+    type: "Workshop",
     capacity: 50,
+    isApproved: true,
     registeredCount: 35,
     attendeeCount: 0,
   }; //useSelector((state: {event: Event}) => state.event);
 
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>(
-    event.timeSlot || "Afternoon (2:00 PM - 6:00PM)"
-  );
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("Afternoon (2:00 PM - 6:00PM)");
   const [checkboxes, setCheckboxes] = useState<boolean[]>([false, false]);
 
   const navigate = useNavigate();
@@ -54,7 +53,7 @@ export default function EventRegisterForm() {
         </h2>
         <p className="text-center text-gray-700">
           Please fill out the form below to register for the event:{" "}
-          <span className="font-semibold">{event.title}</span>
+          <span className="font-semibold">{event.name}</span>
         </p>
         <hr className="my-3 border-gray-400" />
         {/*registration form grid flexes on overflow into one column*/}
@@ -78,7 +77,7 @@ export default function EventRegisterForm() {
             />
             <TextDisplayEdit
               label="Graduation Year"
-              value={storedUser.graduationYear}
+              value={storedUser.graduationYear.toString()}
               disabled={true}
               placeholder="e.g. 2024"
             />
@@ -88,7 +87,7 @@ export default function EventRegisterForm() {
               disabled={true}
               placeholder="Please select your university"
             />
-            {event.category === "JobFair" && (
+            {event.type === "Jobfair" && (
               <DropdownMenu
                 label="Time Slot"
                 value={selectedTimeSlot}
@@ -123,7 +122,7 @@ export default function EventRegisterForm() {
             />
             <TextDisplayEdit
               label="GPA"
-              value={storedUser.gpa}
+              value={storedUser.gpa.toString()}
               disabled={true}
               placeholder="on a 4.0 scale"
             />

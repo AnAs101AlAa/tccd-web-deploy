@@ -1,5 +1,5 @@
 import { PastEventCard, UpcomingEventCard } from "../components";
-import { Pagination, ViewAllButton } from "@/shared/components/pagination";
+import { Pagination } from "@/shared/components/pagination";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import GenericGrid from "@/shared/components/GenericGrid";
@@ -9,15 +9,41 @@ import { useState } from "react";
 import type { EventQueryParams } from "@/shared/types/events";
 import toast from "react-hot-toast";
 import EventsFilter from "../components/EventsFilter";
-import { ErrorScreen } from "tccd-ui";
+import { Button, ErrorScreen } from "tccd-ui";
 import { useNavigate } from "react-router-dom";
+import EVENT_HEADER_IMAGE from "@/assets/eventsHeader.jpeg";
+import { useEffect } from "react";
+
+const getResponsivePageSize = () => {
+  const width = window.innerWidth;
+  if (width < 768) return 1;
+  if (width < 1024) return 2;
+  return 3;
+};
 
 const EventsPage = () => {
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(getResponsivePageSize());
   const [queryParams, setQueryParams] = useState<EventQueryParams>({
     PageNumber: 1,
-    PageSize: 10,
+    PageSize: getResponsivePageSize(),
   });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newSize = getResponsivePageSize();
+      setPageSize(newSize);
+      setQueryParams((prev) => ({ ...prev, PageSize: newSize, PageNumber: 1 }));
+      setPageNumber(1);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    setQueryParams((prev) => ({ ...prev, PageNumber: pageNumber, PageSize: pageSize }));
+  }, [pageNumber, pageSize]);
 
   const handleApplyFilters = (stagingParams: EventQueryParams) => {
     const now = new Date();
@@ -48,6 +74,8 @@ const EventsPage = () => {
     refetchPast,
   } = useEvents(queryParams, true);
 
+  useEvents({ ...queryParams, PageNumber: pageNumber + 1, PageSize: pageSize }, true);
+
   const onBookNow = () => {
     console.log("BookNow");
   };
@@ -67,13 +95,12 @@ const EventsPage = () => {
     <WithLayout>
       <div className="min-h-screen bg-gray-50">
         <UpperHeader
-          image=""
+          image={EVENT_HEADER_IMAGE}
           title="Events"
           subtitle="Explore the catalogue of our latest and history of events on full display"
         />
 
         <main className="w-[97%] md:w-[95%] lg:w-[92%] xl:w-[84%] mx-auto px-0 md:px-6 py-2 md:pt-5 md:py-5">
-          {/* Upcoming Events Section */}
           <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
             <div className="flex flex-col md:gap-1 gap-0 mb-1">
               <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
@@ -134,10 +161,7 @@ const EventsPage = () => {
                   currentPage={apiUpcomingEvents.pageIndex}
                   totalPages={apiUpcomingEvents.totalPages}
                   onPageChange={(page: number) => {
-                    setQueryParams((prev) => ({
-                      ...prev,
-                      PageNumber: page,
-                    }));
+                    setPageNumber(page);
                   }}
                 />
               </>
@@ -190,7 +214,9 @@ const EventsPage = () => {
                   getKey={(event: Event) => event.id}
                 />
                 {apiPastEvents.totalPages > 1 && (
-                  <ViewAllButton onClick={() => navigate("/past-events")} />
+                  <div className="flex justify-center w-fit mx-auto pt-4">
+                    <Button type="secondary" onClick={() => navigate("/past-events")} buttonText="View all" />
+                  </div>
                 )}
               </>
             )}

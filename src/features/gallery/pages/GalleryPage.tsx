@@ -9,6 +9,7 @@ import EventsFilter from "@/features/events/components/EventsFilter";
 import { useState } from "react";
 import type { EventQueryParams } from "@/shared/types/events";
 import toast from "react-hot-toast";
+import GALLERY_HEADER_IMAGE from "@/assets/galleryHeader.jpeg";
 
 const GalleryPage = () => {
   const [queryParams, setQueryParams] = useState<EventQueryParams>({
@@ -62,9 +63,9 @@ const GalleryPage = () => {
     <WithLayout>
       <div className="min-h-screen bg-gray-50">
         <UpperHeader
-          image=""
+          image={GALLERY_HEADER_IMAGE}
           title="Gallery"
-          subtitle="Dive into the collection of our best and brightest moments shaped by our members and community."
+          subtitle="Dive into the collection of our brightest moments shaped by our community."
         />
 
         <main className="w-full xl:w-[80%] xl:mx-auto px-6 py-5">

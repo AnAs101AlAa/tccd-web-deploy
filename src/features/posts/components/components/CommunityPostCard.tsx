@@ -1,8 +1,15 @@
 import { FaCalendarAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Button } from "tccd-ui";
-import type { CommunityPostCardProps } from "@/shared/types";
 import { useState } from "react";
+
+interface CommunityPostCardProps {
+    id: string;
+    createdOn: string;
+    name: string;
+    description: string;
+    postMedia: string[];
+}
 
 export const CommunityPostCard = ({ id, createdOn, name, description, postMedia }: CommunityPostCardProps) => {
     console.log(id)

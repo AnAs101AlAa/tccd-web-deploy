@@ -6,10 +6,10 @@ import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { useGetEventById } from "@/shared/queries/events/eventQueries";
 import { mapEventMediaList } from "../utils/TypeMappingFunction";
+import type { EventMedia } from "@/shared/types";
 export default function GalleryDisplayPage() {
   const { id } = useParams();
   const { data: galleryData, isLoading, isError } = useGetEventById(id || "");
-  console.log(galleryData);
 
   useEffect (() => {
     if (isError) {
@@ -34,7 +34,7 @@ export default function GalleryDisplayPage() {
             <img src={tccdLogo} alt="TCCD Logo" className="md:block hidden h-9 md:mr-6 mr-3" />
         </div>
         {isLoading && <p>Loading...</p>}
-      <FullscreenMediaViewer items={mapEventMediaList(galleryData?.eventMedia || [])} />
+      <FullscreenMediaViewer items={mapEventMediaList(galleryData?.eventMedia as EventMedia[] || [])} />
     </div>
   );
 }

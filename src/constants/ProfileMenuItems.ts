@@ -3,8 +3,8 @@ import { HiOutlineUser } from "react-icons/hi2";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { MdDashboard, MdPostAdd } from "react-icons/md";
-import type { AnyUser } from "@/shared/types/users";
 import { isAdmin, isVolunteer } from "@/shared/types/users";
+import type { User } from "@/shared/types";
 
 export interface ProfileMenuItem {
   icon: IconType;
@@ -14,7 +14,7 @@ export interface ProfileMenuItem {
 }
 
 export const getProfileMenuItems = (
-  user: AnyUser | null
+  user: User | null
 ): ProfileMenuItem[] => {
   if (!user) return [];
   const menuItems: ProfileMenuItem[] = [];
@@ -24,13 +24,13 @@ export const getProfileMenuItems = (
     iconColor: "#4A4A4A",
     action: "/profile",
   });
-
+  
   if (isAdmin(user) || (isVolunteer(user) && user.position !== "Member")) {
     menuItems.push({
       icon: MdDashboard,
       title: "Admin Dashboard",
       iconColor: "#4A4A4A",
-      action: "/admin",
+      action: "/admin/events",
     });
   }
 

@@ -1,19 +1,22 @@
-import profileImage from "@/assets/placeholders/profileImage.jpeg";
 import { FiLogIn } from "react-icons/fi";
 import Avatar from "@/shared/components/Avatar";
+import type { User } from "@/shared/types";
 
 interface ProfileAvatarProps {
+  userData: User;
   isAuthenticated: boolean;
   onClick: () => void;
 }
 
-const ProfileAvatar = ({ isAuthenticated, onClick }: ProfileAvatarProps) => {
+const ProfileAvatar = ({ userData, isAuthenticated, onClick }: ProfileAvatarProps) => {
+  console.log("User Data in ProfileAvatar:", userData);
+
   return (
     <div data-profile-avatar>
       <Avatar
-        src={isAuthenticated ? profileImage : undefined}
+        src={isAuthenticated ? userData.profilePicture || '/user.jpg' : undefined}
         alt="Profile"
-        size="46px"
+        size="42px"
         backgroundColor="#ffffff"
         borderColor="#2A5F80"
         borderWidth="1px"
@@ -23,7 +26,7 @@ const ProfileAvatar = ({ isAuthenticated, onClick }: ProfileAvatarProps) => {
         fallback={
           <FiLogIn className="text-[#2A5F80] text-[20px] md:text-[28px]" />
         }
-        className="w-[46px] sm:w-[53px] h-[46px] sm:h-[53px] md:w-[42px] md:h-[42px] xl:w-[44px] xl:h-[44px]"
+        className="w-[42px] sm:w-[49px] h-[42px] sm:h-[49px] md:w-[42px] md:h-[42px] xl:w-[44px] xl:h-[44px]"
       />
     </div>
   );

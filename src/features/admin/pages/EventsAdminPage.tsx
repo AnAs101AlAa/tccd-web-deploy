@@ -3,7 +3,6 @@ import { Pagination } from "@/shared/components/pagination";
 import AddEditEventModal from "../components/eventAdminPanel/AddEditEventModal";
 import { MdAdd } from "react-icons/md";
 import type Event from "@/shared/types/events";
-import { upcomingEvents } from "@/features/events/data/dummyEvents";
 import { Button } from "tccd-ui";
 import { WithLayout } from "@/shared/components/hoc";
 import AdminEventCard from "../components/eventAdminPanel/AdminEventCard";
@@ -20,8 +19,6 @@ export default function EventsAdminPage() {
     undefined
   );
   
-  console.log("Fetched Events:", currentEvents);
-
   return (
     <WithLayout>
       <div className="w-full mx-auto space-y-4 md:space-y-6">
@@ -60,7 +57,7 @@ export default function EventsAdminPage() {
           <div className="mt-4 md:mt-6">
             <Pagination
               currentPage={currentPage}
-              totalPages={Math.ceil(upcomingEvents.length / eventsPerPage)}
+              totalPages={Math.ceil(currentEvents.length / eventsPerPage)}
               onPageChange={(page) => {
                 setCurrentPage(page);
               }}

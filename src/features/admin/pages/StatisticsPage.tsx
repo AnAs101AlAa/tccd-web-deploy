@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import WithSidebar from "@/shared/components/hoc/WithSidebar";
 import RegistrationOverviewChart from "../components/statistics/RegistrationOverviewChart";
 import GenderDistributionChart from "../components/statistics/GenderDistributionChart";
 import UniversityDistributionChart from "../components/statistics/UniversityDistributionChart";
 import DepartmentAttendanceChart from "../components/statistics/DepartmentAttendanceChart";
-import FeedbackCarousel from "../components/statistics/FeedbackCarousel";
-import TicketTypeChart from "../components/statistics/TicketTypeChart";
-import RegistrationTrendChart from "../components/statistics/RegistrationTrendChart";
-import TShirtSizeChart from "../components/statistics/TShirtSizeChart";
 
 const StatisticsPage: React.FC = () => {
   const [showAll, setShowAll] = useState(false);

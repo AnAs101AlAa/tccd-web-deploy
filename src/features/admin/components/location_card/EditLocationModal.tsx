@@ -132,9 +132,8 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
             render={({ field }) => (
               <NumberField
                 label="Capacity"
-                id="location-capacity"
                 value={field.value?.toString() || ""}
-                onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                onChange={(val) => field.onChange(parseInt(val.toString(), 10) || 0)}
                 placeholder="e.g., 500"
                 error={errors.capacity?.message}
               />

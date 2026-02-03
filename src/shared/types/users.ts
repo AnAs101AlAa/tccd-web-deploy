@@ -32,7 +32,7 @@ interface Entity {
   role: EntityRole;
 }
 
-interface User extends Entity {
+export interface User extends Entity {
   englishFullName: string;
   arabicFullName: string;
   phoneNumber: string;
@@ -90,7 +90,8 @@ export type AnyUser =
   | CompanyUser
   | BusinessRepUser
   | FacultyMemberUser
-  | AdminUser;
+  | AdminUser
+  | User;
 
 /** Guards for Conditional Rendering */
 export const isStudent = (u: AnyUser): u is StudentUser => u.role === "Student";
