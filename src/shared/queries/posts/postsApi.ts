@@ -66,7 +66,20 @@ export class PostsApi {
 
   async getPostById(id: string): Promise<CommunityPost> {
     const response = await systemApi.get(`${POSTS_ROUTE}/${id}`);
-    return response.data;
+    
+    if (response.data.success && response.data.data) {
+      const item = response.data.data;
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        media: item.media || [],
+        priority: item.priority,
+        createdAt: item.createdAt,
+      };
+    }
+    
+    throw new Error("Failed to fetch post");
   }
 
   async getPostsByStatus(status: string): Promise<CommunityPost[]> {

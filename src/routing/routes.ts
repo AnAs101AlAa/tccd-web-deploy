@@ -17,9 +17,12 @@ import {
   EventRegistrationPage,
   EventsAdminPage,
   StatisticsPage,
+  HomePage,
+  PostPage,
 } from "@/features";
 
 export const routes = [
+  { path: "/", Component: HomePage },
   { path: "/login", Component: LoginPage },
   { path: "/sign-up", Component: SignupPage },
   { path: "/sign-up/confirmation", Component: SignupConfirmation },
@@ -34,6 +37,7 @@ export const routes = [
   { path: "/tickets/:id", Component: EventTicketPage },
   { path: "/otp", Component: OTPPage },
   { path: "/posts", Component: PostManagementPage },
+  { path: "/posts/:id", Component: PostPage },
   { path: "/admin/locations", Component: LocationsManagementPage },
   { path: "/events/register/:id", Component: EventRegistrationPage },
   { path: "/admin/events", Component: EventsAdminPage }, // NOT A PROTECTED ROUTE, CAREFUL WITH INTEGRATION
