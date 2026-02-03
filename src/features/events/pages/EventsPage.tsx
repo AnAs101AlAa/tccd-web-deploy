@@ -190,7 +190,7 @@ const EventsPage = () => {
                   getKey={(event: Event) => event.id}
                 />
                 {apiPastEvents.totalPages > 1 && (
-                  <ViewAllButton onClick={() => navigate("past-events")} />
+                  <ViewAllButton onClick={() => navigate("/past-events")} />
                 )}
               </>
             )}

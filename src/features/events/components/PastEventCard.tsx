@@ -16,7 +16,7 @@ export default function AdminEventCard({
       onClick={() => navigate(`/events/${event.id}`)}
       className={`relative flex flex-col items-start m-auto gap-1 lg:gap-2 border-1 border-contrast/13 rounded-lg py-2 px-3 md:p-3 w-full h-full cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out`}
     >
-      <div className="w-full max-h-[240px] md:max-h-[290px] lg:max-h-[320px]">
+      <div className="w-full max-h-[260px] md:max-h-[310px] lg:max-h-[340px]">
           <LazyImageLoader
             src={event.eventImage}
             alt={event.name}
@@ -44,7 +44,7 @@ export default function AdminEventCard({
           <MdGroups className="text-inactive-tab-text mr-1 size-4 lg:size-4.5 -mt-0.5" />
           {event.attendeeCount}
         </div>
-      <p className="mt-1 line-clamp-3 text-[14px] md:text-[15px] lg:text-[16px]">
+      <p className="mt-1 line-clamp-3 text-[13px] md:text-[14px] lg:text-[15px]">
         {event.description}
       </p>
     </div>

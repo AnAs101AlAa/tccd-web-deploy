@@ -41,7 +41,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     attendeeCount: 0,
   });
   const [errors, setErrors] = useState<{ [key in keyof Event]?: string }>({});
-
+  
   const [isAddingMedia, setIsAddingMedia] = useState<boolean>(false);
   const [currentMediaInput, setCurrentMediaInput] = useState<string>("");
 
@@ -80,22 +80,23 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   }
 
   const handleSave = () => {
-    const validationErrors = validateAllFields(formValues);
+    const registrationDeadlineDate = new Date(formValues.date);
+    registrationDeadlineDate.setDate(registrationDeadlineDate.getDate() - 2);
+
+    const finalizedValue = {
+      ...formValues,
+      date: new Date(formValues.date).toISOString(),
+      media: formValues.eventMedia,
+      registrationDeadline: registrationDeadlineDate.toISOString(),
+    };
+    
+    const validationErrors = validateAllFields(finalizedValue);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-
-    const eventDate = new Date(formValues.date);
-    const registrationDeadlineDate = new Date(eventDate);
-    registrationDeadlineDate.setDate(eventDate.getDate() - 2);
-    const finalizedValue = {
-      ...formValues,
-      date: eventDate.toISOString(),
-      media: formValues.eventMedia,
-      registrationDeadline: registrationDeadlineDate.toISOString(),
-    };
+    
     createEventMutation.mutate(finalizedValue, {
       onSuccess: () => {
         toast.success("Event created successfully!");

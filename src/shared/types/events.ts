@@ -24,7 +24,7 @@ export default interface Event {
   createdBy?: string;
   createdAt?: string;
   updatedOn?: string;
-  eventMedia?: EventMedia[];
+  eventMedia?: EventMedia[] | string[];
 }
 
 export interface EventResponse {

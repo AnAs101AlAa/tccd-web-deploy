@@ -3,10 +3,10 @@ import {
   InputField,
   TextAreaField,
   DropdownMenu,
-  DatePicker,
   Button,
   SearchField,
-  Checkbox
+  Checkbox,
+  DateTimePicker
 } from "tccd-ui";
 import EVENT_TYPES from "@/constants/EventTypes";
 import type Event from "@/shared/types/events";
@@ -89,12 +89,12 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
           </div>
 
           <div className="space-y-2">
-            <DatePicker
+            <DateTimePicker
               id="date"
               labelClassName="text-[13px] md:text-[14px] xl:text-[15px] text-gray-600 mb-1"
               label="Event Date & Time"
-              value={formValues.date}
-              onChange={(value: string) => handleInputChange("date", value)}
+              value={formValues.date ? new Date(formValues.date).getTime() : null}
+              onChange={(timestamp: number) => handleInputChange("date", timestamp)}
               error={errors.date}
             />
             {errors.date && <p className="px-1 text-xs text-primary">
