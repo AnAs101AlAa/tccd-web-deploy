@@ -6,7 +6,6 @@ import {
     Modal,
     InputField,
     DropdownMenu,
-    TextAreaField,
     NumberField,
 } from "tccd-ui";
 import type { Gender, StudentUser, VolunteeringUser } from "@/shared/types";
@@ -33,7 +32,6 @@ interface EditStudentFormValues {
     gpa: string;
     linkedin?: string;
     cv?: string;
-    experience?: string;
 }
 
 interface FormErrors {
@@ -49,7 +47,6 @@ interface FormErrors {
     gpa?: string;
     linkedin?: string;
     cv?: string;
-    experience?: string;
 }
 
 const genderOptions = [
@@ -116,11 +113,6 @@ const validateField = (field: keyof EditStudentFormValues, value: string): strin
                 return "CV must be a valid URL";
             }
             break;
-        case "experience":
-            if (value.trim().length > 1000) {
-                return "Experience must not exceed 1000 characters";
-            }
-            break;
     }
     return undefined;
 };
@@ -135,11 +127,10 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
         university: user.university,
         faculty: user.faculty,
         department: user.department,
-        graduationYear: user.graduationYear,
-        gpa: user.gpa,
+        graduationYear: user.graduationYear.toString(),
+        gpa: user.gpa.toString(),
         linkedin: user.linkedin,
         cv: user.cv,
-        experience: user.experience,
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
@@ -154,11 +145,10 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
             university: user.university,
             faculty: user.faculty,
             department: user.department,
-            graduationYear: user.graduationYear,
-            gpa: user.gpa,
+            graduationYear: user.graduationYear.toString(),
+            gpa: user.gpa.toString(),
             linkedin: user.linkedin,
             cv: user.cv,
-            experience: user.experience,
         });
     }, [user]);
 
@@ -172,12 +162,12 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
             }
         };
 
-    const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const { value } = event.target;
-        setFormValues((prev) => ({ ...prev, experience: value }));
+    const handleNumberChange = (field: keyof EditStudentFormValues) => (value: string | number) => {
+        const stringValue = String(value);
+        setFormValues((prev) => ({ ...prev, [field]: stringValue }));
 
-        if (errors.experience) {
-            setErrors((prev) => ({ ...prev, experience: undefined }));
+        if (errors[field]) {
+            setErrors((prev) => ({ ...prev, [field]: undefined }));
         }
     };
 
@@ -221,11 +211,10 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
             university: formValues.university.trim(),
             faculty: formValues.faculty.trim(),
             department: formValues.department.trim(),
-            graduationYear: formValues.graduationYear.trim(),
-            gpa: formValues.gpa.trim(),
+            graduationYear: parseInt(formValues.graduationYear.trim(), 10),
+            gpa: parseFloat(formValues.gpa.trim()),
             linkedin: formValues.linkedin?.trim() || undefined,
             cv: formValues.cv?.trim() || undefined,
-            experience: formValues.experience?.trim() || undefined,
         };
 
         onSave(updatedUser);
@@ -320,9 +309,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                             label="Graduation Year"
                             value={formValues.graduationYear}
                             placeholder="Enter graduation year"
-                            onChange={handleInputChange("graduationYear")}
-                            id="graduationYear"
-                            maxLength={4}
+                            onChange={handleNumberChange("graduationYear")}
                             error={errors.graduationYear}
                         />
                     </FormFieldWithError>
@@ -331,9 +318,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                             label="GPA"
                             value={formValues.gpa}
                             placeholder="Enter GPA"
-                            onChange={handleInputChange("gpa")}
-                            id="gpa"
-                            maxLength={4}
+                            onChange={handleNumberChange("gpa")}
                             error={errors.gpa}
                         />
                     </FormFieldWithError>
@@ -358,17 +343,6 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                         />
                     </FormFieldWithError>
                 </div>
-                <FormFieldWithError error={errors.experience}>
-                    <TextAreaField
-                        label="Experience"
-                        value={formValues.experience ?? ""}
-                        placeholder="Write a short summary of your experience"
-                        onChange={handleTextAreaChange}
-                        id="experience"
-                        maxLength={1000}
-                        error={errors.experience}
-                    />
-                </FormFieldWithError>
                 <div className="flex items-center justify-end gap-3">
                     <Button
                         buttonText="Cancel"

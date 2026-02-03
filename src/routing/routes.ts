@@ -29,7 +29,7 @@ export const routes = [
   { path: "/events", Component: EventsPage },
   { path: "/past-events", Component: PastEventsPage },
   { path: "/gallery", Component: GalleryPage },
-  { path: "/profile/:id", Component: ProfilePage },
+  { path: "/profile", Component: ProfilePage },
   { path: "/gallery/view/:id", Component: GalleryDisplayPage },
   { path: "/tickets/:id", Component: EventTicketPage },
   { path: "/otp", Component: OTPPage },

@@ -12,8 +12,8 @@ export const mockUser: AnyUser = {
   createdAt: "2024-01-01",
   updatedAt: "2024-10-22",
   isDeleted: false,
-  gpa: "3.7",
-  graduationYear: "2025",
+  gpa: 3.7,
+  graduationYear: 2025,
   department: "Computer Engineering",
   faculty: "Engineering",
   university: "Cairo University",
@@ -21,5 +21,4 @@ export const mockUser: AnyUser = {
   cv: undefined,
   linkedin: undefined,
   gitHub: undefined,
-  experience: undefined,
 };

@@ -14,7 +14,7 @@ export const useProfileHeader = (user: AnyUser, isOwnProfile: boolean) => {
   const getBio = () => {
     if (isStudent(user) || isVolunteer(user)) {
       const status =
-        new Date().getFullYear() >= parseInt(user.graduationYear)
+        new Date().getFullYear() >= user.graduationYear
           ? "Graduate of"
           : "Student in";
       return `${status} ${user.university} batch of ${user.graduationYear}`;
