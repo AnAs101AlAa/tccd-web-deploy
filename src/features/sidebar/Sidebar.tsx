@@ -6,7 +6,7 @@ import {
   FiBarChart2,
   FiLogOut,
 } from "react-icons/fi";
-import TCCDLogo from "@/assets/TCCD_logo.svg";
+import TCCDLogo from "/TCCD_logo.svg";
 import { useNavigate, useLocation } from "react-router-dom";
 
 interface SidebarProps {

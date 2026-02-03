@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import FullscreenMediaViewer from "@/shared/components/MediaViewer/MediaViewer";
 import { FaChevronLeft } from "react-icons/fa6";
-import tccdLogo from "@/assets/TCCD_logo.svg";
+import tccdLogo from "/TCCD_logo.svg";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { useGetEventById } from "@/shared/queries/events/eventQueries";

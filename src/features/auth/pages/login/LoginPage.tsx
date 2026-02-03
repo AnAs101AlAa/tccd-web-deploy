@@ -5,7 +5,7 @@ import { loginSchema } from "../../schemas";
 import type { LoginFormData } from "../../schemas";
 import { useAuth } from "../../hooks";
 import { FormInput, SubmitButton } from "../../components";
-import tccdLogo from "@/assets/TCCD_logo.svg";
+import tccdLogo from "/TCCD_logo.svg";
 
 export const LoginPage = () => {
   const { handleLogin, isLoggingIn, isAuthenticated } = useAuth();

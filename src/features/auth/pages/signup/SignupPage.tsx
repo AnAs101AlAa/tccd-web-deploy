@@ -26,7 +26,7 @@ import {
   SubmitButton,
 } from "../../components";
 import { Button } from "tccd-ui";
-import tccdLogo from "@/assets/TCCD_logo.svg";
+import tccdLogo from "/TCCD_logo.svg";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 
