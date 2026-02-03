@@ -101,7 +101,6 @@ export const selectStudentData = createSelector([selectCurrentUser], (user) => {
       cv: user.cv || "",
       linkedin: user.linkedin || "",
       gitHub: user.gitHub || "",
-      experience: user.experience || "",
     };
   }
   return undefined;

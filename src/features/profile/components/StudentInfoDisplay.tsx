@@ -92,13 +92,6 @@ const StudentInfoDisplay: React.FC<StudentInfoDisplayProps> = ({ user }) => {
           </a>
         ),
       },
-      {
-        label: "Experience",
-        value: user.experience,
-        render: (value?: string) => (
-          <span className="text-sm text-contrast leading-relaxed">{value}</span>
-        ),
-      },
     ],
     [user]
   );
@@ -113,7 +106,7 @@ const StudentInfoDisplay: React.FC<StudentInfoDisplayProps> = ({ user }) => {
               key={detail.label}
               icon={detail.icon}
               label={detail.label}
-              value={detail.value!}
+              value={String(detail.value!)}
               truncate={detail.truncate}
             />
           ))}

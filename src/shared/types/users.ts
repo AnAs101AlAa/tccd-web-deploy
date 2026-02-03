@@ -58,15 +58,14 @@ export interface BusinessRepUser extends User {
 }
 
 export interface StudentUser extends User {
-  gpa: string; // e.g., "3.7" or "85%"
-  graduationYear: string;
+  gpa: number;
+  graduationYear: number;
   department: string;
   faculty: string;
   university: string;
   cv?: string; // URL
   linkedin?: string;
   gitHub?: string;
-  experience?: string;
 }
 
 export interface VolunteeringUser extends StudentUser {
