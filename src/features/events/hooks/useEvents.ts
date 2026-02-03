@@ -2,19 +2,20 @@ import {
   useGetAllUpcomingEvents,
   useGetAllPastEvents,
 } from "@/shared/queries/events";
+import type { EventQueryParams } from "@/shared/types";
 
 /**
  * Custom hook to fetch upcoming and past events
  * Returns loading states, error states, and event data
  */
-export const useEvents = () => {
+export const useEvents = (params? : EventQueryParams, dontFilterOnPast?: boolean) => {
   // Fetch upcoming events
   const {
     data: upcomingEvents,
     isLoading: isLoadingUpcoming,
     error: upcomingError,
     refetch: refetchUpcoming,
-  } = useGetAllUpcomingEvents();
+  } = useGetAllUpcomingEvents(params);
 
   // Fetch past events
   const {
@@ -22,7 +23,7 @@ export const useEvents = () => {
     isLoading: isLoadingPast,
     error: pastError,
     refetch: refetchPast,
-  } = useGetAllPastEvents();
+  } = useGetAllPastEvents(dontFilterOnPast ? {PageSize: 6} : params);
 
   // Combined loading state
   const isLoading = isLoadingUpcoming || isLoadingPast;
@@ -38,8 +39,8 @@ export const useEvents = () => {
 
   return {
     // Data
-    upcomingEvents: upcomingEvents || [],
-    pastEvents: pastEvents || [],
+    upcomingEvents: upcomingEvents,
+    pastEvents: pastEvents,
 
     // Loading states
     isLoading,

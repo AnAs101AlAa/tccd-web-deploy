@@ -5,7 +5,7 @@ import { forgotPasswordSchema } from "../../schemas";
 import type { ForgotPasswordFormData } from "../../schemas";
 import { useAuth } from "../../hooks";
 import { FormInput, SubmitButton } from "../../components";
-import tccdLogo from "@/assets/TCCD_logo.svg";
+import tccdLogo from "/TCCD_logo.svg";
 
 /**
  * ForgotPasswordPage Component
@@ -43,7 +43,7 @@ export const ForgotPasswordPage = () => {
 
   // Redirect if already authenticated
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   const onSubmit = async (data: ForgotPasswordFormData) => {

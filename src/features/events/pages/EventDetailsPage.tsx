@@ -1,27 +1,23 @@
 import { ErrorScreen, LoadingPage } from "tccd-ui";
-import { useParams } from "react-router-dom";
-import WithNavbar from "@/shared/components/hoc/WithNavbar";
+import { useParams, useNavigate } from "react-router-dom";
+import WithLayout from "@/shared/components/hoc/WithLayout";
 import EventDetailsPageComponent from "../components/EventDetailsView";
 import { useGetEventById } from "@/shared/queries/events";
 
+
 const EventDetailsPage = () => {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const eventId = id ?? "";
-    const {
-        data: event,
-        error,
-        isLoading,
-    } = useGetEventById(eventId);
+    const { data: event, error, isLoading } = useGetEventById(eventId);
 
     const handleRegister = () => {
         if (!event) return;
-        console.log("Register for event", event.id);
+        navigate(`/events/register/${event.id}`);
     };
 
     if (isLoading) {
-        return (
-            <LoadingPage />
-        );
+        return <LoadingPage />;
     }
 
     if (error || !event) {
@@ -34,14 +30,19 @@ const EventDetailsPage = () => {
     }
 
     return (
-        <WithNavbar>
-            <div className="min-h-screen bg-gray-50 -mb-5 md:mb-0 md:py-10">
-                <div className="mx-auto flex w-full md:w-2/3 lg:w-1/2 flex-col gap-6">
-                    <EventDetailsPageComponent event={event} onRegister={handleRegister} />
+        <WithLayout>
+            <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-0 md:py-6">
+                <div className="mx-auto flex w-full px-0 sm:px-4 md:w-3/4 lg:w-2/3 flex-col gap-6">
+                    <EventDetailsPageComponent
+                        event={event}
+                        onRegister={handleRegister}
+                    />
                 </div>
             </div>
-        </WithNavbar>
+        </WithLayout>
     );
 };
+
+
 
 export default EventDetailsPage;

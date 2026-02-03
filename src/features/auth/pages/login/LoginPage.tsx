@@ -5,7 +5,7 @@ import { loginSchema } from "../../schemas";
 import type { LoginFormData } from "../../schemas";
 import { useAuth } from "../../hooks";
 import { FormInput, SubmitButton } from "../../components";
-import tccdLogo from "@/assets/TCCD_logo.svg";
+import tccdLogo from "/TCCD_logo.svg";
 
 export const LoginPage = () => {
   const { handleLogin, isLoggingIn, isAuthenticated } = useAuth();
@@ -24,9 +24,9 @@ export const LoginPage = () => {
     },
   });
 
-  // Redirect if already authenticated
+  // // Redirect if already authenticated
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   const onSubmit = async (data: LoginFormData) => {
@@ -35,7 +35,7 @@ export const LoginPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-white to-[#f8f6f1] text-[#121212]">
-      <form className="mx-auto grid min-h-screen max-w-7xl place-items-center px-4 pb-16">
+      <div className="mx-auto grid min-h-screen max-w-7xl place-items-center px-4 pb-16">
         <section
           className="w-full max-w-md rounded-2xl border border-black/5 bg-white/80 p-8 shadow-[0_4px_30px_rgba(0,0,0,0.04)] backdrop-blur"
           aria-labelledby="login-title"
@@ -60,7 +60,7 @@ export const LoginPage = () => {
                 placeholder="Enter your email"
                 autoComplete="email"
               />
-
+              <div className="h-1" />
               {/* Password Input */}
               <FormInput
                 name="password"
@@ -71,10 +71,10 @@ export const LoginPage = () => {
                 autoComplete="current-password"
               />
               {/* Forgot Password Link */}
-              <div className="flex justify-end mt-2">
+              <div className="flex justify-end mb-4 mt-1">
                 <Link
                   to="/forgot-password"
-                  className="text-sm font-semibold text-[#515151] hover:text-[#3B3D41] hover:underline transition-colors"
+                  className="text-[12px] md:text-[13px] font-semibold text-[#515151] hover:text-[#3B3D41] hover:underline transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -105,7 +105,7 @@ export const LoginPage = () => {
             </p>
           </footer>
         </section>
-      </form>
+      </div>
     </main>
   );
 };

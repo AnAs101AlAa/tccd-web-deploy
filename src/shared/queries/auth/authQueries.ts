@@ -3,7 +3,13 @@ import { AuthApi } from "./authApi";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
 import { useUserActions } from "@/shared/queries/user/userHooks";
-import type { LoginCredentials, SignupCredentials, ForgotPasswordCredentials } from "./types";
+import type { 
+  LoginCredentials, 
+  StudentSignupCredentials, 
+  BusinessRepSignupCredentials,
+  FacultySignupCredentials,
+  ForgotPasswordCredentials 
+} from "./types";
 import type { AnyUser } from "@/shared/types/users";
 
 export const authKeys = {
@@ -24,6 +30,7 @@ export const useLogin = () => {
     mutationFn: (credentials: LoginCredentials) =>
       authApiInstance.login(credentials),
     onSuccess: (data: AnyUser) => {
+      console.log(data)
       login(data);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Login successful!");
@@ -39,11 +46,11 @@ export const useLogout = () => {
   const { logout } = useUserActions();
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: () => authApiInstance.logout(),
     onSuccess: () => {
+      queryClient.removeQueries({ queryKey: authKeys.all });
       logout();
-      queryClient.clear();
       toast.success("Logged out successfully!");
     },
     onError: (error: unknown) => {
@@ -51,15 +58,59 @@ export const useLogout = () => {
       toast.error(message || "Logout failed. Please try again.");
     },
   });
+
+  return {
+    ...mutation,
+    isLoading: mutation.isPending,
+  };
 };
 
-export const useSignup = () => {
+export const useSignupStudent = () => {
   const { login } = useUserActions();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (credentials: SignupCredentials) =>
-      authApiInstance.signup(credentials),
+    mutationFn: (credentials: StudentSignupCredentials) =>
+      authApiInstance.signupStudent(credentials),
+    onSuccess: (data: AnyUser) => {
+      console.log(data)
+      login(data);
+      queryClient.invalidateQueries({ queryKey: authKeys.all });
+      toast.success("Account created successfully!");
+    },
+    onError: (error: unknown) => {
+      const message = getErrorMessage(error);
+      toast.error(message || "Signup failed. Please try again.");
+    },
+  });
+};
+
+export const useSignupBusinessRep = () => {
+  const { login } = useUserActions();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (credentials: BusinessRepSignupCredentials) =>
+      authApiInstance.signupBusinessRep(credentials),
+    onSuccess: (data: AnyUser) => {
+      login(data);
+      queryClient.invalidateQueries({ queryKey: authKeys.all });
+      toast.success("Account created successfully!");
+    },
+    onError: (error: unknown) => {
+      const message = getErrorMessage(error);
+      toast.error(message || "Signup failed. Please try again.");
+    },
+  });
+};
+
+export const useSignupFaculty = () => {
+  const { login } = useUserActions();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (credentials: FacultySignupCredentials) =>
+      authApiInstance.signupFaculty(credentials),
     onSuccess: (data: AnyUser) => {
       login(data);
       queryClient.invalidateQueries({ queryKey: authKeys.all });

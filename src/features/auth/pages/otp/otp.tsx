@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { verifyOtp, resendOtp } from "../../../../shared/queries/otp/otp";
-import tccdLogo from "@/assets/TCCD_logo.svg";
+import tccdLogo from "/TCCD_logo.svg";
 import toast from "react-hot-toast";
 import { Button } from "tccd-ui";
 import { AiOutlineArrowLeft, AiOutlineLoading3Quarters } from "react-icons/ai";

@@ -1,28 +1,28 @@
 import type { IconType } from "react-icons";
-import { FiHome } from "react-icons/fi";
-import { HiPhoto} from "react-icons/hi2";
-import { MdEvent } from "react-icons/md";
-import { IoInformationCircleOutline } from "react-icons/io5";
+import { MdEventNote } from "react-icons/md";
+import { HiOutlineHome } from "react-icons/hi";
+import { FaRegImages } from "react-icons/fa";
+import { GrCircleQuestion } from "react-icons/gr";
 
 export const NAV_ITEMS: { to: string; icon: IconType; title: string }[] = [
   {
     to: "/",
-    icon: FiHome,
+    icon: HiOutlineHome,
     title: "Home",
   },
   {
     to: "/events",
-    icon: MdEvent,
+    icon: MdEventNote,
     title: "Events",
   },
   {
     to: "/gallery",
-    icon: HiPhoto,
+    icon: FaRegImages,
     title: "Gallery",
   },
   {
     to: "/aboutus",
-    icon: IoInformationCircleOutline,
+    icon: GrCircleQuestion,
     title: "About us",
   },
 ];

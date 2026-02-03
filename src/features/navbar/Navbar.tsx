@@ -3,17 +3,18 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import ProfileAvatar from "./components/ProfileAvatar";
 import ProfileMenu from "./components/ProfileMenu";
-import logo from "@/assets/TCCD_logo.svg";
+import logo from "/TCCD_logo.svg";
 import facultyLogo from "@/assets/faculty.png";
 import universityLogo from "@/assets/university.png";
 import { useAppSelector } from "@/shared/store/hooks";
-import { selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
+import { selectCurrentUser, selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
 
 const Navbar = () => {
   const { pathname } = useLocation();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const userData = useAppSelector(selectCurrentUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  console.log("Is Authenticated:", isAuthenticated);
+  console.log("User Data in Navbar:", userData);
 
   const handleAvatarClick = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -75,11 +76,13 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               <ProfileAvatar
+                userData={userData}
                 isAuthenticated={isAuthenticated}
                 onClick={handleAvatarClick}
               />
 
               <ProfileMenu
+                userData={userData}
                 isOpen={showProfileMenu}
                 onClose={() => {
                   setShowProfileMenu(false);

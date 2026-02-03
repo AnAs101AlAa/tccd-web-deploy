@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, Navigate } from "react-router-dom";
@@ -7,10 +7,12 @@ import {
   basicInfoSchema,
   studentInfoSchema,
   companyRepInfoSchema,
+  facultyInfoSchema,
   type AccountTypeFormData,
   type BasicInfoFormData,
   type StudentInfoFormData,
   type CompanyRepInfoFormData,
+  type FacultyInfoFormData,
   type UserType,
 } from "../../schemas";
 import { useAuth } from "../../hooks";
@@ -19,11 +21,12 @@ import {
   BasicInfoStep,
   StudentInfoStep,
   CompanyRepInfoStep,
+  FacultyInfoStep,
   StepIndicator,
   SubmitButton,
 } from "../../components";
 import { Button } from "tccd-ui";
-import tccdLogo from "@/assets/TCCD_logo.svg";
+import tccdLogo from "/TCCD_logo.svg";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 
@@ -33,7 +36,9 @@ import { FcGoogle } from "react-icons/fc";
 export const SignupPage = () => {
   const { handleSignup, isSigningUp, isAuthenticated } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedUserType, setSelectedUserType] = useState<UserType | undefined>();
+  const [selectedUserType, setSelectedUserType] = useState<
+    UserType | undefined
+  >();
 
   // Step 1: Account Type
   const accountTypeForm = useForm<AccountTypeFormData>({
@@ -52,11 +57,16 @@ export const SignupPage = () => {
       arabicFullName: "",
       phoneNumber: "",
       email: "",
+      gender: undefined,
       linkedinUrl: "",
       password: "",
       confirmPassword: "",
     },
   });
+
+  useEffect(() => {
+    console.log(currentStep, selectedUserType);
+  }, [currentStep, selectedUserType]);
 
   // Step 3: Student Info
   const studentInfoForm = useForm<StudentInfoFormData>({
@@ -66,19 +76,37 @@ export const SignupPage = () => {
       university: "",
       faculty: "",
       department: "",
-      graduationYear: undefined,
     },
   });
 
-  // Step 4: Company Rep Info
+  // Step 3/4: Company Rep Info
   const companyRepForm = useForm<CompanyRepInfoFormData>({
     resolver: zodResolver(companyRepInfoSchema),
     mode: "onChange",
-    defaultValues: { companyId: "" },
+    defaultValues: {
+      companyId: "",
+      position: "",
+      proofFile: null as unknown as File,
+      isNewCompany: false,
+      newCompany: undefined,
+    },
+  });
+
+  // Step 3/4: Faculty Info
+  const facultyInfoForm = useForm<FacultyInfoFormData>({
+    resolver: zodResolver(facultyInfoSchema),
+    mode: "onChange",
+    defaultValues: {
+      universityName: "",
+      facultyName: "",
+      department: "",
+      role: "",
+      proofFile: null as unknown as File,
+    },
   });
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   // Get step labels
@@ -89,6 +117,9 @@ export const SignupPage = () => {
     }
     if (selectedUserType === "company_representative") {
       return [...baseSteps, "Company Info"];
+    }
+    if (selectedUserType === "academic") {
+      return [...baseSteps, "Academic Info"];
     }
     return baseSteps;
   };
@@ -108,6 +139,8 @@ export const SignupPage = () => {
         return studentInfoForm.formState.isValid;
       } else if (selectedUserType === "company_representative") {
         return companyRepForm.formState.isValid;
+      } else if (selectedUserType === "academic") {
+        return facultyInfoForm.formState.isValid;
       }
     }
     return false;
@@ -130,6 +163,8 @@ export const SignupPage = () => {
         isValid = await studentInfoForm.trigger();
       } else if (selectedUserType === "company_representative") {
         isValid = await companyRepForm.trigger();
+      } else if (selectedUserType === "academic") {
+        isValid = await facultyInfoForm.trigger();
       }
     }
 
@@ -143,23 +178,17 @@ export const SignupPage = () => {
   };
 
   const onSubmit = async () => {
-    const accountData = accountTypeForm.getValues();
     const basicData = basicInfoForm.getValues();
-    let additionalData = {};
 
-    if (selectedUserType === "student") {
-      additionalData = studentInfoForm.getValues();
-    } else if (selectedUserType === "company_representative") {
-      additionalData = companyRepForm.getValues();
-    }
-
-    const completeData = {
-      ...accountData,
-      ...basicData,
-      ...additionalData,
-    };
-
-    await handleSignup(completeData);
+    await handleSignup(
+      selectedUserType!,
+      basicData,
+      selectedUserType === "student"
+        ? studentInfoForm.getValues()
+        : selectedUserType === "company_representative"
+        ? companyRepForm.getValues()
+        : facultyInfoForm.getValues()
+    );
   };
 
   const handleGoogleSignIn = () => {
@@ -190,10 +219,10 @@ export const SignupPage = () => {
                 control={accountTypeForm.control}
                 selectedType={accountTypeForm.watch("userType")}
                 onSelect={(type) => {
-                  accountTypeForm.setValue("userType", type, { 
+                  accountTypeForm.setValue("userType", type, {
                     shouldValidate: true,
                     shouldDirty: true,
-                    shouldTouch: true
+                    shouldTouch: true,
                   });
                   setSelectedUserType(type); // Update immediately for step indicator
                 }}
@@ -208,8 +237,13 @@ export const SignupPage = () => {
               <StudentInfoStep control={studentInfoForm.control} />
             )}
 
-            {currentStep === 3 && selectedUserType === "company_representative" && (
-              <CompanyRepInfoStep control={companyRepForm.control} />
+            {currentStep === 3 &&
+              selectedUserType === "company_representative" && (
+                <CompanyRepInfoStep control={companyRepForm.control} />
+              )}
+
+            {currentStep === 3 && selectedUserType === "academic" && (
+              <FacultyInfoStep control={facultyInfoForm.control} />
             )}
           </div>
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import WithNavbar from "@/shared/components/hoc/WithNavbar";
+import WithLayout from "@/shared/components/hoc/WithLayout";
 import EventTicketCard from "../components/EventTicketCard";
 import { mockTickets } from "@/features/profile/mocks/mockTickets";
 import { mockUser } from "@/features/profile/mocks/mockUser";
@@ -15,7 +15,7 @@ const EventTicketPage: React.FC = () => {
 
   if (!ticket) {
     return (
-      <WithNavbar>
+      <WithLayout>
         <div className="min-h-screen bg-background-contrast flex items-center justify-center p-4">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-contrast mb-4">
@@ -32,7 +32,7 @@ const EventTicketPage: React.FC = () => {
             </button>
           </div>
         </div>
-      </WithNavbar>
+      </WithLayout>
     );
   }
 
@@ -46,7 +46,7 @@ const EventTicketPage: React.FC = () => {
   };
 
   return (
-    <WithNavbar>
+    <WithLayout>
       <div className="min-h-screen bg-background-contrast py-4 sm:py-6 md:py-8">
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <button
@@ -60,7 +60,7 @@ const EventTicketPage: React.FC = () => {
           <EventTicketCard ticket={ticket} userDetails={userDetails} />
         </div>
       </div>
-    </WithNavbar>
+    </WithLayout>
   );
 };
 

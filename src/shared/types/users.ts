@@ -32,7 +32,7 @@ interface Entity {
   role: EntityRole;
 }
 
-interface User extends Entity {
+export interface User extends Entity {
   englishFullName: string;
   arabicFullName: string;
   phoneNumber: string;
@@ -58,15 +58,14 @@ export interface BusinessRepUser extends User {
 }
 
 export interface StudentUser extends User {
-  gpa: string; // e.g., "3.7" or "85%"
-  graduationYear: string;
+  gpa: number;
+  graduationYear: number;
   department: string;
   faculty: string;
   university: string;
   cv?: string; // URL
   linkedin?: string;
   gitHub?: string;
-  experience?: string;
 }
 
 export interface VolunteeringUser extends StudentUser {
@@ -91,7 +90,8 @@ export type AnyUser =
   | CompanyUser
   | BusinessRepUser
   | FacultyMemberUser
-  | AdminUser;
+  | AdminUser
+  | User;
 
 /** Guards for Conditional Rendering */
 export const isStudent = (u: AnyUser): u is StudentUser => u.role === "Student";

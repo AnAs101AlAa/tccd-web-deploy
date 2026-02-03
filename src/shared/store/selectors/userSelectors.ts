@@ -101,7 +101,6 @@ export const selectStudentData = createSelector([selectCurrentUser], (user) => {
       cv: user.cv || "",
       linkedin: user.linkedin || "",
       gitHub: user.gitHub || "",
-      experience: user.experience || "",
     };
   }
   return undefined;
@@ -144,7 +143,9 @@ export const selectHasCommitteeAffiliation = createSelector(
  */
 export const selectUserStatus = createSelector(
   [selectCurrentUser],
-  (user) => user?.status
+  (user) => {
+    console.log(user)
+    return user?.status}
 );
 
 /**

@@ -1,14 +1,15 @@
 import { useParams } from "react-router-dom";
 import FullscreenMediaViewer from "@/shared/components/MediaViewer/MediaViewer";
 import { FaChevronLeft } from "react-icons/fa6";
-import tccdLogo from "@/assets/TCCD_logo.svg";
-import { useGetGalleryById } from "@/shared/queries/gallery";
+import tccdLogo from "/TCCD_logo.svg";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import { useGetEventById } from "@/shared/queries/events/eventQueries";
+import { mapEventMediaList } from "../utils/TypeMappingFunction";
+import type { EventMedia } from "@/shared/types";
 export default function GalleryDisplayPage() {
   const { id } = useParams();
-  const { data: galleryData, isLoading, isError } = useGetGalleryById(id || "");
-  console.log(galleryData);
+  const { data: galleryData, isLoading, isError } = useGetEventById(id || "");
 
   useEffect (() => {
     if (isError) {
@@ -28,12 +29,12 @@ export default function GalleryDisplayPage() {
                     <FaChevronLeft className="cursor-pointer size-5" onClick={() => window.history.back()} />
                     <p className="font-bold text-[26px] text-secondary">Event Gallery</p>
                 </div>
-                <p className="text-contrast font-medium text-[14px] md:text-[16px] mt-1">Explore the collection of media from the <span className="font-bold">{galleryData?.eventName}</span> event.</p>
+                <p className="text-contrast font-medium text-[14px] md:text-[16px] mt-1">Explore the collection of media from the <span className="font-bold">{galleryData?.name}</span> event.</p>
             </div>
             <img src={tccdLogo} alt="TCCD Logo" className="md:block hidden h-9 md:mr-6 mr-3" />
         </div>
         {isLoading && <p>Loading...</p>}
-      <FullscreenMediaViewer items={galleryData?.media || []} />
+      <FullscreenMediaViewer items={mapEventMediaList(galleryData?.eventMedia as EventMedia[] || [])} />
     </div>
   );
 }

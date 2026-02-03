@@ -5,12 +5,14 @@ import { useState } from "react";
 import ProfileAvatar from "./components/ProfileAvatar";
 import ProfileMenu from "./components/ProfileMenu";
 import { useAppSelector } from "@/shared/store/hooks";
-import { selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
+import { selectCurrentUser, selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
 
 const MobileNavbar = () => {
   const { pathname } = useLocation();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const userData = useAppSelector(selectCurrentUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  
   const handleAvatarClick = () => {
     if (isAuthenticated) {
       setShowProfileMenu(!showProfileMenu);
@@ -43,15 +45,17 @@ const MobileNavbar = () => {
         );
       })}
 
-      <div className="absolute left-1/2 -translate-x-1/2 -top-2 sm:-top-4">
+      <div className="absolute left-1/2 -translate-x-1/2 top-1">
         {isAuthenticated ? (
           <>
             <ProfileAvatar
+              userData={userData}
               isAuthenticated={isAuthenticated}
               onClick={handleAvatarClick}
             />
 
             <ProfileMenu
+              userData={userData}
               isOpen={showProfileMenu}
               onClose={() => {
                 setShowProfileMenu(false);
@@ -63,6 +67,7 @@ const MobileNavbar = () => {
         ) : (
           <Link to="/login">
             <ProfileAvatar
+              userData={userData}
               isAuthenticated={isAuthenticated}
               onClick={() => {}}
             />
