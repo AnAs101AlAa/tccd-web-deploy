@@ -60,7 +60,7 @@ export const LoginPage = () => {
                 placeholder="Enter your email"
                 autoComplete="email"
               />
-
+              <div className="h-1" />
               {/* Password Input */}
               <FormInput
                 name="password"
@@ -71,10 +71,10 @@ export const LoginPage = () => {
                 autoComplete="current-password"
               />
               {/* Forgot Password Link */}
-              <div className="flex justify-end mt-2">
+              <div className="flex justify-end mb-4 mt-1">
                 <Link
                   to="/forgot-password"
-                  className="text-sm font-semibold text-[#515151] hover:text-[#3B3D41] hover:underline transition-colors"
+                  className="text-[12px] md:text-[13px] font-semibold text-[#515151] hover:text-[#3B3D41] hover:underline transition-colors"
                 >
                   Forgot password?
                 </Link>

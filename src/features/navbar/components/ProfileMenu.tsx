@@ -1,8 +1,9 @@
 import { getProfileMenuItems } from "@/constants/ProfileMenuItems";
 import { useEffect, useRef } from "react";
-import { useAppDispatch } from "@/shared/store/hooks";
-import { clearUser } from "@/shared/store/slices/userSlice";
+import { useAppSelector } from "@/shared/store/hooks";
+import { selectCurrentUser } from "@/shared/store/selectors/userSelectors";
 import { useNavigate } from "react-router-dom";
+import { useLogout } from "@/shared/queries/auth";
 import type { User } from "@/shared/types";
 
 interface ProfileMenuProps {
@@ -21,16 +22,24 @@ const ProfileMenu = ({
   userData,
 }: ProfileMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  
-  const menuItems = getProfileMenuItems(userData);
+  const { mutateAsync: logoutAsync } = useLogout();
+
+  const currentUser = useAppSelector(selectCurrentUser);
+
+  const menuItems = getProfileMenuItems(currentUser);
 
   const handleMenuItemClick = (action?: string) => {
     if (action === "logout") {
-      dispatch(clearUser());
-      navigate("/login");
-      onClose();
+      (async () => {
+        try {
+          await logoutAsync();
+          navigate("/login");
+          onClose();
+        } catch (err) {
+          console.error("Logout failed:", err);
+        }
+      })();
     } else if (action) {
       navigate(action);
       onClose();
@@ -63,33 +72,33 @@ const ProfileMenu = ({
 
   const horizontalPosition =
     position === "top"
-      ? "left-1/2 -translate-x-1/2" 
-      : "right-0"; 
+      ? "left-1/2 -translate-x-1/2"
+      : "right-0";
 
   const triangleHorizontalPosition =
     position === "top"
-      ? "left-1/2 -translate-x-1/2" 
-      : "right-[15px]"; 
+      ? "left-1/2 -translate-x-1/2"
+      : "right-[15px]";
 
   const positionClasses =
     position === "top"
-      ? "bottom-[calc(100%+22px)]" 
-      : "top-[calc(100%+20px)]"; 
+      ? "bottom-[calc(100%+22px)]"
+      : "top-[calc(100%+20px)]";
 
   const triangleStyle =
     position === "top"
       ? {
-          bottom: "-12px",
-          borderLeft: "12px solid transparent",
-          borderRight: "12px solid transparent",
-          borderTop: "12px solid white",
-        }
+        bottom: "-12px",
+        borderLeft: "12px solid transparent",
+        borderRight: "12px solid transparent",
+        borderTop: "12px solid white",
+      }
       : {
-          top: "-12px",
-          borderLeft: "12px solid transparent",
-          borderRight: "12px solid transparent",
-          borderBottom: "12px solid white",
-        };
+        top: "-12px",
+        borderLeft: "12px solid transparent",
+        borderRight: "12px solid transparent",
+        borderBottom: "12px solid white",
+      };
 
   return (
     <div
@@ -126,16 +135,16 @@ const ProfileMenu = ({
                   }`}
                   onClick={() => handleMenuItemClick(item.action)}
                 >
-                    <Icon
-                      size={position === "top" ? 16 : 22}
-                      color={item.iconColor}
-                    />
-                    <h3
-                      className={`text-[12px] md:text-[13px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold`}
-                      style={{ color: item.iconColor }}
-                    >
-                      {item.title}
-                    </h3>
+                  <Icon
+                    size={position === "top" ? 16 : 22}
+                    color={item.iconColor}
+                  />
+                  <h3
+                    className={`text-[12px] md:text-[13px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold`}
+                    style={{ color: item.iconColor }}
+                  >
+                    {item.title}
+                  </h3>
                 </div>
               );
             })}

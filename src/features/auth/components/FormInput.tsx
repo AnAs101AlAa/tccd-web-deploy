@@ -71,11 +71,13 @@ FormInputProps<T>) {
                     onChange={field.onChange}
                     error={error?.message}
                     label={label}
+                    labelClassName="text-[13px] text-contrast/60"
                     id={name}
                   />
                 </div>
               ) : (
                 <InputField
+                  labelClassName="text-[13px] text-contrast/60"
                   label={label}
                   id={inputId}
                   value={field.value || ""}
