@@ -3,12 +3,12 @@ import { AuthApi } from "./authApi";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
 import { useUserActions } from "@/shared/queries/user/userHooks";
-import type { 
-  LoginCredentials, 
-  StudentSignupCredentials, 
+import type {
+  LoginCredentials,
+  StudentSignupCredentials,
   BusinessRepSignupCredentials,
   FacultySignupCredentials,
-  ForgotPasswordCredentials 
+  ForgotPasswordCredentials,
 } from "./types";
 import type { AnyUser } from "@/shared/types/users";
 
@@ -29,8 +29,8 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (credentials: LoginCredentials) =>
       authApiInstance.login(credentials),
-    onSuccess: (data: AnyUser) => {
-      console.log(data)
+    onSuccess: (data: { user: AnyUser; token: string }) => {
+      console.log(data);
       login(data);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Login successful!");
@@ -72,8 +72,8 @@ export const useSignupStudent = () => {
   return useMutation({
     mutationFn: (credentials: StudentSignupCredentials) =>
       authApiInstance.signupStudent(credentials),
-    onSuccess: (data: AnyUser) => {
-      console.log(data)
+    onSuccess: (data: { user: AnyUser; token: string }) => {
+      console.log(data);
       login(data);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Account created successfully!");
@@ -92,7 +92,7 @@ export const useSignupBusinessRep = () => {
   return useMutation({
     mutationFn: (credentials: BusinessRepSignupCredentials) =>
       authApiInstance.signupBusinessRep(credentials),
-    onSuccess: (data: AnyUser) => {
+    onSuccess: (data: { user: AnyUser; token: string }) => {
       login(data);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Account created successfully!");
@@ -111,7 +111,7 @@ export const useSignupFaculty = () => {
   return useMutation({
     mutationFn: (credentials: FacultySignupCredentials) =>
       authApiInstance.signupFaculty(credentials),
-    onSuccess: (data: AnyUser) => {
+    onSuccess: (data: { user: AnyUser; token: string }) => {
       login(data);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Account created successfully!");

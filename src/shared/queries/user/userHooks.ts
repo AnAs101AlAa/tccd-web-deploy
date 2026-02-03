@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
+import { useAppDispatch, useAppSelector } from "@/shared/store/hooks";
 import {
   setUser,
   updateUser,
@@ -6,7 +6,7 @@ import {
   setLoading,
   setError,
   clearError,
-} from '@/shared/store/slices';
+} from "@/shared/store/slices";
 import {
   selectCurrentUser,
   selectIsAuthenticated,
@@ -18,27 +18,27 @@ import {
   selectIsAdmin,
   selectIsTA,
   selectIsDR,
-} from '@/shared/store/selectors';
-import type { AnyUser } from '@/shared/types/users';
+} from "@/shared/store/selectors";
+import type { AnyUser } from "@/shared/types/users";
 
 /**
  * Custom Redux Hooks for User Domain
- * 
+ *
  * These hooks provide convenient access to user state and actions
  * without needing to use useAppSelector and useAppDispatch directly.
- * 
+ *
  * BENEFITS:
  * - Cleaner component code
  * - Consistent API across components
  * - Easy to test and mock
  * - Encapsulates Redux implementation details
- * 
+ *
  * USAGE:
  * Instead of:
  *   const dispatch = useAppDispatch();
  *   const user = useAppSelector(selectCurrentUser);
  *   dispatch(setUser(userData));
- * 
+ *
  * Use:
  *   const user = useCurrentUser();
  *   const { login } = useUserActions();
@@ -127,21 +127,21 @@ export const useIsDR = () => {
 
 /**
  * Hook to get user-related actions
- * 
+ *
  * Returns an object with functions to manipulate user state.
  * This encapsulates the dispatch calls and provides a clean API.
- * 
+ *
  * @returns Object with user action functions
- * 
+ *
  * @example
  * const { login, logout, update } = useUserActions();
- * 
+ *
  * // Login
  * login(userData);
- * 
+ *
  * // Logout
  * logout();
- * 
+ *
  * // Update profile
  * update({ phoneNumber: '+201234567890' });
  */
@@ -150,11 +150,11 @@ export const useUserActions = () => {
 
   return {
     /**
-     * Login user (set user data and mark as authenticated)
-     * @param user - User data to set
+     * Login user (set user data and token)
+     * @param data - User data and token
      */
-    login: (user: AnyUser) => {
-      dispatch(setUser(user));
+    login: (data: { user: AnyUser; token: string }) => {
+      dispatch(setUser(data));
     },
 
     /**
@@ -199,12 +199,12 @@ export const useUserActions = () => {
 
 /**
  * Hook for complete user state
- * 
+ *
  * Returns an object with all user state and actions.
  * Useful when you need everything in one place.
- * 
+ *
  * @returns Object with user state and actions
- * 
+ *
  * @example
  * const {
  *   user,
@@ -215,11 +215,11 @@ export const useUserActions = () => {
  *   isStudent,
  *   actions
  * } = useUser();
- * 
+ *
  * if (isLoading) return <Spinner />;
  * if (error) return <Error message={error} />;
  * if (!isAuthenticated) return <Login onLogin={actions.login} />;
- * 
+ *
  * return <Profile user={user} onUpdate={actions.update} />;
  */
 export const useUser = () => {
@@ -252,17 +252,17 @@ export const useUser = () => {
 
 /**
  * USAGE EXAMPLES:
- * 
+ *
  * 1. Simple component needing just user data:
- * 
+ *
  * function UserGreeting() {
  *   const user = useCurrentUser();
  *   if (!user) return null;
  *   return <h1>Welcome, {user.englishFullName}!</h1>;
  * }
- * 
+ *
  * 2. Component needing authentication check:
- * 
+ *
  * function ProtectedContent() {
  *   const isAuthenticated = useIsAuthenticated();
  *   if (!isAuthenticated) {
@@ -270,12 +270,12 @@ export const useUser = () => {
  *   }
  *   return <SensitiveData />;
  * }
- * 
+ *
  * 3. Component needing user actions:
- * 
+ *
  * function LoginForm() {
  *   const { login, setLoading, setError } = useUserActions();
- *   
+ *
  *   const handleSubmit = async (credentials) => {
  *     try {
  *       setLoading(true);
@@ -287,12 +287,12 @@ export const useUser = () => {
  *       setLoading(false);
  *     }
  *   };
- *   
+ *
  *   return <form onSubmit={handleSubmit}>...</form>;
  * }
- * 
+ *
  * 4. Component needing everything:
- * 
+ *
  * function Dashboard() {
  *   const {
  *     user,
@@ -302,11 +302,11 @@ export const useUser = () => {
  *     isStudent,
  *     actions
  *   } = useUser();
- *   
+ *
  *   if (isLoading) return <Spinner />;
  *   if (error) return <ErrorMessage message={error} onDismiss={actions.clearError} />;
  *   if (!isAuthenticated) return <Navigate to="/login" />;
- *   
+ *
  *   return (
  *     <div>
  *       <UserProfile user={user!} onUpdate={actions.update} />
@@ -315,13 +315,13 @@ export const useUser = () => {
  *     </div>
  *   );
  * }
- * 
+ *
  * 5. Role-based rendering:
- * 
+ *
  * function FeatureAccess() {
  *   const isAdmin = useIsAdmin();
  *   const isStudent = useIsStudent();
- *   
+ *
  *   return (
  *     <div>
  *       {isAdmin && <AdminPanel />}
@@ -333,18 +333,18 @@ export const useUser = () => {
 
 /**
  * TESTING NOTES:
- * 
+ *
  * These hooks are easy to test with custom providers:
- * 
+ *
  * import { renderHook } from '@testing-library/react';
  * import { Provider } from 'react-redux';
  * import { store } from '@/shared/store';
- * 
+ *
  * test('useCurrentUser returns user data', () => {
  *   const wrapper = ({ children }) => (
  *     <Provider store={store}>{children}</Provider>
  *   );
- *   
+ *
  *   const { result } = renderHook(() => useCurrentUser(), { wrapper });
  *   expect(result.current).toBeDefined();
  * });

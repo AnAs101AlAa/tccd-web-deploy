@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { Modal, Button, ButtonTypes, ButtonWidths } from "tccd-ui";
-import { useDeleteLocation } from "@/shared/queries/admin";
 import type { Location } from "@/shared/queries/admin";
 import toast from "react-hot-toast";
 import { FaExclamationTriangle } from "react-icons/fa";
@@ -9,6 +9,7 @@ interface DeleteLocationConfirmationProps {
   location: Location;
   isOpen: boolean;
   onClose: () => void;
+  onConfirm: () => Promise<void> | void;
 }
 
 /**
@@ -20,17 +21,21 @@ const DeleteLocationConfirmation: React.FC<DeleteLocationConfirmationProps> = ({
   location,
   isOpen,
   onClose,
+  onConfirm,
 }) => {
-  const deleteLocationMutation = useDeleteLocation();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     try {
-      await deleteLocationMutation.mutateAsync(location.id);
+      setIsDeleting(true);
+      await onConfirm();
       toast.success(`${location.name} has been deleted successfully`);
       onClose();
     } catch (error) {
       console.error("Error deleting location:", error);
       toast.error(getErrorMessage(error));
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -106,18 +111,14 @@ const DeleteLocationConfirmation: React.FC<DeleteLocationConfirmationProps> = ({
             onClick={onClose}
             type={ButtonTypes.SECONDARY}
             width={ButtonWidths.AUTO}
-            disabled={deleteLocationMutation.isPending}
+            disabled={isDeleting}
           />
           <Button
-            buttonText={
-              deleteLocationMutation.isPending
-                ? "Deleting..."
-                : "Delete Location"
-            }
+            buttonText={isDeleting ? "Deleting..." : "Delete Location"}
             onClick={handleDelete}
             type={ButtonTypes.DANGER}
             width={ButtonWidths.AUTO}
-            disabled={deleteLocationMutation.isPending}
+            disabled={isDeleting}
           />
         </div>
       </div>

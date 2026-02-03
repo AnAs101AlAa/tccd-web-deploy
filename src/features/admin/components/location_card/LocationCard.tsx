@@ -1,27 +1,40 @@
-import { useState } from "react";
-import { LazyImageLoader } from "tccd-ui";
+import { useState, useEffect } from "react";
 import { FaEdit, FaTrash, FaMapMarkerAlt, FaUsers } from "react-icons/fa";
 import type { Location } from "@/shared/queries/admin";
 import EditLocationModal from "./EditLocationModal";
 import DeleteLocationConfirmation from "./DeleteLocationConfirmation";
+import roomFallback from "@/assets/room.png";
 
 interface LocationCardProps {
   location: Location;
+  onDelete?: (id: string) => void;
 }
 
-/**
- * LocationCard Component
- * Reusable component for displaying location entities with edit/delete capabilities.
- * Features:
- * - Fixed 16:9 aspect ratio with object-fit: cover for responsive image handling
- * - Placeholder support for missing images
- * - Distinctive action buttons (Edit in blue, Delete in red/warning color)
- * - Fully responsive design (mobile-first approach)
- * - Accessibility support with ARIA labels
- */
-const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
+const LocationCard: React.FC<LocationCardProps> = ({ location, onDelete }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [imageSrc, setImageSrc] = useState(
+    `https://drive.google.com/thumbnail?id=${location.roomImage}`,
+  );
+  const [hasError, setHasError] = useState(false);
+
+  // Update image source when location changes
+  // Note: We use a key on LazyImageLoader to reset state, but we also want to ensure
+  // imageSrc is correct if the component is reused without unmounting?
+  // Actually, setting the key on LazyImageLoader is enough to reset its internal state,
+  // but we are managing src externally now.
+  // Better to sync state if location.roomImage changes.
+  useEffect(() => {
+    setImageSrc(`https://drive.google.com/thumbnail?id=${location.roomImage}`);
+    setHasError(false);
+  }, [location.roomImage]);
+
+  const handleImageError = () => {
+    if (!hasError) {
+      setImageSrc(roomFallback);
+      setHasError(true);
+    }
+  };
 
   const handleEditClick = () => {
     setIsEditModalOpen(true);
@@ -31,6 +44,12 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
     setIsDeleteModalOpen(true);
   };
 
+  const handleConfirmDelete = () => {
+    if (onDelete) {
+      onDelete(location.id);
+    }
+    setIsDeleteModalOpen(false);
+  };
 
   return (
     <>
@@ -41,12 +60,13 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
       >
         {/* Image Container - 16:9 Aspect Ratio */}
         <div className="relative w-full aspect-video overflow-hidden bg-gray-200">
-          <LazyImageLoader
-            src={location.image}
+          <img
+            key={location.roomImage} // Ensure re-render on image change
+            src={imageSrc}
             alt={`${location.name} venue`}
-            width="100%"
-            height="100%"
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+            onError={handleImageError}
           />
 
           {/* Gradient Overlay - Visible on Hover */}
@@ -154,6 +174,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
           location={location}
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </>

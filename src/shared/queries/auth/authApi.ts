@@ -6,15 +6,26 @@ import type {
   FacultySignupCredentials,
   ForgotPasswordCredentials,
 } from "./types";
-import type { AnyUser, StudentUser, VolunteeringUser, BusinessRepUser, FacultyMemberUser, AdminUser } from "@/shared/types/users";
+import type {
+  AnyUser,
+  StudentUser,
+  VolunteeringUser,
+  BusinessRepUser,
+  FacultyMemberUser,
+  AdminUser,
+} from "@/shared/types/users";
 
 const AUTH_ROUTE = "/v1/Auth/";
 
 export class AuthApi {
-  async login(credentials: LoginCredentials): Promise<AnyUser> {
+  async login(
+    credentials: LoginCredentials,
+  ): Promise<{ user: AnyUser; token: string }> {
     const { data } = await systemApi.post(AUTH_ROUTE + "login", credentials);
     const response = data.data;
-    
+
+    const token = response.token || response.jwToken || ""; // Adjust field name if needed
+
     // Map API response to our user types
     const baseUser = {
       id: response.id,
@@ -29,24 +40,23 @@ export class AuthApi {
       updatedAt: new Date().toISOString(),
       isDeleted: false,
     };
-    
+
     const roles = response.roles || [];
-    
+    let user: AnyUser;
+
     // Map based on role and available profile data
     if (roles.includes("Admin")) {
-      return {
+      user = {
         ...baseUser,
         role: "Admin" as const,
         adminLevel: 1,
       } as AdminUser;
-    }
-    
-    if (response.studentProfile) {
+    } else if (response.studentProfile) {
       const student = response.studentProfile;
-      
+
       // Check if they're also a volunteer
       if (student.volunteeringProfile) {
-        return {
+        user = {
           ...baseUser,
           role: "Volunteer" as const,
           gpa: student.gpa,
@@ -57,53 +67,56 @@ export class AuthApi {
           cv: student.cv,
           linkedin: student.linkedIn,
           gitHub: student.gitHub,
-          committeeAffiliation: student.volunteeringProfile.committeeAffiliation,
+          committeeAffiliation:
+            student.volunteeringProfile.committeeAffiliation,
           position: student.volunteeringProfile.position,
         } as VolunteeringUser;
+      } else {
+        user = {
+          ...baseUser,
+          role: "Student" as const,
+          gpa: student.gpa,
+          graduationYear: student.graduationYear,
+          department: student.department,
+          faculty: student.faculty,
+          university: student.university,
+          cv: student.cv,
+          linkedin: student.linkedIn,
+          gitHub: student.gitHub,
+        } as StudentUser;
       }
-      
-      return {
-        ...baseUser,
-        role: "Student" as const,
-        gpa: student.gpa,
-        graduationYear: student.graduationYear,
-        department: student.department,
-        faculty: student.faculty,
-        university: student.university,
-        cv: student.cv,
-        linkedin: student.linkedIn,
-        gitHub: student.gitHub,
-      } as StudentUser;
-    }
-    
-    if (response.businessRepProfile) {
-      return {
+    } else if (response.businessRepProfile) {
+      user = {
         ...baseUser,
         role: "BusinessRep" as const,
         companyId: "", // Not provided in login response
         jobTitle: response.businessRepProfile.position,
       } as BusinessRepUser;
-    }
-    
-    if (response.facultyMemberProfile) {
+    } else if (response.facultyMemberProfile) {
       const faculty = response.facultyMemberProfile;
-      const facultyRole = roles.includes("TA") ? "TA" : roles.includes("DR") ? "DR" : "TA";
-      
-      return {
+      const facultyRole = roles.includes("TA")
+        ? "TA"
+        : roles.includes("DR")
+          ? "DR"
+          : "TA";
+
+      user = {
         ...baseUser,
         role: facultyRole as "TA" | "DR",
         university: faculty.universityName,
         faculty: faculty.facultyName,
         department: faculty.department,
       } as FacultyMemberUser;
+    } else {
+      // Default to admin if no profile matches
+      user = {
+        ...baseUser,
+        role: "Admin" as const,
+        adminLevel: 1,
+      } as AdminUser;
     }
-    
-    // Default to admin if no profile matches
-    return {
-      ...baseUser,
-      role: "Admin" as const,
-      adminLevel: 1,
-    } as AdminUser;
+
+    return { user, token };
   }
 
   async logout() {
@@ -114,9 +127,11 @@ export class AuthApi {
   async signupStudent(credentials: StudentSignupCredentials) {
     const { data } = await systemApi.post(
       AUTH_ROUTE + "register-student",
-      credentials
+      credentials,
     );
-    return data.data;
+    const response = data.data;
+    const token = response.token || response.jwToken || "";
+    return { user: response as AnyUser, token };
   }
 
   async signupBusinessRep(credentials: BusinessRepSignupCredentials) {
@@ -142,15 +157,15 @@ export class AuthApi {
     if (credentials.newCompany) {
       formData.append(
         "newCompany.companyName",
-        credentials.newCompany.companyName
+        credentials.newCompany.companyName,
       );
       formData.append(
         "newCompany.businessType",
-        credentials.newCompany.businessType
+        credentials.newCompany.businessType,
       );
       formData.append(
         "newCompany.description",
-        credentials.newCompany.description
+        credentials.newCompany.description,
       );
       formData.append("newCompany.website", credentials.newCompany.website);
       formData.append("newCompany.brief", credentials.newCompany.brief);
@@ -165,9 +180,11 @@ export class AuthApi {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
-    return data.data;
+    const response = data.data;
+    const token = response.token || response.jwToken || "";
+    return { user: response as AnyUser, token };
   }
 
   async signupFaculty(credentials: FacultySignupCredentials) {
@@ -193,15 +210,17 @@ export class AuthApi {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
-    return data.data;
+    const response = data.data;
+    const token = response.token || response.jwToken || "";
+    return { user: response as AnyUser, token };
   }
 
   async forgotPassword(credentials: ForgotPasswordCredentials) {
     const { data } = await systemApi.post(
       AUTH_ROUTE + "forgot-password",
-      credentials
+      credentials,
     );
     return data;
   }

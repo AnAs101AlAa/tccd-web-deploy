@@ -20,21 +20,9 @@ const capacitySchema = z
   .max(100000, "Capacity seems unrealistic (max 100,000)");
 
 /**
- * Schema for base64 image validation
+ * Schema for room image ID validation (Google Drive ID)
  */
-const base64ImageSchema = z
-  .string()
-  .min(1, "Image is required")
-  .refine(
-    (value) => {
-      // Check if it's a valid base64 data URL
-      const base64Regex = /^data:image\/(png|jpg|jpeg|gif|webp|svg\+xml);base64,/;
-      return base64Regex.test(value);
-    },
-    {
-      message: "Invalid image format. Please upload a valid image file.",
-    }
-  );
+const roomImageSchema = z.string().trim().min(1, "Image ID is required");
 
 /**
  * Schema for address validation (optional)
@@ -50,7 +38,7 @@ const addressSchema = z
     },
     {
       message: "Please provide a complete address",
-    }
+    },
   );
 
 /**
@@ -67,7 +55,7 @@ const descriptionSchema = z
     },
     {
       message: "Description should be at least 10 characters",
-    }
+    },
   )
   .refine(
     (value) => {
@@ -76,7 +64,7 @@ const descriptionSchema = z
     },
     {
       message: "Description must not exceed 500 characters",
-    }
+    },
   );
 
 /**
@@ -92,7 +80,7 @@ const descriptionSchema = z
 export const editLocationSchema = z.object({
   name: locationNameSchema,
   capacity: capacitySchema,
-  image: base64ImageSchema,
+  roomImage: roomImageSchema,
   address: addressSchema,
   description: descriptionSchema,
 });

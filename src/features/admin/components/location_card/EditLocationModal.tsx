@@ -16,7 +16,6 @@ import {
   editLocationSchema,
   type EditLocationFormData,
 } from "@/features/admin/schemas";
-import ImageUpload from "@/shared/components/ImageUpload";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
 
@@ -41,7 +40,6 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
   const {
     control,
     handleSubmit,
-    setValue,
     watch,
     reset,
     formState: { errors },
@@ -50,13 +48,12 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
     defaultValues: {
       name: location.name,
       capacity: location.capacity,
-      image: location.image,
+      roomImage: location.roomImage,
       address: location.address || "",
       description: location.description || "",
     },
   });
 
-  const imageValue = watch("image");
   const descriptionValue = watch("description");
 
   // Reset form when location changes
@@ -64,7 +61,7 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
     reset({
       name: location.name,
       capacity: location.capacity,
-      image: location.image,
+      roomImage: location.roomImage,
       address: location.address || "",
       description: location.description || "",
     });
@@ -77,7 +74,7 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
         payload: {
           name: data.name.trim(),
           capacity: data.capacity,
-          image: data.image,
+          roomImage: data.roomImage,
           address: data.address?.trim() || undefined,
           description: data.description?.trim() || undefined,
         },
@@ -133,7 +130,9 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
               <NumberField
                 label="Capacity"
                 value={field.value?.toString() || ""}
-                onChange={(val) => field.onChange(parseInt(val.toString(), 10) || 0)}
+                onChange={(val: string | number) =>
+                  field.onChange(parseInt(val.toString(), 10) || 0)
+                }
                 placeholder="e.g., 500"
                 error={errors.capacity?.message}
               />
@@ -147,14 +146,39 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
         </div>
 
         {/* Image Upload */}
-        <ImageUpload
-          label="Location Image"
-          value={imageValue}
-          onChange={(base64) =>
-            setValue("image", base64, { shouldValidate: true })
-          }
-          error={errors.image?.message}
-        />
+        <div>
+          <Controller
+            name="roomImage"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                label="Google Drive Image ID"
+                id="location-image"
+                value={field.value}
+                onChange={(e: any) => {
+                  const val =
+                    e?.target?.value !== undefined ? e.target.value : e;
+                  // Regex to extract ID from Google Drive URL
+                  // Matches /d/ID or id=ID
+                  const match =
+                    typeof val === "string"
+                      ? val.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+                        val.match(/id=([a-zA-Z0-9_-]+)/)
+                      : null;
+                  const id = match ? match[1] : val;
+                  field.onChange(id);
+                }}
+                placeholder="Paste ID or full Google Drive URL"
+                error={errors.roomImage?.message}
+              />
+            )}
+          />
+          {errors.roomImage && (
+            <p className="text-red-600 text-sm mt-1" role="alert">
+              {errors.roomImage.message}
+            </p>
+          )}
+        </div>
 
         {/* Address */}
         <div>
