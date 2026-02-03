@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import ProfileAvatar from "./components/ProfileAvatar";
 import ProfileMenu from "./components/ProfileMenu";
-import logo from "@/assets/TCCD_logo.svg";
+import logo from "/TCCD_logo.svg";
 import facultyLogo from "@/assets/faculty.png";
 import universityLogo from "@/assets/university.png";
 import { useAppSelector } from "@/shared/store/hooks";

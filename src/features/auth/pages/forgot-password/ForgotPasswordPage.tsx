@@ -5,7 +5,7 @@ import { forgotPasswordSchema } from "../../schemas";
 import type { ForgotPasswordFormData } from "../../schemas";
 import { useAuth } from "../../hooks";
 import { FormInput, SubmitButton } from "../../components";
-import tccdLogo from "@/assets/TCCD_logo.svg";
+import tccdLogo from "/TCCD_logo.svg";
 
 /**
  * ForgotPasswordPage Component
