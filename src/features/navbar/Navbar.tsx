@@ -82,7 +82,6 @@ const Navbar = () => {
               />
 
               <ProfileMenu
-                userData={userData}
                 isOpen={showProfileMenu}
                 onClose={() => {
                   setShowProfileMenu(false);

@@ -27,7 +27,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <WithLayout>
-      <div className="min-h-screen bg-background-contrast -mb-5 md:mb-0">
+      <div className="min-h-screen bg-background-contrast pb-8 -mb-5">
         <ProfileContainer user={currentUser} isOwnProfile={isOwnProfile} />
       </div>
     </WithLayout>

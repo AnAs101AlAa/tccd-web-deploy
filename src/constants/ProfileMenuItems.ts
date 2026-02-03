@@ -1,5 +1,5 @@
 import type { IconType } from "react-icons";
-import { HiOutlineUser } from "react-icons/hi2";
+import { FaRegUser } from "react-icons/fa";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { MdDashboard, MdPostAdd } from "react-icons/md";
@@ -20,9 +20,9 @@ export const getProfileMenuItems = (
   if (!user) return [];
   const menuItems: ProfileMenuItem[] = [];
   menuItems.push({
-    icon: HiOutlineUser,
+    icon: FaRegUser,
     title: "Profile",
-    iconColor: "#4A4A4A",
+    iconColor: "var(--color-contrast)",
     action: "/profile",
   });
   
@@ -30,7 +30,7 @@ export const getProfileMenuItems = (
     menuItems.push({
       icon: MdDashboard,
       title: "Admin dashboard",
-      iconColor: "#4A4A4A",
+      iconColor: "var(--color-contrast)",
       action: "/admin/events",
     });
   }
@@ -39,7 +39,7 @@ export const getProfileMenuItems = (
     menuItems.push({
       icon: MdPostAdd,
       title: "Manage posts",
-      iconColor: "#4A4A4A",
+      iconColor: "var(--color-contrast)",
       action: "/manage-posts",
     });
   }
@@ -56,7 +56,7 @@ export const getProfileMenuItems = (
   menuItems.push({
     icon: BiMessageSquareDetail,
     title: "Help & support",
-    iconColor: "#4A4A4A",
+    iconColor: "var(--color-contrast)",
     action: "/support",
   });
 
