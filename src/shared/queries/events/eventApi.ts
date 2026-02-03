@@ -7,12 +7,16 @@ const EVENT_ROUTE = "/v1/Event";
 const SPONSOR_ROUTE = "/v1/Sponsors";
 
 export class EventApi {
-  async getAllUpcomingEvents(params?: EventQueryParams): Promise<EventResponse> {
+  async getAllUpcomingEvents(
+    params?: EventQueryParams,
+  ): Promise<EventResponse> {
     if (params?.StartDate) {
       const startDateTime = new Date(params.StartDate);
       const now = new Date();
       if (startDateTime < now) {
-        throw new Error("Start date cannot be in the past, Please head to the past events section.");
+        throw new Error(
+          "Start date cannot be in the past, Please head to the past events section.",
+        );
       }
     } else {
       params = { ...params, StartDate: new Date().toISOString() };
@@ -23,89 +27,24 @@ export class EventApi {
     return response.data.data;
   }
 
-  async getAllPastEvents(
-    pageNumber: number = 1,
-    pageSize: number = 12,
-    filters?: {
-      searchQuery?: string;
-      eventTypes?: string[];
-      startDate?: string;
-      endDate?: string;
-      orderBy?: string;
-      descending?: boolean;
+  async getAllPastEvents(params?: EventQueryParams): Promise<EventResponse> {
+    if (params?.EndDate) {
+      const endDateTime = new Date(params.EndDate);
+      const now = new Date();
+      if (endDateTime > now) {
+        throw new Error("End date cannot be in the future, Please head to the upcoming events section.");
+      }
+    } else {
+      params = { ...params, StartDate: new Date().toISOString() };
     }
-  ) {
-    const currentDate = new Date();
-    const currentDateISO = currentDate.toISOString();
-    
-    const params: any = {
-      EndDate: filters?.endDate || currentDateISO,
-      OrderBy: filters?.orderBy || "Date",
-      Descending: filters?.descending !== undefined ? filters.descending : true,
-      PageNumber: pageNumber,
-      PageSize: pageSize,
-    };
-
-    if (filters?.searchQuery) {
-      params.Name = filters.searchQuery;
-    }
-
-    if (filters?.eventTypes && filters.eventTypes.length > 0) {
-      params.Type = filters.eventTypes.join(',');
-    }
-
-    if (filters?.startDate) {
-      params.StartDate = filters.startDate;
-    }
-    
-    const response = await systemApi.get(
-      EVENT_ROUTE,
-      { params }
-    );
-
-    // Map API response to Event type and return pagination data
-    if (response.data.success && response.data.data) {
-      const { items, pageIndex, pageSize, totalCount, totalPages, hasPreviousPage, hasNextPage } = response.data.data;
-      return {
-        events: items.map((item: any): Event => ({
-          id: item.id,
-          name: item.name,
-          description: item.description,
-          eventImage: item.eventImage || "",
-          type: item.type,
-          date: item.date,
-          location: item.location,
-          isApproved: item.isApproved,
-          capacity: item.capacity,
-          attendeeCount: item.attendeeCount,
-          registrationDeadline: item.registrationDeadline,
-          createdBy: item.createdBy,
-          createdAt: item.createdAt,
-          updatedOn: item.updatedOn,
-        })),
-        pageIndex,
-        pageSize,
-        totalCount,
-        totalPages,
-        hasPreviousPage,
-        hasNextPage,
-      };
-    }
-    
-    return {
-      events: [],
-      pageIndex: 1,
-      pageSize: pageSize,
-      totalCount: 0,
-      totalPages: 0,
-      hasPreviousPage: false,
-      hasNextPage: false,
-    };
+    const response = await systemApi.get(`${EVENT_ROUTE}`, {
+      params,
+    });
+    return response.data.data;
   }
 
   async getEventById(id: string): Promise<Event> {
     const response = await systemApi.get(`${EVENT_ROUTE}/${id}`);
-    
     if (response.data.success && response.data.data) {
       const item = response.data.data;
       return {
@@ -125,25 +64,29 @@ export class EventApi {
         updatedOn: item.updatedOn,
       };
     }
-    
+
     throw new Error("Event not found");
   }
 
   async getSponsorsByEventId(eventId: string): Promise<Sponsor[]> {
-    const response = await systemApi.get(`${SPONSOR_ROUTE}/sponsor/${eventId}/companies`);
-    
+    const response = await systemApi.get(
+      `${SPONSOR_ROUTE}/sponsor/${eventId}/companies`,
+    );
+
     if (response.data.success && response.data.data) {
-      return response.data.data.map((item: any): Sponsor => ({
-        id: item.id,
-        companyName: item.companyName,
-        businessType: item.businessType,
-        description: item.description,
-        website: item.website,
-        brief: item.brief,
-        logo: item.logo,
-      }));
+      return response.data.data.map(
+        (item: any): Sponsor => ({
+          id: item.id,
+          companyName: item.companyName,
+          businessType: item.businessType,
+          description: item.description,
+          website: item.website,
+          brief: item.brief,
+          logo: item.logo,
+        }),
+      );
     }
-    
+
     return [];
   }
 }

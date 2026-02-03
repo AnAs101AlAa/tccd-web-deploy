@@ -96,9 +96,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           {/* Logo / Brand Area */}
           <div className="px-6 pb-8 flex justify-center">
             <img
+              onClick={() => navigate("/")}
               src={TCCDLogo}
               alt="TCCD Logo"
-              className="h-9 md:h-10 w-auto object-contain"
+              className="h-9 md:h-10 w-auto object-contain cursor-pointer"
             />
           </div>
 

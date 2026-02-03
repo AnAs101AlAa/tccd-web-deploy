@@ -13,16 +13,18 @@ export default interface Event {
   name: string;
   description: string;
   date: string;
-  location: string;
+  locations: string[];
   isApproved: boolean;
   type: EventTypes;
   attendeeCount: number;
+  registeredCount: number;
   capacity: number;
   eventImage: string;
   registrationDeadline: string;
-  createdBy: string;
-  createdAt: string;
-  updatedOn: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedOn?: string;
+  eventMedia?: EventMedia[] | string[];
 }
 
 export interface EventResponse {
@@ -35,12 +37,20 @@ export interface EventResponse {
   hasNextPage: boolean;
 }
 
+export interface EventMedia {
+  id: string;
+  eventId: string;
+  mediaUrl: string;
+  isApproved: boolean;
+  createdBy: string;
+}
+
 export interface EventQueryParams {
   Name?: string;
   Type?: EventTypes;
   StartDate?: string;
   EndDate?: string;
-  Location?: string;
+  Locations?: string[];
   OrderBy?: EventOrderBy;
   Descending?: boolean;
   PageNumber?: number;

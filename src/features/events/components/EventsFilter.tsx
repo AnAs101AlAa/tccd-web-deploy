@@ -30,7 +30,7 @@ export interface EventsFilterProps {
 const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [tempSelectedParams, setTempSelectedParams] =
-    useState<EventQueryParams>(searchParams);
+    useState<EventQueryParams>({...searchParams, PageNumber: 1});
 
   useEffect(() => {
     setTempSelectedParams(searchParams);

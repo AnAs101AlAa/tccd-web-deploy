@@ -8,7 +8,7 @@ import type Event from "@/shared/types/events";
 import type { EventQueryParams } from "@/shared/types/events";
 import { LoadingPage, ErrorScreen } from "tccd-ui";
 import { useGetAllPastEvents } from "@/shared/queries/events";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 const PastEventsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,12 +17,7 @@ const PastEventsPage = () => {
 
   const currentDate = new Date();
   const todayFormatted = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
-  const [searchParams, setSearchParams] = useState<EventQueryParams>({
-    EndDate: currentDate.toISOString(),
-    OrderBy: "Date",
-    Descending: true,
-  });
-
+  
   // Detect screen size
   useEffect(() => {
     const checkMobile = () => {
@@ -33,21 +28,16 @@ const PastEventsPage = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const pageSize = isMobile ? 6 : 12;
+  const [searchParams, setSearchParams] = useState<EventQueryParams>({
+    EndDate: currentDate.toISOString(),
+    OrderBy: "Date",
+    Descending: true,
+    PageSize: isMobile ? 6 : 12
+  });
 
-  // Convert EventQueryParams to the format expected by getAllPastEvents
-  const filters = useMemo(() => ({
-    searchQuery: searchParams.Name,
-    eventTypes: searchParams.Type ? [searchParams.Type] : undefined,
-    startDate: searchParams.StartDate,
-    endDate: searchParams.EndDate,
-    orderBy: searchParams.OrderBy,
-    descending: searchParams.Descending,
-  }), [searchParams.Name, searchParams.Type, searchParams.StartDate, searchParams.EndDate, searchParams.OrderBy, searchParams.Descending]);
+  const { data, isLoading, error, refetch } = useGetAllPastEvents(searchParams);
 
-  const { data, isLoading, error, refetch } = useGetAllPastEvents(currentPage, pageSize, filters);
-
-  const apiPastEvents = data?.events || [];
+  const apiPastEvents = data?.items || [];
   const totalPages = data?.totalPages || 0;
 
   useEffect(() => {
@@ -97,7 +87,7 @@ const PastEventsPage = () => {
           subtitle="Explore memorable moments from our previous events"
         />
 
-        <main className="w-[96%] md:w-[94%] lg:w-[88%] xl:w-[80%] mx-auto py-2 md:py-5">
+        <main className="w-[97%] md:w-[96%] lg:w-[92%] xl:w-[84%] mx-auto py-2 md:py-5">
           <section className="mb-16">
             <div className="mb-6 bg-white shadow-lg p-3 pb-2 rounded-lg border-b-4 border-secondary">
               <EventsFilter
@@ -123,7 +113,7 @@ const PastEventsPage = () => {
                   items={apiPastEvents}
                   emptyMessage="No past events found. Try adjusting your filters."
                   renderCard={(event: Event) => <PastEventCard event={event} />}
-                  gridCols="grid-cols-1 md:grid-cols-2"
+                  gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                   getKey={(event: Event) => event.id}
                 />
 
