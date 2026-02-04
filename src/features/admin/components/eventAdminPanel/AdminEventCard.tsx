@@ -1,4 +1,5 @@
 import type Event from "@/shared/types/events";
+import { useNavigate } from "react-router-dom";
 import { Button, LazyImageLoader } from "tccd-ui";
 import Format from "@/shared/utils/dateFormater";
 import { MdCalendarMonth, MdGroups } from "react-icons/md";
@@ -13,9 +14,10 @@ export default function AdminEventCard({
   onDelete: () => void;
   event: Event;
 }) {
-
+  const navigate = useNavigate();
   return (
     <div
+      onClick={() => navigate(`/events/${event.id}`)}
       className={`relative flex flex-col items-start m-auto gap-1 lg:gap-2 border-1 border-contrast/13 rounded-lg py-2 px-3 md:p-3 w-full h-full cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out`}
     >
       <span className="absolute w-fit md:top-5 top-4 left-4 md:left-5 text-white text-xs px-3 py-1 z-20 rounded-2xl bg-secondary">
@@ -31,7 +33,7 @@ export default function AdminEventCard({
       </div>
       <hr className="w-full border border-gray-200" />
       <div className="flex items-center justify-between">
-        <p className="font-bold leading-8 text-[20px] md:text-[22px] lg:text-[24px] xl:text-[26px]">
+        <p className="font-bold leading-8 text-[22px] md:text-[24px] lg:text-[27px] mb-1">
           {event.name}
         </p>
       </div>
