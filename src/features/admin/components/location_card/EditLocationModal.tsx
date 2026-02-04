@@ -5,7 +5,6 @@ import {
   Modal,
   InputField,
   NumberField,
-  TextAreaField,
   Button,
   ButtonTypes,
   ButtonWidths,
@@ -40,7 +39,6 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
   const {
     control,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm<EditLocationFormData>({
@@ -48,22 +46,14 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
     defaultValues: {
       name: location.name,
       capacity: location.capacity,
-      roomImage: location.roomImage,
-      address: location.address || "",
-      description: location.description || "",
     },
   });
-
-  const descriptionValue = watch("description");
 
   // Reset form when location changes
   useEffect(() => {
     reset({
       name: location.name,
       capacity: location.capacity,
-      roomImage: location.roomImage,
-      address: location.address || "",
-      description: location.description || "",
     });
   }, [location, reset]);
 
@@ -72,11 +62,9 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
       await updateLocationMutation.mutateAsync({
         id: location.id,
         payload: {
+          id: location.id,
           name: data.name.trim(),
           capacity: data.capacity,
-          roomImage: data.roomImage,
-          address: data.address?.trim() || undefined,
-          description: data.description?.trim() || undefined,
         },
       });
 
@@ -145,89 +133,8 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
           )}
         </div>
 
-        {/* Image Upload */}
-        <div>
-          <Controller
-            name="roomImage"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Google Drive Image ID"
-                id="location-image"
-                value={field.value}
-                onChange={(e: any) => {
-                  const val =
-                    e?.target?.value !== undefined ? e.target.value : e;
-                  // Regex to extract ID from Google Drive URL
-                  // Matches /d/ID or id=ID
-                  const match =
-                    typeof val === "string"
-                      ? val.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
-                        val.match(/id=([a-zA-Z0-9_-]+)/)
-                      : null;
-                  const id = match ? match[1] : val;
-                  field.onChange(id);
-                }}
-                placeholder="Paste ID or full Google Drive URL"
-                error={errors.roomImage?.message}
-              />
-            )}
-          />
-          {errors.roomImage && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.roomImage.message}
-            </p>
-          )}
-        </div>
-
-        {/* Address */}
-        <div>
-          <Controller
-            name="address"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Address (Optional)"
-                id="location-address"
-                value={field.value || ""}
-                onChange={field.onChange}
-                placeholder="e.g., 123 Main Street, Downtown, Cairo"
-                error={errors.address?.message}
-              />
-            )}
-          />
-          {errors.address && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.address.message}
-            </p>
-          )}
-        </div>
-
-        {/* Description */}
-        <div>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <TextAreaField
-                label="Description (Optional)"
-                id="location-description"
-                value={field.value || ""}
-                onChange={field.onChange}
-                placeholder="Brief description of the location..."
-                maxLength={500}
-                error={errors.description?.message}
-              />
-            )}
-          />
-          {errors.description && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.description.message}
-            </p>
-          )}
-          <p className="text-gray-500 text-xs mt-1">
-            {descriptionValue?.length || 0}/500 characters
-          </p>
+        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 text-blue-700 text-sm">
+          <strong>Note:</strong> Only name and capacity can be updated.
         </div>
 
         {/* Action Buttons */}

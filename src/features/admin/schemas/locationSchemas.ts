@@ -25,49 +25,6 @@ const capacitySchema = z
 const roomImageSchema = z.string().trim().min(1, "Image ID is required");
 
 /**
- * Schema for address validation (optional)
- */
-const addressSchema = z
-  .string()
-  .trim()
-  .optional()
-  .refine(
-    (value) => {
-      if (!value || value.length === 0) return true;
-      return value.length >= 10;
-    },
-    {
-      message: "Please provide a complete address",
-    },
-  );
-
-/**
- * Schema for description validation (optional)
- */
-const descriptionSchema = z
-  .string()
-  .trim()
-  .optional()
-  .refine(
-    (value) => {
-      if (!value || value.length === 0) return true;
-      return value.length >= 10;
-    },
-    {
-      message: "Description should be at least 10 characters",
-    },
-  )
-  .refine(
-    (value) => {
-      if (!value) return true;
-      return value.length <= 500;
-    },
-    {
-      message: "Description must not exceed 500 characters",
-    },
-  );
-
-/**
  * Edit Location Form Schema
  *
  * Validates location update form data
@@ -80,18 +37,17 @@ const descriptionSchema = z
 export const editLocationSchema = z.object({
   name: locationNameSchema,
   capacity: capacitySchema,
-  roomImage: roomImageSchema,
-  address: addressSchema,
-  description: descriptionSchema,
 });
 
 export type EditLocationFormData = z.infer<typeof editLocationSchema>;
 
 /**
  * Create Location Form Schema
- *
- * Same as edit schema for now, but separated for future flexibility
  */
-export const createLocationSchema = editLocationSchema;
+export const createLocationSchema = z.object({
+  name: locationNameSchema,
+  capacity: capacitySchema,
+  roomImageFileId: roomImageSchema,
+});
 
 export type CreateLocationFormData = z.infer<typeof createLocationSchema>;

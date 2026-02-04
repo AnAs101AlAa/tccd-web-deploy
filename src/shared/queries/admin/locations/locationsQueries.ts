@@ -67,3 +67,11 @@ export const useDeleteLocation = () => {
     },
   });
 };
+
+export const useGetLocationById = (id: string) => {
+  return useQuery({
+    queryKey: ["locations", id],
+    queryFn: () => locationsApi.getLocationById(id),
+    enabled: !!id,
+  });
+};

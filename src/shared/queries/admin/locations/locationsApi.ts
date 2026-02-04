@@ -46,12 +46,17 @@ export class LocationsApi {
     id: string,
     payload: UpdateLocationPayload,
   ): Promise<Location> {
-    const { data } = await systemApi.put(`${LOCATIONS_ROUTE}/${id}`, payload);
+    const { data } = await systemApi.patch(`${LOCATIONS_ROUTE}/${id}`, payload);
     return data.data;
   }
 
   async deleteLocation(id: string): Promise<void> {
     await systemApi.delete(`${LOCATIONS_ROUTE}/${id}`);
+  }
+
+  async getLocationById(id: string): Promise<Location> {
+    const { data } = await systemApi.get(`${LOCATIONS_ROUTE}/${id}`);
+    return data.data;
   }
 }
 

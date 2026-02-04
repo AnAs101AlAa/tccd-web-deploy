@@ -7,8 +7,6 @@ export interface Location {
   name: string;
   capacity: number;
   roomImage: string;
-  address?: string;
-  description?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -19,20 +17,16 @@ export interface Location {
 export interface CreateLocationPayload {
   name: string;
   capacity: number;
-  roomImage: string;
-  address?: string; // Optional in UI, check if API needs it
-  description?: string;
+  roomImageFileId: string;
 }
 
 /**
  * Payload for updating an existing location
  */
 export interface UpdateLocationPayload {
-  name?: string;
-  capacity?: number;
-  roomImage?: string;
-  address?: string;
-  description?: string;
+  id?: string;
+  name: string;
+  capacity: number;
 }
 
 /**

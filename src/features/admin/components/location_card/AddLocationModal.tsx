@@ -4,7 +4,6 @@ import {
   Modal,
   InputField,
   NumberField,
-  TextAreaField,
   Button,
   ButtonTypes,
   ButtonWidths,
@@ -31,7 +30,6 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
   const {
     control,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm<CreateLocationFormData>({
@@ -39,22 +37,16 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
     defaultValues: {
       name: "",
       capacity: 0,
-      roomImage: "",
-      address: "",
-      description: "",
+      roomImageFileId: "",
     },
   });
-
-  const descriptionValue = watch("description");
 
   const onSubmit = async (data: CreateLocationFormData) => {
     try {
       await createLocationMutation.mutateAsync({
         name: data.name.trim(),
         capacity: data.capacity,
-        roomImage: data.roomImage,
-        address: data.address?.trim() || undefined,
-        description: data.description?.trim() || undefined,
+        roomImageFileId: data.roomImageFileId,
       });
 
       toast.success("Location created successfully!");
@@ -126,7 +118,7 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
 
         <div>
           <Controller
-            name="roomImage"
+            name="roomImageFileId"
             control={control}
             render={({ field }) => (
               <InputField
@@ -147,63 +139,15 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
                   field.onChange(id);
                 }}
                 placeholder="Paste ID or full Google Drive URL"
-                error={errors.roomImage?.message}
+                error={errors.roomImageFileId?.message}
               />
             )}
           />
-          {errors.roomImage && (
+          {errors.roomImageFileId && (
             <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.roomImage.message}
+              {errors.roomImageFileId.message}
             </p>
           )}
-        </div>
-
-        <div>
-          <Controller
-            name="address"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Address (Optional)"
-                id="location-address"
-                value={field.value || ""}
-                onChange={field.onChange}
-                placeholder="e.g., 123 Main Street, Downtown, Cairo"
-                error={errors.address?.message}
-              />
-            )}
-          />
-          {errors.address && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.address.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <TextAreaField
-                label="Description (Optional)"
-                id="location-description"
-                value={field.value || ""}
-                onChange={field.onChange}
-                placeholder="Brief description of the location..."
-                maxLength={500}
-                error={errors.description?.message}
-              />
-            )}
-          />
-          {errors.description && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.description.message}
-            </p>
-          )}
-          <p className="text-gray-500 text-xs mt-1">
-            {descriptionValue?.length || 0}/500 characters
-          </p>
         </div>
 
         <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
@@ -217,7 +161,7 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
           <Button
             buttonText="Submit"
             type="primary"
-            onClick={() => handleSubmit}
+            onClick={() => handleSubmit(onSubmit)()}
             width={ButtonWidths.AUTO}
             disabled={createLocationMutation.isPending}
           />

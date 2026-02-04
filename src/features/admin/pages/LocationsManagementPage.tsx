@@ -46,11 +46,8 @@ const LocationsManagementPage = () => {
 
     if (searchTerm.trim()) {
       const search = searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (location) =>
-          location.name.toLowerCase().includes(search) ||
-          location.address?.toLowerCase().includes(search) ||
-          location.description?.toLowerCase().includes(search),
+      filtered = filtered.filter((location) =>
+        location.name.toLowerCase().includes(search),
       );
     }
 

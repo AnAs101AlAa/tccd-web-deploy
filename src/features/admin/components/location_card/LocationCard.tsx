@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaEdit, FaTrash, FaMapMarkerAlt, FaUsers } from "react-icons/fa";
+import { FaEdit, FaTrash, FaUsers } from "react-icons/fa";
 import type { Location } from "@/shared/queries/admin";
 import EditLocationModal from "./EditLocationModal";
 import DeleteLocationConfirmation from "./DeleteLocationConfirmation";
@@ -13,19 +13,17 @@ interface LocationCardProps {
 const LocationCard: React.FC<LocationCardProps> = ({ location, onDelete }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [imageSrc, setImageSrc] = useState(
-    `https://drive.google.com/thumbnail?id=${location.roomImage}`,
-  );
+  const getImageUrl = (fileId: string | undefined | null) => {
+    if (!fileId) return roomFallback;
+    return `https://lh3.googleusercontent.com/d/${fileId}`;
+  };
+
+  const [imageSrc, setImageSrc] = useState(getImageUrl(location.roomImage));
   const [hasError, setHasError] = useState(false);
 
   // Update image source when location changes
-  // Note: We use a key on LazyImageLoader to reset state, but we also want to ensure
-  // imageSrc is correct if the component is reused without unmounting?
-  // Actually, setting the key on LazyImageLoader is enough to reset its internal state,
-  // but we are managing src externally now.
-  // Better to sync state if location.roomImage changes.
   useEffect(() => {
-    setImageSrc(`https://drive.google.com/thumbnail?id=${location.roomImage}`);
+    setImageSrc(getImageUrl(location.roomImage));
     setHasError(false);
   }, [location.roomImage]);
 
@@ -102,19 +100,6 @@ const LocationCard: React.FC<LocationCardProps> = ({ location, onDelete }) => {
 
           {/* Location Details */}
           <div className="space-y-2 mb-4 flex-grow">
-            {/* Address */}
-            {location.address && (
-              <div className="flex items-start gap-1 md:gap-2 text-gray-600">
-                <FaMapMarkerAlt
-                  className="size-4 flex-shrink-0 text-primary"
-                  aria-hidden="true"
-                />
-                <p className="text-[13px] sm:text-sm line-clamp-2 font-semibold">
-                  {location.address}
-                </p>
-              </div>
-            )}
-
             {/* Capacity */}
             <div className="flex items-center gap-2 text-gray-700">
               <FaUsers
@@ -130,13 +115,6 @@ const LocationCard: React.FC<LocationCardProps> = ({ location, onDelete }) => {
               </p>
             </div>
           </div>
-
-          {/* Description */}
-          {location.description && (
-            <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 mb-3">
-              {location.description}
-            </p>
-          )}
 
           {/* Action Buttons - Mobile/Tablet View (Below content) */}
           <div className="flex gap-2 md:gap-3 mt-auto pt-3 border-t border-gray-200 lg:hidden">
