@@ -16,7 +16,7 @@ import {
   LocationsManagementPage,
   PostManagementPage,
   EventRegistrationPage,
-  EventsAdminPage,
+  AdminEventsListPage,
   StatisticsPage,
   HomePage,
   PostPage,
@@ -42,6 +42,6 @@ export const routes = [
   { path: "/posts/:id", Component: PostPage },
   { path: "/admin/locations", Component: LocationsManagementPage },
   { path: "/events/register/:id", Component: EventRegistrationPage },
-  { path: "/admin/events", Component: EventsAdminPage }, // NOT A PROTECTED ROUTE, CAREFUL WITH INTEGRATION
+  { path: "/admin/events", Component: AdminEventsListPage }, // NOT A PROTECTED ROUTE, CAREFUL WITH INTEGRATION
   { path: "/admin/statistics", Component: StatisticsPage },
 ];
