@@ -125,10 +125,10 @@ const AdminEventsListPage = () => {
 
   return (
     <WithLayout>
-      <div className="py-8 px-4 md:px-8">
-        <div className="flex flex-col sm:flex-row items-start pb-4 sm:items-center justify-between gap-2 md:gap-4">
+      <div className="py-4 md:py-8 px-4 md:px-8">
+        <div className="flex flex-col sm:flex-row items-start mb-4 sm:items-center justify-between gap-2 md:gap-4">
           <div>
-            <p className="text-[26px] md:text-[28px] lg:text-[30px] font-bold text-contrast">
+            <p className="text-[29px] md:text-[32px] lg:text-[34px] font-bold text-contrast">
               Event Management
             </p>
             <p className="text-inactive-tab-text text-[15px] md:text-[16px] lg:text-[18px]">
