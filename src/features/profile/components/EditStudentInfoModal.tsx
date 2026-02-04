@@ -10,6 +10,10 @@ import {
 } from "tccd-ui";
 import type { Gender, StudentUser, VolunteeringUser } from "@/shared/types";
 import FormFieldWithError from "./FormFieldWithError";
+import { useUpdateUserProfile, useUpdateStudentProfile, useUpdateStudentCV } from "@/shared/queries/user/userQueries";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "@/shared/utils";
+import { FileUploadField } from "@/shared/components/FileUploadField";
 
 type StudentLikeUser = StudentUser | VolunteeringUser;
 
@@ -22,8 +26,6 @@ interface EditStudentInfoModalProps {
 interface EditStudentFormValues {
     englishFullName: string;
     arabicFullName: string;
-    email: string;
-    phoneNumber: string;
     gender: Gender;
     university: string;
     faculty: string;
@@ -31,14 +33,13 @@ interface EditStudentFormValues {
     graduationYear: string;
     gpa: string;
     linkedin?: string;
+    gitHub?: string;
     cv?: string;
 }
 
 interface FormErrors {
     englishFullName?: string;
     arabicFullName?: string;
-    email?: string;
-    phoneNumber?: string;
     gender?: string;
     university?: string;
     faculty?: string;
@@ -46,6 +47,7 @@ interface FormErrors {
     graduationYear?: string;
     gpa?: string;
     linkedin?: string;
+    gitHub?: string;
     cv?: string;
 }
 
@@ -66,16 +68,6 @@ const validateField = (field: keyof EditStudentFormValues, value: string): strin
             if (value.trim().length < 3) return "Arabic name must be at least 3 characters";
             if (!/^[\u0600-\u06FF\s]+$/.test(value))
                 return "Arabic name must contain only Arabic letters";
-            break;
-        case "email":
-            if (!value.trim()) return "Email is required";
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email format";
-            break;
-        case "phoneNumber":
-            if (!value.trim()) return "Phone number is required";
-            if (!/^[0-9+\s()-]+$/.test(value)) return "Invalid phone number format";
-            if (value.replace(/\D/g, "").length < 10)
-                return "Phone number must be at least 10 digits";
             break;
         case "university":
             if (!value.trim()) return "University is required";
@@ -108,9 +100,9 @@ const validateField = (field: keyof EditStudentFormValues, value: string): strin
                 return "Invalid LinkedIn URL format";
             }
             break;
-        case "cv":
-            if (value.trim() && !/^https?:\/\/.+/.test(value)) {
-                return "CV must be a valid URL";
+        case "gitHub":
+            if (value.trim() && !/^https?:\/\/(www\.)?github\.com\/.+/.test(value)) {
+                return "Invalid GitHub URL format";
             }
             break;
     }
@@ -118,11 +110,15 @@ const validateField = (field: keyof EditStudentFormValues, value: string): strin
 };
 
 const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClose, onSave }) => {
+    const updateUserProfileMutation = useUpdateUserProfile();
+    const updateStudentProfileMutation = useUpdateStudentProfile();
+    const updateStudentCVMutation = useUpdateStudentCV();
+
+    const [cvFile, setCvFile] = useState<File | null>(null);
+
     const [formValues, setFormValues] = useState<EditStudentFormValues>({
         englishFullName: user.englishFullName,
         arabicFullName: user.arabicFullName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
         gender: user.gender,
         university: user.university,
         faculty: user.faculty,
@@ -130,6 +126,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
         graduationYear: user.graduationYear.toString(),
         gpa: user.gpa.toString(),
         linkedin: user.linkedin,
+        gitHub: user.gitHub,
         cv: user.cv,
     });
 
@@ -139,8 +136,6 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
         setFormValues({
             englishFullName: user.englishFullName,
             arabicFullName: user.arabicFullName,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
             gender: user.gender,
             university: user.university,
             faculty: user.faculty,
@@ -148,6 +143,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
             graduationYear: user.graduationYear.toString(),
             gpa: user.gpa.toString(),
             linkedin: user.linkedin,
+            gitHub: user.gitHub,
             cv: user.cv,
         });
     }, [user]);
@@ -179,7 +175,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
         }
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const newErrors: FormErrors = {};
 
         (Object.keys(formValues) as Array<keyof EditStudentFormValues>).forEach((field) => {
@@ -201,23 +197,57 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
             return;
         }
 
-        const updatedUser: StudentLikeUser = {
-            ...user,
-            englishFullName: formValues.englishFullName.trim(),
-            arabicFullName: formValues.arabicFullName.trim(),
-            email: formValues.email.trim(),
-            phoneNumber: formValues.phoneNumber.trim(),
-            gender: formValues.gender,
-            university: formValues.university.trim(),
-            faculty: formValues.faculty.trim(),
-            department: formValues.department.trim(),
-            graduationYear: parseInt(formValues.graduationYear.trim(), 10),
-            gpa: parseFloat(formValues.gpa.trim()),
-            linkedin: formValues.linkedin?.trim() || undefined,
-            cv: formValues.cv?.trim() || undefined,
-        };
+        try {
+            // Build array of API calls - always call first two, conditionally call CV upload
+            const apiCalls: Promise<any>[] = [
+                updateUserProfileMutation.mutateAsync({
+                    englishName: formValues.englishFullName.trim(),
+                    arabicName: formValues.arabicFullName.trim(),
+                    gender: formValues.gender,
+                }),
+                updateStudentProfileMutation.mutateAsync({
+                    gpa: parseFloat(formValues.gpa.trim()),
+                    graduationYear: parseInt(formValues.graduationYear.trim(), 10),
+                    department: formValues.department.trim(),
+                    faculty: formValues.faculty.trim(),
+                    university: formValues.university.trim(),
+                    linkedIn: formValues.linkedin?.trim() || undefined,
+                    gitHub: formValues.gitHub?.trim() || undefined,
+                }),
+            ];
 
-        onSave(updatedUser);
+            // Only upload CV if a new file has been selected
+            if (cvFile) {
+                apiCalls.push(updateStudentCVMutation.mutateAsync(cvFile));
+            }
+
+            const results = await Promise.all(apiCalls);
+
+            // Update local user state with all form values
+            const updatedUser: StudentLikeUser = {
+                ...user,
+                englishFullName: formValues.englishFullName.trim(),
+                arabicFullName: formValues.arabicFullName.trim(),
+                gender: formValues.gender,
+                university: formValues.university.trim(),
+                faculty: formValues.faculty.trim(),
+                department: formValues.department.trim(),
+                graduationYear: parseInt(formValues.graduationYear.trim(), 10),
+                gpa: parseFloat(formValues.gpa.trim()),
+                linkedin: formValues.linkedin?.trim() || undefined,
+                gitHub: formValues.gitHub?.trim() || undefined,
+                // If CV was uploaded, use the URL from the response, otherwise keep the existing value
+                cv: cvFile && results.length === 3 ? (results[2] as any).cv : formValues.cv?.trim() || undefined,
+            };
+
+            toast.success("Profile updated successfully!");
+            onSave(updatedUser);
+            onClose();
+        } catch (error) {
+            const message = getErrorMessage(error);
+            toast.error(message || "Failed to update profile. Please try again.");
+            console.error("Failed to update profile:", error);
+        }
     };
 
     return (
@@ -242,26 +272,6 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                             onChange={handleInputChange("arabicFullName")}
                             id="arabicFullName"
                             error={errors.arabicFullName}
-                        />
-                    </FormFieldWithError>
-                    <FormFieldWithError error={errors.email}>
-                        <InputField
-                            label="Email"
-                            value={formValues.email}
-                            placeholder="Enter email address"
-                            onChange={handleInputChange("email")}
-                            id="email"
-                            error={errors.email}
-                        />
-                    </FormFieldWithError>
-                    <FormFieldWithError error={errors.phoneNumber}>
-                        <InputField
-                            label="Phone Number"
-                            value={formValues.phoneNumber}
-                            placeholder="Enter phone number"
-                            onChange={handleInputChange("phoneNumber")}
-                            id="phoneNumber"
-                            error={errors.phoneNumber}
                         />
                     </FormFieldWithError>
                     <FormFieldWithError error={errors.gender}>
@@ -332,16 +342,32 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                             error={errors.linkedin}
                         />
                     </FormFieldWithError>
-                    <FormFieldWithError error={errors.cv}>
+                    <FormFieldWithError error={errors.gitHub}>
                         <InputField
-                            label="Curriculum Vitae"
-                            value={formValues.cv ?? ""}
-                            placeholder="https://resume-link"
-                            onChange={handleInputChange("cv")}
-                            id="cv"
-                            error={errors.cv}
+                            label="GitHub Profile"
+                            value={formValues.gitHub ?? ""}
+                            placeholder="https://github.com/username"
+                            onChange={handleInputChange("gitHub")}
+                            id="gitHub"
+                            error={errors.gitHub}
                         />
                     </FormFieldWithError>
+                    <div className="col-span-1 md:col-span-2">
+                        <FormFieldWithError error={errors.cv}>
+                            <FileUploadField
+                                id="cv"
+                                label="Curriculum Vitae"
+                                value={cvFile || formValues.cv || ""}
+                                // value={"current file" }
+                                onChange={(file) => setCvFile(file)}
+                                accept=".pdf,.doc,.docx"
+                                acceptedFormats="PDF, DOC, or DOCX"
+                                maxSize={10}
+                                // showPreview={true}
+                                error={errors.cv}
+                            />
+                        </FormFieldWithError>
+                    </div>
                 </div>
                 <div className="flex items-center justify-end gap-3">
                     <Button
@@ -349,12 +375,14 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                         onClick={onClose}
                         type={ButtonTypes.BASIC}
                         width={ButtonWidths.FIT}
+                        disabled={updateUserProfileMutation.isPending || updateStudentProfileMutation.isPending || updateStudentCVMutation.isPending}
                     />
                     <Button
-                        buttonText="Save changes"
+                        buttonText={(updateUserProfileMutation.isPending || updateStudentProfileMutation.isPending || updateStudentCVMutation.isPending) ? "Saving..." : "Save changes"}
                         onClick={handleSave}
                         type={ButtonTypes.PRIMARY}
                         width={ButtonWidths.FIT}
+                        disabled={updateUserProfileMutation.isPending || updateStudentProfileMutation.isPending || updateStudentCVMutation.isPending}
                     />
                 </div>
             </div>
