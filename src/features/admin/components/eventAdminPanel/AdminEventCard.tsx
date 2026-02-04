@@ -7,11 +7,9 @@ import EVENT_TYPES from "@/constants/EventTypes";
 
 export default function AdminEventCard({
   onEdit,
-  onDelete,
   event,
 }: {
   onEdit: () => void;
-  onDelete: () => void;
   event: Event;
 }) {
   const navigate = useNavigate();
@@ -53,6 +51,7 @@ export default function AdminEventCard({
           buttonText="Edit"
           type="secondary"
           width="small"
+          className="md:py-2"
           onClick={() => {
             onEdit();
           }}
@@ -62,7 +61,7 @@ export default function AdminEventCard({
           type="danger"
           width="small"
           onClick={() => {
-            onDelete();
+            onEdit();
           }}
         />
       </div>
