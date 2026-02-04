@@ -10,7 +10,7 @@ const EventDetailsPage = () => {
     const navigate = useNavigate();
     const eventId = id ?? "";
     const { data: event, error, isLoading } = useGetEventById(eventId);
-
+        
     const handleRegister = () => {
         if (!event) return;
         navigate(`/events/register/${event.id}`);

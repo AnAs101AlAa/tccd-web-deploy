@@ -1,15 +1,10 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { ProfileContainer } from "../components";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import { useCurrentUser } from "@/shared/queries/user/userHooks";
 
 const ProfilePage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
   const currentUser = useCurrentUser();
-
-  // TODO: Fetch user data based on id from API using the id parameter
-  console.log("Profile id:", id);
 
   // TODO: Check if this is the current user's profile
   // const isOwnProfile = currentUser?.id === id;
