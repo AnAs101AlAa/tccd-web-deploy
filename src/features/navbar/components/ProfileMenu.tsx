@@ -4,10 +4,8 @@ import { useAppSelector } from "@/shared/store/hooks";
 import { selectCurrentUser } from "@/shared/store/selectors/userSelectors";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "@/shared/queries/auth";
-import type { User } from "@/shared/types";
 
 interface ProfileMenuProps {
-  userData: User;
   isOpen: boolean;
   onClose: () => void;
   isAuthenticated: boolean;
@@ -19,7 +17,6 @@ const ProfileMenu = ({
   onClose,
   isAuthenticated,
   position = "top",
-  userData,
 }: ProfileMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -103,7 +100,7 @@ const ProfileMenu = ({
   return (
     <div
       ref={menuRef}
-      className={`absolute ${horizontalPosition} ${positionClasses} w-[210px] md:w-[250px] bg-background shadow-[0px_4px_14.7px_rgba(0,0,0,0.25)] rounded-[10px] z-50`}
+      className={`absolute ${horizontalPosition} ${positionClasses} w-[150px] md:w-[180px] bg-background shadow-[0px_4px_14.7px_rgba(0,0,0,0.25)] rounded-[10px] z-50`}
     >
       <div
         className={`absolute ${triangleHorizontalPosition} w-0 h-0`}
@@ -111,45 +108,33 @@ const ProfileMenu = ({
       />
 
       {isAuthenticated ? (
-        <>
-          {/* Profile Header */}
-          <div className="flex flex-col items-center pt-4 pb-3 md:pt-[20px] md:pb-3">
-            <p className="text-[14px] md:text-[15px] lg:text-[16px] leading-5 md:leading-6 tracking-[-0.365714px] text-contrast font-semibold mb-1">
-              {userData?.englishFullName || "Guest User"}
-            </p>
-            <p className="text-[12px] md:text-[13px] lg:text-[14px] leading-1.5 md:leading-2.5 tracking-[-0.365714px] text-contrast">
-              {userData?.email || "No email available"}
-            </p>
-          </div>
-
-          {/* Main Settings */}
-          <div className="flex flex-col">
-            {menuItems.map((item, index) => {
-              const Icon = item.icon;
-              const isLast = index === menuItems.length - 1;
-              return (
-                <div
-                  key={item.title}
-                  className={`flex flex-row items-center px-2 md:px-4 py-3 gap-2 md:gap-[8px] cursor-pointer hover:bg-gray-100/80 transition-colors ${
-                    !isLast ? "border-b border-gray-300" : "rounded-b-lg"
-                  }`}
-                  onClick={() => handleMenuItemClick(item.action)}
+        <div className="flex flex-col">
+          {menuItems.map((item, index) => {
+            const Icon = item.icon;
+            const isLast = index === menuItems.length - 1;
+            const isFirst = index === 0;
+            return (
+              <div
+                key={item.title}
+                className={`flex flex-row items-center px-2 md:px-4 py-3 gap-1.5 md:gap-[8px] cursor-pointer hover:bg-gray-100/80 transition-colors ${
+                  !isLast ? "border-b border-gray-300" : "rounded-b-lg"}
+                  ${isFirst ? "rounded-t-lg" : ""}`}
+                onClick={() => handleMenuItemClick(item.action)}
+              >
+                <Icon
+                  size={position === "top" ? 15 : 17}
+                  color={item.iconColor}
+                />
+                <h3
+                  className={`text-[13px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold`}
+                  style={{ color: item.iconColor }}
                 >
-                  <Icon
-                    size={position === "top" ? 16 : 22}
-                    color={item.iconColor}
-                  />
-                  <h3
-                    className={`text-[12px] md:text-[13px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold`}
-                    style={{ color: item.iconColor }}
-                  >
-                    {item.title}
-                  </h3>
-                </div>
-              );
-            })}
-          </div>
-        </>
+                  {item.title}
+                </h3>
+              </div>
+            );
+          })}
+        </div>
       ) : (
         <>
           {/* Unauthenticated - Sign In/Sign Up Buttons */}

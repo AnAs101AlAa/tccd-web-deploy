@@ -1,10 +1,11 @@
 import type { IconType } from "react-icons";
-import { HiOutlineUser } from "react-icons/hi2";
+import { FaRegUser } from "react-icons/fa";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { MdDashboard, MdPostAdd } from "react-icons/md";
 import { isAdmin, isVolunteer } from "@/shared/types/users";
 import type { User } from "@/shared/types";
+import { LuScanBarcode } from "react-icons/lu";
 
 export interface ProfileMenuItem {
   icon: IconType;
@@ -19,17 +20,17 @@ export const getProfileMenuItems = (
   if (!user) return [];
   const menuItems: ProfileMenuItem[] = [];
   menuItems.push({
-    icon: HiOutlineUser,
+    icon: FaRegUser,
     title: "Profile",
-    iconColor: "#4A4A4A",
+    iconColor: "var(--color-contrast)",
     action: "/profile",
   });
   
   if (isAdmin(user) || (isVolunteer(user) && user.position !== "Member")) {
     menuItems.push({
       icon: MdDashboard,
-      title: "Admin Dashboard",
-      iconColor: "#4A4A4A",
+      title: "Admin dashboard",
+      iconColor: "var(--color-contrast)",
       action: "/admin/events",
     });
   }
@@ -37,18 +38,28 @@ export const getProfileMenuItems = (
   if (isVolunteer(user) || isAdmin(user)) {
     menuItems.push({
       icon: MdPostAdd,
-      title: "Manage Posts",
-      iconColor: "#4A4A4A",
+      title: "Manage posts",
+      iconColor: "var(--color-contrast)",
       action: "/manage-posts",
     });
   }
-
+  
+  if(isAdmin(user) || (isVolunteer(user))) {
+    menuItems.push({
+      icon: LuScanBarcode,
+      title: "Scan tickets",
+      iconColor: "var(--color-contrast)",
+      action: "/scan-qr",
+    });
+  }
+  
   menuItems.push({
     icon: BiMessageSquareDetail,
-    title: "Help & Support",
-    iconColor: "#4A4A4A",
+    title: "Help & support",
+    iconColor: "var(--color-contrast)",
     action: "/support",
   });
+
 
   menuItems.push({
     icon: RiLogoutBoxLine,

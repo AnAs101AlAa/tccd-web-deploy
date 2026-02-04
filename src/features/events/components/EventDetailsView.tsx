@@ -288,7 +288,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                                         Seats Remaining
                                     </p>
                                     <p className="text-xs sm:text-sm text-gray-600 mt-0.5">
-                                        {Math.max(event.capacity - event.attendeeCount, 0)} of {event.capacity} spots available
+                                        {Math.max(event.capacity - event.registeredCount, 0)} of {event.capacity} spots available
                                     </p>
                                 </div>
                             </div>

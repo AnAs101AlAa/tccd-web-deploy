@@ -55,7 +55,6 @@ const MobileNavbar = () => {
             />
 
             <ProfileMenu
-              userData={userData}
               isOpen={showProfileMenu}
               onClose={() => {
                 setShowProfileMenu(false);

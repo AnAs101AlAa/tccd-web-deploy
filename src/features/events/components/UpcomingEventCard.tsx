@@ -7,8 +7,8 @@ import format from "@/shared/utils/dateFormater";
 
 interface Props {
   event: Event;
-  onBookNow: () => void;
-  onLearnMore: () => void;
+  onBookNow: (id: string) => void;
+  onLearnMore: (id: string) => void;
 }
 
 const UpcomingEventCard: React.FC<Props> = ({
@@ -111,7 +111,7 @@ const UpcomingEventCard: React.FC<Props> = ({
               type="primary"
               width="small"
               onClick={() => {
-                onBookNow();
+                onBookNow(event.id);
               }}
             />
 
@@ -120,7 +120,7 @@ const UpcomingEventCard: React.FC<Props> = ({
               type="secondary"
               width="small"
               onClick={() => {
-                onLearnMore();
+                onLearnMore(event.id);
               }}
             />
           </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, Navigate } from "react-router-dom";
@@ -63,10 +63,6 @@ export const SignupPage = () => {
       confirmPassword: "",
     },
   });
-
-  useEffect(() => {
-    console.log(currentStep, selectedUserType);
-  }, [currentStep, selectedUserType]);
 
   // Step 3: Student Info
   const studentInfoForm = useForm<StudentInfoFormData>({

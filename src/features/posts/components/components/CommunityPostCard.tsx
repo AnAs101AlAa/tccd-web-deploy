@@ -11,8 +11,7 @@ interface CommunityPostCardProps {
     postMedia: string[];
 }
 
-export const CommunityPostCard = ({ id, createdOn, name, description, postMedia }: CommunityPostCardProps) => {
-    console.log(id)
+export const CommunityPostCard = ({ createdOn, name, description, postMedia }: CommunityPostCardProps) => {
     const navigate = useNavigate();
     const [imageLoaded, setImageLoaded] = useState(false);
     const [videoLoaded, setVideoLoaded] = useState(false);

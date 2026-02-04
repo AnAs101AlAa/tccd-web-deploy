@@ -14,7 +14,6 @@ const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const userData = useAppSelector(selectCurrentUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  console.log("User Data in Navbar:", userData);
 
   const handleAvatarClick = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -82,7 +81,6 @@ const Navbar = () => {
               />
 
               <ProfileMenu
-                userData={userData}
                 isOpen={showProfileMenu}
                 onClose={() => {
                   setShowProfileMenu(false);
