@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
-    ButtonTypes,
-    ButtonWidths,
     Modal,
     InputField,
     DropdownMenu,
     NumberField,
 } from "tccd-ui";
-import type { Gender, StudentUser, VolunteeringUser } from "@/shared/types";
+import type { StudentUser, VolunteeringUser } from "@/shared/types";
 import FormFieldWithError from "./FormFieldWithError";
 import { useUpdateUserProfile, useUpdateStudentProfile, useUpdateStudentCV } from "@/shared/queries/user/userQueries";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
 import { FileUploadField } from "@/shared/components/FileUploadField";
+import DepartmentList from "@/constants/departmentList";
+import FacultyList from "@/constants/facultyList";
+import UniversityList from "@/constants/universityList";
+import { editStudentProfileSchema, type EditStudentProfileFormData } from "../schemas";
 
 type StudentLikeUser = StudentUser | VolunteeringUser;
 
@@ -23,91 +27,10 @@ interface EditStudentInfoModalProps {
     onSave: (updatedUser: StudentLikeUser) => void;
 }
 
-interface EditStudentFormValues {
-    englishFullName: string;
-    arabicFullName: string;
-    gender: Gender;
-    university: string;
-    faculty: string;
-    department: string;
-    graduationYear: string;
-    gpa: string;
-    linkedin?: string;
-    gitHub?: string;
-    cv?: string;
-}
-
-interface FormErrors {
-    englishFullName?: string;
-    arabicFullName?: string;
-    gender?: string;
-    university?: string;
-    faculty?: string;
-    department?: string;
-    graduationYear?: string;
-    gpa?: string;
-    linkedin?: string;
-    gitHub?: string;
-    cv?: string;
-}
-
 const genderOptions = [
     { label: "Male", value: "Male" },
     { label: "Female", value: "Female" },
 ];
-
-const validateField = (field: keyof EditStudentFormValues, value: string): string | undefined => {
-    switch (field) {
-        case "englishFullName":
-            if (!value.trim()) return "English name is required";
-            if (value.trim().length < 3) return "English name must be at least 3 characters";
-            if (!/^[a-zA-Z\s]+$/.test(value)) return "English name must contain only English letters";
-            break;
-        case "arabicFullName":
-            if (!value.trim()) return "Arabic name is required";
-            if (value.trim().length < 3) return "Arabic name must be at least 3 characters";
-            if (!/^[\u0600-\u06FF\s]+$/.test(value))
-                return "Arabic name must contain only Arabic letters";
-            break;
-        case "university":
-            if (!value.trim()) return "University is required";
-            if (value.trim().length < 3) return "University name must be at least 3 characters";
-            break;
-        case "faculty":
-            if (!value.trim()) return "Faculty is required";
-            if (value.trim().length < 3) return "Faculty name must be at least 3 characters";
-            break;
-        case "department":
-            if (!value.trim()) return "Department is required";
-            if (value.trim().length < 3) return "Department name must be at least 3 characters";
-            break;
-        case "graduationYear":
-            if (!value.trim()) return "Graduation year is required";
-            const year = parseInt(value, 10);
-            const currentYear = new Date().getFullYear();
-            if (isNaN(year)) return "Invalid year";
-            if (year < 1950 || year > currentYear + 10)
-                return `Year must be between 1950 and ${currentYear + 10}`;
-            break;
-        case "gpa":
-            if (!value.trim()) return "GPA is required";
-            const gpa = parseFloat(value);
-            if (isNaN(gpa)) return "Invalid GPA";
-            if (gpa < 0 || gpa > 4) return "GPA must be between 0 and 4";
-            break;
-        case "linkedin":
-            if (value.trim() && !/^https?:\/\/(www\.)?linkedin\.com\/.+/.test(value)) {
-                return "Invalid LinkedIn URL format";
-            }
-            break;
-        case "gitHub":
-            if (value.trim() && !/^https?:\/\/(www\.)?github\.com\/.+/.test(value)) {
-                return "Invalid GitHub URL format";
-            }
-            break;
-    }
-    return undefined;
-};
 
 const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClose, onSave }) => {
     const updateUserProfileMutation = useUpdateUserProfile();
@@ -116,24 +39,33 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
 
     const [cvFile, setCvFile] = useState<File | null>(null);
 
-    const [formValues, setFormValues] = useState<EditStudentFormValues>({
-        englishFullName: user.englishFullName,
-        arabicFullName: user.arabicFullName,
-        gender: user.gender,
-        university: user.university,
-        faculty: user.faculty,
-        department: user.department,
-        graduationYear: user.graduationYear.toString(),
-        gpa: user.gpa.toString(),
-        linkedin: user.linkedin,
-        gitHub: user.gitHub,
-        cv: user.cv,
+    const {
+        control,
+        handleSubmit,
+        watch,
+        reset,
+        formState: { errors },
+    } = useForm<EditStudentProfileFormData>({
+        resolver: zodResolver(editStudentProfileSchema),
+        defaultValues: {
+            englishFullName: user.englishFullName,
+            arabicFullName: user.arabicFullName,
+            gender: user.gender,
+            university: user.university,
+            faculty: user.faculty,
+            department: user.department,
+            graduationYear: user.graduationYear.toString(),
+            gpa: user.gpa.toString(),
+            linkedin: user.linkedin,
+            gitHub: user.gitHub,
+            cv: user.cv,
+        },
     });
 
-    const [errors, setErrors] = useState<FormErrors>({});
+    const facultyValue = watch("faculty");
 
     useEffect(() => {
-        setFormValues({
+        reset({
             englishFullName: user.englishFullName,
             arabicFullName: user.arabicFullName,
             gender: user.gender,
@@ -146,57 +78,9 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
             gitHub: user.gitHub,
             cv: user.cv,
         });
-    }, [user]);
+    }, [user, reset]);
 
-    const handleInputChange =
-        (field: keyof EditStudentFormValues) => (event: React.ChangeEvent<HTMLInputElement>) => {
-            const value = event.target.value;
-            setFormValues((prev) => ({ ...prev, [field]: value }));
-
-            if (errors[field]) {
-                setErrors((prev) => ({ ...prev, [field]: undefined }));
-            }
-        };
-
-    const handleNumberChange = (field: keyof EditStudentFormValues) => (value: string | number) => {
-        const stringValue = String(value);
-        setFormValues((prev) => ({ ...prev, [field]: stringValue }));
-
-        if (errors[field]) {
-            setErrors((prev) => ({ ...prev, [field]: undefined }));
-        }
-    };
-
-    const handleGenderChange = (value: string) => {
-        setFormValues((prev) => ({ ...prev, gender: value as Gender }));
-
-        if (errors.gender) {
-            setErrors((prev) => ({ ...prev, gender: undefined }));
-        }
-    };
-
-    const handleSave = async () => {
-        const newErrors: FormErrors = {};
-
-        (Object.keys(formValues) as Array<keyof EditStudentFormValues>).forEach((field) => {
-            const value = formValues[field];
-            if (value !== undefined) {
-                const error = validateField(field, String(value));
-                if (error) {
-                    newErrors[field] = error;
-                }
-            }
-        });
-
-        if (!formValues.gender) {
-            newErrors.gender = "Gender is required";
-        }
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
-
+    const onSubmit = async (formValues: EditStudentProfileFormData) => {
         try {
             // Build array of API calls - always call first two, conditionally call CV upload
             const apiCalls: Promise<any>[] = [
@@ -252,119 +136,192 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
 
     return (
         <Modal title="Edit student information" isOpen onClose={onClose} className="max-w-3xl">
-            <div className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <FormFieldWithError error={errors.englishFullName}>
-                        <InputField
-                            label="English Name"
-                            value={formValues.englishFullName}
-                            placeholder="Enter English full name"
-                            onChange={handleInputChange("englishFullName")}
-                            id="englishFullName"
-                            error={errors.englishFullName}
+                    <FormFieldWithError error={errors.englishFullName?.message}>
+                        <Controller
+                            name="englishFullName"
+                            control={control}
+                            render={({ field }) => (
+                                <InputField
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="English Name"
+                                    value={field.value}
+                                    placeholder="Enter at least 3 names (e.g., John Michael Doe)"
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    id="englishFullName"
+                                    error={errors.englishFullName?.message}
+                                />
+                            )}
                         />
                     </FormFieldWithError>
-                    <FormFieldWithError error={errors.arabicFullName}>
-                        <InputField
-                            label="Arabic Name"
-                            value={formValues.arabicFullName}
-                            placeholder="Enter Arabic full name"
-                            onChange={handleInputChange("arabicFullName")}
-                            id="arabicFullName"
-                            error={errors.arabicFullName}
+                    <FormFieldWithError error={errors.arabicFullName?.message}>
+                        <Controller
+                            name="arabicFullName"
+                            control={control}
+                            render={({ field }) => (
+                                <InputField
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="Arabic Name"
+                                    value={field.value}
+                                    placeholder="أدخل ثلاثة أسماء على الأقل"
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    id="arabicFullName"
+                                    error={errors.arabicFullName?.message}
+                                />
+                            )}
                         />
                     </FormFieldWithError>
-                    <FormFieldWithError error={errors.gender}>
-                        <DropdownMenu
-                            label="Gender"
-                            options={genderOptions}
-                            value={formValues.gender}
-                            onChange={handleGenderChange}
-                            placeholder="Select gender"
-                            id="gender"
+                    <FormFieldWithError error={errors.gender?.message}>
+                        <Controller
+                            name="gender"
+                            control={control}
+                            render={({ field }) => (
+                                <DropdownMenu
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="Gender"
+                                    options={genderOptions}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="Select gender"
+                                    id="gender"
+                                />
+                            )}
                         />
                     </FormFieldWithError>
-                    <FormFieldWithError error={errors.university}>
-                        <InputField
-                            label="University"
-                            value={formValues.university}
-                            placeholder="Enter university"
-                            onChange={handleInputChange("university")}
-                            id="university"
-                            error={errors.university}
+                    <FormFieldWithError error={errors.university?.message}>
+                        <Controller
+                            name="university"
+                            control={control}
+                            render={({ field }) => (
+                                <DropdownMenu
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="University"
+                                    value={field.value}
+                                    options={UniversityList.map((uni) => ({ label: uni, value: uni }))}
+                                    placeholder="Enter university"
+                                    onChange={field.onChange}
+                                    id="university"
+                                    error={errors.university?.message}
+                                />
+                            )}
                         />
                     </FormFieldWithError>
-                    <FormFieldWithError error={errors.faculty}>
-                        <InputField
-                            label="Faculty"
-                            value={formValues.faculty}
-                            placeholder="Enter faculty"
-                            onChange={handleInputChange("faculty")}
-                            id="faculty"
-                            error={errors.faculty}
+                    <FormFieldWithError error={errors.faculty?.message}>
+                        <Controller
+                            name="faculty"
+                            control={control}
+                            render={({ field }) => (
+                                <DropdownMenu
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="Faculty"
+                                    value={field.value}
+                                    options={FacultyList.map((faculty) => ({ label: faculty, value: faculty }))}
+                                    placeholder="Enter faculty"
+                                    onChange={field.onChange}
+                                    id="faculty"
+                                    error={errors.faculty?.message}
+                                />
+                            )}
                         />
                     </FormFieldWithError>
-                    <FormFieldWithError error={errors.department}>
-                        <InputField
-                            label="Department"
-                            value={formValues.department}
-                            placeholder="Enter department"
-                            onChange={handleInputChange("department")}
-                            id="department"
-                            error={errors.department}
+                    {facultyValue === "Engineering" && (
+                        <FormFieldWithError error={errors.department?.message}>
+                            <Controller
+                                name="department"
+                                control={control}
+                                render={({ field }) => (
+                                    <DropdownMenu
+                                        labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                        label="Department"
+                                        value={field.value}
+                                        options={DepartmentList.map((dept) => ({ label: dept, value: dept }))}
+                                        placeholder="Enter department"
+                                        onChange={field.onChange}
+                                        id="department"
+                                        error={errors.department?.message}
+                                    />
+                                )}
+                            />
+                        </FormFieldWithError>
+                    )}
+                    <FormFieldWithError error={errors.graduationYear?.message}>
+                        <Controller
+                            name="graduationYear"
+                            control={control}
+                            render={({ field }) => (
+                                <NumberField
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="Graduation Year"
+                                    value={field.value}
+                                    placeholder="Enter graduation year"
+                                    onChange={field.onChange}
+                                    error={errors.graduationYear?.message}
+                                />
+                            )}
                         />
                     </FormFieldWithError>
-                    <FormFieldWithError error={errors.graduationYear}>
-                        <NumberField
-                            label="Graduation Year"
-                            value={formValues.graduationYear}
-                            placeholder="Enter graduation year"
-                            onChange={handleNumberChange("graduationYear")}
-                            error={errors.graduationYear}
+                    <FormFieldWithError error={errors.gpa?.message}>
+                        <Controller
+                            name="gpa"
+                            control={control}
+                            render={({ field }) => (
+                                <NumberField
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="GPA"
+                                    value={field.value}
+                                    placeholder="Enter GPA"
+                                    onChange={field.onChange}
+                                    error={errors.gpa?.message}
+                                />
+                            )}
                         />
                     </FormFieldWithError>
-                    <FormFieldWithError error={errors.gpa}>
-                        <NumberField
-                            label="GPA"
-                            value={formValues.gpa}
-                            placeholder="Enter GPA"
-                            onChange={handleNumberChange("gpa")}
-                            error={errors.gpa}
+                    <FormFieldWithError error={errors.linkedin?.message}>
+                        <Controller
+                            name="linkedin"
+                            control={control}
+                            render={({ field }) => (
+                                <InputField
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="LinkedIn"
+                                    value={field.value ?? ""}
+                                    placeholder="https://linkedin.com/in/..."
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    id="linkedin"
+                                    error={errors.linkedin?.message}
+                                />
+                            )}
                         />
                     </FormFieldWithError>
-                    <FormFieldWithError error={errors.linkedin}>
-                        <InputField
-                            label="LinkedIn"
-                            value={formValues.linkedin ?? ""}
-                            placeholder="https://linkedin.com/in/..."
-                            onChange={handleInputChange("linkedin")}
-                            id="linkedin"
-                            error={errors.linkedin}
-                        />
-                    </FormFieldWithError>
-                    <FormFieldWithError error={errors.gitHub}>
-                        <InputField
-                            label="GitHub Profile"
-                            value={formValues.gitHub ?? ""}
-                            placeholder="https://github.com/username"
-                            onChange={handleInputChange("gitHub")}
-                            id="gitHub"
-                            error={errors.gitHub}
+                    <FormFieldWithError error={errors.gitHub?.message}>
+                        <Controller
+                            name="gitHub"
+                            control={control}
+                            render={({ field }) => (
+                                <InputField
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="GitHub Profile"
+                                    value={field.value ?? ""}
+                                    placeholder="https://github.com/username"
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    id="gitHub"
+                                    error={errors.gitHub?.message}
+                                />
+                            )}
                         />
                     </FormFieldWithError>
                     <div className="col-span-1 md:col-span-2">
-                        <FormFieldWithError error={errors.cv}>
+                        <FormFieldWithError error={errors.cv?.message}>
                             <FileUploadField
                                 id="cv"
                                 label="Curriculum Vitae"
-                                value={cvFile || formValues.cv || ""}
-                                // value={"current file" }
+                                value={cvFile || watch("cv") || ""}
                                 onChange={(file) => setCvFile(file)}
                                 accept=".pdf,.doc,.docx"
                                 acceptedFormats="PDF, DOC, or DOCX"
                                 maxSize={10}
-                                // showPreview={true}
-                                error={errors.cv}
+                                error={errors.cv?.message}
                             />
                         </FormFieldWithError>
                     </div>
@@ -373,19 +330,19 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                     <Button
                         buttonText="Cancel"
                         onClick={onClose}
-                        type={ButtonTypes.BASIC}
-                        width={ButtonWidths.FIT}
+                        type="basic"
+                        width="fit"
                         disabled={updateUserProfileMutation.isPending || updateStudentProfileMutation.isPending || updateStudentCVMutation.isPending}
                     />
                     <Button
                         buttonText={(updateUserProfileMutation.isPending || updateStudentProfileMutation.isPending || updateStudentCVMutation.isPending) ? "Saving..." : "Save changes"}
-                        onClick={handleSave}
-                        type={ButtonTypes.PRIMARY}
-                        width={ButtonWidths.FIT}
+                        onClick={handleSubmit(onSubmit)}
+                        type="primary"
+                        width="fit"
                         disabled={updateUserProfileMutation.isPending || updateStudentProfileMutation.isPending || updateStudentCVMutation.isPending}
                     />
                 </div>
-            </div>
+            </form>
         </Modal>
     );
 };
