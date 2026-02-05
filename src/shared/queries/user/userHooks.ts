@@ -173,6 +173,15 @@ export const useUserActions = () => {
     },
 
     /**
+     * Update user in store (complete user replacement)
+     * Used after API calls that return full user data
+     * @param user - Complete user data to set
+     */
+    updateUserInStore: (user: AnyUser) => {
+      dispatch(setUser(user));
+    },
+
+    /**
      * Set loading state
      * @param loading - Loading state
      */
