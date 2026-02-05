@@ -79,6 +79,20 @@ const StudentInfoDisplay: React.FC<StudentInfoDisplayProps> = ({ user }) => {
         ),
       },
       {
+        label: "GitHub",
+        value: user.gitHub,
+        render: (value?: string) => (
+          <a
+            href={value}
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            View profile
+          </a>
+        ),
+      },
+      {
         label: "Curriculum Vitae",
         value: user.cv,
         render: (value?: string) => (

@@ -20,6 +20,7 @@ import type {
   FacultyInfoFormData,
   UserType,
 } from "../schemas";
+import { useState } from "react";
 
 /**
  * Custom Auth Hook
@@ -31,6 +32,7 @@ export const useAuth = () => {
   const navigate = useNavigate();
   const isAuthenticated = useIsAuthenticated();
   const currentUser = useCurrentUser();
+  const [loginHolder, setLoginHolder] = useState(false);
 
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
@@ -45,8 +47,9 @@ export const useAuth = () => {
    */
   const handleLogin = async (data: LoginFormData) => {
     try {
+      setLoginHolder(true)
       await loginMutation.mutateAsync(data);
-      navigate("/");
+      setTimeout(() => navigate("/"), 1500);
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -143,6 +146,7 @@ export const useAuth = () => {
 
     // Loading states
     isLoggingIn: loginMutation.isPending,
+    loginHolder: loginHolder,
     isLoggingOut: logoutMutation.isPending,
     isSigningUp: signupStudentMutation.isPending || signupBusinessRepMutation.isPending || signupFacultyMutation.isPending,
     isSendingResetEmail: forgotPasswordMutation.isPending,

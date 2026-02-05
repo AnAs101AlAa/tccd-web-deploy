@@ -18,13 +18,9 @@ import type {
 const AUTH_ROUTE = "/v1/Auth/";
 
 export class AuthApi {
-  async login(
-    credentials: LoginCredentials,
-  ): Promise<{ user: AnyUser; token: string }> {
+  async login(credentials: LoginCredentials): Promise<AnyUser> {
     const { data } = await systemApi.post(AUTH_ROUTE + "login", credentials);
     const response = data.data;
-
-    const token = response.token || response.jwToken || ""; // Adjust field name if needed
 
     // Map API response to our user types
     const baseUser = {
@@ -42,28 +38,30 @@ export class AuthApi {
     };
 
     const roles = response.roles || [];
-    let user: AnyUser;
 
     // Map based on role and available profile data
     if (roles.includes("Admin")) {
-      user = {
+      return {
         ...baseUser,
         role: "Admin" as const,
         adminLevel: 1,
       } as AdminUser;
-    } else if (response.studentProfile) {
+    }
+
+    // Handle Student role (even if profile is incomplete/null)
+    if (response.role === "Student" || roles.includes("Student")) {
       const student = response.studentProfile;
 
-      // Check if they're also a volunteer
-      if (student.volunteeringProfile) {
-        user = {
+      // If they have a volunteering profile
+      if (student?.volunteeringProfile) {
+        return {
           ...baseUser,
           role: "Volunteer" as const,
-          gpa: student.gpa,
-          graduationYear: student.graduationYear,
-          department: student.department,
-          faculty: student.faculty,
-          university: student.university,
+          gpa: student.gpa || 0,
+          graduationYear: student.graduationYear || new Date().getFullYear(),
+          department: student.department || "",
+          faculty: student.faculty || "",
+          university: student.university || "",
           cv: student.cv,
           linkedin: student.linkedIn,
           gitHub: student.gitHub,
@@ -71,52 +69,60 @@ export class AuthApi {
             student.volunteeringProfile.committeeAffiliation,
           position: student.volunteeringProfile.position,
         } as VolunteeringUser;
-      } else {
-        user = {
-          ...baseUser,
-          role: "Student" as const,
-          gpa: student.gpa,
-          graduationYear: student.graduationYear,
-          department: student.department,
-          faculty: student.faculty,
-          university: student.university,
-          cv: student.cv,
-          linkedin: student.linkedIn,
-          gitHub: student.gitHub,
-        } as StudentUser;
       }
-    } else if (response.businessRepProfile) {
-      user = {
-        ...baseUser,
-        role: "BusinessRep" as const,
-        companyId: "", // Not provided in login response
-        jobTitle: response.businessRepProfile.position,
-      } as BusinessRepUser;
-    } else if (response.facultyMemberProfile) {
-      const faculty = response.facultyMemberProfile;
-      const facultyRole = roles.includes("TA")
-        ? "TA"
-        : roles.includes("DR")
-          ? "DR"
-          : "TA";
 
-      user = {
+      // Regular student (with or without profile data)
+      return {
         ...baseUser,
-        role: facultyRole as "TA" | "DR",
-        university: faculty.universityName,
-        faculty: faculty.facultyName,
-        department: faculty.department,
-      } as FacultyMemberUser;
-    } else {
-      // Default to admin if no profile matches
-      user = {
-        ...baseUser,
-        role: "Admin" as const,
-        adminLevel: 1,
-      } as AdminUser;
+        role: "Student" as const,
+        gpa: student?.gpa || 0,
+        graduationYear: student?.graduationYear || new Date().getFullYear() + 4,
+        // graduationYear: student?.graduationYear || null,
+        department: student?.department || "",
+        faculty: student?.faculty || "",
+        university: student?.university || "",
+        cv: student?.cv,
+        linkedin: student?.linkedIn,
+        gitHub: student?.gitHub,
+      } as StudentUser;
     }
 
-    return { user, token };
+    // Handle BusinessRep role (even if profile is incomplete/null)
+    if (response.role === "BusinessRep" || roles.includes("BusinessRep")) {
+      return {
+        ...baseUser,
+        role: "BusinessRep" as const,
+        companyId: response.businessRepProfile?.companyId || "",
+        jobTitle: response.businessRepProfile?.position || "",
+      } as BusinessRepUser;
+    }
+
+    // Handle Faculty roles (TA/DR) (even if profile is incomplete/null)
+    if (
+      response.role === "TA" ||
+      response.role === "DR" ||
+      roles.includes("TA") ||
+      roles.includes("DR")
+    ) {
+      const faculty = response.facultyMemberProfile;
+      const facultyRole =
+        roles.includes("TA") || response.role === "TA" ? "TA" : "DR";
+
+      return {
+        ...baseUser,
+        role: facultyRole as "TA" | "DR",
+        university: faculty?.universityName || "",
+        faculty: faculty?.facultyName || "",
+        department: faculty?.department || "",
+      } as FacultyMemberUser;
+    }
+
+    // Default to admin if no role matches
+    return {
+      ...baseUser,
+      role: "Admin" as const,
+      adminLevel: 1,
+    } as AdminUser;
   }
 
   async logout() {
@@ -129,9 +135,7 @@ export class AuthApi {
       AUTH_ROUTE + "register-student",
       credentials,
     );
-    const response = data.data;
-    const token = response.token || response.jwToken || "";
-    return { user: response as AnyUser, token };
+    return data.data;
   }
 
   async signupBusinessRep(credentials: BusinessRepSignupCredentials) {
@@ -182,9 +186,7 @@ export class AuthApi {
         },
       },
     );
-    const response = data.data;
-    const token = response.token || response.jwToken || "";
-    return { user: response as AnyUser, token };
+    return data.data;
   }
 
   async signupFaculty(credentials: FacultySignupCredentials) {
@@ -212,9 +214,7 @@ export class AuthApi {
         },
       },
     );
-    const response = data.data;
-    const token = response.token || response.jwToken || "";
-    return { user: response as AnyUser, token };
+    return data.data;
   }
 
   async forgotPassword(credentials: ForgotPasswordCredentials) {

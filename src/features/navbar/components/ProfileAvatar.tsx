@@ -9,7 +9,6 @@ interface ProfileAvatarProps {
 }
 
 const ProfileAvatar = ({ userData, isAuthenticated, onClick }: ProfileAvatarProps) => {
-  console.log("User Data in ProfileAvatar:", userData);
 
   return (
     <div data-profile-avatar>

@@ -76,11 +76,11 @@ const EventsPage = () => {
 
   useEvents({ ...queryParams, PageNumber: pageNumber + 1, PageSize: pageSize }, true);
 
-  const onBookNow = () => {
-    console.log("BookNow");
+  const onBookNow = (id: string) => {
+    navigate(`/events/register/${id}`);
   };
-  const onLearnMore = () => {
-    console.log("LearnMore");
+  const onLearnMore = (id: string) => {
+    navigate(`/events/${id}`);
   };
 
   if (upcomingError && pastError) {

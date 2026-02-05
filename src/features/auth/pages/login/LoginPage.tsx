@@ -8,7 +8,7 @@ import { FormInput, SubmitButton } from "../../components";
 import tccdLogo from "/TCCD_logo.svg";
 
 export const LoginPage = () => {
-  const { handleLogin, isLoggingIn, isAuthenticated } = useAuth();
+  const { handleLogin, isLoggingIn, isAuthenticated, loginHolder } = useAuth();
 
   const {
     control,
@@ -25,7 +25,7 @@ export const LoginPage = () => {
   });
 
   // // Redirect if already authenticated
-  if (isAuthenticated) {
+  if (isAuthenticated && !loginHolder) {
     return <Navigate to="/" replace />;
   }
 
