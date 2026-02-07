@@ -21,6 +21,7 @@ import {
   HomePage,
   PostPage,
 } from "@/features";
+import { UsersAdminPage } from "@/features/admin/pages/UsersAdminPage";
 
 export const routes = [
   { path: "/", Component: HomePage },
@@ -40,8 +41,9 @@ export const routes = [
   { path: "/scan-qr", Component: QRScannerPage },
   { path: "/posts", Component: PostManagementPage },
   { path: "/posts/:id", Component: PostPage },
-  { path: "/admin/locations", Component: LocationsManagementPage },
   { path: "/events/register/:id", Component: EventRegistrationPage },
+  { path: "/admin/locations", Component: LocationsManagementPage },
   { path: "/admin/events", Component: EventsAdminPage }, // NOT A PROTECTED ROUTE, CAREFUL WITH INTEGRATION
   { path: "/admin/statistics", Component: StatisticsPage },
+  { path: "/admin/users", Component: UsersAdminPage },
 ];
