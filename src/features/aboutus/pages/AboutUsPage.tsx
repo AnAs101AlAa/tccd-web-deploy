@@ -122,8 +122,6 @@ export const AboutUsPage = () => {
     setIsSubmitting(true);
 
     try {
-      console.log("Form Data:", formData);
-
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast.success("Message sent successfully!");

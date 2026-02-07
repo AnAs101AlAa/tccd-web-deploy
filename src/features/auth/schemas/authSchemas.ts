@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+/**
+ * Validates that a name has at least 3 parts (first, middle, last)
+ */
+const validateNameParts = (value: string, minParts: number = 3) => {
+  const nameParts = value.trim().split(/\s+/).filter(part => part.length > 0);
+  return nameParts.length >= minParts;
+};
+
 const emailSchema = z
   .string()
   .email("Please enter a valid email address")
@@ -27,7 +35,13 @@ const fullNameSchema = z
   .trim()
   .min(1, "Name is required")
   .min(3, "Name must be at least 3 characters")
-  .max(100, "Name must not exceed 100 characters");
+  .max(100, "Name must not exceed 100 characters")
+  .refine(
+    (value) => validateNameParts(value, 3),
+    {
+      message: "Please enter at least 3 names (first, middle, last name)",
+    }
+  );
 
 const arabicNameSchema = z
   .string()
@@ -38,6 +52,12 @@ const arabicNameSchema = z
   .regex(
     /^[\u0600-\u06FF\s]+$/,
     "Arabic name must contain only Arabic characters"
+  )
+  .refine(
+    (value) => validateNameParts(value, 3),
+    {
+      message: "Please enter at least 3 names (first, middle, last name)",
+    }
   );
 
 const genderSchema = z.enum(["Male", "Female"], {

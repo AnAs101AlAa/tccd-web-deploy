@@ -41,19 +41,20 @@ export class AuthApi {
       } as AdminUser;
     }
     
-    if (response.studentProfile) {
+    // Handle Student role (even if profile is incomplete/null)
+    if (response.role === "Student" || roles.includes("Student")) {
       const student = response.studentProfile;
       
-      // Check if they're also a volunteer
-      if (student.volunteeringProfile) {
+      // If they have a volunteering profile
+      if (student?.volunteeringProfile) {
         return {
           ...baseUser,
           role: "Volunteer" as const,
-          gpa: student.gpa,
-          graduationYear: student.graduationYear,
-          department: student.department,
-          faculty: student.faculty,
-          university: student.university,
+          gpa: student.gpa || 0,
+          graduationYear: student.graduationYear || new Date().getFullYear(),
+          department: student.department || "",
+          faculty: student.faculty || "",
+          university: student.university || "",
           cv: student.cv,
           linkedin: student.linkedIn,
           gitHub: student.gitHub,
@@ -62,43 +63,47 @@ export class AuthApi {
         } as VolunteeringUser;
       }
       
+      // Regular student (with or without profile data)
       return {
         ...baseUser,
         role: "Student" as const,
-        gpa: student.gpa,
-        graduationYear: student.graduationYear,
-        department: student.department,
-        faculty: student.faculty,
-        university: student.university,
-        cv: student.cv,
-        linkedin: student.linkedIn,
-        gitHub: student.gitHub,
+        gpa: student?.gpa || 0,
+        graduationYear: student?.graduationYear || new Date().getFullYear() + 4,
+        // graduationYear: student?.graduationYear || null,
+        department: student?.department || "",
+        faculty: student?.faculty || "",
+        university: student?.university || "",
+        cv: student?.cv,
+        linkedin: student?.linkedIn,
+        gitHub: student?.gitHub,
       } as StudentUser;
     }
     
-    if (response.businessRepProfile) {
+    // Handle BusinessRep role (even if profile is incomplete/null)
+    if (response.role === "BusinessRep" || roles.includes("BusinessRep")) {
       return {
         ...baseUser,
         role: "BusinessRep" as const,
-        companyId: "", // Not provided in login response
-        jobTitle: response.businessRepProfile.position,
+        companyId: response.businessRepProfile?.companyId || "",
+        jobTitle: response.businessRepProfile?.position || "",
       } as BusinessRepUser;
     }
     
-    if (response.facultyMemberProfile) {
+    // Handle Faculty roles (TA/DR) (even if profile is incomplete/null)
+    if (response.role === "TA" || response.role === "DR" || roles.includes("TA") || roles.includes("DR")) {
       const faculty = response.facultyMemberProfile;
-      const facultyRole = roles.includes("TA") ? "TA" : roles.includes("DR") ? "DR" : "TA";
+      const facultyRole = roles.includes("TA") || response.role === "TA" ? "TA" : "DR";
       
       return {
         ...baseUser,
         role: facultyRole as "TA" | "DR",
-        university: faculty.universityName,
-        faculty: faculty.facultyName,
-        department: faculty.department,
+        university: faculty?.universityName || "",
+        faculty: faculty?.facultyName || "",
+        department: faculty?.department || "",
       } as FacultyMemberUser;
     }
     
-    // Default to admin if no profile matches
+    // Default to admin if no role matches
     return {
       ...baseUser,
       role: "Admin" as const,
