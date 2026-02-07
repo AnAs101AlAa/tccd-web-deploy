@@ -46,23 +46,22 @@ export default function AdminEventCard({
       <p className="mt-1 md:mt-2 line-clamp-3 text-[13px] md:text-[14px] lg:text-[15px]">
         {event.description}
       </p>
-      <div className="flex flex-1 items-end gap-3 mt-4">
+      <div
+        className="flex flex-1 items-end gap-3 mt-4"
+        onClick={(e) => e.stopPropagation()}
+      >
         <Button
           buttonText="Edit"
           type="secondary"
           width="small"
           className="md:py-2"
-          onClick={() => {
-            onEdit();
-          }}
+          onClick={() => onEdit()}
         />
         <Button
           buttonText="Delete"
           type="danger"
           width="small"
-          onClick={() => {
-            onEdit();
-          }}
+          onClick={() => onEdit()}
         />
       </div>
     </div>
