@@ -17,6 +17,6 @@ export const eventFormSchema = z.object({
   type: z.custom<EventTypes>((val) => EVENT_TYPES.map((t) => t.value).includes(val as EventTypes), {
     message: "Invalid event type.",
   }),
-  eventImage: z.string({message: "Event image URL is required."}).min(1, {message: "Event image URL is required."}),
+  eventImage: z.string({message: "Event image URL is required."}).min(1, {message: "Event image URL is required."}).optional(),
   registrationDeadline: z.string().optional(),
 });

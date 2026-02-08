@@ -40,15 +40,19 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     currentMediaInput,
     setCurrentMediaInput,
     handleAddMedia,
-    handleRemoveMedia,
+    handleRemoveNewMedia,
+    handleRemoveOriginalMedia,
     handleSave,
+    originalMedia,
+    newMediaIds,
+    deletedMediaIds,
   } = useEventModalUtils({ event, onClose });
 
   return (
     <Modal
       title={isEditMode ? "Edit Event" : "Add New Event"}
       isOpen
-      onClose={() => {if(!isSubmitting) onClose()}}
+      onClose={() => { if (!isSubmitting) onClose() }}
       className="max-w-4xl"
     >
       <div>
@@ -61,7 +65,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
             <InputField
               label="Title"
               labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
-              value={formValues.name}
+              value={formValues.name || ""}
               placeholder="Enter event title"
               onChange={(e) => handleInputChange("name", e.target.value)}
               id="title"
@@ -76,7 +80,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
             <TextAreaField
               label="Description"
               labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
-              value={formValues.description}
+              value={formValues.description || ""}
               placeholder="Enter detailed event description"
               onChange={(e) => handleInputChange("description", e.target.value)}
               id="description"
@@ -190,40 +194,41 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
               ) : (
                 <>
                   {locations && locations.length > 0 ? (
-                  locations.map((loc) => (
-                    <div
-                      key={loc.id}
-                      className="p-3 cursor-pointer hover:bg-gray-50 flex items-center"
-                    >
-                      <Checkbox
-                      label=""
-                      checked={formValues.locations.includes(loc.id)}
-                      onChange={() => {
-                        setFormValues((prev) => {
-                        const isSelected = prev.locations.includes(loc.id);
-                        const newLocations = isSelected
-                          ? prev.locations.filter((id) => id !== loc.id)
-                          : [...prev.locations, loc.id];
-                        const newCapacity = isSelected
-                          ? prev.capacity - loc.capacity
-                          : prev.capacity + loc.capacity;
-                        return {
-                          ...prev,
-                          locations: newLocations,
-                          capacity: newCapacity < 0 ? 0 : newCapacity,
-                        };
-                        });
-                      }}
-                      />
-                      <div className="flex-1 flex gap-2 items-center">
-                      <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-contrast">{loc.name}</p>
-                      <p className="text-sm text-gray-500">Capacity: {loc.capacity}</p>
+                    locations.map((loc) => (
+                      <div
+                        key={loc.id}
+                        className="p-3 cursor-pointer hover:bg-gray-50 flex items-center"
+                      >
+                        <Checkbox
+                          label=""
+                          checked={Array.isArray(formValues.locations) && formValues.locations.includes(loc.id)}
+                          onChange={() => {
+                            setFormValues((prev) => {
+                              const currentLocations = Array.isArray(prev.locations) ? prev.locations : [];
+                              const isSelected = currentLocations.includes(loc.id);
+                              const newLocations = isSelected
+                                ? currentLocations.filter((id) => id !== loc.id)
+                                : [...currentLocations, loc.id];
+                              const newCapacity = isSelected
+                                ? prev.capacity - loc.capacity
+                                : prev.capacity + loc.capacity;
+                              return {
+                                ...prev,
+                                locations: newLocations,
+                                capacity: newCapacity < 0 ? 0 : newCapacity,
+                              };
+                            });
+                          }}
+                        />
+                        <div className="flex-1 flex gap-2 items-center">
+                          <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-contrast">{loc.name}</p>
+                          <p className="text-sm text-gray-500">Capacity: {loc.capacity}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">No locations found.</p>
-                )}
+                    ))
+                  ) : (
+                    <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">No locations found.</p>
+                  )}
                 </>
               )}
             </div>
@@ -232,7 +237,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                 label="Total capacity"
                 value={formValues.capacity.toString()}
                 placeholder="Capacity of selected locations combined"
-                onChange={() => {}}
+                onChange={() => { }}
                 id="capacity"
                 error={errors.locations}
               />
@@ -243,16 +248,16 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
           </div>
         </div>
         <p className="text-md font-semibold mt-6">
-          {'C) Location media'}
+          {'C) Event media'}
         </p>
         <hr className="border-gray-300 mt-1 mb-3" />
         <div className="space-y-3">
           <div className="space-y-2">
             <InputField
-              label="Event poster ID"
+              label="Event Poster Drive ID"
               labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
-              value={formValues.eventImage}
-              placeholder="Event poster drive ID"
+              value={formValues.eventImage || ""}
+              placeholder="Enter Google Drive file ID (e.g., 1mZpgvii35XVK3VnvX49YRO80NeXCaBrD)"
               onChange={(e) => handleInputChange("eventImage", e.target.value)}
               id="eventImage"
               error={errors.eventImage}
@@ -264,10 +269,10 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
           <div className="mt-4">
             <div className="flex items-center justify-between gap-2 mb-1">
               <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600">
-                Additional Media (Optional)
+                Additional Media Drive IDs (Optional)
               </p>
               <Button
-                buttonIcon={<FaPlus className="size-3"/>}
+                buttonIcon={<FaPlus className="size-3" />}
                 className="py-1 md:py-2 px-3 md:px-4"
                 type="primary"
                 width="fit"
@@ -275,30 +280,64 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
               />
             </div>
             <div className="max-h-48 overflow-y-auto border border-gray-400 rounded-2xl p-2 space-y-2">
-              {(formValues.eventMedia && formValues.eventMedia.length > 0) || isAddingMedia ? (
-                <>
-                  {formValues?.eventMedia?.map((mediaUrl, index) => (
-                    <div key={index} className="p-2 border border-gray-300 rounded-2xl">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-700">{mediaUrl as string}</span>
-                        <button onClick={() => handleRemoveMedia(index)} className="text-contrast hover:text-primary cursor-pointer">
-                          <TbTrash className="size-4"/>
-                        </button>
+              {(() => {
+                const visibleOriginalMedia = originalMedia?.filter((media: any) => !deletedMediaIds.includes(media.id)) || [];
+                const hasVisibleMedia = visibleOriginalMedia.length > 0 || newMediaIds.length > 0 || isAddingMedia;
+
+                return hasVisibleMedia ? (
+                  <>
+                    {/* Existing media from API (read-only, can delete) */}
+                    {visibleOriginalMedia.map((media: any) => {
+                      const driveId = media.mediaUrl ? media.mediaUrl.match(/\/d\/([^\/\?]+)/)?.[1] || media.mediaUrl : '';
+                      return (
+                        <div key={media.id} className="p-2 border border-gray-300 rounded-2xl bg-gray-50">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              <span className="text-xs text-gray-500 font-medium">Existing:</span>
+                              <span className="text-sm text-gray-700 truncate">{driveId}</span>
+                            </div>
+                            <button
+                              onClick={() => handleRemoveOriginalMedia(media.id)}
+                              className="text-contrast hover:text-primary cursor-pointer flex-shrink-0"
+                              title="Mark for deletion"
+                            >
+                              <TbTrash className="size-4" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* Newly added media (can delete before saving) */}
+                    {newMediaIds.map((mediaId, index) => (
+                      <div key={`new-${index}`} className="p-2 border border-gray-300 rounded-2xl bg-blue-50">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <span className="text-xs text-blue-600 font-medium">New:</span>
+                            <span className="text-sm text-gray-700 truncate">{mediaId}</span>
+                          </div>
+                          <button
+                            onClick={() => handleRemoveNewMedia(index)}
+                            className="text-contrast hover:text-primary cursor-pointer flex-shrink-0"
+                          >
+                            <TbTrash className="size-4" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                  {isAddingMedia && (
-                    <div className="flex items-center gap-2">
+                    ))}
+
+                    {isAddingMedia && (
+                      <div className="flex items-center gap-2">
                         <InputField
                           label=""
                           labelClassName="hidden"
                           value={currentMediaInput}
-                          placeholder="Enter media URL"
+                          placeholder="Enter Google Drive file ID"
                           onChange={(e) => setCurrentMediaInput(e.target.value)}
                           id="mediaUrl"
                         />
                         <Button
-                          buttonIcon={<FaCheck className="size-3"/>}
+                          buttonIcon={<FaCheck className="size-3" />}
                           className="px-2 md:px-3"
                           type="primary"
                           width="fit"
@@ -310,12 +349,13 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                             }
                           }}
                         />
-                    </div>
-                  )}
-                </>
-              ) : (
-                <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">No additional media added.</p>
-              )}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">No additional media added.</p>
+                );
+              })()}
             </div>
           </div>
         </div>
