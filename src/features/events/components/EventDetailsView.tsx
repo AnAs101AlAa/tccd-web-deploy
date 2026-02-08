@@ -24,7 +24,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
     const mediaItems = useMemo(() => {
         const items = [];
         if (event.eventImage) items.push(event.eventImage);
-        if (event.eventMedia) items.push(...(event.eventMedia as EventMedia[]).map(media => media.id));
+        if (event.eventMedia) items.push(...(event.eventMedia as EventMedia[]).map(media => media.mediaUrl));
         return items;
     }, [event.eventImage, event.eventMedia]);
 
@@ -203,7 +203,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                                         alt={event.name}
                                         width="100%"
                                         height="100%"
-                                        className="h-full w-full rounded-md sm:rounded-lg"
+                                        className="h-full w-full rounded-md sm:rounded-lg object-contain"
                                     />
                                 </div>
                             ) : (
@@ -213,7 +213,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                             )}
                         </div>
                         {hasMultipleMedia && (
-                            <div className="flex justify-center gap-3 sm:gap-4 items-center mt-3 sm:mt-4">
+                            <div className="flex justify-center gap-3 sm:gap-4 items-center mt-2 sm:mt-3">
                                 <button
                                     onClick={handlePrev}
                                     className="p-2 sm:p-2.5 rounded-full hover:bg-gray-100 active:bg-gray-200 transition-colors"

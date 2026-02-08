@@ -24,7 +24,7 @@ export default function PastEventCard({
           <LazyImageLoader
             src={event.eventImage}
             alt={event.name}
-            className="rounded-l-lg aspect-video object-top"
+            className="rounded-lg aspect-video object-top"
           />
       </div>
       <hr className="w-full border border-gray-200" />
