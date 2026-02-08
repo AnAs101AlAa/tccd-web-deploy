@@ -9,7 +9,6 @@ import type { AnyUser } from "@/shared/types/users";
  * It's designed to be scalable and accommodate future additions like:
  * - User preferences
  * - Session data
- * - Authentication tokens (if not handled elsewhere)
  */
 export interface UserState {
   /**
@@ -37,12 +36,6 @@ export interface UserState {
   isAuthenticated: boolean;
 
   /**
-   * Authentication token (JWT)
-   * null if not authenticated
-   */
-  token: string | null;
-
-  /**
    * Timestamp of last user data update
    * Useful for cache invalidation and sync logic
    */
@@ -55,7 +48,6 @@ export interface UserState {
  */
 const initialState: UserState = {
   currentUser: null,
-  token: null,
   isLoading: false,
   error: null,
   isAuthenticated: false,
@@ -70,14 +62,14 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     /**
-     * Set the current user and token after login
+     * Set the current user after login
      */
     setUser: (
       state,
-      action: PayloadAction<{ user: AnyUser; token: string }>,
+      action: PayloadAction<AnyUser>,
     ) => {
-      state.currentUser = action.payload.user;
-      state.token = action.payload.token;
+      console.log("Setting user in store:", action.payload);
+      state.currentUser = action.payload;
       state.isAuthenticated = true;
       state.error = null;
       state.lastUpdated = Date.now();
@@ -102,7 +94,6 @@ const userSlice = createSlice({
      */
     clearUser: (state) => {
       state.currentUser = null;
-      state.token = null;
       state.isAuthenticated = false;
       state.error = null;
       state.lastUpdated = null;

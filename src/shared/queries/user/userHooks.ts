@@ -150,11 +150,11 @@ export const useUserActions = () => {
 
   return {
     /**
-     * Login user (set user data and token)
-     * @param data - User data and token
+     * Login user (set user data)
+     * @param user - User data
      */
-    login: (data: { user: AnyUser; token: string }) => {
-      dispatch(setUser(data));
+    login: (user: AnyUser) => {
+      dispatch(setUser(user));
     },
 
     /**

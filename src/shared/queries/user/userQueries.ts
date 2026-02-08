@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserApi, type UpdateUserProfilePayload, type UpdateStudentProfilePayload } from "./userApi";
-import { getErrorMessage } from "@/shared/utils";
 import { useUserActions } from "./userHooks";
 
 export const userKeys = {

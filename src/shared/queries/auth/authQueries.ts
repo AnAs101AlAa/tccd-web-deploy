@@ -29,9 +29,9 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (credentials: LoginCredentials) =>
       authApiInstance.login(credentials),
-    onSuccess: (data: { user: AnyUser; token: string }) => {
-      console.log(data);
-      login(data);
+    onSuccess: (user: AnyUser) => {
+      console.log(user);
+      login(user);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Login successful!");
     },
@@ -72,9 +72,8 @@ export const useSignupStudent = () => {
   return useMutation({
     mutationFn: (credentials: StudentSignupCredentials) =>
       authApiInstance.signupStudent(credentials),
-    onSuccess: (data: { user: AnyUser; token: string }) => {
-      console.log(data);
-      login(data);
+    onSuccess: (user: AnyUser) => {
+      login(user);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Account created successfully!");
     },
@@ -92,8 +91,8 @@ export const useSignupBusinessRep = () => {
   return useMutation({
     mutationFn: (credentials: BusinessRepSignupCredentials) =>
       authApiInstance.signupBusinessRep(credentials),
-    onSuccess: (data: { user: AnyUser; token: string }) => {
-      login(data);
+    onSuccess: (user: AnyUser) => {
+      login(user);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Account created successfully!");
     },
@@ -111,8 +110,8 @@ export const useSignupFaculty = () => {
   return useMutation({
     mutationFn: (credentials: FacultySignupCredentials) =>
       authApiInstance.signupFaculty(credentials),
-    onSuccess: (data: { user: AnyUser; token: string }) => {
-      login(data);
+    onSuccess: (user: AnyUser) => {
+      login(user);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Account created successfully!");
     },
