@@ -14,7 +14,7 @@ import GALLERY_HEADER_IMAGE from "@/assets/galleryHeader.jpeg";
 const GalleryPage = () => {
   const [queryParams, setQueryParams] = useState<EventQueryParams>({
     PageNumber: 1,
-    PageSize: 6,
+    PageSize: 12,
   });
 
   const handleApplyFilters = (stagingParams: EventQueryParams) => {
@@ -40,7 +40,7 @@ const GalleryPage = () => {
     error,
     refetch,
   } = useGallery(queryParams);
-
+  
   if (error) {
     return (
       <WithLayout>

@@ -55,11 +55,12 @@ export default function AdminEventCard({
           {EVENT_TYPES.find((type) => type.value === event.type)?.label ||
             "Other"}
         </span>
-        <div className="w-full max-h-[220px] md:max-h-[260px] lg:max-h-[300px]">
+        <div className="w-full h-[210px] md:h-[245px] lg:h-[280px]">
           <LazyImageLoader
             src={event.eventImage}
             alt={event.name}
-            className="rounded-l-lg aspect-video"
+            height={"100%"}
+            className="rounded-lg aspect-video "
           />
         </div>
         <hr className="w-full border border-gray-200" />
@@ -76,7 +77,7 @@ export default function AdminEventCard({
           <MdGroups className="text-inactive-tab-text mr-1 size-4 lg:size-4.5 -mt-0.5" />
           {event.attendeeCount}
         </div>
-        <p className="mt-1 md:mt-2 line-clamp-3 text-[13px] md:text-[14px] lg:text-[15px]">
+        <p className="line-clamp-3 text-[13px] md:text-[14px] lg:text-[15px]">
           {event.description}
         </p>
         <div

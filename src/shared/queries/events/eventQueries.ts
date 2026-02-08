@@ -13,6 +13,14 @@ export const eventKeys = {
     [...eventKeys.all, "sponsors", eventId] as const,
 };
 
+export const useGetAllEvents = (params?: EventQueryParams) => {
+  return useQuery({
+    queryKey: eventKeys.all,
+    queryFn: () => eventApi.getAllEvents(params),
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
 export const useGetAllUpcomingEvents = (params?: EventQueryParams) => {
   return useQuery({
     queryKey: eventKeys.upcoming(params),

@@ -7,11 +7,22 @@ import EVENT_TYPES from "@/constants/EventTypes";
 import { useCreateEvent, useUpdateEvent, useUpdateEventPoster, useAddEventMedia, useDeleteEventMedia } from "@/shared/queries/admin/events/eventsQueries";
 import toast from "react-hot-toast";  
 
-// Extract Google Drive ID from full URL
 const extractDriveId = (urlOrId: string): string => {
   if (!urlOrId) return "";
-  const match = urlOrId.match(/\/d\/([^\/\?]+)/);
-  return match ? match[1] : urlOrId;
+  
+  const patterns = [
+    /\/file\/d\/([a-zA-Z0-9_-]+)/,      // /file/d/{id} - file view link
+    /\/folders\/([a-zA-Z0-9_-]+)/,      // /folders/{id} - folder link
+    /\/d\/([a-zA-Z0-9_-]+)/,            // /d/{id} - standard file/folder link
+    /[?&]id=([a-zA-Z0-9_-]+)/,          // ?id={id} or &id={id} - query parameter
+    /\/open\?id=([a-zA-Z0-9_-]+)/,      // /open?id={id} - open format
+  ];
+  
+  for (const pattern of patterns) {
+    const match = urlOrId.match(pattern);
+    if (match) return match[1];
+  }  
+  return urlOrId;
 };
 
 const validateAllFields = (formValues : Event) => {
@@ -39,7 +50,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   const [originalMedia, setOriginalMedia] = useState<any[]>([]);
   const [deletedMediaIds, setDeletedMediaIds] = useState<string[]>([]);
   const [newMediaIds, setNewMediaIds] = useState<string[]>([]);
-  const [originalPosterId, setOriginalPosterId] = useState<string>("");
+  const [,setOriginalPosterId] = useState<string>("");
   const [formValues, setFormValues] = useState<Event>({
     id: "",
     name: "",
@@ -154,12 +165,6 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     
     try {
       if (isEditMode && event) {
-        // ========== EDIT MODE ==========
-        
-        console.log("Edit mode - Starting save...");
-        console.log("New media IDs to add:", newMediaIds);
-        console.log("Deleted media IDs:", deletedMediaIds);
-        
         // 1. Update basic event info
         await updateEventMutation.mutateAsync({
           id: event.id,
@@ -168,7 +173,6 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
 
         // 2. Update poster (always call if poster exists)
         if (formValues.eventImage) {
-          console.log("Updating poster...");
           await updateEventPosterMutation.mutateAsync({
             id: event.id,
             fileId: formValues.eventImage,
@@ -177,13 +181,11 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
 
         // 3. Delete removed media
         for (const mediaId of deletedMediaIds) {
-          console.log("Deleting media:", mediaId);
           await deleteEventMediaMutation.mutateAsync(mediaId);
         }
 
         // 4. Add new media (using drive IDs)
         if (newMediaIds.length > 0) {
-          console.log("Adding new media...", { eventId: event.id, mediaFileIds: newMediaIds });
           await addEventMediaMutation.mutateAsync({
             eventId: event.id,
             mediaFileIds: newMediaIds,
@@ -191,14 +193,32 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
         }
 
         toast.success("Event updated successfully!");
-        window.location.reload();
-        
+        onClose();
       } else {
         // ========== CREATE MODE ==========
-        await createEventMutation.mutateAsync(finalizedValue);
+        const createdEvent = await createEventMutation.mutateAsync(finalizedValue);
+        const eventId = createdEvent?.id || createdEvent?.data?.id;
+        
+        if (eventId) {
+          // Add poster if exists
+          if (formValues.eventImage) {
+            await updateEventPosterMutation.mutateAsync({
+              id: eventId,
+              fileId: formValues.eventImage,
+            });
+          }
+
+          // Add new media (using drive IDs)
+          if (newMediaIds.length > 0) {
+            await addEventMediaMutation.mutateAsync({
+              eventId: eventId,
+              mediaFileIds: newMediaIds,
+            });
+          }
+        }
         
         toast.success("Event created successfully!");
-        window.location.reload();
+        onClose();
       }
     } catch (error) {
       toast.error(

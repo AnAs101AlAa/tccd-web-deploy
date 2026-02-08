@@ -157,7 +157,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                                 </span>
                             )}
                         </div>
-                        <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed">
+                        <p className="text-[13px] sm:text-[14px] md:text-[15px] mt-2 text-gray-600">
                             {event.description}
                         </p>
                     </div>

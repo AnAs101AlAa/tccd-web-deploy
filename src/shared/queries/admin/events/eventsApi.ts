@@ -5,10 +5,12 @@ const EVENTS_ROUTE = "/v1/Event";
 
 export class EventsApi {
   async createEvent(data: Event) {
-    await systemApi.post(
+    const res = await systemApi.post(
       `/v2/Event`,
       {...data, eventImageId: data.eventImage}
     );
+
+    return res.data.data;
   }
   
   async updateEvent(id: string, data: Partial<Event>) {

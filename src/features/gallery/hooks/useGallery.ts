@@ -1,4 +1,4 @@
-import { useGetAllPastEvents } from "@/shared/queries/events";
+import { useGetAllEvents } from "@/shared/queries/events";
 import type { EventQueryParams } from "@/shared/types";
 
 /**
@@ -7,7 +7,7 @@ import type { EventQueryParams } from "@/shared/types";
  */
 export const useGallery = (params?: EventQueryParams) => {
   // Fetch all gallery items
-  const { data: galleryItems, isLoading, error, refetch } = useGetAllPastEvents(params);
+  const { data: galleryItems, isLoading, error, refetch } = useGetAllEvents(params);
 
   return {
     galleryItems: galleryItems,
