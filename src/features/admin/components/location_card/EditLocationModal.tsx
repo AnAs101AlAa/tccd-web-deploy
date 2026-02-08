@@ -5,7 +5,6 @@ import {
   Modal,
   InputField,
   NumberField,
-  TextAreaField,
   Button,
   ButtonTypes,
   ButtonWidths,
@@ -16,7 +15,6 @@ import {
   editLocationSchema,
   type EditLocationFormData,
 } from "@/features/admin/schemas";
-import ImageUpload from "@/shared/components/ImageUpload";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
 
@@ -41,8 +39,6 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
   const {
     control,
     handleSubmit,
-    setValue,
-    watch,
     reset,
     formState: { errors },
   } = useForm<EditLocationFormData>({
@@ -50,23 +46,14 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
     defaultValues: {
       name: location.name,
       capacity: location.capacity,
-      image: location.image,
-      address: location.address || "",
-      description: location.description || "",
     },
   });
-
-  const imageValue = watch("image");
-  const descriptionValue = watch("description");
 
   // Reset form when location changes
   useEffect(() => {
     reset({
       name: location.name,
       capacity: location.capacity,
-      image: location.image,
-      address: location.address || "",
-      description: location.description || "",
     });
   }, [location, reset]);
 
@@ -75,11 +62,9 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
       await updateLocationMutation.mutateAsync({
         id: location.id,
         payload: {
+          id: location.id,
           name: data.name.trim(),
           capacity: data.capacity,
-          image: data.image,
-          address: data.address?.trim() || undefined,
-          description: data.description?.trim() || undefined,
         },
       });
 
@@ -133,7 +118,9 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
               <NumberField
                 label="Capacity"
                 value={field.value?.toString() || ""}
-                onChange={(val) => field.onChange(parseInt(val.toString(), 10) || 0)}
+                onChange={(val: string | number) =>
+                  field.onChange(parseInt(val.toString(), 10) || 0)
+                }
                 placeholder="e.g., 500"
                 error={errors.capacity?.message}
               />
@@ -146,64 +133,8 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
           )}
         </div>
 
-        {/* Image Upload */}
-        <ImageUpload
-          label="Location Image"
-          value={imageValue}
-          onChange={(base64) =>
-            setValue("image", base64, { shouldValidate: true })
-          }
-          error={errors.image?.message}
-        />
-
-        {/* Address */}
-        <div>
-          <Controller
-            name="address"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Address (Optional)"
-                id="location-address"
-                value={field.value || ""}
-                onChange={field.onChange}
-                placeholder="e.g., 123 Main Street, Downtown, Cairo"
-                error={errors.address?.message}
-              />
-            )}
-          />
-          {errors.address && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.address.message}
-            </p>
-          )}
-        </div>
-
-        {/* Description */}
-        <div>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <TextAreaField
-                label="Description (Optional)"
-                id="location-description"
-                value={field.value || ""}
-                onChange={field.onChange}
-                placeholder="Brief description of the location..."
-                maxLength={500}
-                error={errors.description?.message}
-              />
-            )}
-          />
-          {errors.description && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.description.message}
-            </p>
-          )}
-          <p className="text-gray-500 text-xs mt-1">
-            {descriptionValue?.length || 0}/500 characters
-          </p>
+        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 text-blue-700 text-sm">
+          <strong>Note:</strong> Only name and capacity can be updated.
         </div>
 
         {/* Action Buttons */}

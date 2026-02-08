@@ -37,6 +37,12 @@ export interface UserState {
   isAuthenticated: boolean;
 
   /**
+   * Authentication token (JWT)
+   * null if not authenticated
+   */
+  token: string | null;
+
+  /**
    * Timestamp of last user data update
    * Useful for cache invalidation and sync logic
    */
@@ -46,25 +52,10 @@ export interface UserState {
 /**
  * Initial state for the user slice
  * All values start in a "clean slate" configuration
- *
- * TEMPORARY: Mock admin user for development until API integration is complete
  */
 const initialState: UserState = {
-  currentUser: {
-    id: "",
-    englishFullName: "",
-    arabicFullName: "",
-    phoneNumber: "",
-    email: "",
-    gender: "Male",
-    role: "Admin" as const,
-    status: "Pending",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    isDeleted: false,
-    adminLevel: 1,
-    profilePicture: undefined, // Will use placeholder
-  },
+  currentUser: null,
+  token: null,
   isLoading: false,
   error: null,
   isAuthenticated: false,
@@ -73,22 +64,20 @@ const initialState: UserState = {
 
 /**
  * User Slice
- *
- * SCALABILITY NOTES:
- * - To add new user operations, simply add new reducers
- * - State shape can be extended without breaking existing reducers
- * - Each reducer is independent and focused on a single responsibility
  */
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     /**
-     * Set the current user (typically after login or token validation)
-     * Also updates authentication status and timestamp
+     * Set the current user and token after login
      */
-    setUser: (state, action: PayloadAction<AnyUser>) => {
-      state.currentUser = action.payload;
+    setUser: (
+      state,
+      action: PayloadAction<{ user: AnyUser; token: string }>,
+    ) => {
+      state.currentUser = action.payload.user;
+      state.token = action.payload.token;
       state.isAuthenticated = true;
       state.error = null;
       state.lastUpdated = Date.now();
@@ -113,6 +102,7 @@ const userSlice = createSlice({
      */
     clearUser: (state) => {
       state.currentUser = null;
+      state.token = null;
       state.isAuthenticated = false;
       state.error = null;
       state.lastUpdated = null;

@@ -6,6 +6,7 @@ import format from "@/shared/utils/dateFormater";
 import type Event from "@/shared/types/events";
 import PosterCard from "@/shared/components/PosterCard";
 import { useGetEventSponsors } from "@/shared/queries/events/eventQueries";
+import type { EventMedia } from "@/shared/types/events";
 
 const SPONSOR_GAP_PERCENT = 2;
 const AUTO_SCROLL_INTERVAL_MS = 3000;
@@ -21,8 +22,11 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
     const { data: sponsors, isLoading: isLoadingSponsors } = useGetEventSponsors(event.id);
 
     const mediaItems = useMemo(() => {
-        return event.eventImage ? [event.eventImage] : [];
-    }, [event.eventImage]);
+        const items = [];
+        if (event.eventImage) items.push(event.eventImage);
+        if (event.eventMedia) items.push(...(event.eventMedia as EventMedia[]).map(media => media.mediaUrl));
+        return items;
+    }, [event.eventImage, event.eventMedia]);
 
 
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
@@ -157,7 +161,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                                 </span>
                             )}
                         </div>
-                        <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed">
+                        <p className="text-[13px] sm:text-[14px] md:text-[15px] mt-2 text-gray-600">
                             {event.description}
                         </p>
                     </div>
@@ -199,7 +203,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                                         alt={event.name}
                                         width="100%"
                                         height="100%"
-                                        className="h-full w-full rounded-md sm:rounded-lg"
+                                        className="h-full w-full rounded-md sm:rounded-lg object-contain"
                                     />
                                 </div>
                             ) : (
@@ -209,7 +213,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                             )}
                         </div>
                         {hasMultipleMedia && (
-                            <div className="flex justify-center gap-3 sm:gap-4 items-center mt-3 sm:mt-4">
+                            <div className="flex justify-center gap-3 sm:gap-4 items-center mt-2 sm:mt-3">
                                 <button
                                     onClick={handlePrev}
                                     className="p-2 sm:p-2.5 rounded-full hover:bg-gray-100 active:bg-gray-200 transition-colors"

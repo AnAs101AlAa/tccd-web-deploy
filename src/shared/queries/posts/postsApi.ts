@@ -48,6 +48,7 @@ export class PostsApi {
           description: item.description,
           media: item.media || [],
           priority: item.priority,
+          isApproved: item.isApproved,
           createdAt: item.createdAt,
         })),
         pageIndex,
@@ -75,6 +76,7 @@ export class PostsApi {
         description: item.description,
         media: item.media || [],
         priority: item.priority,
+        isApproved: item.isApproved,
         createdAt: item.createdAt,
       };
     }

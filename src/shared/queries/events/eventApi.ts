@@ -7,6 +7,13 @@ const EVENT_ROUTE = "/v1/Event";
 const SPONSOR_ROUTE = "/v1/Sponsors";
 
 export class EventApi {
+  async getAllEvents(params?: EventQueryParams): Promise<EventResponse> {
+    const response = await systemApi.get(`${EVENT_ROUTE}`, {
+      params,
+    });
+    return response.data.data;
+  }
+
   async getAllUpcomingEvents(
     params?: EventQueryParams,
   ): Promise<EventResponse> {
@@ -35,7 +42,7 @@ export class EventApi {
         throw new Error("End date cannot be in the future, Please head to the upcoming events section.");
       }
     } else {
-      params = { ...params, StartDate: new Date().toISOString() };
+      params = { ...params, EndDate: new Date().toISOString() };
     }
     const response = await systemApi.get(`${EVENT_ROUTE}`, {
       params,
@@ -61,6 +68,7 @@ export class EventApi {
         attendeeCount: item.attendeeCount,
         registrationDeadline: item.registrationDeadline,
         createdBy: item.createdBy,
+        eventMedia: item.medias || [],
         createdAt: item.createdAt,
         updatedOn: item.updatedOn,
       };

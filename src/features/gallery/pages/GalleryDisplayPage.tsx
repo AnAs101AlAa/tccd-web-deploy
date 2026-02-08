@@ -11,6 +11,8 @@ export default function GalleryDisplayPage() {
   const { id } = useParams();
   const { data: galleryData, isLoading, isError } = useGetEventById(id || "");
 
+  console.log("Gallery data:", galleryData);
+  
   useEffect (() => {
     if (isError) {
       toast.error("Failed to load gallery data. Please try again later.");

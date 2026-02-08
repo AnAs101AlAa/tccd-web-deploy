@@ -1,14 +1,18 @@
 import type Event from "@/shared/types/events";
 import { useNavigate } from "react-router-dom";
-import { LazyImageLoader } from "tccd-ui";
+import { Button, LazyImageLoader } from "tccd-ui";
 import { MdCalendarMonth, MdGroups } from "react-icons/md";
 import EVENT_TYPES from "@/constants/EventTypes";
 import format from "@/shared/utils/dateFormater";
 
-export default function AdminEventCard({
+export default function PastEventCard({
   event,
+  onEdit,
+  onDelete,
 }: {
   event: Event;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }) {
   const navigate = useNavigate();
   return (
@@ -20,7 +24,7 @@ export default function AdminEventCard({
           <LazyImageLoader
             src={event.eventImage}
             alt={event.name}
-            className="rounded-l-lg aspect-video object-top"
+            className="rounded-lg aspect-video object-top"
           />
       </div>
       <hr className="w-full border border-gray-200" />
@@ -44,9 +48,29 @@ export default function AdminEventCard({
           <MdGroups className="text-inactive-tab-text mr-1 size-4 lg:size-4.5 -mt-0.5" />
           {event.attendeeCount}
         </div>
-      <p className="mt-1 line-clamp-3 text-[13px] md:text-[14px] lg:text-[15px]">
+      <p className="line-clamp-3 text-[13px] md:text-[14px] lg:text-[15px]">
         {event.description}
       </p>
+      {onEdit && (
+        <div
+          className="flex flex-1 items-end gap-3 mt-4"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Button
+            buttonText="Edit"
+            type="secondary"
+            width="small"
+            className="md:py-2"
+            onClick={() => onEdit?.()}
+          />
+          <Button
+            buttonText="Delete"
+            type="danger"
+            width="small"
+            onClick={() => onDelete?.()}
+          />
+        </div>
+      )}
     </div>
   );
 }
