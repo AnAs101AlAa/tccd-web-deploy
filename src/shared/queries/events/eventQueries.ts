@@ -4,7 +4,8 @@ import type { EventQueryParams } from "@/shared/types";
 
 export const eventKeys = {
   all: ["events"] as const,
-  upcoming: () => [...eventKeys.all, "upcoming"] as const,
+  upcoming: (params?: EventQueryParams) =>
+    [...eventKeys.all, "upcoming", params] as const,
   past: (params?: EventQueryParams) =>
     [...eventKeys.all, "past", params] as const,
   detail: (id: string) => [...eventKeys.all, "detail", id] as const,
@@ -14,7 +15,7 @@ export const eventKeys = {
 
 export const useGetAllUpcomingEvents = (params?: EventQueryParams) => {
   return useQuery({
-    queryKey: [eventKeys.upcoming(), params],
+    queryKey: eventKeys.upcoming(params),
     queryFn: () => eventApi.getAllUpcomingEvents(params),
     staleTime: 5 * 60 * 1000,
   });

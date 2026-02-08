@@ -35,7 +35,7 @@ export class EventApi {
         throw new Error("End date cannot be in the future, Please head to the upcoming events section.");
       }
     } else {
-      params = { ...params, StartDate: new Date().toISOString() };
+      params = { ...params, EndDate: new Date().toISOString() };
     }
     const response = await systemApi.get(`${EVENT_ROUTE}`, {
       params,
