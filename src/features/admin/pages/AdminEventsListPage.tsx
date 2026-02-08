@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Pagination } from "@/shared/components/pagination";
 import { WithLayout } from "@/shared/components/hoc";
@@ -12,14 +12,40 @@ import type Event from "@/shared/types/events";
 import { useGetAllUpcomingEvents, useGetAllPastEvents } from "@/shared/queries/events";
 import type { EventQueryParams } from "@/shared/types/events";
 import GenericGrid from "@/shared/components/GenericGrid";
+import { PastEventCard } from "@/features/events/components";
+import { useDeleteEvent } from "@/shared/queries/admin/events/eventsQueries";
+import ConfirmActionModal from "@/shared/components/modals/ConfirmActionModal";
 
 const AdminEventsListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  
+  const getPageSize = () => {
+    if (typeof window === 'undefined') return 4;
+    const width = window.innerWidth;
+    if (width >= 1280) return 3;
+    return 4;
+  };
 
   const [upcomingQueryParams, setUpcomingQueryParams] = useState<EventQueryParams>({
     PageNumber: 1,
-    PageSize: 3,
+    PageSize: getPageSize(),
   });
+  
+  // Update page size on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      const newPageSize = getPageSize();
+      setUpcomingQueryParams((prev) => {
+        if (prev.PageSize !== newPageSize) {
+          return { ...prev, PageSize: newPageSize, PageNumber: 1 };
+        }
+        return prev;
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const { data: upcomingData, isLoading: isLoadingUpcoming } = useGetAllUpcomingEvents(upcomingQueryParams);
 
@@ -31,6 +57,9 @@ const AdminEventsListPage = () => {
   const { data: pastData, isLoading: isLoadingPast } = useGetAllPastEvents(pastQueryParams);
 
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const deleteEventMutation = useDeleteEvent();
+
   const [selectedEvent, setSelectedEvent] = useState<Event | undefined>(undefined);
 
   const handleApplyUpcomingFilters = useCallback((stagingParams: EventQueryParams) => {
@@ -115,6 +144,19 @@ const AdminEventsListPage = () => {
     setSelectedEvent(undefined);
   }, []);
 
+  const handleDeleteEvent = (eventId: string) => {
+    deleteEventMutation.mutate(eventId, {
+      onSuccess: () => {
+        toast.success("Event deleted successfully");
+        setIsDeleteModalOpen(false);
+      },
+      onError: () => {
+        toast.error("Failed to delete event. Please try again.");
+        setIsDeleteModalOpen(false);
+      }
+    });
+  };
+
   return (
     <WithLayout>
       <div className="py-4 md:py-8 px-4 md:px-8">
@@ -176,6 +218,10 @@ const AdminEventsListPage = () => {
                     renderCard={(event: Event) => (
                       <AdminEventCard
                         event={event}
+                        onDelete={() => {
+                          setIsDeleteModalOpen(true);
+                          setSelectedEvent(event);
+                        }}
                         onEdit={() => {
                           setSelectedEvent(event);
                           setIsEventModalOpen(true);
@@ -243,11 +289,15 @@ const AdminEventsListPage = () => {
                     gridCols="grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
                     getKey={(event: Event) => event.id}
                     renderCard={(event: Event) => (
-                      <AdminEventCard
+                      <PastEventCard
                         event={event}
                         onEdit={() => {
                           setSelectedEvent(event);
                           setIsEventModalOpen(true);
+                        }}
+                        onDelete={() => {
+                          setSelectedEvent(event);
+                          setIsDeleteModalOpen(true)
                         }}
                       />
                     )}
@@ -275,6 +325,23 @@ const AdminEventsListPage = () => {
             onClose={handleCloseModal}
           />
         )}
+
+      {isDeleteModalOpen && (
+        <ConfirmActionModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          isSubmitting={deleteEventMutation.isPending}
+          title="Confirm Deletion"
+          message={`Are you sure you want to delete the event "${selectedEvent?.name}"? This action cannot be undone.`}
+          onConfirm={() => {
+            if (selectedEvent) {
+              handleDeleteEvent(selectedEvent.id);
+            }
+          }}
+          confirmButtonText="Delete"
+          cancelButtonText="Cancel"
+        />
+      )}
       </div>
     </WithLayout>
   );

@@ -101,7 +101,7 @@ const UpcomingEventCard: React.FC<Props> = ({
         </div>
 
         <div className="transition-all duration-500 ease-in-out transform">
-          <p className="text-[13px] md:text-[14px] lg:text-[15px] leading-relaxed text-gray-700">
+          <p className="text-[13px] md:text-[14px] lg:text-[15px] leading-relaxed text-gray-700 line-clamp-6">
             {event.description}
           </p>
 

@@ -6,6 +6,7 @@ import format from "@/shared/utils/dateFormater";
 import type Event from "@/shared/types/events";
 import PosterCard from "@/shared/components/PosterCard";
 import { useGetEventSponsors } from "@/shared/queries/events/eventQueries";
+import type { EventMedia } from "@/shared/types/events";
 
 const SPONSOR_GAP_PERCENT = 2;
 const AUTO_SCROLL_INTERVAL_MS = 3000;
@@ -21,8 +22,11 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
     const { data: sponsors, isLoading: isLoadingSponsors } = useGetEventSponsors(event.id);
 
     const mediaItems = useMemo(() => {
-        return event.eventImage ? [event.eventImage] : [];
-    }, [event.eventImage]);
+        const items = [];
+        if (event.eventImage) items.push(event.eventImage);
+        if (event.eventMedia) items.push(...(event.eventMedia as EventMedia[]).map(media => media.id));
+        return items;
+    }, [event.eventImage, event.eventMedia]);
 
 
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);

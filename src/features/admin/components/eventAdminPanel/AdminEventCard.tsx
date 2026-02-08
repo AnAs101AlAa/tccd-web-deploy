@@ -1,52 +1,22 @@
 import type Event from "@/shared/types/events";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { Button, LazyImageLoader } from "tccd-ui";
 import Format from "@/shared/utils/dateFormater";
 import { MdCalendarMonth, MdGroups } from "react-icons/md";
-import ConfirmActionModal from "@/shared/components/modals/ConfirmActionModal";
 import EVENT_TYPES from "@/constants/EventTypes";
-import { useDeleteEvent } from "@/shared/queries/admin/events/eventsQueries";
-import toast from "react-hot-toast";
 
 export default function AdminEventCard({
   onEdit,
   event,
+  onDelete,
 }: {
+  onDelete: () => void;
   onEdit: () => void;
   event: Event;
 }) {
   const navigate = useNavigate();
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const deleteEventMutation = useDeleteEvent();
-
-  const handleDelete = () => {
-    deleteEventMutation.mutate(event.id, {
-      onSuccess: () => {
-        toast.success("Event deleted successfully");
-        setIsDeleteModalOpen(false);
-      },
-      onError: () => {
-        toast.error("Failed to delete event. Please try again.");
-        setIsDeleteModalOpen(false);
-      }
-    });
-  };
 
   return (
-    <>
-      {isDeleteModalOpen && (
-        <ConfirmActionModal
-          isOpen={isDeleteModalOpen}
-          onClose={() => setIsDeleteModalOpen(false)}
-          isSubmitting={deleteEventMutation.isPending}
-          title="Confirm Deletion"
-          message={`Are you sure you want to delete the event "${event.name}"? This action cannot be undone.`}
-          onConfirm={handleDelete}
-          confirmButtonText="Delete"
-          cancelButtonText="Cancel"
-        />
-      )}
       <div
         onClick={() => navigate(`/events/${event.id}`)}
         className={`relative flex flex-col items-start m-auto gap-1 lg:gap-2 border-1 border-contrast/13 rounded-lg py-2 px-3 md:p-3 w-full h-full cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out`}
@@ -73,7 +43,7 @@ export default function AdminEventCard({
           <MdCalendarMonth className="text-inactive-tab-text mr-1 size-4 lg:size-4.5 -mt-0.5" />
           {Format(event.date, "stringed")}
         </div>
-        <div className="-mt-1 flex flex-row text-inactive-tab-text font-medium text-[13px] md:text-[14px] lg:text-[15px] items-center mb-2 md:mb-3">
+        <div className="-mt-2 flex flex-row text-inactive-tab-text font-medium text-[13px] md:text-[14px] lg:text-[15px] items-center">
           <MdGroups className="text-inactive-tab-text mr-1 size-4 lg:size-4.5 -mt-0.5" />
           {event.attendeeCount}
         </div>
@@ -95,10 +65,9 @@ export default function AdminEventCard({
             buttonText="Delete"
             type="danger"
             width="small"
-            onClick={() => setIsDeleteModalOpen(true)}
+            onClick={() => onDelete()}
           />
         </div>
       </div>
-    </>
   );
 }
