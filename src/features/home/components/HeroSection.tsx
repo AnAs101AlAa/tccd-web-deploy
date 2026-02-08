@@ -20,8 +20,9 @@ const HeroSection = () => {
 
   const userData = useSelector((state: { user: StudentUser }) => state.user);
   const handleLoginClick = () => {
+    console.log(userData);
     if (userData.id != "") {
-      navigate(`/profile/${userData.englishFullName.replace(/ /g, "")}`);
+      navigate(`/profile`);
     } else {
       navigate("/signin");
     }
@@ -107,7 +108,7 @@ const HeroSection = () => {
       </div>
 
       {/* Main content container */}
-      <div className="container relative z-10 px-4 md:px-6 mx-auto">
+      <div className="container relative px-4 md:px-6 mx-auto">
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
           {/* Left column with text content */}
           <div className="flex flex-col justify-center space-y-5 text-white xl:pt-8 fade-in-left">
@@ -137,14 +138,14 @@ const HeroSection = () => {
             {/* Call-to-action buttons */}
             <div className="flex sm:flex-row gap-4 pt-4">
               <button
-                className="bg-[#cd3a38] hover:bg-[#b33432] text-[14px] md:text-[16px] lg:text-[18px] text-white border-0 rounded-full w-fit px-4 md:px-8 py-2 md:py-3 font-medium flex items-center justify-center"
+                className="bg-[#cd3a38] cursor-pointer hover:bg-[#b33432] text-[14px] md:text-[16px] lg:text-[18px] text-white border-0 rounded-full w-fit px-4 md:px-8 py-2 md:py-3 font-medium flex items-center justify-center"
                 onClick={handleEventClick}
               >
                 Explore Events
                 <FaChevronRight className="ml-2 h-4 w-4" />
               </button>
               <button
-                className="border text-[14px] md:text-[16px] lg:text-[18px] border-[#295E7E] bg-[#295E7E] text-white hover:bg-[#1d4259] w-fit rounded-full px-8 py-2 md:py-3 font-medium flex items-center justify-center"
+                className="border cursor-pointer text-[14px] md:text-[16px] lg:text-[18px] border-[#295E7E] bg-[#295E7E] text-white hover:bg-[#1d4259] w-fit rounded-full px-8 py-2 md:py-3 font-medium flex items-center justify-center"
                 onClick={handleLoginClick}
               >
                 {userData.id != "" ? "Profile" : "Login"}

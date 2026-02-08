@@ -4,6 +4,8 @@ import { useRef, useEffect, useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
 import EVENT_TYPES from "@/constants/EventTypes";
 import format from "@/shared/utils/dateFormater";
+import { useCurrentUser } from "@/shared/store";
+import toast from "react-hot-toast";
 
 interface Props {
   event: Event;
@@ -20,7 +22,8 @@ const UpcomingEventCard: React.FC<Props> = ({
   const mainInfoRef = useRef<HTMLDivElement>(null);
   const [translateValue, setTranslateValue] = useState(260);
   const [isTapped, setIsTapped] = useState(false);
-  
+  const currentUser = useCurrentUser();
+
   useEffect(() => {
     const wholeEl = wholeInfoRef.current;
     const mainEl = mainInfoRef.current;
@@ -111,6 +114,10 @@ const UpcomingEventCard: React.FC<Props> = ({
               type="primary"
               width="small"
               onClick={() => {
+                if (!currentUser.id) {
+                  toast.error("Please log in to be able to register in events.");
+                  return;
+                }
                 onBookNow(event.id);
               }}
             />

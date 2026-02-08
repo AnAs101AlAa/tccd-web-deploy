@@ -27,7 +27,7 @@ const MobileNavbar = () => {
           <Link
             className={`${
               active ? "text-primary" : "text-secondary"
-            } inline-flex flex-col items-center gap-1 ${
+            } inline-flex flex-col w-1/4 items-center gap-1 ${
               index === 1 ? "mr-7" : index === 2 ? "ml-7" : ""
             } cursor-pointer`}
             key={title}
@@ -45,7 +45,7 @@ const MobileNavbar = () => {
         );
       })}
 
-      <div className="absolute left-1/2 -translate-x-1/2 top-1">
+      <div className="absolute right-1/2 translate-x-1/2 top-1">
         {isAuthenticated ? (
           <>
             <ProfileAvatar

@@ -44,6 +44,7 @@ export class EventApi {
     } else {
       params = { ...params, EndDate: new Date().toISOString() };
     }
+    console.log("Fetching past events with params:", params);
     const response = await systemApi.get(`${EVENT_ROUTE}`, {
       params,
     });

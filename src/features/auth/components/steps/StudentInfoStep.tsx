@@ -1,9 +1,10 @@
 import type { Control } from "react-hook-form";
 import type { StudentInfoFormData } from "../../schemas";
-import { Controller } from "react-hook-form";
 import UniversityList from "@/constants/universityList";
 import FacultyList from "@/constants/facultyList";
 import DepartmentList from "@/constants/departmentList";
+import { FormInput } from "../FormInput";
+import { useWatch } from "react-hook-form";
 
 interface StudentInfoStepProps {
   control: Control<StudentInfoFormData>;
@@ -13,6 +14,9 @@ interface StudentInfoStepProps {
  * Step 3: Student Information Collection
  */
 export const StudentInfoStep = ({ control }: StudentInfoStepProps) => {
+  const faculty = useWatch({ control, name: "faculty" });
+  const isDepartmentRequired = faculty === "Engineering";
+
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -24,92 +28,34 @@ export const StudentInfoStep = ({ control }: StudentInfoStepProps) => {
         </p>
       </div>
 
-      {/* University */}
-      <Controller
+      <FormInput
         name="university"
         control={control}
-        render={({ field, fieldState: { error } }) => (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              University <span className="text-red-500">*</span>
-            </label>
-            <select
-              {...field}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-colors"
-            >
-              <option value="">Select your university</option>
-              {UniversityList.map((uni) => (
-                <option key={uni} value={uni}>
-                  {uni}
-                </option>
-              ))}
-            </select>
-            {error && (
-              <p className="mt-1 text-sm text-red-600" role="alert">
-                {error.message}
-              </p>
-            )}
-          </div>
-        )}
+        label="University"
+        type="dropdown"
+        placeholder="Select your university"
+        options={UniversityList.map((uni) => ({ label: uni, value: uni }))}
       />
 
-      {/* Faculty */}
-      <Controller
+      <FormInput
         name="faculty"
         control={control}
-        render={({ field, fieldState: { error } }) => (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Faculty <span className="text-red-500">*</span>
-            </label>
-            <select
-              {...field}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-colors"
-            >
-              <option value="">Select your faculty</option>
-              {FacultyList.map((faculty) => (
-                <option key={faculty} value={faculty}>
-                  {faculty}
-                </option>
-              ))}
-            </select>
-            {error && (
-              <p className="mt-1 text-sm text-red-600" role="alert">
-                {error.message}
-              </p>
-            )}
-          </div>
-        )}
+        label="Faculty"
+        type="dropdown"
+        placeholder="Select your faculty"
+        options={FacultyList.map((fac) => ({ label: fac, value: fac }))}
       />
 
-      {/* Department (Optional) */}
-      <Controller
-        name="department"
-        control={control}
-        render={({ field, fieldState: { error } }) => (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Department (Optional)
-            </label>
-            <select
-              {...field}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-colors"
-            >
-              <option value="">Select your department</option>
-              {DepartmentList.map((dept) => (
-                <option key={dept} value={dept}>
-                  {dept}
-                </option>
-              ))}
-            </select>
-            {error && (
-              <p className="mt-1 text-sm text-red-600" role="alert">
-                {error.message}
-              </p>
-            )}
-          </div>
-        )}
-      />
+      {faculty === "Engineering" && (
+        <FormInput
+          name="department"
+          control={control}
+          type="dropdown"
+          label={isDepartmentRequired ? "Department" : "Department (Optional)"}
+          placeholder="Select your department"
+          options={DepartmentList.map((dept) => ({ label: dept, value: dept }))}
+        />
+      )}
     </div>
   );
 };
