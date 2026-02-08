@@ -1,9 +1,9 @@
-import { Modal, Button, ButtonTypes, ButtonWidths } from "tccd-ui";
-import { useDeleteLocation } from "@/shared/queries/admin";
+import { Modal, Button } from "tccd-ui";
 import type { Location } from "@/shared/queries/admin";
 import toast from "react-hot-toast";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { getErrorMessage } from "@/shared/utils";
+import { useDeleteLocation } from "@/shared/queries/admin";
 
 interface DeleteLocationConfirmationProps {
   location: Location;
@@ -22,7 +22,6 @@ const DeleteLocationConfirmation: React.FC<DeleteLocationConfirmationProps> = ({
   onClose,
 }) => {
   const deleteLocationMutation = useDeleteLocation();
-
   const handleDelete = async () => {
     try {
       await deleteLocationMutation.mutateAsync(location.id);
@@ -80,14 +79,6 @@ const DeleteLocationConfirmation: React.FC<DeleteLocationConfirmationProps> = ({
               {location.capacity.toLocaleString()} people
             </span>
           </div>
-          {location.address && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Address:</span>
-              <span className="font-medium text-gray-900 text-right max-w-[60%]">
-                {location.address}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Additional Warning */}
@@ -100,23 +91,19 @@ const DeleteLocationConfirmation: React.FC<DeleteLocationConfirmationProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+        <div className="flex justify-center gap-3 pt-4 border-t border-gray-200">
           <Button
             buttonText="Cancel"
             onClick={onClose}
-            type={ButtonTypes.SECONDARY}
-            width={ButtonWidths.AUTO}
+            type="basic"
+            width="auto"
             disabled={deleteLocationMutation.isPending}
           />
           <Button
-            buttonText={
-              deleteLocationMutation.isPending
-                ? "Deleting..."
-                : "Delete Location"
-            }
+            buttonText={deleteLocationMutation.isPending ? "Deleting..." : "Delete Location"}
             onClick={handleDelete}
-            type={ButtonTypes.DANGER}
-            width={ButtonWidths.AUTO}
+            type="danger"
+            width="auto"
             disabled={deleteLocationMutation.isPending}
           />
         </div>
