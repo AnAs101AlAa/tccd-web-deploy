@@ -1,15 +1,14 @@
-import { useState } from "react";
-import { Modal, Button, ButtonTypes, ButtonWidths } from "tccd-ui";
+import { Modal, Button } from "tccd-ui";
 import type { Location } from "@/shared/queries/admin";
 import toast from "react-hot-toast";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { getErrorMessage } from "@/shared/utils";
+import { useDeleteLocation } from "@/shared/queries/admin";
 
 interface DeleteLocationConfirmationProps {
   location: Location;
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => Promise<void> | void;
 }
 
 /**
@@ -21,21 +20,16 @@ const DeleteLocationConfirmation: React.FC<DeleteLocationConfirmationProps> = ({
   location,
   isOpen,
   onClose,
-  onConfirm,
 }) => {
-  const [isDeleting, setIsDeleting] = useState(false);
-
+  const deleteLocationMutation = useDeleteLocation();
   const handleDelete = async () => {
     try {
-      setIsDeleting(true);
-      await onConfirm();
+      await deleteLocationMutation.mutateAsync(location.id);
       toast.success(`${location.name} has been deleted successfully`);
       onClose();
     } catch (error) {
       console.error("Error deleting location:", error);
       toast.error(getErrorMessage(error));
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -85,14 +79,6 @@ const DeleteLocationConfirmation: React.FC<DeleteLocationConfirmationProps> = ({
               {location.capacity.toLocaleString()} people
             </span>
           </div>
-          {location.address && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Address:</span>
-              <span className="font-medium text-gray-900 text-right max-w-[60%]">
-                {location.address}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Additional Warning */}
@@ -105,20 +91,20 @@ const DeleteLocationConfirmation: React.FC<DeleteLocationConfirmationProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+        <div className="flex justify-center gap-3 pt-4 border-t border-gray-200">
           <Button
             buttonText="Cancel"
             onClick={onClose}
-            type={ButtonTypes.SECONDARY}
-            width={ButtonWidths.AUTO}
-            disabled={isDeleting}
+            type="basic"
+            width="auto"
+            disabled={deleteLocationMutation.isPending}
           />
           <Button
-            buttonText={isDeleting ? "Deleting..." : "Delete Location"}
+            buttonText={deleteLocationMutation.isPending ? "Deleting..." : "Delete Location"}
             onClick={handleDelete}
-            type={ButtonTypes.DANGER}
-            width={ButtonWidths.AUTO}
-            disabled={isDeleting}
+            type="danger"
+            width="auto"
+            disabled={deleteLocationMutation.isPending}
           />
         </div>
       </div>

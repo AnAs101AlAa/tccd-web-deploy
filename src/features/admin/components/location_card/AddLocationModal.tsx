@@ -69,7 +69,7 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
     <Modal
       title="Add New Location"
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={() => {if(!createLocationMutation.isPending) handleClose()}}
       className="max-w-2xl"
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -109,11 +109,6 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
               />
             )}
           />
-          {errors.capacity && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.capacity.message}
-            </p>
-          )}
         </div>
 
         <div>
@@ -150,19 +145,20 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
           )}
         </div>
 
-        <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+        <div className="flex justify-center gap-3 pt-4 border-t border-gray-200">
           <Button
             buttonText="Cancel"
             onClick={handleClose}
-            type={ButtonTypes.SECONDARY}
-            width={ButtonWidths.AUTO}
+            type="basic"
+            width="auto"
             disabled={createLocationMutation.isPending}
           />
           <Button
             buttonText="Submit"
             type="primary"
             onClick={() => handleSubmit(onSubmit)()}
-            width={ButtonWidths.AUTO}
+            width="auto"
+            loading={createLocationMutation.isPending}
             disabled={createLocationMutation.isPending}
           />
         </div>

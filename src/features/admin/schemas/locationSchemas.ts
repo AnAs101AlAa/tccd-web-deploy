@@ -17,7 +17,7 @@ const capacitySchema = z
   .number()
   .int("Capacity must be a whole number")
   .positive("Capacity must be greater than 0")
-  .max(100000, "Capacity seems unrealistic (max 100,000)");
+  .max(10000, "Capacity seems unrealistic (max 10,000)");
 
 /**
  * Schema for room image ID validation (Google Drive ID)

@@ -7,10 +7,9 @@ import roomFallback from "@/assets/room.png";
 
 interface LocationCardProps {
   location: Location;
-  onDelete?: (id: string) => void;
 }
 
-const LocationCard: React.FC<LocationCardProps> = ({ location, onDelete }) => {
+const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const getImageUrl = (fileId: string | undefined | null) => {
@@ -40,13 +39,6 @@ const LocationCard: React.FC<LocationCardProps> = ({ location, onDelete }) => {
 
   const handleDeleteClick = () => {
     setIsDeleteModalOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    if (onDelete) {
-      onDelete(location.id);
-    }
-    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -152,7 +144,6 @@ const LocationCard: React.FC<LocationCardProps> = ({ location, onDelete }) => {
           location={location}
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
-          onConfirm={handleConfirmDelete}
         />
       )}
     </>

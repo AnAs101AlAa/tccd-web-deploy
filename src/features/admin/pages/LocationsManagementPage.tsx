@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { LoadingPage, ErrorScreen, Button } from "tccd-ui";
-import { useGetLocations, useDeleteLocation } from "@/shared/queries/admin";
+import { useGetLocations } from "@/shared/queries/admin";
 import { LocationCard, AddLocationModal } from "../components/location_card";
 import { usePagination } from "@/shared/hooks";
 import { Pagination } from "@/shared/components/pagination";
@@ -17,7 +17,6 @@ import { WithLayout } from "@/shared/components/hoc";
  */
 const LocationsManagementPage = () => {
   const { data: locations, isLoading, isError, error } = useGetLocations();
-  const { mutateAsync: deleteLocation } = useDeleteLocation();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -30,15 +29,6 @@ const LocationsManagementPage = () => {
     setSearchTerm(searchInput);
     setMinCapacity(minCapacityInput);
     setPage(1);
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteLocation(id);
-      // Optional: Add toast success here if not handled in mutation
-    } catch (error) {
-      console.error("Failed to delete location:", error);
-    }
   };
 
   const filteredLocations = useMemo(() => {
@@ -119,7 +109,7 @@ const LocationsManagementPage = () => {
           items={paginatedItems}
           emptyMessage="No locations found. Start by adding your first location to manage events."
           renderCard={(location: Location) => (
-            <LocationCard location={location} onDelete={handleDelete} />
+            <LocationCard location={location} />
           )}
           gridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           getKey={(location: Location) => location.id}
