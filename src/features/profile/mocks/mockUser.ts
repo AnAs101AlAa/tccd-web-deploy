@@ -17,7 +17,6 @@ export const mockUser: AnyUser = {
   department: "Computer Engineering",
   faculty: "Engineering",
   university: "Cairo University",
-  profilePicture: "https://avatars.githubusercontent.com/u/583231?v=40",
   cv: undefined,
   linkedin: undefined,
   gitHub: undefined,

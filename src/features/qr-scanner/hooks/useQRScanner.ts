@@ -24,7 +24,6 @@ export function useQRScanner() {
       const qrData = JSON.parse(detectedCodes[0].rawValue);
       
       if (!qrData.userId || !qrData.eventId) {
-        console.log(qrData)
         throw new Error("Invalid QR code format");
       }
 

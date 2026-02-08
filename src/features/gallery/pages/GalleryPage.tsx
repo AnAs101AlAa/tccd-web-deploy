@@ -36,6 +36,7 @@ const GalleryPage = () => {
 
     setQueryParams(stagingParams);
   };
+
   const {
     galleryItems: apiGalleryEvents,
     isLoading,

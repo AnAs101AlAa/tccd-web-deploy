@@ -39,7 +39,6 @@ export class PostsApi {
     const response = await systemApi.get(POSTS_ROUTE, { params });
 
     if (response.data.success && response.data.data) {
-      // console.log("API Response Data:", response.data.data); // Debug log
       const { items, pageIndex, totalPages, totalCount } = response.data.data;
       return {
         posts: items.map((item: any): CommunityPost => ({
@@ -89,8 +88,29 @@ export class PostsApi {
     return response.data;
   }
 
+  async createPost(postData: {name: string, description: string, priority?: number}): Promise<CommunityPost> {
+    const response = await systemApi.post(POSTS_ROUTE, postData);
+    if (response.data.success && response.data.data) {
+      const item = response.data.data;
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        media: item.media || [],
+        priority: item.priority,
+        isApproved: item.isApproved,
+        createdAt: item.createdAt,
+      };
+    }
+    throw new Error("Failed to create post");
+  }
+
   async deletePost(id: string): Promise<void> {
     await systemApi.delete(`${POSTS_ROUTE}/${id}`);
+  }
+
+  async addPostMedia(postId: string, mediaFiles: string[]): Promise<void> {
+    await systemApi.post(`v2/posts/${postId}/PostMedia`, { fileIds: mediaFiles });
   }
 }
 

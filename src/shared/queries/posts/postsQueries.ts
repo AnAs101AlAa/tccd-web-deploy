@@ -48,6 +48,21 @@ export const useGetPostsByStatus = (status: string) => {
   });
 };
 
+export const useCreatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (postData: {
+      name: string;
+      description: string;
+      priority?: number;
+    }) => postsApi.createPost(postData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: postsKeys.lists() });
+    },
+  });
+};
+
 export const useDeletePost = () => {
   const queryClient = useQueryClient();
 
@@ -56,5 +71,17 @@ export const useDeletePost = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: postsKeys.lists() });
     },
+  });
+};
+
+export const useAddPostMedia = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ postId, mediaFiles }: { postId: string; mediaFiles: string[] }) =>
+      postsApi.addPostMedia(postId, mediaFiles),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: postsKeys.detail(variables.postId) });
+    }
   });
 };

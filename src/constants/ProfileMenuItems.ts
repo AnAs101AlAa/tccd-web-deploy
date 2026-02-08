@@ -40,7 +40,7 @@ export const getProfileMenuItems = (
       icon: MdPostAdd,
       title: "Manage posts",
       iconColor: "var(--color-contrast)",
-      action: "/manage-posts",
+      action: "/posts",
     });
   }
   

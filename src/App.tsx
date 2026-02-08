@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { ProtectedRoute } from "@/shared/components/hoc";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -21,8 +22,20 @@ function App() {
       <ScrollToTop />
       <Toaster />
         <Routes>
-          {routes.map(({ path, Component }) => (
-            <Route key={path} path={path} element={<Component />} />
+          {routes.map(({ path, Component, protected: isProtected, roles }) => (
+            <Route 
+              key={path} 
+              path={path} 
+              element={
+                isProtected ? (
+                  <ProtectedRoute roles={roles}>
+                    <Component />
+                  </ProtectedRoute>
+                ) : (
+                  <Component />
+                )
+              } 
+            />
           ))}
         </Routes>
     </BrowserRouter>

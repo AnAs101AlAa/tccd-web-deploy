@@ -2,17 +2,17 @@ import type { CommunityPost } from "@/shared/types/postTypes";
 import { Button, LazyImageLoader } from "tccd-ui";
 import format from "@/shared/utils/dateFormater";
 import { FaImage } from "react-icons/fa";
-import { convertGoogleDriveUrl } from "@/shared/utils";
+import extractDriveId from "@/shared/utils/googleDriveHelper";
 
 export interface PostCardProps {
   post: CommunityPost;
-  setEditing: (postId: string) => void;
+  setEditing: (post: CommunityPost) => void;
   setDeleting: (postId: string) => void;
 }
 
 export default function PostCard({ post, setEditing, setDeleting }: PostCardProps) {
   const imageUrl = post.media && post.media.length > 0 && post.media[0]
-    ? convertGoogleDriveUrl(post.media[0])
+    ? extractDriveId(post.media[0])
     : null;
 
   return (
@@ -50,7 +50,7 @@ export default function PostCard({ post, setEditing, setDeleting }: PostCardProp
           </p>
         </div>
         <div className="flex justify-center gap-2 items-center">
-          <Button type="secondary" onClick={() => setEditing(post.id)} buttonText="Edit" width="small" />
+          <Button type="secondary" onClick={() => setEditing(post)} buttonText="Edit" width="small" />
           <Button type="danger" onClick={() => setDeleting(post.id)} buttonText="Delete" width="small" />
         </div>
       </div>

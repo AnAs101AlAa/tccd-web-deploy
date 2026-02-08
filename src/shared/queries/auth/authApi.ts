@@ -30,7 +30,6 @@ export class AuthApi {
       phoneNumber: "", // Not provided in login response
       email: credentials.email, // Use from credentials
       gender: response.gender,
-      profilePicture: response.profileImage,
       status: response.status,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
