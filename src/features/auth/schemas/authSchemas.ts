@@ -128,7 +128,19 @@ export const studentInfoSchema = z.object({
   university: z.string().min(1, "University is required"),
   faculty: z.string().min(1, "Faculty is required"),
   department: z.string().optional(),
-});
+})
+.refine(
+  (data) => {
+    if (data.faculty === "Engineering") {
+      return data.department && data.department.trim().length > 0;
+    }
+    return true;
+  },
+  {
+    message: "Department is required for Engineering faculty",
+    path: ["department"],
+  }
+);
 
 export type StudentInfoFormData = z.infer<typeof studentInfoSchema>;
 

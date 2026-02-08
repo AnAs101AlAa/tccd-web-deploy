@@ -15,6 +15,8 @@ const GalleryPage = () => {
   const [queryParams, setQueryParams] = useState<EventQueryParams>({
     PageNumber: 1,
     PageSize: 12,
+    OrderBy: "Date",
+    Descending: true,
   });
 
   const handleApplyFilters = (stagingParams: EventQueryParams) => {

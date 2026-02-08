@@ -34,7 +34,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       {/* Cover/Banner Section */}
       <div className="relative">
         <Cover
-          className="h-32 sm:h-40 md:h-48 lg:h-[200px]"
+          className="h-32 sm:h-40 md:h-48 lg:h-50"
         />
 
         {/* Avatar positioned to overlap cover */}
@@ -46,7 +46,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               position="relative"
               className="border-2 sm:border-4 border-white"
             />
-            {isOwnProfile && (
+            {(isOwnProfile && user.role !== "Admin") && (
               <div className="relative">
                 <button
                   ref={cameraButtonRef}

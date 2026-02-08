@@ -15,7 +15,7 @@ export const useEvents = (params? : EventQueryParams, dontFilterOnPast?: boolean
     isLoading: isLoadingUpcoming,
     error: upcomingError,
     refetch: refetchUpcoming,
-  } = useGetAllUpcomingEvents(params);
+  } = useGetAllUpcomingEvents({...params, OrderBy: "Date", Descending: false});
 
   // Fetch past events
   const {
@@ -23,7 +23,7 @@ export const useEvents = (params? : EventQueryParams, dontFilterOnPast?: boolean
     isLoading: isLoadingPast,
     error: pastError,
     refetch: refetchPast,
-  } = useGetAllPastEvents(dontFilterOnPast ? {PageSize: 6} : params);
+  } = useGetAllPastEvents(dontFilterOnPast ? {PageSize: 6, OrderBy: "Date", Descending: true} : {...params, OrderBy:"Date", Descending: true});
 
   // Combined loading state
   const isLoading = isLoadingUpcoming || isLoadingPast;

@@ -18,9 +18,9 @@ export default function PastEventCard({
   return (
     <div
       onClick={() => navigate(`/events/${event.id}`)}
-      className={`relative flex flex-col items-start m-auto gap-1 lg:gap-2 border-1 border-contrast/13 rounded-lg py-2 px-3 md:p-3 w-full h-full cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out`}
+      className={`relative flex flex-col items-start m-auto gap-1 lg:gap-2 border border-contrast/13 rounded-lg py-2 px-3 md:p-3 w-full h-full cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out`}
     >
-      <div className="w-full max-h-[260px] md:max-h-[310px] lg:max-h-[340px]">
+      <div className="w-full max-h-65 md:max-h-77.5 lg:max-h-85">
           <LazyImageLoader
             src={event.eventImage}
             alt={event.name}

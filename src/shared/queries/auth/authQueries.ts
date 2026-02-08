@@ -35,7 +35,11 @@ export const useLogin = () => {
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Login successful!");
     },
-    onError: (error: unknown) => {
+    onError: (error: any) => {
+      if(error.response?.status === 401) {
+        toast.error("Invalid email or password. Please try again.");
+        return;
+      }
       const message = getErrorMessage(error);
       toast.error(message || "Login failed. Please try again.");
     },

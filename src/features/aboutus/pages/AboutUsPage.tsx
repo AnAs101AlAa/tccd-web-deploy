@@ -15,8 +15,8 @@ import VisionIcon from "@/assets/vision.svg";
 import MissionIcon from "@/assets/mission.svg";
 import GoalIcon from "@/assets/goal.svg";
 import WithLayout from "@/shared/components/hoc/WithLayout";
-const ABOUT_US_HEADER_IMAGE = "src/assets/aboutusTopHeader.jpg";
-const ABOUT_US_IMAGE = "/user.jpg";
+import ABOUT_US_HEADER_IMAGE from "@/assets/aboutusTopHeader.jpg";
+import ABOUT_US_IMAGE from "/user.jpg";
 
 export const AboutUsPage = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
