@@ -17,7 +17,7 @@ const AdminEventsListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [upcomingQueryParams, setUpcomingQueryParams] = useState<EventQueryParams>({
-    PageNumber: parseInt(searchParams.get("upcomingPage") || "1", 10),
+    PageNumber: 1,
     PageSize: 3,
   });
 
@@ -50,11 +50,7 @@ const AdminEventsListPage = () => {
       ...stagingParams,
       PageNumber: 1,
     });
-
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("upcomingPage", "1");
-    setSearchParams(newParams);
-  }, [setUpcomingQueryParams, searchParams, setSearchParams]);
+  }, [setUpcomingQueryParams]);
 
   const handleApplyPastFilters = useCallback((stagingParams: EventQueryParams) => {
     const now = new Date();
@@ -89,14 +85,10 @@ const AdminEventsListPage = () => {
       PageNumber: newPage,
     }));
 
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("upcomingPage", newPage.toString());
-    setSearchParams(newParams);
-
     setTimeout(() => {
       document.getElementById("upcoming-section")?.scrollIntoView({ behavior: "smooth" });
     }, 100);
-  }, [setUpcomingQueryParams, searchParams, setSearchParams]);
+  }, [setUpcomingQueryParams]);
 
   const handlePastPageChange = useCallback((newPage: number) => {
     setPastQueryParams((prev) => ({

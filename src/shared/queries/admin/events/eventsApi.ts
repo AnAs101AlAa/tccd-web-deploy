@@ -78,6 +78,12 @@ export class EventsApi {
     );
     return data.data.items.map((item: any) => ({...item, locations: item.rooms, eventMedia: item.medias} as Event)) as Event[];
   }
+
+  async deleteEvent(id: string) {
+    await systemApi.delete(
+      `${EVENTS_ROUTE}/${id}`
+    );
+  }
 }
 
 export const eventsApi = new EventsApi();
