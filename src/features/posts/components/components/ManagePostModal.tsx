@@ -6,7 +6,15 @@ import type { CommunityPost, PostMedia } from "@/shared/types";
 import extractDriveId from "@/shared/utils/googleDriveHelper";
 
 export default function ManagePostModal({
-  initialData,
+  initialData = {
+    id: "",
+    name: "",
+    description: "",
+    media: [],
+    priority: 0,
+    isApproved: false,
+    createdAt: new Date().toISOString(),
+  },
   isOpen,
   onClose,
 }: {
@@ -31,18 +39,10 @@ export default function ManagePostModal({
     isSubmitting,
     errors,
     handleSubmit,
-  } = useManagePostUtils({initialData: initialData || {
-    id: "",
-    name: "",
-    description: "",
-    media: [],
-    priority: 0,
-    isApproved: false,
-    createdAt: new Date().toISOString(),
-  }, onClose});
+  } = useManagePostUtils({initialData: initialData, onClose});
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={initialData ? "Edit Post" : "Create a new Post"}>
+    <Modal isOpen={isOpen} onClose={onClose} title={initialData.id !== "" ? "Edit Post" : "Create a new Post"}>
       <div className="space-y-4">
         <div className="space-y-2">
           <InputField
@@ -67,7 +67,7 @@ export default function ManagePostModal({
             placeholder="What's new ?"
             value={postData.description}
             onChange={(e) => handleInputChange("description", e.target.value)}
-            maxLength={500}
+            maxLength={2000}
             error={errors.description}
           />
           {errors.description && <p className="px-1 text-xs text-primary">

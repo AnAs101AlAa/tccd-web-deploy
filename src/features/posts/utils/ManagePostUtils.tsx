@@ -7,7 +7,7 @@ import extractDriveId from "@/shared/utils/googleDriveHelper";
 
 export const postSchema = z.object({
     name: z.string().min(1, "Title is required and cannot be empty"),
-    description: z.string().min(1, "Description is required and cannot be empty"),
+    description: z.string().min(1, "Description is required and cannot be empty").min(10, "Description must be at least 10 characters long").max(2000, "Description cannot exceed 2000 characters"),
     media: z.array(z.any()).min(1, "At least one media file is required"),
 });
 
@@ -28,7 +28,7 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
     const deletePostMediaMutation = useDeletePostMedia();
 
     useEffect(() => {
-        if(initialData) {
+        if(initialData.id !== "") {
             setPostData(initialData);
             setOriginalMedia(initialData.media || []);
             setNewMedia([]);

@@ -1,5 +1,5 @@
 import { systemApi } from "../AxoisInstance";
-import type { CommunityPost, PostMedia } from "@/shared/types/postTypes";
+import type { CommunityPost } from "@/shared/types/postTypes";
 
 const POSTS_ROUTE = "/v1/Posts";
 

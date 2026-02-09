@@ -75,7 +75,7 @@ export const PostManagementPage = () => {
         postId={deletedPost}
       />
       <ManagePostModal
-        initialData={selectedPost || { name: "", description: "", media: [], priority: 0, createdAt: new Date().toISOString(), id: "" }}
+        initialData={selectedPost || undefined}
         onClose={() => {
           setSelectedPost(null);
           setCreatePost(false);

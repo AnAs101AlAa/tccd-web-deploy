@@ -1,6 +1,7 @@
 import { Modal, Button } from 'tccd-ui';
 import { useDeletePost } from '@/shared/queries/posts';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function PostDeleteModal({isOpen, onClose, postId}: {isOpen: boolean; onClose: () => void; postId: string | null}) {
     const { mutate: deletePost, isPending } = useDeletePost();
@@ -14,9 +15,8 @@ export default function PostDeleteModal({isOpen, onClose, postId}: {isOpen: bool
             onSuccess: () => {
                 onClose();
             },
-            onError: (err: any) => {
-                const errorMessage = err?.response?.data?.message || 'Failed to delete post. Please try again.';
-                setError(errorMessage);
+            onError: () => {
+                toast.error('Failed to delete post. Please try again.');
             },
         });
     };
