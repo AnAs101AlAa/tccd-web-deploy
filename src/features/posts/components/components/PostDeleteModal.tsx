@@ -30,7 +30,7 @@ export default function PostDeleteModal({isOpen, onClose, postId}: {isOpen: bool
                 </div>
             )}
             <div className="flex justify-center gap-2">
-                <Button type="secondary" onClick={onClose} buttonText="Cancel" width="small" disabled={isPending} />
+                <Button type="basic" onClick={onClose} buttonText="Cancel" width="small" disabled={isPending} />
                 <Button type="danger" onClick={handleDelete} buttonText={isPending ? "Deleting..." : "Delete"} width="small" disabled={isPending} />
             </div>
         </Modal>

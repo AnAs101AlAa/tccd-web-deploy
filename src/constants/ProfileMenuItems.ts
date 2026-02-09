@@ -3,7 +3,7 @@ import { FaRegUser } from "react-icons/fa";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { MdDashboard, MdPostAdd } from "react-icons/md";
-import { isAdmin, isVolunteer } from "@/shared/types/users";
+import { isAdmin, isStudent, isVolunteer } from "@/shared/types/users";
 import type { User } from "@/shared/types";
 import { LuScanBarcode } from "react-icons/lu";
 
@@ -19,12 +19,14 @@ export const getProfileMenuItems = (
 ): ProfileMenuItem[] => {
   if (!user) return [];
   const menuItems: ProfileMenuItem[] = [];
-  menuItems.push({
-    icon: FaRegUser,
-    title: "Profile",
-    iconColor: "var(--color-contrast)",
-    action: "/profile",
-  });
+  if(isStudent(user)) {
+    menuItems.push({
+      icon: FaRegUser,
+      title: "Profile",
+      iconColor: "var(--color-contrast)",
+      action: "/profile",
+    });
+  }
   
   if (isAdmin(user) || (isVolunteer(user) && user.position !== "Member")) {
     menuItems.push({

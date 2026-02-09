@@ -63,6 +63,18 @@ export const useCreatePost = () => {
   });
 };
 
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ postId, postData }: { postId: string; postData: { name: string; description: string; priority?: number } }) =>
+      postsApi.updatePost(postId, postData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: postsKeys.lists() });
+    }
+  });
+};
+
 export const useDeletePost = () => {
   const queryClient = useQueryClient();
 
@@ -80,8 +92,20 @@ export const useAddPostMedia = () => {
   return useMutation({
     mutationFn: ({ postId, mediaFiles }: { postId: string; mediaFiles: string[] }) =>
       postsApi.addPostMedia(postId, mediaFiles),
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: postsKeys.detail(variables.postId) });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: postsKeys.lists() });
+    }
+  });
+};
+
+export const useDeletePostMedia = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ postId, mediaFiles }: { postId: string; mediaFiles: string[] }) =>
+      postsApi.deletePostMedia(postId, mediaFiles),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: postsKeys.lists() });
     }
   });
 };

@@ -80,7 +80,7 @@ export const PostManagementPage = () => {
           setSelectedPost(null);
           setCreatePost(false);
         }}
-        isOpen={createPost}
+        isOpen={createPost || selectedPost !== null}
       />
       <div className="min-h-screen bg-gray-50">
         <UpperHeader

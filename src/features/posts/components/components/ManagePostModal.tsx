@@ -2,7 +2,8 @@ import { Button, Modal, TextAreaField, InputField } from "tccd-ui";
 import { FaPlus, FaCheck } from "react-icons/fa";
 import { TbTrash } from "react-icons/tb";
 import useManagePostUtils from "../../utils/ManagePostUtils";
-import type { CommunityPost } from "@/shared/types";
+import type { CommunityPost, PostMedia } from "@/shared/types";
+import extractDriveId from "@/shared/utils/googleDriveHelper";
 
 export default function ManagePostModal({
   initialData,
@@ -20,9 +21,9 @@ export default function ManagePostModal({
     currentMediaInput,
     setCurrentMediaInput,
     handleInputChange,
-    newMediaIds,
+    newMedia,
     originalMedia,
-    deletedMediaIds,
+    deletedMedia,
     handleRemoveNewMedia,
     setIsAddingMedia,
     handleAddMedia,
@@ -36,11 +37,12 @@ export default function ManagePostModal({
     description: "",
     media: [],
     priority: 0,
+    isApproved: false,
     createdAt: new Date().toISOString(),
   }, onClose});
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create a new Post">
+    <Modal isOpen={isOpen} onClose={onClose} title={initialData ? "Edit Post" : "Create a new Post"}>
       <div className="space-y-4">
         <div className="space-y-2">
           <InputField
@@ -89,14 +91,13 @@ export default function ManagePostModal({
             </div>
             <div className="max-h-48 overflow-y-auto border border-gray-400 rounded-2xl p-2 space-y-2">
               {(() => {
-                const visibleOriginalMedia = originalMedia?.filter((media: any) => !deletedMediaIds.includes(media.id)) || [];
-                const hasVisibleMedia = visibleOriginalMedia.length > 0 || newMediaIds.length > 0 || isAddingMedia;
+                const visibleOriginalMedia = originalMedia?.filter((media: PostMedia) => !deletedMedia.includes(media)) || [];
+                const hasVisibleMedia = visibleOriginalMedia.length > 0 || newMedia.length > 0 || isAddingMedia;
 
                 return hasVisibleMedia ? (
                   <>
-                    {/* Existing media from API (read-only, can delete) */}
-                    {visibleOriginalMedia.map((media: any) => {
-                      const driveId = media.mediaUrl ? media.mediaUrl.match(/\/d\/([^\/\?]+)/)?.[1] || media.mediaUrl : '';
+                    {visibleOriginalMedia.map((media: PostMedia) => {
+                      const driveId = extractDriveId(media.mediaUrl);
                       return (
                         <div key={media.id} className="p-2 border border-gray-300 rounded-2xl bg-gray-50">
                           <div className="flex items-center justify-between gap-2">
@@ -105,7 +106,7 @@ export default function ManagePostModal({
                               <span className="text-sm text-gray-700 truncate">{driveId}</span>
                             </div>
                             <button
-                              onClick={() => handleRemoveOriginalMedia(media.id)}
+                              onClick={() => handleRemoveOriginalMedia(media)}
                               className="text-contrast hover:text-primary cursor-pointer shrink-0"
                               title="Mark for deletion"
                             >
@@ -116,16 +117,15 @@ export default function ManagePostModal({
                       );
                     })}
 
-                    {/* Newly added media (can delete before saving) */}
-                    {newMediaIds.map((mediaId, index) => (
+                    {newMedia.map((media: PostMedia, index) => (
                       <div key={`new-${index}`} className="p-2 border border-gray-300 rounded-2xl bg-blue-50">
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 flex-1 min-w-0">
                             <span className="text-xs text-blue-600 font-medium">New:</span>
-                            <span className="text-sm text-gray-700 truncate">{mediaId}</span>
+                            <span className="text-sm text-gray-700 truncate">{media.mediaUrl}</span>
                           </div>
                           <button
-                            onClick={() => handleRemoveNewMedia(mediaId)}
+                            onClick={() => handleRemoveNewMedia(media)}
                             className="text-contrast hover:text-primary cursor-pointer shrink-0"
                           >
                             <TbTrash className="size-4" />

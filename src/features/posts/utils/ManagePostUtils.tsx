@@ -1,6 +1,6 @@
-import type { CommunityPost } from "@/shared/types";
-import { useState } from "react";
-import { useCreatePost, useAddPostMedia } from "@/shared/queries/posts";
+import type { CommunityPost, PostMedia } from "@/shared/types";
+import { useEffect, useState } from "react";
+import { useCreatePost, useAddPostMedia, useUpdatePost, useDeletePostMedia } from "@/shared/queries/posts";
 import { z, ZodError } from "zod";
 import toast from "react-hot-toast";
 import extractDriveId from "@/shared/utils/googleDriveHelper";
@@ -17,14 +17,24 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
     const [postData, setPostData] = useState<CommunityPost>(initialData);
     const [isAddingMedia, setIsAddingMedia] = useState<boolean>(false);
     const [currentMediaInput, setCurrentMediaInput] = useState<string>("");
-    const [newMediaIds, setNewMediaIds] = useState<string[]>([]);
-    const [originalMedia] = useState<string[]>([]);
-    const [deletedMediaIds, setDeletedMediaIds] = useState<string[]>([]);
+    const [newMedia, setNewMedia] = useState<PostMedia[]>([]);
+    const [originalMedia, setOriginalMedia] = useState<PostMedia[]>(initialData?.media || []);
+    const [deletedMedia, setDeletedMedia] = useState<PostMedia[]>([]);
     const [errors, setErrors] = useState<Record<string, string>>({});
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const createPostMutation = useCreatePost();
     const addPostMediaMutation = useAddPostMedia();
+    const updatePostMutation = useUpdatePost();
+    const deletePostMediaMutation = useDeletePostMedia();
+
+    useEffect(() => {
+        if(initialData) {
+            setPostData(initialData);
+            setOriginalMedia(initialData.media || []);
+            setNewMedia([]);
+            setDeletedMedia([]);
+        }
+    }, [initialData]);
 
     const handleInputChange = (field: keyof CommunityPost, value: string | number | boolean) => {
         setPostData((prev) => ({
@@ -40,18 +50,21 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
         }
     };
 
-    const handleRemoveOriginalMedia = (mediaId: string) => {
-        setDeletedMediaIds((prev) => [...prev, mediaId]);
+    const handleRemoveOriginalMedia = (media: PostMedia) => {
+        const mediaToDelete = originalMedia.find(m => m.id === media.id);
+        if (mediaToDelete) {
+            setDeletedMedia((prev) => [...prev, mediaToDelete]);
+        }
     };
 
-    const handleRemoveNewMedia = (mediaId: string) => {
-        setNewMediaIds((prev) => prev.filter((id) => id !== mediaId));
+    const handleRemoveNewMedia = (media: PostMedia) => {
+        setNewMedia((prev) => prev.filter((m) => m.id !== media.id));
     };
 
     const handleAddNewMedia = () => {
         if (currentMediaInput.trim()) {
             const extractedId = extractDriveId(currentMediaInput.trim());
-            setNewMediaIds((prev) => [...prev, extractedId]);
+            setNewMedia((prev) => [...prev, { id: "", mediaUrl: extractedId }]);
             setCurrentMediaInput("");
         }
     };
@@ -60,7 +73,7 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
         const extractedId = extractDriveId(mediaId);
 
         if (currentMediaInput.trim()) {
-            setNewMediaIds((prev) => [...prev, extractedId]);
+            setNewMedia((prev) => [...prev, { id: "", mediaUrl: extractedId }]);
             setCurrentMediaInput("");
         }
     };
@@ -72,7 +85,7 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
             const formData = {
                 name: postData?.name || "",
                 description: postData?.description || "",
-                media: [...originalMedia.filter((id) => !deletedMediaIds.includes(id)), ...newMediaIds],
+                media: [...originalMedia.filter((media) => !deletedMedia.includes(media)), ...newMedia],
             };
 
             postSchema.parse(formData);
@@ -93,32 +106,58 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
     };
 
     const handleSubmit = async () => {
+        if (!validatePost()) {
+            return;
+        }
 
-        setIsSubmitting(true);
+        if(initialData.id === "") {
+            try {
+                const res = await createPostMutation.mutateAsync({
+                    name: postData?.name || "",
+                    description: postData?.description || "",
+                    priority: 100,
+                });
 
-        try {
-            if (!validatePost()) {
-                setIsSubmitting(false);
-                return;
+                await addPostMediaMutation.mutateAsync({
+                    postId: res.id,
+                    mediaFiles: newMedia.map((media) => media.mediaUrl),
+                });
+
+                toast.success("Post created successfully!");
+                onClose();
+            } catch {
+                toast.error("An unexpected error occurred while creating the post, please try again.");
             }
+        } else {
+            try {
+                await updatePostMutation.mutateAsync({
+                    postId: postData.id,
+                    postData: {
+                        name: postData.name,
+                        description: postData.description,
+                        priority: postData.priority,
+                    }
+                });
 
-            const res = await createPostMutation.mutateAsync({
-                name: postData?.name || "",
-                description: postData?.description || "",
-                priority: 100,
-            });
+                if (newMedia.length > 0) {
+                    await addPostMediaMutation.mutateAsync({
+                        postId: postData.id,
+                        mediaFiles: newMedia.map((media) => media.mediaUrl),
+                    });
+                }
 
-            await addPostMediaMutation.mutateAsync({
-                postId: res.id,
-                mediaFiles: newMediaIds,
-            });
+                if (deletedMedia.length > 0) {
+                    await deletePostMediaMutation.mutateAsync({
+                        postId: postData.id,
+                        mediaFiles: deletedMedia.map((media) => extractDriveId(media.id)),
+                    });
+                }
 
-            toast.success("Post created successfully!");
-            onClose();
-        } catch {
-            toast.error("An unexpected error occurred");
-        } finally {
-            setIsSubmitting(false);
+                toast.success("Post updated successfully!");
+                onClose();
+            } catch {
+                toast.error("An unexpected error occurred while updating the post, please try again.");
+            }
         }
     };
 
@@ -131,9 +170,9 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
         postData,
         handleInputChange,
         setIsAddingMedia,
-        newMediaIds,
+        newMedia,
         originalMedia,
-        deletedMediaIds,
+        deletedMedia,
         isAddingMedia,
         currentMediaInput,
         setCurrentMediaInput,
@@ -141,7 +180,7 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
         handleAddNewMedia,
         handleRemoveNewMedia,
         handleRemoveOriginalMedia,
-        isSubmitting,
+        isSubmitting: createPostMutation.isPending || addPostMediaMutation.isPending || updatePostMutation.isPending || deletePostMediaMutation.isPending,
         errors,
         validatePost,
         handleSubmit,
