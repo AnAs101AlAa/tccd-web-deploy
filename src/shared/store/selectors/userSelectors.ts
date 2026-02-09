@@ -43,14 +43,6 @@ export const selectUserEmail = createSelector(
 );
 
 /**
- * Select user's profile image URL
- */
-export const selectUserProfileImage = createSelector(
-  [selectCurrentUser],
-  (user) => user?.profileImage
-);
-
-/**
  * Check if user has a specific role
  * Returns false if no user or role doesn't match
  */
@@ -144,8 +136,8 @@ export const selectHasCommitteeAffiliation = createSelector(
 export const selectUserStatus = createSelector(
   [selectCurrentUser],
   (user) => {
-    console.log(user)
-    return user?.status}
+    return user?.status || "Unknown";
+  }
 );
 
 /**

@@ -18,11 +18,11 @@ const PostContainer: React.FC<PostContainerProps> = ({ post }) => {
   };
 
   return (
-    <div className=" bg-gray-100 w-full">
+    <div className=" bg-gray-100 w-full min-h-screen">
       <div className="flex flex-col items-center w-full mx-auto px-3">
         <div className="lg:w-[40%] md:w-[60%] w-[90%] flex flex-col gap-1 mt-4 max-h-svh rounded-2xl shadow-2xl bg-white p-4 border-gray-300 border-2 mb-12 fade-in-up relative pb-8 ">
           <div className="flex gap-2 relative w-full pb-2 border-b-2 border-gray-300">
-            <div className="w-1.5 bg-[#cd3a38]" />
+            <div className="w-1.5 bg-primary" />
             <h2 className="text-[23px] md:text-[25px] lg:text-[27px] font-semibold text-[#295E7E]">
               {name}
             </h2>
@@ -43,13 +43,13 @@ const PostContainer: React.FC<PostContainerProps> = ({ post }) => {
             {description}
           </p>
 
-          {media && media[0] && media[0] !== "" && (
+          {media && media[0] && media[0].mediaUrl !== "" && (
             <div
               className="relative mt-4 overflow-hidden rounded-lg shadow-lg cursor-pointer transition-all duration-300 hover:opacity-90 group"
               onClick={toggleImageModal}
             >
               <LazyImageLoader
-                src={media[0]}
+                src={media[0].mediaUrl}
                 alt={name}
                 height="60vh"
               />
@@ -63,7 +63,7 @@ const PostContainer: React.FC<PostContainerProps> = ({ post }) => {
         </div>
       </div>
       {isImageModalOpen && media && media[0] && (
-        <ImageModal onClick={toggleImageModal} name={name} image={media[0]} />
+        <ImageModal onClick={toggleImageModal} name={name} image={media[0].mediaUrl} />
       )}
     </div>
   );

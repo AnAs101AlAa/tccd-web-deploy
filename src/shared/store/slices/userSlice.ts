@@ -68,7 +68,6 @@ const userSlice = createSlice({
       state,
       action: PayloadAction<AnyUser>,
     ) => {
-      console.log("Setting user in store:", action.payload);
       state.currentUser = action.payload;
       state.isAuthenticated = true;
       state.error = null;

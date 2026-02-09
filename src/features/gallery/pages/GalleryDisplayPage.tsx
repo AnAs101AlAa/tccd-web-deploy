@@ -10,8 +10,6 @@ import type { EventMedia } from "@/shared/types";
 export default function GalleryDisplayPage() {
   const { id } = useParams();
   const { data: galleryData, isLoading, isError } = useGetEventById(id || "");
-
-  console.log("Gallery data:", galleryData);
   
   useEffect (() => {
     if (isError) {

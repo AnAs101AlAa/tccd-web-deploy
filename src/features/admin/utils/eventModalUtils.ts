@@ -11,11 +11,11 @@ const extractDriveId = (urlOrId: string): string => {
   if (!urlOrId) return "";
   
   const patterns = [
-    /\/file\/d\/([a-zA-Z0-9_-]+)/,      // /file/d/{id} - file view link
-    /\/folders\/([a-zA-Z0-9_-]+)/,      // /folders/{id} - folder link
-    /\/d\/([a-zA-Z0-9_-]+)/,            // /d/{id} - standard file/folder link
-    /[?&]id=([a-zA-Z0-9_-]+)/,          // ?id={id} or &id={id} - query parameter
-    /\/open\?id=([a-zA-Z0-9_-]+)/,      // /open?id={id} - open format
+    /\/file\/d\/([a-zA-Z0-9_-]+)/,
+    /\/folders\/([a-zA-Z0-9_-]+)/,
+    /\/d\/([a-zA-Z0-9_-]+)/,
+    /[?&]id=([a-zA-Z0-9_-]+)/,
+    /\/open\?id=([a-zA-Z0-9_-]+)/,
   ];
   
   for (const pattern of patterns) {
@@ -73,34 +73,25 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
 
   useEffect(() => {
     if (event) {
-      // Extract and store original poster ID for comparison in edit mode
       const posterId = extractDriveId(event.eventImage || "");
       setOriginalPosterId(posterId);
       
-      // Store original media for comparison in edit mode
-      // API might return 'medias' or 'eventMedia' depending on the source
       const mediaArray = event.eventMedia || (event as any).medias || [];
       
       if (Array.isArray(mediaArray) && mediaArray.length > 0) {
         const firstItem = mediaArray[0];
         if (firstItem && typeof firstItem === 'object' && 'id' in firstItem) {
-          // It's EventMedia[] with objects
           setOriginalMedia(mediaArray as any[]);
         } else {
-          // It's string[], no original media to track
           setOriginalMedia([]);
         }
       } else {
-        // No media, set to empty array
         setOriginalMedia([]);
       }
       
-      // Reset delete/new tracking when event changes
       setDeletedMediaIds([]);
       setNewMediaIds([]);
-      
-      // Extract location IDs from locations/rooms array (could be room objects with {id, name, capacity})
-      // API returns 'rooms' but we map it to 'locations', check both for safety
+
       const roomsArray = (event as any).rooms || event.locations || [];
       const locationIds = Array.isArray(roomsArray) 
         ? roomsArray.map((loc: any) => typeof loc === 'string' ? loc : loc.id)
@@ -110,14 +101,13 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
         ...event,
         eventImage: extractDriveId(event.eventImage || ""),
         locations: locationIds,
-        eventMedia: [], // Not using this for media management anymore
+        eventMedia: [],
         capacity: event.capacity || 0,
       });
     }
   }, [event]);
 
   const handleInputChange = (field: keyof Event, value: string| number) => {
-      // Extract Drive ID if the field is eventImage and value is a string
       const finalValue = field === "eventImage" && typeof value === "string" 
         ? extractDriveId(value) 
         : value;
@@ -149,8 +139,8 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     const finalizedValue = {
       ...formValues,
       date: new Date(formValues.date).toISOString(),
-      media: newMediaIds, // Use newMediaIds for media
-      eventMedia: newMediaIds, // Keep both for compatibility
+      media: newMediaIds,
+      eventMedia: newMediaIds,
       registrationDeadline: registrationDeadlineDate.toISOString(),
       eventImage: formValues.eventImage || "",
     };
@@ -165,13 +155,11 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     
     try {
       if (isEditMode && event) {
-        // 1. Update basic event info
         await updateEventMutation.mutateAsync({
           id: event.id,
           data: finalizedValue,
         });
 
-        // 2. Update poster (always call if poster exists)
         if (formValues.eventImage) {
           await updateEventPosterMutation.mutateAsync({
             id: event.id,
@@ -179,12 +167,10 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
           });
         }
 
-        // 3. Delete removed media
         for (const mediaId of deletedMediaIds) {
           await deleteEventMediaMutation.mutateAsync(mediaId);
         }
 
-        // 4. Add new media (using drive IDs)
         if (newMediaIds.length > 0) {
           await addEventMediaMutation.mutateAsync({
             eventId: event.id,
@@ -195,12 +181,10 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
         toast.success("Event updated successfully!");
         onClose();
       } else {
-        // ========== CREATE MODE ==========
         const createdEvent = await createEventMutation.mutateAsync(finalizedValue);
         const eventId = createdEvent?.id || createdEvent?.data?.id;
         
         if (eventId) {
-          // Add poster if exists
           if (formValues.eventImage) {
             await updateEventPosterMutation.mutateAsync({
               id: eventId,
@@ -208,7 +192,6 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
             });
           }
 
-          // Add new media (using drive IDs)
           if (newMediaIds.length > 0) {
             await addEventMediaMutation.mutateAsync({
               eventId: eventId,

@@ -15,7 +15,7 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
   const titleRef = React.useRef<HTMLHeadingElement>(null);
   const mediaRef = React.useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = React.useState("0px");
-
+  
   const isTouchDevice = React.useMemo(() => {
     return typeof window !== "undefined" && "ontouchstart" in window;
   }, []);
@@ -46,7 +46,7 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
 
   return (
     <div className="rounded-xl h-full flex-none bg-white shadow-md flex flex-col border border-gray-200 hover:shadow-lg">
-      {post.media?.[0] && post.media[0] !== "" ? (
+      {post.media?.[0] && post.media[0].mediaUrl !== "" ? (
         <div
           ref={mediaRef}
           className="relative w-full flex-1 aspect-video"
@@ -54,7 +54,7 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
           onMouseLeave={() => !isTouchDevice && setInsideMedia(false)}
         >
           <LazyImageLoader
-            src={post.media[0]}
+            src={post.media[0].mediaUrl}
             alt={post.name}
             className="rounded-t-xl"
             width="100%"

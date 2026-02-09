@@ -30,7 +30,6 @@ export const useLogin = () => {
     mutationFn: (credentials: LoginCredentials) =>
       authApiInstance.login(credentials),
     onSuccess: (user: AnyUser) => {
-      console.log(user);
       login(user);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Login successful!");

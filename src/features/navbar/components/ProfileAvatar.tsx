@@ -1,19 +1,16 @@
 import { FiLogIn } from "react-icons/fi";
 import Avatar from "@/shared/components/Avatar";
-import type { User } from "@/shared/types";
 
 interface ProfileAvatarProps {
-  userData: User;
-  isAuthenticated: boolean;
   onClick: () => void;
 }
 
-const ProfileAvatar = ({ userData, isAuthenticated, onClick }: ProfileAvatarProps) => {
+const ProfileAvatar = ({ onClick }: ProfileAvatarProps) => {
 
   return (
     <div data-profile-avatar>
       <Avatar
-        src={isAuthenticated ? userData.profilePicture || '/user.jpg' : undefined}
+        src={'/user.jpg'}
         alt="Profile"
         size="42px"
         backgroundColor="#ffffff"
