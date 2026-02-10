@@ -2,6 +2,7 @@ import { systemApi } from "../../AxoisInstance";
 import type Event from "@/shared/types/events";
 
 const EVENTS_ROUTE = "/v1/Event";
+const SPONSOR_ROUTE = "/v1/Sponsors";
 
 export class EventsApi {
   async createEvent(data: Event) {
@@ -85,6 +86,18 @@ export class EventsApi {
     await systemApi.delete(
       `${EVENTS_ROUTE}/${id}`
     );
+  }
+
+  
+  async addSponsorToEvent(eventId: string, companyId: string): Promise<void> {
+    await systemApi.post(`${SPONSOR_ROUTE}`, {
+      eventId,
+      companyId,
+    });
+  }
+
+  async removeSponsorFromEvent(eventId: string, companyId: string): Promise<void> {
+    await systemApi.delete(`${SPONSOR_ROUTE}/${eventId}/${companyId}`);
   }
 }
 

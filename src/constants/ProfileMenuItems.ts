@@ -1,6 +1,5 @@
 import type { IconType } from "react-icons";
 import { FaRegUser } from "react-icons/fa";
-import { BiMessageSquareDetail } from "react-icons/bi";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { MdDashboard, MdPostAdd } from "react-icons/md";
 import { isAdmin, isStudent, isVolunteer } from "@/shared/types/users";
@@ -54,14 +53,6 @@ export const getProfileMenuItems = (
       action: "/scan-qr",
     });
   }
-  
-  menuItems.push({
-    icon: BiMessageSquareDetail,
-    title: "Help & support",
-    iconColor: "var(--color-contrast)",
-    action: "/support",
-  });
-
 
   menuItems.push({
     icon: RiLogoutBoxLine,

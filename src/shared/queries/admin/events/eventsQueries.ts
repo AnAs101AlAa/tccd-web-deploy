@@ -83,3 +83,29 @@ export const useDeleteEvent = () => {
     }
   });
 }
+
+export const useAddSponsorToEvent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["events", "addSponsor"],
+    mutationFn: ({ eventId, companyId }: { eventId: string; companyId: string }) =>
+      eventsApi.addSponsorToEvent(eventId, companyId),
+    onSuccess: (_, { eventId }) => {
+      queryClient.invalidateQueries({ queryKey: ["events", "sponsors", eventId] });
+    },
+  });
+};
+
+export const useRemoveSponsorFromEvent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["events", "removeSponsor"],
+    mutationFn: ({ eventId, companyId }: { eventId: string; companyId: string }) =>
+      eventsApi.removeSponsorFromEvent(eventId, companyId),
+    onSuccess: (_, { eventId }) => {
+      queryClient.invalidateQueries({ queryKey: ["events", "sponsors", eventId] });
+    },
+  });
+};
