@@ -25,6 +25,7 @@ export default interface Event {
   createdAt?: string;
   updatedOn?: string;
   eventMedia?: EventMedia[] | string[];
+  sponsors?: Sponsor[];
 }
 
 export interface EventResponse {

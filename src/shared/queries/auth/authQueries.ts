@@ -69,14 +69,12 @@ export const useLogout = () => {
 };
 
 export const useSignupStudent = () => {
-  const { login } = useUserActions();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (credentials: StudentSignupCredentials) =>
       authApiInstance.signupStudent(credentials),
-    onSuccess: (user: AnyUser) => {
-      login(user);
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Account created successfully!");
     },

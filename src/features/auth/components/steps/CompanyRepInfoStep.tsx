@@ -19,7 +19,7 @@ export const CompanyRepInfoStep = ({ control }: CompanyRepInfoStepProps) => {
   const [fileName, setFileName] = useState<string>("");
   const fileRef = useRef<File | null>(null);
 
-  const { data: companiesData, isLoading } = useGetCompanies(1, 100);
+  const { data: companiesData, isLoading } = useGetCompanies({pageIndex: 1, pageSize: 100 });
 
   // Sync showRegisterCompany with form value
   const isNewCompany = control._getWatch("isNewCompany");
