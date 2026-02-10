@@ -22,3 +22,39 @@ export interface CompaniesResponse {
     hasNextPage: boolean;
   };
 }
+
+export interface CompanyResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: Company;
+}
+
+export interface CreateCompanyPayload {
+  companyName: string;
+  businessType: string;
+  description: string;
+  website: string;
+  brief: string;
+  logoId?: string;
+}
+
+export interface UpdateCompanyPayload {
+  companyName?: string;
+  businessType?: string;
+  description?: string;
+  website?: string;
+  brief?: string;
+  isApproved?: boolean;
+  logoId?: string;
+}
+
+export interface AdminCompaniesQueryParams {
+  CompanyName?: string;
+  BusinessType?: string;
+  OrderBy?: string;
+  Descending?: boolean;
+  page?: number;
+  count?: number;
+  isApproved?: boolean;
+}
