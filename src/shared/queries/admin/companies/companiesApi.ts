@@ -1,10 +1,9 @@
-import { systemApi } from "../AxoisInstance";
+import { systemApi } from "../../AxoisInstance";
 import type {
   CompaniesResponse,
   CompanyResponse,
   CreateCompanyPayload,
   UpdateCompanyPayload,
-  AdminCompaniesQueryParams,
 } from "./types";
 
 const COMPANIES_ROUTE = "/v1/Companies";
@@ -20,7 +19,7 @@ export class CompaniesApi {
     orderBy?: string,
     descending?: boolean,
   ): Promise<CompaniesResponse> {
-    const queryParams: Record<string, any> = {
+    const queryParams: Record<string, string | number | boolean | undefined> = {
       page,
       count,
       ...(companyName ? { CompanyName: companyName } : {}),
@@ -76,38 +75,6 @@ export class CompaniesApi {
 
   async deleteCompanyLogo(id: string): Promise<void> {
     await systemApi.delete(`${COMPANIES_ROUTE}/${id}/logo`);
-  }
-
-  // ── Admin endpoints ───────────────────────────────────────
-
-  async getAdminCompanies(
-    params: AdminCompaniesQueryParams = {},
-  ): Promise<CompaniesResponse> {
-    const queryParams: Record<string, any> = {
-      page: params.page ?? 1,
-      count: params.count ?? 10,
-      ...(params.CompanyName ? { CompanyName: params.CompanyName } : {}),
-      ...(params.BusinessType ? { BusinessType: params.BusinessType } : {}),
-      ...(params.OrderBy ? { OrderBy: params.OrderBy } : {}),
-      ...(params.Descending !== undefined
-        ? { Descending: params.Descending }
-        : {}),
-      ...(params.isApproved !== undefined
-        ? { isApproved: params.isApproved }
-        : {}),
-    };
-    const { data } = await systemApi.get<CompaniesResponse>(
-      `${COMPANIES_ROUTE}/admin`,
-      { params: queryParams },
-    );
-    return data;
-  }
-
-  async getAdminCompanyById(id: string): Promise<CompanyResponse> {
-    const { data } = await systemApi.get<CompanyResponse>(
-      `${COMPANIES_ROUTE}/admin/${id}`,
-    );
-    return data;
   }
 }
 

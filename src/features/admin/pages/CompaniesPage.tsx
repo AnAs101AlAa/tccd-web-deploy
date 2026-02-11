@@ -5,10 +5,10 @@ import { MdAdd } from "react-icons/md";
 import CompaniesTable from "../components/companies/CompaniesTable";
 import CompaniesFilter from "../components/companies/CompaniesFilter";
 import AddEditCompanyModal from "../components/companies/AddEditCompanyModal";
-import type { AdminCompaniesQueryParams } from "@/shared/queries/companies";
+import type { CompaniesQueryParams } from "@/shared/queries/admin/companies";
 
 const CompaniesPage: React.FC = () => {
-  const [queryParams, setQueryParams] = useState<AdminCompaniesQueryParams>({
+  const [queryParams, setQueryParams] = useState<CompaniesQueryParams>({
     page: 1,
     count: 10,
   });
@@ -24,7 +24,6 @@ const CompaniesPage: React.FC = () => {
       page: 1,
       CompanyName: searchInput.trim() || undefined,
       BusinessType: businessTypeFilter.trim() || undefined,
-      isApproved: approvalFilter === "" ? undefined : approvalFilter === "true",
     }));
   }, [searchInput, businessTypeFilter, approvalFilter]);
 

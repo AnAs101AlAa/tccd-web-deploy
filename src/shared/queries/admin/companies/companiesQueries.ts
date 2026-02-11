@@ -3,7 +3,6 @@ import { companiesApi } from "./companiesApi";
 import type {
   CreateCompanyPayload,
   UpdateCompanyPayload,
-  AdminCompaniesQueryParams,
 } from "./types";
 
 // ── Public hooks ────────────────────────────────────────────
@@ -81,25 +80,5 @@ export const useDeleteCompany = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["companies"] });
     },
-  });
-};
-
-// ── Admin hooks ─────────────────────────────────────────────
-
-export const useGetAdminCompanies = (
-  params: AdminCompaniesQueryParams = {},
-) => {
-  return useQuery({
-    queryKey: ["companies", "admin", params],
-    queryFn: () => companiesApi.getAdminCompanies(params),
-    staleTime: 5 * 60 * 1000,
-  });
-};
-
-export const useGetAdminCompanyById = (id: string) => {
-  return useQuery({
-    queryKey: ["companies", "admin", id],
-    queryFn: () => companiesApi.getAdminCompanyById(id),
-    enabled: !!id,
   });
 };

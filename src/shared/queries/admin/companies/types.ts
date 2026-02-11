@@ -5,7 +5,7 @@ export interface Company {
   description: string;
   website: string;
   brief: string;
-  logo: string;
+  logo: string | null;
 }
 
 export interface CompaniesResponse {
@@ -49,12 +49,12 @@ export interface UpdateCompanyPayload {
   logoId?: string;
 }
 
-export interface AdminCompaniesQueryParams {
+export interface CompaniesQueryParams {
+  page: number;
+  count: number;
   CompanyName?: string;
   BusinessType?: string;
   OrderBy?: string;
   Descending?: boolean;
-  page?: number;
-  count?: number;
-  isApproved?: boolean;
+  // isApproved is not supported by the new API spec, ensuring strict typing
 }

@@ -1,5 +1,5 @@
 import { Modal } from "tccd-ui";
-import type { Company } from "@/shared/queries/companies";
+import type { Company } from "@/shared/queries/admin/companies";
 import { FiGlobe, FiBriefcase, FiFileText, FiInfo } from "react-icons/fi";
 
 interface CompanyDetailModalProps {

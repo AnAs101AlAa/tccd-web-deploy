@@ -4,7 +4,7 @@ import { Controller } from "react-hook-form";
 import { useEffect, useState, useRef } from "react";
 import { FiSearch, FiPlus, FiUpload, FiX } from "react-icons/fi";
 import { Button } from "tccd-ui";
-import { useGetCompanies } from "@/shared/queries/companies";
+import { useGetCompanies } from "@/shared/queries/admin/companies";
 import toast from "react-hot-toast";
 
 interface CompanyRepInfoStepProps {
@@ -29,7 +29,7 @@ export const CompanyRepInfoStep = ({ control }: CompanyRepInfoStepProps) => {
   const filteredCompanies = companies.filter(
     (company) =>
       company.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      company.businessType.toLowerCase().includes(searchQuery.toLowerCase())
+      company.businessType.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // Sync fileName and fileRef with form value on mount or when proofFile changes
@@ -43,7 +43,7 @@ export const CompanyRepInfoStep = ({ control }: CompanyRepInfoStepProps) => {
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: File) => void
+    onChange: (value: File) => void,
   ) => {
     const file = e.target.files?.[0];
     if (file) {

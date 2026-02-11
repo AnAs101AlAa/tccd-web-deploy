@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { Modal, InputField, Button } from "tccd-ui";
-import { useCreateCompany, useUpdateCompany } from "@/shared/queries/companies";
-import type { Company } from "@/shared/queries/companies";
+import {
+  useCreateCompany,
+  useUpdateCompany,
+} from "@/shared/queries/admin/companies";
+import type { Company } from "@/shared/queries/admin/companies";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
 

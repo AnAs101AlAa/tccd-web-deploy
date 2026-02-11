@@ -1,13 +1,13 @@
 import { useState } from "react";
 import {
-  useGetAdminCompanies,
+  useGetCompanies,
   useDeleteCompany,
-} from "@/shared/queries/companies";
+} from "@/shared/queries/admin/companies";
 import { Pagination } from "@/shared/components/pagination";
 import type {
   Company,
-  AdminCompaniesQueryParams,
-} from "@/shared/queries/companies";
+  CompaniesQueryParams,
+} from "@/shared/queries/admin/companies";
 import { FiEye, FiEdit2, FiTrash2, FiBriefcase } from "react-icons/fi";
 import CompanyDetailModal from "./CompanyDetailModal";
 import AddEditCompanyModal from "./AddEditCompanyModal";
@@ -15,12 +15,19 @@ import ConfirmActionModal from "@/shared/components/modals/ConfirmActionModal";
 import toast from "react-hot-toast";
 
 interface CompaniesTableProps {
-  queryParams: AdminCompaniesQueryParams;
+  queryParams: CompaniesQueryParams;
   onPageChange: (page: number) => void;
 }
 
 const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
-  const { data: response, isLoading } = useGetAdminCompanies(queryParams);
+  const { data: response, isLoading } = useGetCompanies(
+    queryParams.page,
+    queryParams.count,
+    queryParams.CompanyName,
+    queryParams.BusinessType,
+    queryParams.OrderBy,
+    queryParams.Descending,
+  );
   const deleteMutation = useDeleteCompany();
 
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
