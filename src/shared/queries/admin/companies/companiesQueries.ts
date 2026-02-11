@@ -1,9 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { companiesApi } from "./companiesApi";
-import type {
-  CreateCompanyPayload,
-  UpdateCompanyPayload,
-} from "./types";
+import type { CreateCompanyPayload, UpdateCompanyPayload } from "./types";
 
 // ── Public hooks ────────────────────────────────────────────
 
@@ -12,6 +9,7 @@ export const useGetCompanies = (
   count: number = 10,
   companyName?: string,
   businessType?: string,
+  isApproved?: boolean,
   orderBy?: string,
   descending?: boolean,
 ) => {
@@ -22,6 +20,7 @@ export const useGetCompanies = (
       count,
       companyName,
       businessType,
+      isApproved,
       orderBy,
       descending,
     ],
@@ -31,6 +30,7 @@ export const useGetCompanies = (
         count,
         companyName,
         businessType,
+        isApproved,
         orderBy,
         descending,
       ),

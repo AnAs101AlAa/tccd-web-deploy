@@ -2,13 +2,21 @@ import { useState } from "react";
 import {
   useGetCompanies,
   useDeleteCompany,
+  useUpdateCompany,
 } from "@/shared/queries/admin/companies";
 import { Pagination } from "@/shared/components/pagination";
 import type {
   Company,
   CompaniesQueryParams,
 } from "@/shared/queries/admin/companies";
-import { FiEye, FiEdit2, FiTrash2, FiBriefcase } from "react-icons/fi";
+import {
+  FiEye,
+  FiEdit2,
+  FiTrash2,
+  FiBriefcase,
+  FiCheck,
+  FiX,
+} from "react-icons/fi";
 import CompanyDetailModal from "./CompanyDetailModal";
 import AddEditCompanyModal from "./AddEditCompanyModal";
 import ConfirmActionModal from "@/shared/components/modals/ConfirmActionModal";
@@ -25,10 +33,12 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
     queryParams.count,
     queryParams.CompanyName,
     queryParams.BusinessType,
+    queryParams.IsApproved,
     queryParams.OrderBy,
     queryParams.Descending,
   );
   const deleteMutation = useDeleteCompany();
+  const updateMutation = useUpdateCompany();
 
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -71,6 +81,28 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
     });
   };
 
+  const handleToggleApproval = (company: Company) => {
+    const newStatus = !company.isApproved;
+    updateMutation.mutate(
+      {
+        id: company.id,
+        payload: { isApproved: newStatus },
+      },
+      {
+        onSuccess: () => {
+          toast.success(
+            `Company ${newStatus ? "approved" : "disapproved"} successfully`,
+          );
+        },
+        onError: (error: any) => {
+          toast.error(
+            `Failed to update company status: ${error.response?.data?.message || "Unknown error"}`,
+          );
+        },
+      },
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-16">
@@ -101,6 +133,24 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
 
   const ActionButtons = ({ company }: { company: Company }) => (
     <div className="flex items-center gap-2">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          handleToggleApproval(company);
+        }}
+        className={`p-2 rounded-lg transition-colors ${
+          company.isApproved
+            ? "hover:bg-red-500/10 text-red-500"
+            : "hover:bg-green-500/10 text-green-500"
+        }`}
+        title={company.isApproved ? "Disapprove" : "Approve"}
+      >
+        {company.isApproved ? (
+          <FiX className="w-4 h-4" />
+        ) : (
+          <FiCheck className="w-4 h-4" />
+        )}
+      </button>
       <button
         onClick={(e) => {
           e.stopPropagation();
@@ -153,6 +203,9 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                 </th>
                 <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
                   Brief
+                </th>
+                <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
+                  Status
                 </th>
                 <th className="whitespace-nowrap px-4 py-3 text-center text-sm font-medium text-inactive-tab-text">
                   Actions
@@ -210,6 +263,17 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                   </td>
                   <td className="px-4 py-3 text-secondary max-w-[250px] truncate">
                     {company.brief || "—"}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        company.isApproved
+                          ? "bg-green-500/10 text-green-500"
+                          : "bg-yellow-500/10 text-yellow-500"
+                      }`}
+                    >
+                      {company.isApproved ? "Approved" : "Pending"}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex justify-center">

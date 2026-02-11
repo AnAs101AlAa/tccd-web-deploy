@@ -16,6 +16,7 @@ export class CompaniesApi {
     count: number = 10,
     companyName?: string,
     businessType?: string,
+    isApproved?: boolean,
     orderBy?: string,
     descending?: boolean,
   ): Promise<CompaniesResponse> {
@@ -24,6 +25,7 @@ export class CompaniesApi {
       count,
       ...(companyName ? { CompanyName: companyName } : {}),
       ...(businessType ? { BusinessType: businessType } : {}),
+      ...(isApproved !== undefined ? { IsApproved: isApproved } : {}),
       ...(orderBy ? { OrderBy: orderBy } : {}),
       ...(descending !== undefined ? { Descending: descending } : {}),
     };
@@ -52,7 +54,7 @@ export class CompaniesApi {
     id: string,
     payload: UpdateCompanyPayload,
   ): Promise<CompanyResponse> {
-    const { data } = await systemApi.patch<CompanyResponse>(
+    const { data } = await systemApi.put<CompanyResponse>(
       `${COMPANIES_ROUTE}/${id}`,
       payload,
     );
@@ -61,20 +63,6 @@ export class CompaniesApi {
 
   async deleteCompany(id: string): Promise<void> {
     await systemApi.delete(`${COMPANIES_ROUTE}/${id}`);
-  }
-
-  // ── Logo endpoints ────────────────────────────────────────
-
-  async uploadCompanyLogo(id: string, file: File): Promise<void> {
-    const formData = new FormData();
-    formData.append("file", file);
-    await systemApi.post(`${COMPANIES_ROUTE}/${id}/logo`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-  }
-
-  async deleteCompanyLogo(id: string): Promise<void> {
-    await systemApi.delete(`${COMPANIES_ROUTE}/${id}/logo`);
   }
 }
 

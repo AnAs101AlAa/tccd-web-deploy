@@ -6,6 +6,7 @@ export interface Company {
   website: string;
   brief: string;
   logo: string | null;
+  isApproved: boolean;
 }
 
 export interface CompaniesResponse {
@@ -54,7 +55,7 @@ export interface CompaniesQueryParams {
   count: number;
   CompanyName?: string;
   BusinessType?: string;
+  IsApproved?: boolean;
   OrderBy?: string;
   Descending?: boolean;
-  // isApproved is not supported by the new API spec, ensuring strict typing
 }

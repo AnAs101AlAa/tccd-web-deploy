@@ -24,6 +24,7 @@ const CompaniesPage: React.FC = () => {
       page: 1,
       CompanyName: searchInput.trim() || undefined,
       BusinessType: businessTypeFilter.trim() || undefined,
+      IsApproved: approvalFilter === "" ? undefined : approvalFilter === "true",
     }));
   }, [searchInput, businessTypeFilter, approvalFilter]);
 
