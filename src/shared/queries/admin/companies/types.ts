@@ -33,9 +33,9 @@ export interface CompanyResponse {
 export interface CreateCompanyPayload {
   companyName: string;
   businessType: string;
-  description: string;
-  website: string;
-  brief: string;
+  description?: string;
+  website?: string;
+  brief?: string;
   logoId?: string;
 }
 

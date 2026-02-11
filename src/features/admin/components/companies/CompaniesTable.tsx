@@ -58,8 +58,14 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
         setIsDeleteOpen(false);
         setSelectedCompany(null);
       },
-      onError: () => {
-        toast.error("Failed to delete company. Please try again.");
+      onError: (error: any) => {
+        if (error?.response?.status === 409) {
+          toast.error(
+            "Cannot delete company because it is linked to other records (e.g., events, users).",
+          );
+        } else {
+          toast.error("Failed to delete company. Please try again.");
+        }
         setIsDeleteOpen(false);
       },
     });
