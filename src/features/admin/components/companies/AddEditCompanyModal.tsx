@@ -69,9 +69,13 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
           payload: {
             companyName: formData.companyName.trim(),
             businessType: formData.businessType.trim(),
-            description: formData.description.trim(),
-            website: formData.website.trim(),
-            brief: formData.brief.trim(),
+            ...(formData.description.trim()
+              ? { description: formData.description.trim() }
+              : {}),
+            ...(formData.website.trim()
+              ? { website: formData.website.trim() }
+              : {}),
+            ...(formData.brief.trim() ? { brief: formData.brief.trim() } : {}),
             ...(formData.logoId ? { logoId: formData.logoId.trim() } : {}),
           },
         });
@@ -80,16 +84,21 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
         await createMutation.mutateAsync({
           companyName: formData.companyName.trim(),
           businessType: formData.businessType.trim(),
-          description: formData.description.trim(),
-          website: formData.website.trim(),
-          brief: formData.brief.trim(),
+          ...(formData.description.trim()
+            ? { description: formData.description.trim() }
+            : {}),
+          ...(formData.website.trim()
+            ? { website: formData.website.trim() }
+            : {}),
+          ...(formData.brief.trim() ? { brief: formData.brief.trim() } : {}),
           ...(formData.logoId ? { logoId: formData.logoId.trim() } : {}),
         });
         toast.success("Company created successfully!");
       }
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving company:", error);
+      console.error("Error response:", error.response?.data);
       toast.error(getErrorMessage(error));
     }
   };
