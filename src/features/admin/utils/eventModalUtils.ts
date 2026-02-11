@@ -4,8 +4,10 @@ import { eventFormSchema } from "./eventFormSchema";
 import { useGetLocations } from "@/shared/queries/admin/locations/locationsQueries";
 import { useEffect, useState } from "react";
 import EVENT_TYPES from "@/constants/EventTypes";
-import { useCreateEvent, useUpdateEvent, useUpdateEventPoster, useAddEventMedia, useDeleteEventMedia } from "@/shared/queries/admin/events/eventsQueries";
+import { useCreateEvent, useUpdateEvent, useUpdateEventPoster, useAddEventMedia, useDeleteEventMedia, useAddSponsorToEvent, useRemoveSponsorFromEvent } from "@/shared/queries/admin/events/eventsQueries";
 import toast from "react-hot-toast";  
+import { useGetCompanies } from "@/shared/queries/companies";
+import { useGetEventSponsors } from "@/shared/queries/events";
 
 const extractDriveId = (urlOrId: string): string => {
   if (!urlOrId) return "";
@@ -39,12 +41,19 @@ const validateAllFields = (formValues : Event) => {
 
 export default function useEventModalUtils({event, onClose}: {event?: Event; onClose: () => void;}) {
   const [locationNameKey, setLocationNameKey] = useState<string|undefined>(undefined);
+  const [companyNameKey, setCompanyNameKey] = useState<string|undefined>(undefined);
+
   const { data: locations, isLoading: locationsLoading } = useGetLocations(1, 100, locationNameKey);
+  const { data: companies, isLoading: companiesLoading } = useGetCompanies({ companyName: companyNameKey, pageIndex: 1, pageSize: 100 });
+  const { data: eventSponsors } = useGetEventSponsors(event?.id || "");
+
   const createEventMutation = useCreateEvent();
   const updateEventMutation = useUpdateEvent();
   const updateEventPosterMutation = useUpdateEventPoster();
   const addEventMediaMutation = useAddEventMedia();
   const deleteEventMediaMutation = useDeleteEventMedia();
+  const addSponsorToEventMutation = useAddSponsorToEvent();
+  const removeSponsorFromEventMutation = useRemoveSponsorFromEvent();
 
   const isEditMode = !!event;
   const [originalMedia, setOriginalMedia] = useState<any[]>([]);
@@ -65,6 +74,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     capacity: 0,
     registeredCount: 0,
     attendeeCount: 0,
+    sponsors: [],
   });
   const [errors, setErrors] = useState<{ [key in keyof Event]?: string }>({});
   
@@ -103,6 +113,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
         locations: locationIds,
         eventMedia: [],
         capacity: event.capacity || 0,
+        sponsors: eventSponsors || [],
       });
     }
   }, [event]);
@@ -178,6 +189,18 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
           });
         }
 
+        for (const sponsor of formValues.sponsors || []) {
+          if (!eventSponsors?.find((s) => s.id === sponsor.id)) {
+            await addSponsorToEventMutation.mutateAsync({ eventId: event.id, companyId: sponsor.id });
+          }
+        }
+
+        for (const sponsor of eventSponsors || []) {
+          if (!formValues.sponsors?.find((s) => s.id === sponsor.id)) {
+            await removeSponsorFromEventMutation.mutateAsync({ eventId: event.id, companyId: sponsor.id });
+          }
+        }
+
         toast.success("Event updated successfully!");
         onClose();
       } else {
@@ -225,6 +248,10 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     locationsLoading,
     locationNameKey,
     setLocationNameKey,
+    companiesLoading,
+    companyNameKey,
+    setCompanyNameKey,
+    companies: companies?.data.items || [],
     isEditMode,
     isAddingMedia,
     setIsAddingMedia,

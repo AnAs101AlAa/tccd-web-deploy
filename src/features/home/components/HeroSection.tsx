@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { StudentUser } from "@/shared/types/users";
 import { useEffect, useState } from "react";
 import { useCurrentUser } from "@/shared/store";
+import { isAdmin } from "@/shared/types/users";
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -20,7 +21,9 @@ const HeroSection = () => {
   const userData = useCurrentUser() as StudentUser | null;
 
   const handleLoginClick = () => {
-    if (userData && userData.id != "") {
+    if (userData && isAdmin(userData)) {
+      navigate("/admin/events");
+    } else if (userData && userData.id != "") {
       navigate(`/profile`);
     } else {
       navigate("/login");
@@ -147,7 +150,7 @@ const HeroSection = () => {
                 className="border cursor-pointer text-[14px] md:text-[16px] lg:text-[18px] border-[#295E7E] bg-[#295E7E] text-white hover:bg-[#1d4259] w-fit rounded-full px-8 py-2 md:py-3 font-medium flex items-center justify-center"
                 onClick={handleLoginClick}
               >
-                {userData && userData.id != "" ? "Profile" : "Login"}
+                {userData && isAdmin(userData) ? "Admin dashboard" : userData && userData.id != "" ? "Profile" : "Login"}
               </button>
             </div>
 
