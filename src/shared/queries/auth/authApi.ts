@@ -223,4 +223,12 @@ export class AuthApi {
     );
     return data;
   }
+
+  async verifyStudent(token: string) {
+    const { data } = await systemApi.post(
+      AUTH_ROUTE + `verify-student`,
+        { token }
+    );
+    return data;
+  }
 }
