@@ -67,7 +67,20 @@ export const useUpdateCompany = () => {
       id: string;
       payload: UpdateCompanyPayload;
     }) => companiesApi.updateCompany(id, payload),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      queryClient.setQueryData(["companies", data.data.id], data);
+      queryClient.invalidateQueries({ queryKey: ["companies"] });
+    },
+  });
+};
+
+export const useUpdateCompanyApproval = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, isApproved }: { id: string; isApproved: boolean }) =>
+      companiesApi.updateCompanyApproval(id, isApproved),
+    onSuccess: (data) => {
+      queryClient.setQueryData(["companies", data.data.id], data);
       queryClient.invalidateQueries({ queryKey: ["companies"] });
     },
   });

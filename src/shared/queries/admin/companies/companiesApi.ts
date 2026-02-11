@@ -61,6 +61,17 @@ export class CompaniesApi {
     return data;
   }
 
+  async updateCompanyApproval(
+    id: string,
+    isApproved: boolean,
+  ): Promise<CompanyResponse> {
+    const { data } = await systemApi.patch<CompanyResponse>(
+      `${COMPANIES_ROUTE}/${id}/approval`,
+      { isApproved },
+    );
+    return data;
+  }
+
   async deleteCompany(id: string): Promise<void> {
     await systemApi.delete(`${COMPANIES_ROUTE}/${id}`);
   }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   useGetCompanies,
   useDeleteCompany,
-  useUpdateCompany,
+  useUpdateCompanyApproval,
 } from "@/shared/queries/admin/companies";
 import { Pagination } from "@/shared/components/pagination";
 import type {
@@ -38,7 +38,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
     queryParams.Descending,
   );
   const deleteMutation = useDeleteCompany();
-  const updateMutation = useUpdateCompany();
+  const updateApprovalMutation = useUpdateCompanyApproval();
 
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -83,10 +83,10 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
 
   const handleToggleApproval = (company: Company) => {
     const newStatus = !company.isApproved;
-    updateMutation.mutate(
+    updateApprovalMutation.mutate(
       {
         id: company.id,
-        payload: { isApproved: newStatus },
+        isApproved: newStatus,
       },
       {
         onSuccess: () => {
