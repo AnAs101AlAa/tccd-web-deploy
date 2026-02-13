@@ -7,7 +7,7 @@ import { Pagination } from "@/shared/components/pagination";
 import { ErrorScreen } from "tccd-ui";
 import UsersFilter from "../components/users/UsersFilter";
 
-export function UsersAdminPage() {
+export default function UsersAdminPage() {
   const [queryParams, setQueryParams] = useState<UserQueryParams>({
     page: 1,
     count: 20,
