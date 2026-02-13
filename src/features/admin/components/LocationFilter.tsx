@@ -129,6 +129,7 @@ const LocationFilter = ({
 
                         <div className="flex-1 overflow-y-auto p-6 space-y-2">
                                     <NumberField
+                                        id={"minCapacity"}
                                         label="Minimum number of people"
                                         placeholder="0"
                                         value={tempMinCapacity}

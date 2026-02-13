@@ -203,12 +203,12 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   }
 
   const handleSave = async () => {
-    const registrationDeadlineDate = new Date(formValues.date);
+    const registrationDeadlineDate = formValues.date ? new Date(formValues.date) : new Date();
     registrationDeadlineDate.setDate(registrationDeadlineDate.getDate() - 2);
 
     const finalizedValue = {
       ...formValues,
-      date: new Date(formValues.date).toISOString(),
+      date: formValues.date ? new Date(formValues.date).toISOString() : "",
       media: newMediaIds,
       eventMedia: newMediaIds,
       registrationDeadline: registrationDeadlineDate.toISOString(),

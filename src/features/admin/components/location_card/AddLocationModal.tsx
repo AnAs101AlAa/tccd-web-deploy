@@ -71,77 +71,60 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({
       className="max-w-2xl"
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        <div>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Location Name"
-                id="location-name"
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="e.g., Grand Conference Hall"
-                error={errors.name?.message}
-              />
-            )}
-          />
-          {errors.name && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.name.message}
-            </p>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Location Name"
+              id="location-name"
+              value={field.value}
+              onChange={field.onChange}
+              placeholder="e.g., Grand Conference Hall"
+              error={errors.name?.message}
+            />
           )}
-        </div>
+        />
 
-        <div>
-          <Controller
-            name="capacity"
-            control={control}
-            render={({ field }) => (
-              <NumberField
-                label="Capacity"
-                value={field.value?.toString() || ""}
-                onChange={(val: string | number) => field.onChange(val || 0)}
-                placeholder="e.g., 500"
-                error={errors.capacity?.message}
-              />
-            )}
-          />
-        </div>
-
-        <div>
-          <Controller
-            name="roomImageFileId"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Google Drive Image ID"
-                id="location-image"
-                value={field.value}
-                onChange={(e: any) => {
-                  const val =
-                    e?.target?.value !== undefined ? e.target.value : e;
-                  // Regex to extract ID from Google Drive URL
-                  // Matches /d/ID or id=ID
-                  const match =
-                    typeof val === "string"
-                      ? val.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
-                        val.match(/id=([a-zA-Z0-9_-]+)/)
-                      : null;
-                  const id = match ? match[1] : val;
-                  field.onChange(id);
-                }}
-                placeholder="Paste ID or full Google Drive URL"
-                error={errors.roomImageFileId?.message}
-              />
-            )}
-          />
-          {errors.roomImageFileId && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.roomImageFileId.message}
-            </p>
+        <Controller
+          name="capacity"
+          control={control}
+          render={({ field }) => (
+            <NumberField
+              id="location-capacity"
+              label="Capacity"
+              value={field.value?.toString() || ""}
+              onChange={(val: string | number) => field.onChange(val || 0)}
+              placeholder="e.g., 500"
+              error={errors.capacity?.message}
+            />
           )}
-        </div>
+        />
+
+        <Controller
+          name="roomImageFileId"
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Google Drive Image ID"
+              id="location-image"
+              value={field.value}
+              onChange={(e: any) => {
+                const val =
+                  e?.target?.value !== undefined ? e.target.value : e;
+                const match =
+                  typeof val === "string"
+                    ? val.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+                      val.match(/id=([a-zA-Z0-9_-]+)/)
+                    : null;
+                const id = match ? match[1] : val;
+                field.onChange(id);
+              }}
+              placeholder="Paste ID or full Google Drive URL"
+              error={errors.roomImageFileId?.message}
+            />
+          )}
+        />
 
         <div className="flex justify-center gap-3 pt-4 border-t border-gray-200">
           <Button

@@ -69,90 +69,140 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
       onClose={() => { if (!isSubmitting) onClose() }}
       className="lg:max-w-none xl:max-w-none lg:w-4/5 xl:w-3/4"
     >
-      <div className="flex flex-col lg:flex-row gap-0 lg:gap-6">
-        <div className="w-full lg:w-1/2">
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-0 lg:gap-4">
+        <div className="w-full">
           <p className="text-md font-semibold">
             {'Preliminary information'}
           </p>
           <hr className="border-gray-300 mt-1 mb-3" />
           <div className="space-y-3">
-            <div className="space-y-2">
-              <InputField
-                label="Title"
-                labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
-                value={formValues.name || ""}
-                placeholder="Enter event title"
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                id="title"
-                error={errors.name}
-              />
-              {errors.name && <p className="px-1 text-xs text-primary">
-                {errors.name}
-              </p>}
-            </div>
+            <InputField
+              label="Title"
+              labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
+              value={formValues.name || ""}
+              placeholder="Enter event title"
+              onChange={(e) => handleInputChange("name", e.target.value)}
+              id="title"
+              error={errors.name}
+            />
 
-            <div className="space-y-2">
-              <TextAreaField
-                label="Description"
-                labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
-                value={formValues.description || ""}
-                placeholder="Enter detailed event description"
-                onChange={(e) => handleInputChange("description", e.target.value)}
-                id="description"
-                maxLength={1000}
-                error={errors.description}
-              />
-              {errors.description && <p className="-mt-2 px-1 text-xs text-primary">
-                {errors.description}
-              </p>}
-            </div>
+            <TextAreaField
+              label="Description"
+              labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
+              value={formValues.description || ""}
+              placeholder="Enter detailed event description"
+              onChange={(e) => handleInputChange("description", e.target.value)}
+              id="description"
+              maxLength={1000}
+              error={errors.description}
+              errorClassName="-mt-1"
+            />
 
-            <div className="space-y-2">
-              <DateTimePicker
-                id="date"
-                labelClassName="text-[13px] md:text-[14px] xl:text-[15px] text-gray-600 mb-1"
-                label="Event Date & Time"
-                value={formValues.date ? new Date(formValues.date).getTime() : null}
-                onChange={(timestamp: number) => handleInputChange("date", timestamp)}
-                error={errors.date}
+            <DateTimePicker
+              id="date"
+              labelClassName="text-[13px] md:text-[14px] xl:text-[15px] text-gray-600 mb-1"
+              label="Event Date & Time"
+              value={formValues.date ? new Date(formValues.date).getTime() : null}
+              onChange={(timestamp: number) => handleInputChange("date", timestamp)}
+              error={errors.date}
+            />
+            <DropdownMenu
+              label="Event Type"
+              labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
+              options={EVENT_TYPES}
+              value={formValues.type}
+              onChange={(val) => handleInputChange("type", val)}
+              placeholder="Select event type"
+              id="eventType"
+            />
+          </div>
+        </div>
+        <div className="w-full mt-6 lg:mt-0">
+          <p className="text-md font-semibold">
+            {'Location information'}
+          </p>
+          <hr className="border-gray-300 mt-1 mb-3" />
+          <div className="space-y-3">
+            <div className="space-y-3">
+              <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600">
+                Event Locations
+              </p>
+              <SearchField
+                placeholder="Search locations..."
+                value={locationNameKey || ""}
+                onChange={(val) => setLocationNameKey(val || undefined)}
+                className="lg:w-full"
               />
-              {errors.date && <p className="px-1 text-xs text-primary">
-                {errors.date}
-              </p>}
-            </div>
-            <div className="space-y-2">
-              <DropdownMenu
-                label="Event Type"
-                labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
-                options={EVENT_TYPES}
-                value={formValues.type}
-                onChange={(val) => handleInputChange("type", val)}
-                placeholder="Select event type"
-                id="eventType"
-              />
-              {errors.type && <p className="px-1 text-xs text-primary">
-                {errors.type}
-              </p>}
+              <div className="h-48 lg:h-56 overflow-y-auto border border-gray-400 rounded-2xl p-2">
+                {locationsLoading ? (
+                  <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">Loading locations...</p>
+                ) : (
+                  <>
+                    {locations && locations.length > 0 ? (
+                      locations.map((loc) => (
+                        <div
+                          key={loc.id}
+                          className="p-3 border-b border-gray-300 last:border-b-0 cursor-pointer hover:bg-gray-50 flex items-center"
+                        >
+                          <Checkbox
+                            label=""
+                            checked={Array.isArray(formValues.locations) && formValues.locations.includes(loc.id)}
+                            onChange={() => {
+                              setFormValues((prev) => {
+                                const currentLocations = Array.isArray(prev.locations) ? prev.locations : [];
+                                const isSelected = currentLocations.includes(loc.id);
+                                const newLocations = isSelected
+                                  ? currentLocations.filter((id) => id !== loc.id)
+                                  : [...currentLocations, loc.id];
+                                const newCapacity = isSelected
+                                  ? prev.capacity - loc.capacity
+                                  : prev.capacity + loc.capacity;
+                                return {
+                                  ...prev,
+                                  locations: newLocations,
+                                  capacity: newCapacity < 0 ? 0 : newCapacity,
+                                };
+                              });
+                            }}
+                          />
+                          <div className="flex-1 flex gap-2 items-center">
+                            <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-contrast">{loc.name}</p>
+                            <p className="text-sm text-gray-500">Capacity: {loc.capacity}</p>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">No locations found.</p>
+                    )}
+                  </>
+                )}
+              </div>
+                <InputField
+                  label="Total capacity"
+                  value={formValues.capacity.toString()}
+                  placeholder="Capacity of selected locations combined"
+                  onChange={() => { }}
+                  id="capacity"
+                  error={errors.locations}
+                />
             </div>
           </div>
-          <p className="text-md font-semibold mt-6">
+        </div>
+        <div className="w-full mt-6 lg:mt-0">
+          <p className="text-md font-semibold">
             {'Event media'}
           </p>
           <hr className="border-gray-300 mt-1 mb-3" />
           <div className="space-y-3">
-            <div className="space-y-2">
-              <InputField
-                label="Event Poster Drive ID"
-                labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
-                value={formValues.eventImage || ""}
-                placeholder="Enter Google Drive file ID (e.g., 1mZpgvii35XVK3VnvX49YRO80NeXCaBrD)"
-                onChange={(e) => handleInputChange("eventImage", e.target.value)}
-                id="eventImage"
-                error={errors.eventImage}
-              />
-              {errors.eventImage && <p className="px-1 text-xs text-primary">
-                {errors.eventImage}
-              </p>}
+            <InputField
+              label="Event Poster Drive ID"
+              labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
+              value={formValues.eventImage || ""}
+              placeholder="Enter Google Drive file ID (e.g., 1mZpgvii35XVK3VnvX49YRO80NeXCaBrD)"
+              onChange={(e) => handleInputChange("eventImage", e.target.value)}
+              id="eventImage"
+              error={errors.eventImage}
+            />
             </div>
             <div className="mt-4">
               <div className="flex items-center justify-between gap-2 mb-1">
@@ -246,84 +296,9 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                 })()}
               </div>
             </div>
-          </div>
         </div>
-        <div className="w-full lg:w-1/2">
-          <p className="text-md font-semibold mt-6 lg:mt-0">
-            {'Location information'}
-          </p>
-          <hr className="border-gray-300 mt-1 mb-3" />
-          <div className="space-y-3">
-            <div className="space-y-3">
-              <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600">
-                Event Locations
-              </p>
-              <SearchField
-                placeholder="Search locations..."
-                value={locationNameKey || ""}
-                onChange={(val) => setLocationNameKey(val || undefined)}
-                className="lg:w-full"
-              />
-              <div className="h-48 lg:h-56 overflow-y-auto border border-gray-400 rounded-2xl p-2">
-                {locationsLoading ? (
-                  <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">Loading locations...</p>
-                ) : (
-                  <>
-                    {locations && locations.length > 0 ? (
-                      locations.map((loc) => (
-                        <div
-                          key={loc.id}
-                          className="p-3 border-b border-gray-300 last:border-b-0 cursor-pointer hover:bg-gray-50 flex items-center"
-                        >
-                          <Checkbox
-                            label=""
-                            checked={Array.isArray(formValues.locations) && formValues.locations.includes(loc.id)}
-                            onChange={() => {
-                              setFormValues((prev) => {
-                                const currentLocations = Array.isArray(prev.locations) ? prev.locations : [];
-                                const isSelected = currentLocations.includes(loc.id);
-                                const newLocations = isSelected
-                                  ? currentLocations.filter((id) => id !== loc.id)
-                                  : [...currentLocations, loc.id];
-                                const newCapacity = isSelected
-                                  ? prev.capacity - loc.capacity
-                                  : prev.capacity + loc.capacity;
-                                return {
-                                  ...prev,
-                                  locations: newLocations,
-                                  capacity: newCapacity < 0 ? 0 : newCapacity,
-                                };
-                              });
-                            }}
-                          />
-                          <div className="flex-1 flex gap-2 items-center">
-                            <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-contrast">{loc.name}</p>
-                            <p className="text-sm text-gray-500">Capacity: {loc.capacity}</p>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">No locations found.</p>
-                    )}
-                  </>
-                )}
-              </div>
-              <div className="space-y-2">
-                <InputField
-                  label="Total capacity"
-                  value={formValues.capacity.toString()}
-                  placeholder="Capacity of selected locations combined"
-                  onChange={() => { }}
-                  id="capacity"
-                  error={errors.locations}
-                />
-                {errors.locations && <p className="px-1 text-xs text-primary">
-                  {errors.locations}
-                </p>}
-              </div>
-            </div>
-          </div>
-          <p className="text-md font-semibold mt-6">
+        <div className="w-full mt-6 lg:mt-0">
+          <p className="text-md font-semibold">
             {'Sponsors selection (Optional)'}
           </p>
           <hr className="border-gray-300 mt-1 mb-3" />
