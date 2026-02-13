@@ -4,6 +4,7 @@ import { useCreatePost, useAddPostMedia, useUpdatePost, useDeletePostMedia } fro
 import { z, ZodError } from "zod";
 import toast from "react-hot-toast";
 import extractDriveId from "@/shared/utils/googleDriveHelper";
+import { StringTagFormatter } from "@/shared/utils/stringTagFormatter";
 
 export const postSchema = z.object({
     name: z.string().min(1, "Title is required and cannot be empty"),
@@ -114,7 +115,7 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
             try {
                 const res = await createPostMutation.mutateAsync({
                     name: postData?.name || "",
-                    description: postData?.description || "",
+                    description: StringTagFormatter(postData?.description || ""),
                     priority: 100,
                 });
 
@@ -134,7 +135,7 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
                     postId: postData.id,
                     postData: {
                         name: postData.name,
-                        description: postData.description,
+                        description: StringTagFormatter(postData.description),
                         priority: postData.priority,
                     }
                 });

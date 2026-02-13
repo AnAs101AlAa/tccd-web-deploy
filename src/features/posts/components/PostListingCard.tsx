@@ -45,7 +45,7 @@ export default function PostCard({ post, setEditing, setDeleting }: PostCardProp
             <strong>Created:</strong> {format(new Date(post.createdAt), "full")}
           </p>
 
-          <p className="text-contrast/80 text-[13px] md:text-[14px] lg:text-[15px]">
+          <p className="text-contrast/80 text-[13px] md:text-[14px] lg:text-[15px] line-clamp-4">
             {post.description || "No description."}
           </p>
         </div>

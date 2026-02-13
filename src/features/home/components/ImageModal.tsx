@@ -15,10 +15,10 @@ const ImageModal: React.FC<ImageModalProps> = ({ onClick, name, image }) => {
         onClick={onClick}
       >
         <div
-          className="relative max-w-4xl max-h-[90vh] p-1 bg-white/10 rounded-lg shadow-2xl overflow-hidden transform scale-100 animate-zoom-in backdrop-blur-sm"
+          className="relative min-w-3/4 max-w-4xl max-h-[90vh] p-1 bg-white/10 rounded-lg shadow-2xl overflow-hidden transform scale-100 animate-zoom-in backdrop-blur-sm"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="max-h-[85vh] max-w-full rounded-lg shadow-2xl">
+          <div className="max-h-[85vh] rounded-lg shadow-2xl">
             <LazyImageLoader
               src={image}
               alt={name}
