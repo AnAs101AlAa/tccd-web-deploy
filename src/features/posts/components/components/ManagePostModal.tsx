@@ -44,36 +44,27 @@ export default function ManagePostModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={initialData.id !== "" ? "Edit Post" : "Create a new Post"}>
       <div className="space-y-4">
-        <div className="space-y-2">
-          <InputField
-            id="post-title-field"
-            labelClassName="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600"
-            label="Post Title"
-            value={postData.name}
-            onChange={(e) => handleInputChange("name", e.target.value)}
-            placeholder="Enter post title"
-            error={errors.name}
-          />
-          {errors.name && <p className="px-1 text-xs text-primary">
-            {errors.name}
-          </p>}
-        </div>
+        <InputField
+          id="post-title-field"
+          labelClassName="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600"
+          label="Post Title"
+          value={postData.name}
+          onChange={(e) => handleInputChange("name", e.target.value)}
+          placeholder="Enter post title"
+          error={errors.name}
+        />
         
-        <div>
-          <TextAreaField
-            id="PostText"
-            labelClassName="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600"
-            label="Post Description"
-            placeholder="What's new ?"
-            value={postData.description}
-            onChange={(e) => handleInputChange("description", e.target.value)}
-            maxLength={2000}
-            error={errors.description}
-          />
-          {errors.description && <p className="px-1 text-xs text-primary">
-            {errors.description}
-          </p>}
-        </div>
+        <TextAreaField
+          id="post-description-field"
+          labelClassName="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600"
+          label="Post Description"
+          placeholder="What's new ?"
+          value={postData.description}
+          onChange={(e) => handleInputChange("description", e.target.value)}
+          maxLength={2000}
+          error={errors.description}
+          errorClassName="-mt-1"
+        />
 
         <div className="space-y-3">
           <div className="mt-4">

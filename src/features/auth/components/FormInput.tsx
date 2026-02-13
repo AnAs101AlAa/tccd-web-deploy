@@ -100,17 +100,6 @@ FormInputProps<T>) {
                 />
               )}
 
-              {/* Display error message */}
-              {error && (
-                <p
-                  id={`${inputId}-error`}
-                  className="mt-1 text-sm text-red-600"
-                  role="alert"
-                >
-                  {error.message}
-                </p>
-              )}
-
               {/* Display helper text when no error */}
               {!error && helperText && (
                 <p

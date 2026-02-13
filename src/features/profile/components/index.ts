@@ -9,4 +9,3 @@ export { default as InfoTab } from "./InfoTab";
 export { default as StudentInfoTab } from "./StudentInfoTab";
 export { default as StudentInfoDisplay } from "./StudentInfoDisplay";
 export { default as EditStudentInfoModal } from "./EditStudentInfoModal";
-export { default as FormFieldWithError } from "./FormFieldWithError";

@@ -10,6 +10,9 @@ export interface StudentSignupCredentials {
   arabicName: string;
   gender: "Male" | "Female";
   phoneNumber: string;
+  university: string;
+  faculty: string;
+  department: string;
 }
 
 export interface BusinessRepSignupCredentials {
