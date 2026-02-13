@@ -1,13 +1,15 @@
 
 import type Event from "@/shared/types/events";
+import type { EventSlot } from "@/shared/types/events";
 import { eventFormSchema } from "./eventFormSchema";
 import { useGetLocations } from "@/shared/queries/admin/locations/locationsQueries";
 import { useEffect, useState } from "react";
 import EVENT_TYPES from "@/constants/EventTypes";
-import { useCreateEvent, useUpdateEvent, useUpdateEventPoster, useAddEventMedia, useDeleteEventMedia, useAddSponsorToEvent, useRemoveSponsorFromEvent } from "@/shared/queries/admin/events/eventsQueries";
+import { useCreateEvent, useUpdateEvent, useUpdateEventPoster, useAddEventMedia, useDeleteEventMedia, useAddSponsorToEvent, useRemoveSponsorFromEvent, useAddEventSlot, useRemoveEventSlot } from "@/shared/queries/admin/events/eventsQueries";
 import toast from "react-hot-toast";  
 import { useGetCompanies } from "@/shared/queries/companies";
 import { useGetEventSponsors } from "@/shared/queries/events";
+import { useQueryClient } from "@tanstack/react-query";
 
 const extractDriveId = (urlOrId: string): string => {
   if (!urlOrId) return "";
@@ -40,6 +42,8 @@ const validateAllFields = (formValues : Event) => {
 };
 
 export default function useEventModalUtils({event, onClose}: {event?: Event; onClose: () => void;}) {
+  const queryClient = useQueryClient();
+
   const [locationNameKey, setLocationNameKey] = useState<string|undefined>(undefined);
   const [companyNameKey, setCompanyNameKey] = useState<string|undefined>(undefined);
 
@@ -54,6 +58,8 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   const deleteEventMediaMutation = useDeleteEventMedia();
   const addSponsorToEventMutation = useAddSponsorToEvent();
   const removeSponsorFromEventMutation = useRemoveSponsorFromEvent();
+  const addEventSlotMutation = useAddEventSlot();
+  const removeEventSlotMutation = useRemoveEventSlot();
 
   const isEditMode = !!event;
   const [originalMedia, setOriginalMedia] = useState<any[]>([]);
@@ -75,11 +81,15 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     registeredCount: 0,
     attendeeCount: 0,
     sponsors: [],
+    slots: [],
   });
   const [errors, setErrors] = useState<{ [key in keyof Event]?: string }>({});
   
   const [isAddingMedia, setIsAddingMedia] = useState<boolean>(false);
   const [currentMediaInput, setCurrentMediaInput] = useState<string>("");
+
+  const [isAddingSlot, setIsAddingSlot] = useState<boolean>(false);
+  const [currentSlotInput, setCurrentSlotInput] = useState<EventSlot>({ startTime: "", endTime: "" });
 
   useEffect(() => {
     if (event) {
@@ -114,6 +124,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
         eventMedia: [],
         capacity: event.capacity || 0,
         sponsors: eventSponsors || [],
+        slots: event.slots || [],
       });
     }
   }, [event]);
@@ -142,6 +153,54 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   const handleRemoveNewMedia = (index: number) => {
     setNewMediaIds((prev) => prev.filter((_, i) => i !== index));
   };
+  
+  const handleAddSlot = () => {
+    if (!formValues.date) {
+      toast.error("Please select event date first.");
+      return;
+    }
+    
+    if (!currentSlotInput.startTime || !currentSlotInput.endTime) {
+      toast.error("Please select both start and end times.");
+      return;
+    }
+
+    const [startHour, startMin] = currentSlotInput.startTime.split(':').map(Number);
+    const [endHour, endMin] = currentSlotInput.endTime.split(':').map(Number);
+    const startMinutes = startHour * 60 + startMin;
+    const endMinutes = endHour * 60 + endMin;
+    
+    if (startMinutes >= endMinutes) {
+      toast.error("Start time must be before end time.");
+      return;
+    }
+    
+    const eventDate = new Date(formValues.date);    
+    const startDate = new Date(eventDate);
+    startDate.setHours(startHour, startMin, 0, 0);
+    
+    const endDate = new Date(eventDate);
+    endDate.setHours(endHour, endMin, 0, 0);
+    
+    const slotWithTimestamp = {
+      startTime: startDate.toISOString(),
+      endTime: endDate.toISOString(),
+    };
+    
+    setFormValues((prev) => ({
+      ...prev,
+      slots: [...(prev.slots || []), slotWithTimestamp],
+    }));
+    setCurrentSlotInput({ startTime: "", endTime: "" });
+    setIsAddingSlot(false);
+  }
+
+  const handleRemoveSlot = (index: number) => {
+    setFormValues((prev) => ({
+      ...prev,
+      slots: prev.slots?.filter((_, i) => i !== index),
+    }));
+  }
 
   const handleSave = async () => {
     const registrationDeadlineDate = new Date(formValues.date);
@@ -155,11 +214,12 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
       registrationDeadline: registrationDeadlineDate.toISOString(),
       eventImage: formValues.eventImage || "",
     };
-    
+
     const validationErrors = validateAllFields(finalizedValue);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      toast.error("Please fix all errors before saving.");
       console.error("Validation errors:", validationErrors);
       return;
     }
@@ -201,6 +261,19 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
           }
         }
 
+        for (const slot of formValues.slots || []) {
+          if (!event.slots?.find((s) => s.startTime === slot.startTime && s.endTime === slot.endTime)) {
+            await addEventSlotMutation.mutateAsync({ eventId: event.id, startTime: slot.startTime, endTime: slot.endTime });
+          }
+        }
+
+        for (const slot of event.slots || []) {
+          if (!formValues.slots?.find((s) => s.startTime === slot.startTime && s.endTime === slot.endTime)) {
+            await removeEventSlotMutation.mutateAsync({ eventId: event.id, slotId: slot.id || "" });
+          }
+        }
+
+        queryClient.invalidateQueries({ queryKey: ["events"] });
         toast.success("Event updated successfully!");
         onClose();
       } else {
@@ -223,6 +296,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
           }
         }
         
+        queryClient.invalidateQueries({ queryKey: ["events"] });
         toast.success("Event created successfully!");
         onClose();
       }
@@ -255,11 +329,17 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     isEditMode,
     isAddingMedia,
     setIsAddingMedia,
+    isAddingSlot,
+    setIsAddingSlot,
+    currentSlotInput,
+    setCurrentSlotInput,
     currentMediaInput,
     setCurrentMediaInput,
     handleAddMedia,
     handleRemoveNewMedia,
     handleRemoveOriginalMedia,
+    handleAddSlot,
+    handleRemoveSlot,
     handleSave,
     originalMedia,
     newMediaIds,

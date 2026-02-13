@@ -87,7 +87,6 @@ export class EventsApi {
       `${EVENTS_ROUTE}/${id}`
     );
   }
-
   
   async addSponsorToEvent(eventId: string, companyId: string): Promise<void> {
     await systemApi.post(`${SPONSOR_ROUTE}`, {
@@ -98,6 +97,17 @@ export class EventsApi {
 
   async removeSponsorFromEvent(eventId: string, companyId: string): Promise<void> {
     await systemApi.delete(`${SPONSOR_ROUTE}/${eventId}/${companyId}`);
+  }
+
+  async addEventSlot(eventId: string, startTime: string, endTime: string): Promise<void> {
+    await systemApi.post(`/v1/Event/${eventId}/slots`, {
+      startTime,
+      endTime,
+    });
+  }
+
+  async removeEventSlot(eventId: string, slotId: string): Promise<void> {
+    await systemApi.delete(`/v1/Event/${eventId}/slots/${slotId}`);
   }
 }
 
