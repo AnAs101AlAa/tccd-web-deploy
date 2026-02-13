@@ -38,7 +38,6 @@ export interface User extends Entity {
   phoneNumber: string;
   email: string;
   gender: Gender;
-  profilePicture?: string;
 }
 
 export interface CompanyUser extends Entity {

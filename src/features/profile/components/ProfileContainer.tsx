@@ -18,7 +18,7 @@ const ProfileContainer: React.FC<ProfileContainerProps> = ({
   return (
     <div className="w-full max-w-4xl mx-auto">
       <div className="bg-white rounded-b-3xl shadow-md overflow-hidden">
-        <ProfileHeader user={user} isOwnProfile={isOwnProfile} />
+        <ProfileHeader user={user} />
         <ProfileTabs
           user={user}
           activeTab={activeTab}

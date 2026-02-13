@@ -1,7 +1,6 @@
 
 export const verifyOtp = async (otp: string): Promise<boolean> => {
   try {
-    console.log("Sending OTP to API:", otp);
     // api vesification
     // const response = await fetch("/api/verify-otp", {
     //   method: "POST",
@@ -20,7 +19,6 @@ export const verifyOtp = async (otp: string): Promise<boolean> => {
 
 export const resendOtp = async (): Promise<void> => {
   try {
-    console.log("Resending OTP...");
     // api resend
     // await fetch("/api/resend-otp", { method: "POST" });
   } catch (error) {

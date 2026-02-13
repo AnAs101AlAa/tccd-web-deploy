@@ -1,6 +1,6 @@
 import type { Control } from "react-hook-form";
 import type { AccountTypeFormData } from "../../schemas";
-import { FiUsers, FiBriefcase, FiBook } from "react-icons/fi";
+import { FiUsers, /*FiBriefcase, FiBook*/ } from "react-icons/fi";
 
 interface AccountTypeStepProps {
   control: Control<AccountTypeFormData>;
@@ -19,18 +19,18 @@ export const AccountTypeStep = ({ selectedType, onSelect }: AccountTypeStepProps
       description: "For university students looking to connect and grow",
       icon: FiUsers,
     },
-    {
-      id: "company_representative" as const,
-      title: "Company Representative",
-      description: "For companies seeking talented students",
-      icon: FiBriefcase,
-    },
-    {
-      id: "academic" as const,
-      title: "Academic",
-      description: "For teaching assistants and doctors",
-      icon: FiBook,
-    },
+    // {
+    //   id: "company_representative" as const,
+    //   title: "Company Representative",
+    //   description: "For companies seeking talented students",
+    //   icon: FiBriefcase,
+    // },
+    // {
+    //   id: "academic" as const,
+    //   title: "Academic",
+    //   description: "For teaching assistants and doctors",
+    //   icon: FiBook,
+    // },
   ];
 
   return (

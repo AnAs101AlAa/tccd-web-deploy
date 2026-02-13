@@ -7,12 +7,11 @@ import logo from "/TCCD_logo.svg";
 import facultyLogo from "@/assets/faculty.png";
 import universityLogo from "@/assets/university.png";
 import { useAppSelector } from "@/shared/store/hooks";
-import { selectCurrentUser, selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
+import { selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
 
 const Navbar = () => {
   const { pathname } = useLocation();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const userData = useAppSelector(selectCurrentUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const handleAvatarClick = () => {
@@ -75,8 +74,6 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               <ProfileAvatar
-                userData={userData}
-                isAuthenticated={isAuthenticated}
                 onClick={handleAvatarClick}
               />
 

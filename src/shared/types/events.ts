@@ -8,6 +8,12 @@ export interface Sponsor {
   logo: string; // This is the banner/logo image URL
 }
 
+export interface EventSlot {
+  id?: string;
+  startTime: string;
+  endTime: string;
+}
+
 export default interface Event {
   id: string;
   name: string;
@@ -25,6 +31,8 @@ export default interface Event {
   createdAt?: string;
   updatedOn?: string;
   eventMedia?: EventMedia[] | string[];
+  sponsors?: Sponsor[];
+  slots?: EventSlot[];
 }
 
 export interface EventResponse {
@@ -57,5 +65,5 @@ export interface EventQueryParams {
   PageSize?: number;
 }
 
-export type EventTypes = "Workshop" | "Jobfair" | "Researchday" | "Fieldtrip" | "Sessions" | "Recruitment" | "Orientation"
+export type EventTypes = "Workshop" | "Jobfair" | "Researchday" | "Fieldtrip" | "Sessions"
 export type EventOrderBy = "Name" | "Date" | "Location" | "Type";

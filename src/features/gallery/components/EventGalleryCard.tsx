@@ -2,6 +2,9 @@ import Format from "@/shared/utils/dateFormater";
 import { LazyImageLoader } from "tccd-ui";
 import { useNavigate } from "react-router-dom";
 import type Event from "@/shared/types/events";
+import EVENT_TYPES from "@/constants/EventTypes";
+import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
+
 export const EventGalleryCard = (event: Event) => {
     const navigator = useNavigate();
     const handleCardClick = () => {
@@ -24,7 +27,8 @@ export const EventGalleryCard = (event: Event) => {
             <div className="p-3 space-y-1">
                 <div className="flex gap-1 items-center">
                     <span className="text-primary text-[13px] md:text-[15px] font-semibold">
-                        {event.type}
+                        {EVENT_TYPES.find((type) => type.value === event.type)?.label ||
+                            "Other"}
                     </span>
                     <span className="text-gray-400">|</span>
                     <span className="text-inactive-tab-text text-[12px] md:text-[14px] font-semibold">
@@ -35,7 +39,7 @@ export const EventGalleryCard = (event: Event) => {
                     {event.name}
                 </h2>
                 <p className="text-gray-600 text-[13px] md:text-[15px] line-clamp-3">
-                    {event.description}
+                    <HTMLFormattedText content={event.description} />
                 </p>
             </div>
         </div>

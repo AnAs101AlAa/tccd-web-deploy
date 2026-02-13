@@ -8,6 +8,14 @@ export interface Company {
   logo: string;
 }
 
+export interface CompanyQueryParams {
+  pageIndex?: number;
+  pageSize?: number;
+  companyName?: string;
+  businessType?: string;
+  orderBy?: string;
+}
+
 export interface CompaniesResponse {
   success: boolean;
   statusCode: number;

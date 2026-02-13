@@ -5,14 +5,14 @@ import { useState, useEffect } from "react";
 import Pagination from "@/shared/components/pagination/Pagination";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import { useGetAllPosts } from "@/shared/queries/posts";
-import { LoadingPage, Button } from "tccd-ui";
-import ManagePostModal from "../components/components/EditPostModal";
+import { LoadingPage, Button, ErrorScreen } from "tccd-ui";
 import PostDeleteModal from "../components/components/PostDeleteModal";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
+import ManagePostModal from "../components/components/ManagePostModal";
 
 export const PostManagementPage = () => {
   const [searchKey, setSearchKey] = useState("");
-  const [editedPost, setEditedPost] = useState<string | null>(null);
+  const [selectedPost, setSelectedPost] = useState<CommunityPost | null>(null);
   const [createPost, setCreatePost] = useState<boolean>(false);
   const [deletedPost, setDeletedPost] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,16 +29,16 @@ export const PostManagementPage = () => {
     name?: string;
   }>({});
 
-  const { data, isLoading, error } = useGetAllPosts(currentPage, pageSize, activeFilters);
+  const { data, isLoading, isError } = useGetAllPosts(currentPage, pageSize, activeFilters);
 
   const posts = data?.posts || [];
   const totalPages = data?.totalPages || 0;
 
   useEffect(() => {
-    if (!isLoading && (data || error)) {
+    if (!isLoading && (data || isError)) {
       setIsInitialLoad(false);
     }
-  }, [isLoading, data, error]);
+  }, [isLoading, data, isError]);
 
   const handleSearch = () => {
     const filters: any = {};
@@ -55,18 +55,17 @@ export const PostManagementPage = () => {
     setCurrentPage(page);
   };
 
-  // Show full-page loading only on initial load
   if (isInitialLoad && isLoading) {
     return <LoadingPage />;
   }
 
-  // if(isError) {
-  //     return (
-  //         <WithLayout>
-  //             <ErrorScreen title="Failed to load posts. Using cached data." message='An Error has occurred while loading posts, please try again later.'/>
-  //         </WithLayout>
-  //     )
-  // }
+  if(isError) {
+      return (
+          <WithLayout>
+              <ErrorScreen title="Failed to load posts. Using cached data." message='An Error has occurred while loading posts, please try again later.'/>
+          </WithLayout>
+      )
+  }
 
   return (
     <WithLayout>
@@ -75,15 +74,16 @@ export const PostManagementPage = () => {
         onClose={() => setDeletedPost(null)}
         postId={deletedPost}
       />
-      <ManagePostModal
-        mode={editedPost != null}
-        post={posts.find((post: CommunityPost) => post.id === editedPost)!}
-        onClose={() => {
-          setEditedPost(null);
-          setCreatePost(false);
-        }}
-        isOpen={editedPost != null || createPost}
-      />
+      {(createPost || selectedPost) && (
+        <ManagePostModal
+          initialData={selectedPost || undefined}
+          onClose={() => {
+            setSelectedPost(null);
+            setCreatePost(false);
+          }}
+          isOpen={createPost || selectedPost !== null}
+        />
+      )}
       <div className="min-h-screen bg-gray-50">
         <UpperHeader
           image=""
@@ -111,7 +111,7 @@ export const PostManagementPage = () => {
             <div className="flex justify-center items-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
-          ) : error ? (
+          ) : isError ? (
             <div className="text-center py-20">
               <p className="text-red-600 text-lg">
                 An error occurred while fetching posts. Please try again.
@@ -124,7 +124,7 @@ export const PostManagementPage = () => {
                   <div key={post.id} className="w-full md:w-[49%] xl:w-[32%]">
                     <PostCard
                       post={post}
-                      setEditing={setEditedPost}
+                      setEditing={setSelectedPost}
                       setDeleting={setDeletedPost}
                     />
                   </div>

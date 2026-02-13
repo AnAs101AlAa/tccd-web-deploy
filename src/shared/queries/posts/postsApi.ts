@@ -39,15 +39,15 @@ export class PostsApi {
     const response = await systemApi.get(POSTS_ROUTE, { params });
 
     if (response.data.success && response.data.data) {
-      // console.log("API Response Data:", response.data.data); // Debug log
       const { items, pageIndex, totalPages, totalCount } = response.data.data;
       return {
         posts: items.map((item: any): CommunityPost => ({
           id: item.id,
           name: item.name,
           description: item.description,
-          media: item.media || [],
+          media: item.medias || [],
           priority: item.priority,
+          isApproved: item.isApproved,
           createdAt: item.createdAt,
         })),
         pageIndex,
@@ -73,8 +73,9 @@ export class PostsApi {
         id: item.id,
         name: item.name,
         description: item.description,
-        media: item.media || [],
+        media: item.medias || [],
         priority: item.priority,
+        isApproved: item.isApproved,
         createdAt: item.createdAt,
       };
     }
@@ -87,8 +88,49 @@ export class PostsApi {
     return response.data;
   }
 
+  async createPost(postData: {name: string, description: string, priority?: number}): Promise<CommunityPost> {
+    const response = await systemApi.post(POSTS_ROUTE, postData);
+    if (response.data.success && response.data.data) {
+      const item = response.data.data;
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        media: item.media || [],
+        priority: item.priority,
+        isApproved: item.isApproved,
+        createdAt: item.createdAt,
+      };
+    }
+    throw new Error("Failed to create post");
+  }
+
+  async updatePost(id: string, postData: {name?: string, description?: string, priority?: number}) {
+    const response = await systemApi.put(`${POSTS_ROUTE}/${id}`, postData);
+    if (response.data.success && response.data.data) {
+      const item = response.data.data;
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        media: item.media || [],
+        priority: item.priority,
+        isApproved: item.isApproved,
+        createdAt: item.createdAt,
+      };
+    }
+  }
+   
   async deletePost(id: string): Promise<void> {
     await systemApi.delete(`${POSTS_ROUTE}/${id}`);
+  }
+
+  async addPostMedia(postId: string, mediaFiles: string[]): Promise<void> {
+    await systemApi.post(`v2/posts/${postId}/PostMedia`, { fileIds: mediaFiles });
+  }
+
+  async deletePostMedia(postId: string, mediaFiles: string[]): Promise<void> {
+    await systemApi.delete(`v1/posts/${postId}/PostMedia`, { data: { mediaIds: mediaFiles } });
   }
 }
 

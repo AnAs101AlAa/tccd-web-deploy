@@ -4,6 +4,9 @@ import { useRef, useEffect, useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
 import EVENT_TYPES from "@/constants/EventTypes";
 import format from "@/shared/utils/dateFormater";
+import { useCurrentUser } from "@/shared/store";
+import toast from "react-hot-toast";
+import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 
 interface Props {
   event: Event;
@@ -20,7 +23,8 @@ const UpcomingEventCard: React.FC<Props> = ({
   const mainInfoRef = useRef<HTMLDivElement>(null);
   const [translateValue, setTranslateValue] = useState(260);
   const [isTapped, setIsTapped] = useState(false);
-  
+  const currentUser = useCurrentUser();
+
   useEffect(() => {
     const wholeEl = wholeInfoRef.current;
     const mainEl = mainInfoRef.current;
@@ -101,8 +105,8 @@ const UpcomingEventCard: React.FC<Props> = ({
         </div>
 
         <div className="transition-all duration-500 ease-in-out transform">
-          <p className="text-[13px] md:text-[14px] lg:text-[15px] leading-relaxed text-gray-700">
-            {event.description}
+          <p className="text-[13px] md:text-[14px] lg:text-[15px] leading-relaxed text-gray-700 line-clamp-6">
+            <HTMLFormattedText content={event.description} />
           </p>
 
           <div className="flex gap-3 mt-4">
@@ -111,6 +115,10 @@ const UpcomingEventCard: React.FC<Props> = ({
               type="primary"
               width="small"
               onClick={() => {
+                if (!currentUser.id) {
+                  toast.error("Please log in to be able to register in events.");
+                  return;
+                }
                 onBookNow(event.id);
               }}
             />

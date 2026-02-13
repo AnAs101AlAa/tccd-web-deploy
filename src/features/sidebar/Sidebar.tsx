@@ -6,6 +6,7 @@ import {
   FiBarChart2,
   FiLogOut,
 } from "react-icons/fi";
+import { IoHome } from "react-icons/io5";
 import TCCDLogo from "/TCCD_logo.svg";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -132,11 +133,28 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           </nav>
 
           {/* Logout Button */}
-          <div className="px-3 mt-auto pt-6 border-t border-contrast/5">
+          <div className="mt-auto pt-4 md:pt-6 border-t border-contrast/5">
+            <button
+              onClick={() => navigate("/")}
+              className="
+                w-full py-2 md:py-4
+                text-contrast hover:bg-gray-100 font-medium
+                flex items-center gap-3
+                px-4
+                rounded-lg
+                cursor-pointer
+                transition-all duration-200
+              "
+            >
+              <span className="flex-shrink-0">
+                <IoHome className="w-5 h-5" />
+              </span>
+              <span className="text-sm font-medium">back to home</span>
+            </button>
             <button
               onClick={handleLogout}
               className="
-                w-full h-12
+                w-full py-2 md:py-4
                 flex items-center gap-3
                 px-4
                 rounded-lg

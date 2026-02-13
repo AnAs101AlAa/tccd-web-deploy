@@ -79,7 +79,7 @@ export const useAuth = () => {
   ) => {
     try {
       if (userType === "student") {
-        // const studentData = additionalData as StudentInfoFormData;
+        const studentData = additionalData as StudentInfoFormData;
         await signupStudentMutation.mutateAsync({
           email: basicData.email,
           password: basicData.password,
@@ -87,6 +87,9 @@ export const useAuth = () => {
           arabicName: basicData.arabicFullName,
           gender: basicData.gender,
           phoneNumber: basicData.phoneNumber,
+          university: studentData.university,
+          faculty: studentData.faculty,
+          department: studentData.department || "",
         });
       } else if (userType === "company_representative") {
         const companyData = additionalData as CompanyRepInfoFormData;

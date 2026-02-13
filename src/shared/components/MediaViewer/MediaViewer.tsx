@@ -79,31 +79,38 @@ export default function FullscreenMediaViewer({
       ref={galleryRef}
       className="flex flex-wrap gap-0 md:gap-[2%] lg:gap-[0.66%] space-y-4 p-2 md:p-3 overflow-y-auto"
     >
-      {items.slice(0, visibleCount).map((it, i) => (
-        <button
-          key={it.id}
-          onClick={() => openAt(i)}
-          className="group relative w-full md:w-[32%] lg:w-[24.5%] h-[24vh] md:h-[32vh] lg:h-[28vh] overflow-hidden rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          <img
-            src={it.thumb || it.src}
-            alt={it.alt || `thumb-${i + 1}`}
-            className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-            draggable={false}
-            loading="lazy"
-          />
-          {it.type === "video" && (
-            <span className="absolute left-2 top-2 rounded-full bg-black/50 px-2 py-1 text-xs text-white">
-              Video
-            </span>
-          )}
-        </button>
-      ))}
-
-      {visibleCount < items.length && (
+      {items.length === 0 ? (
         <div className="w-full text-center font-bold py-4 text-contrast text-[14px] md:text-[16px]">
-          Loading more...
+          No media available.
         </div>
+      ) : (
+        <>
+          {items.slice(0, visibleCount).map((it, i) => (
+            <button
+              key={it.id}
+              onClick={() => openAt(i)}
+              className="group relative w-full md:w-[32%] lg:w-[24.5%] h-[24vh] md:h-[32vh] lg:h-[28vh] overflow-hidden rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <img
+                src={it.thumb || it.src}
+                alt={it.alt || `thumb-${i + 1}`}
+                className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                draggable={false}
+                loading="lazy"
+              />
+              {it.type === "video" && (
+                <span className="absolute left-2 top-2 rounded-full bg-black/50 px-2 py-1 text-xs text-white">
+                  Video
+                </span>
+              )}
+            </button>
+          ))}
+          {visibleCount < items.length && (
+            <div className="w-full text-center font-bold py-4 text-contrast text-[14px] md:text-[16px]">
+              Loading more...
+            </div>
+          )}
+        </>
       )}
     </div>
   );

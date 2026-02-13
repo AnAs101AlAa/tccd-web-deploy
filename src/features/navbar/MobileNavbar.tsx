@@ -5,12 +5,11 @@ import { useState } from "react";
 import ProfileAvatar from "./components/ProfileAvatar";
 import ProfileMenu from "./components/ProfileMenu";
 import { useAppSelector } from "@/shared/store/hooks";
-import { selectCurrentUser, selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
+import { selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
 
 const MobileNavbar = () => {
   const { pathname } = useLocation();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const userData = useAppSelector(selectCurrentUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   
   const handleAvatarClick = () => {
@@ -27,7 +26,7 @@ const MobileNavbar = () => {
           <Link
             className={`${
               active ? "text-primary" : "text-secondary"
-            } inline-flex flex-col items-center gap-1 ${
+            } inline-flex flex-col w-1/4 items-center gap-1 ${
               index === 1 ? "mr-7" : index === 2 ? "ml-7" : ""
             } cursor-pointer`}
             key={title}
@@ -45,12 +44,10 @@ const MobileNavbar = () => {
         );
       })}
 
-      <div className="absolute left-1/2 -translate-x-1/2 top-1">
+      <div className="absolute right-1/2 translate-x-1/2 top-1">
         {isAuthenticated ? (
           <>
             <ProfileAvatar
-              userData={userData}
-              isAuthenticated={isAuthenticated}
               onClick={handleAvatarClick}
             />
 
@@ -66,8 +63,6 @@ const MobileNavbar = () => {
         ) : (
           <Link to="/login">
             <ProfileAvatar
-              userData={userData}
-              isAuthenticated={isAuthenticated}
               onClick={() => {}}
             />
           </Link>
