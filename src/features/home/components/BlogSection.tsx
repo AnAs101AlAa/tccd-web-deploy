@@ -10,27 +10,12 @@ const BlogSection = () => {
   const [postsPerPage, setPostsPerPage] = useState<number>(3);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const [componentHeight, setComponentHeight] = useState<number>(0);
   const gridRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading } = useGetAllPosts(currentPage, postsPerPage);
 
   const latestPosts = data?.posts || [];
   const totalPages = data?.totalPages || 0;
-
-  useEffect(() => {
-    if (gridRef.current) {
-      const heights = Array.from(gridRef.current.children).map(
-        (child) => (child as HTMLElement).offsetHeight
-      );
-      const maxHeight = Math.max(500, ...heights);
-      if (componentHeight !== maxHeight) {
-        setComponentHeight(maxHeight + 40);
-      }
-    }
-  }, [latestPosts, postsPerPage, currentPage]);
-
-
 
   // Set posts per page based on screen size
   useEffect(() => {
@@ -133,11 +118,8 @@ const BlogSection = () => {
         ) : latestPosts.length > 0 ? (
           <>
             <div
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 overflow-x-hidden"
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 overflow-x-hidden pb-4"
               ref={gridRef}
-              style={{
-                height: Math.max(500, componentHeight),
-              }}
             >
               {latestPosts.map((post: CommunityPost) => (
                 <BlogPostCard

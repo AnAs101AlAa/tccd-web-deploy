@@ -1,9 +1,10 @@
-import { Button, Modal, TextAreaField, InputField } from "tccd-ui";
+import { Button, Modal, InputField } from "tccd-ui";
 import { FaPlus, FaCheck } from "react-icons/fa";
 import { TbTrash } from "react-icons/tb";
 import useManagePostUtils from "../../utils/ManagePostUtils";
 import type { CommunityPost, PostMedia } from "@/shared/types";
 import extractDriveId from "@/shared/utils/googleDriveHelper";
+import { RichTextEditor } from "@/shared/components/RichTextEditor";
 
 export default function ManagePostModal({
   initialData = {
@@ -54,13 +55,13 @@ export default function ManagePostModal({
           error={errors.name}
         />
         
-        <TextAreaField
+        <RichTextEditor
           id="post-description-field"
           labelClassName="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600"
           label="Post Description"
-          placeholder="What's new ?"
+          placeholder="What's new?"
           value={postData.description}
-          onChange={(e) => handleInputChange("description", e.target.value)}
+          onChange={(value) => handleInputChange("description", value)}
           maxLength={2000}
           error={errors.description}
           errorClassName="-mt-1"
