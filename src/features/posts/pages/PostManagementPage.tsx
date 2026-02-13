@@ -74,14 +74,16 @@ export const PostManagementPage = () => {
         onClose={() => setDeletedPost(null)}
         postId={deletedPost}
       />
-      <ManagePostModal
-        initialData={selectedPost || undefined}
-        onClose={() => {
-          setSelectedPost(null);
-          setCreatePost(false);
-        }}
-        isOpen={createPost || selectedPost !== null}
-      />
+      {(createPost || selectedPost) && (
+        <ManagePostModal
+          initialData={selectedPost || undefined}
+          onClose={() => {
+            setSelectedPost(null);
+            setCreatePost(false);
+          }}
+          isOpen={createPost || selectedPost !== null}
+        />
+      )}
       <div className="min-h-screen bg-gray-50">
         <UpperHeader
           image=""

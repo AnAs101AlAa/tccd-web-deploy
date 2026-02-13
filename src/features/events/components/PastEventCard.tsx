@@ -4,6 +4,7 @@ import { Button, LazyImageLoader } from "tccd-ui";
 import { MdCalendarMonth, MdGroups } from "react-icons/md";
 import EVENT_TYPES from "@/constants/EventTypes";
 import format from "@/shared/utils/dateFormater";
+import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 
 export default function PastEventCard({
   event,
@@ -49,7 +50,7 @@ export default function PastEventCard({
           {event.attendeeCount}
         </div>
       <p className="line-clamp-3 text-[13px] md:text-[14px] lg:text-[15px]">
-        {event.description}
+        <HTMLFormattedText content={event.description} />
       </p>
       {onEdit && (
         <div

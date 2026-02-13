@@ -49,7 +49,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     // Set cursor position after the inserted markup
     setTimeout(() => {
       const newPosition = start + startTag.length + selectedText.length;
-      textarea.focus();
+      textarea.focus({ preventScroll: true });
       textarea.setSelectionRange(newPosition, newPosition);
     }, 0);
   };
@@ -68,7 +68,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     // Set cursor position after the break
     setTimeout(() => {
       const newPosition = start + 4; // length of *br*
-      textarea.focus();
+      textarea.focus({ preventScroll: true });
       textarea.setSelectionRange(newPosition, newPosition);
     }, 0);
   };
