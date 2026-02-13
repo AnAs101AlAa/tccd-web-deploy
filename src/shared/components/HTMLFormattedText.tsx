@@ -9,6 +9,15 @@ type RenderHtmlProps = {
 export function HTMLFormattedText({ content, className }: RenderHtmlProps) {
   if (!content) return null;
 
+  // Transform custom markup to HTML tags
+  const transformCustomMarkup = (text: string): string => {
+    return text
+      .replace(/\*b\*(.*?)\*b\*/g, "<b>$1</b>") // Bold
+      .replace(/\*i\*(.*?)\*i\*/g, "<i>$1</i>") // Italic
+      .replace(/\*u\*(.*?)\*u\*/g, "<u>$1</u>") // Underline
+      .replace(/\*br\*/g, "<br />"); // Line break
+  };
+
   const decodeHtmlEntities = (str: string) => {
     const txt = document.createElement("textarea");
     txt.innerHTML = str;
@@ -19,7 +28,10 @@ export function HTMLFormattedText({ content, className }: RenderHtmlProps) {
     ? decodeHtmlEntities(content)
     : content;
 
-  const safeHtml = DOMPurify.sanitize(decoded, {
+  // Transform custom markup before sanitizing
+  const transformed = transformCustomMarkup(decoded);
+
+  const safeHtml = DOMPurify.sanitize(transformed, {
     ALLOWED_TAGS: [
       "b",
       "strong",

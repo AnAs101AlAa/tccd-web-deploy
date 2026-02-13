@@ -7,6 +7,7 @@ import type Event from "@/shared/types/events";
 import PosterCard from "@/shared/components/PosterCard";
 import { useGetEventSponsors } from "@/shared/queries/events/eventQueries";
 import type { EventMedia } from "@/shared/types/events";
+import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 
 const SPONSOR_GAP_PERCENT = 2;
 const AUTO_SCROLL_INTERVAL_MS = 3000;
@@ -162,7 +163,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                             )}
                         </div>
                         <p className="text-[13px] sm:text-[14px] md:text-[15px] mt-2 text-gray-600">
-                            {event.description}
+                            <HTMLFormattedText content={event.description} />
                         </p>
                     </div>
 
