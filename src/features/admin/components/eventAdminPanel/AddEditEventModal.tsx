@@ -1,7 +1,6 @@
 import {
   Modal,
   InputField,
-  TextAreaField,
   DropdownMenu,
   Button,
   SearchField,
