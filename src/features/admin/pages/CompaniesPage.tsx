@@ -5,7 +5,7 @@ import { MdAdd } from "react-icons/md";
 import CompaniesTable from "../components/companies/CompaniesTable";
 import CompaniesFilter from "../components/companies/CompaniesFilter";
 import AddEditCompanyModal from "../components/companies/AddEditCompanyModal";
-import type { CompaniesQueryParams } from "@/shared/queries/admin/companies";
+import type { CompaniesQueryParams } from "@/shared/queries/companies";
 
 const CompaniesPage: React.FC = () => {
   const [queryParams, setQueryParams] = useState<CompaniesQueryParams>({
@@ -38,8 +38,8 @@ const CompaniesPage: React.FC = () => {
         {/* Header */}
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-[29px] md:text-[32px] lg:text-[34px] font-bold text-contrast">
-              Companies Management
+            <h1 className="text-[28px] md:text-[32px] lg:text-[34px] font-bold text-contrast">
+              Companies
             </h1>
             <p className="text-inactive-tab-text text-[15px] md:text-[16px] lg:text-[18px]">
               Manage all registered companies and their details
@@ -65,8 +65,8 @@ const CompaniesPage: React.FC = () => {
         />
 
         {/* Table Section */}
-        <section className="rounded-xl border border-contrast/10 bg-background/60 p-4 sm:p-5 lg:p-6 shadow-sm">
-          <div className="flex flex-col gap-3 mb-4">
+        <section className="rounded-xl border border-contrast/10 bg-background/60 pb-4 shadow-sm">
+          {/* <div className="flex flex-col gap-3 mb-4">
             <div>
               <h2 className="text-[22px] md:text-[23px] lg:text-[24px] font-bold text-secondary">
                 All Companies
@@ -76,7 +76,7 @@ const CompaniesPage: React.FC = () => {
               </p>
             </div>
             <hr className="border-t border-gray-400/60 -mt-1 mb-1 shadow-lg" />
-          </div>
+          </div> */}
 
           <CompaniesTable
             queryParams={queryParams}

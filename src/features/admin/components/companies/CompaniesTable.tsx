@@ -3,20 +3,20 @@ import {
   useGetCompanies,
   useDeleteCompany,
   useUpdateCompanyApproval,
-} from "@/shared/queries/admin/companies";
+} from "@/shared/queries/companies";
+import { Button, LazyImageLoader } from "tccd-ui";
 import { Pagination } from "@/shared/components/pagination";
 import type {
   Company,
   CompaniesQueryParams,
-} from "@/shared/queries/admin/companies";
+} from "@/shared/queries/companies";
 import {
-  FiEye,
-  FiEdit2,
-  FiTrash2,
+  FiEdit,
   FiBriefcase,
-  FiCheck,
-  FiX,
 } from "react-icons/fi";
+import { TbTrash } from "react-icons/tb";
+import { LuExpand } from "react-icons/lu";
+import { BsClipboard2XFill, BsClipboard2CheckFill  } from "react-icons/bs";
 import CompanyDetailModal from "./CompanyDetailModal";
 import AddEditCompanyModal from "./AddEditCompanyModal";
 import ConfirmActionModal from "@/shared/components/modals/ConfirmActionModal";
@@ -132,55 +132,39 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
   }
 
   const ActionButtons = ({ company }: { company: Company }) => (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          handleToggleApproval(company);
-        }}
-        className={`p-2 rounded-lg transition-colors ${
-          company.isApproved
-            ? "hover:bg-red-500/10 text-red-500"
-            : "hover:bg-green-500/10 text-green-500"
-        }`}
-        title={company.isApproved ? "Disapprove" : "Approve"}
-      >
-        {company.isApproved ? (
-          <FiX className="w-4 h-4" />
-        ) : (
-          <FiCheck className="w-4 h-4" />
-        )}
-      </button>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          handleView(company);
-        }}
-        className="p-2 rounded-lg hover:bg-contrast/10 text-secondary transition-colors"
-        title="View details"
-      >
-        <FiEye className="w-4 h-4" />
-      </button>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          handleEdit(company);
-        }}
-        className="p-2 rounded-lg hover:bg-contrast/10 text-secondary transition-colors"
-        title="Edit company"
-      >
-        <FiEdit2 className="w-4 h-4" />
-      </button>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          handleDeleteClick(company);
-        }}
-        className="p-2 rounded-lg hover:bg-red-500/10 text-red-500 transition-colors"
-        title="Delete company"
-      >
-        <FiTrash2 className="w-4 h-4" />
-      </button>
+    <div className="flex items-center justify-center md:justify-start w-full gap-2" onClick={(e) => e.stopPropagation()}>
+      <Button 
+        type="tertiary"
+        className="md:py-1.5 md:px-3"
+        width="fit"
+        buttonIcon={!company.isApproved ? <BsClipboard2CheckFill className="size-4 md:size-4.5" /> : <BsClipboard2XFill className="size-4 md:size-4.5" />}
+        onClick={() => handleToggleApproval(company)}
+        disabled={updateApprovalMutation.isPending}
+      />
+      <Button
+        type="secondary"
+        width="fit"
+        className="md:py-1.5 md:px-3"
+        buttonIcon={<FiEdit className="size-4 md:size-4.5" />}
+        onClick={() => handleEdit(company)}
+        disabled={updateApprovalMutation.isPending}
+      />
+      <Button
+        type="primary"
+        width="fit"
+        className="md:py-1.5 md:px-3"
+        buttonIcon={<LuExpand className="size-4 md:size-4.5" />}
+        onClick={() => handleView(company)}
+        disabled={updateApprovalMutation.isPending}
+      />
+      <Button
+        type="danger"
+        width="fit"
+        className="md:py-1.5 md:px-3"
+        buttonIcon={<TbTrash className="size-4 md:size-4.5" />}
+        onClick={() => handleDeleteClick(company)}
+        disabled={updateApprovalMutation.isPending}
+      />
     </div>
   );
 
@@ -207,7 +191,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                 <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
                   Status
                 </th>
-                <th className="whitespace-nowrap px-4 py-3 text-center text-sm font-medium text-inactive-tab-text">
+                <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
                   Actions
                 </th>
               </tr>
@@ -221,12 +205,12 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                 >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full overflow-hidden bg-contrast/5 flex items-center justify-center flex-shrink-0 border border-contrast/10">
+                      <div className="w-9 h-9 rounded-full overflow-hidden bg-contrast/5 flex items-center justify-center shrink-0 border border-contrast/10">
                         {company.logo ? (
-                          <img
+                          <LazyImageLoader
                             src={company.logo}
                             alt={company.companyName}
-                            className="w-full h-full object-cover"
+                            objectClassName="w-full h-full object-contain"
                           />
                         ) : (
                           <FiBriefcase className="w-4 h-4 text-inactive-tab-text" />
@@ -239,7 +223,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                   </td>
                   <td className="px-4 py-3">
                     {company.businessType ? (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-contrast/10 text-contrast">
+                      <span className="inline-flex items-center px-3 py-0.5 shadow-sm rounded-full text-[13px] font-semibold bg-contrast/10 text-contrast">
                         {company.businessType}
                       </span>
                     ) : (
@@ -261,24 +245,22 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                       <span className="text-inactive-tab-text">—</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-secondary max-w-[250px] truncate">
+                  <td className="px-4 py-3 text-secondary max-w-62.5 truncate">
                     {company.brief || "—"}
                   </td>
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      className={`inline-flex items-center px-2.5 py-1 shadow-sm border rounded-full text-xs font-medium ${
                         company.isApproved
-                          ? "bg-green-500/10 text-green-500"
-                          : "bg-yellow-500/10 text-yellow-500"
+                          ? "bg-green-500/10 text-green-600 border-green-500"
+                          : "bg-yellow-500/10 text-yellow-600 border-yellow-500"
                       }`}
                     >
                       {company.isApproved ? "Approved" : "Pending"}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex justify-center">
-                      <ActionButtons company={company} />
-                    </div>
+                    <ActionButtons company={company} />
                   </td>
                 </tr>
               ))}
@@ -289,34 +271,32 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
         {/* Mobile Card View */}
         <div className="lg:hidden divide-y divide-contrast/10">
           {companies.map((company) => (
-            <div key={company.id} className="p-4 space-y-3">
-              <div className="flex justify-between items-start">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full overflow-hidden bg-contrast/5 flex items-center justify-center flex-shrink-0 border border-contrast/10">
-                    {company.logo ? (
-                      <img
-                        src={company.logo}
-                        alt={company.companyName}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <FiBriefcase className="w-5 h-5 text-inactive-tab-text" />
-                    )}
-                  </div>
-                  <p className="font-semibold text-contrast text-[18px]">
-                    {company.companyName}
-                  </p>
+            <div key={company.id} className="p-3 space-y-2 relative">
+              {company.businessType && (
+                <span className="absolute top-4 right-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] font-semibold bg-contrast/10 text-contrast shrink-0 ml-2">
+                  {company.businessType}
+                </span>
+              )}
+              <div className="flex flex-col gap-1.5">
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-contrast/5 flex items-center justify-center shrink-0 border border-contrast/10">
+                  {company.logo ? (
+                    <LazyImageLoader
+                      src={company.logo}
+                      alt={company.companyName}
+                      objectClassName="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <FiBriefcase className="w-5 h-5 text-inactive-tab-text" />
+                  )}
                 </div>
-                {company.businessType && (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-contrast/10 text-contrast shrink-0 ml-2">
-                    {company.businessType}
-                  </span>
-                )}
+                <p className="font-semibold text-contrast text-[20px]">
+                  {company.companyName}
+                </p>
               </div>
 
-              <div className="flex flex-wrap gap-4 text-sm">
+              <div className="flex flex-wrap space-x-3 space-y-2 text-sm mb-4">
                 <div>
-                  <span className="font-medium text-inactive-tab-text block mb-0.5">
+                  <span className="font-medium text-inactive-tab-text block">
                     Website
                   </span>
                   <span className="text-secondary">
@@ -336,7 +316,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                 </div>
                 {company.brief && (
                   <div>
-                    <span className="font-medium text-inactive-tab-text block mb-0.5">
+                    <span className="font-medium text-inactive-tab-text block">
                       Brief
                     </span>
                     <span className="text-secondary">{company.brief}</span>
@@ -345,28 +325,8 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
               </div>
 
               {/* Mobile Action Buttons */}
-              <div className="flex gap-2 pt-2 border-t border-contrast/5">
-                <button
-                  onClick={() => handleView(company)}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-secondary/10 hover:bg-secondary/20 text-secondary rounded-lg transition-colors text-sm font-medium"
-                >
-                  <FiEye className="w-4 h-4" />
-                  View
-                </button>
-                <button
-                  onClick={() => handleEdit(company)}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-secondary/10 hover:bg-secondary/20 text-secondary rounded-lg transition-colors text-sm font-medium"
-                >
-                  <FiEdit2 className="w-4 h-4" />
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeleteClick(company)}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg transition-colors text-sm font-medium"
-                >
-                  <FiTrash2 className="w-4 h-4" />
-                  Delete
-                </button>
+              <div className="flex gap-2 pt-2 border-t border-contrast/5 w-full">
+                <ActionButtons company={company} />
               </div>
             </div>
           ))}
@@ -374,11 +334,13 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
 
         {/* Pagination */}
         {paginationData && paginationData.totalPages > 1 && (
-          <Pagination
-            currentPage={paginationData.pageIndex}
-            totalPages={paginationData.totalPages}
-            onPageChange={onPageChange}
-          />
+          <div className="-mt-3">
+            <Pagination
+              currentPage={paginationData.pageIndex}
+              totalPages={paginationData.totalPages}
+              onPageChange={onPageChange}
+            />
+          </div>
         )}
       </div>
 

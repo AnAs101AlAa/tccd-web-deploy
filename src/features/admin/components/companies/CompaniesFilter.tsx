@@ -54,7 +54,7 @@ const CompaniesFilter = ({
 
   return (
     <>
-      <div className="w-full bg-background p-4 rounded-xl shadow-sm mb-6 border border-contrast/10">
+      <div className="w-full bg-background p-4 rounded-xl shadow-sm mb-6">
         <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
           <div onKeyDown={handleKeyDown} className="w-full">
             <SearchField

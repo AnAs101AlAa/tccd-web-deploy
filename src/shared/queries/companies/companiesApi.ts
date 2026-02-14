@@ -1,4 +1,4 @@
-import { systemApi } from "../../AxoisInstance";
+import { systemApi } from "../AxoisInstance";
 import type {
   CompaniesResponse,
   CompanyResponse,

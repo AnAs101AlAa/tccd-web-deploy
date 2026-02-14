@@ -4,7 +4,7 @@ import { Controller } from "react-hook-form";
 import { useEffect, useState, useRef } from "react";
 import { FiSearch, FiPlus, FiUpload, FiX } from "react-icons/fi";
 import { Button } from "tccd-ui";
-import { useGetCompanies } from "@/shared/queries/admin/companies";
+import { useGetCompanies } from "@/shared/queries/companies";
 import toast from "react-hot-toast";
 
 interface CompanyRepInfoStepProps {

@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { Modal, InputField, Button } from "tccd-ui";
+import { Modal, InputField, Button, TextAreaField } from "tccd-ui";
 import {
   useCreateCompany,
   useUpdateCompany,
-} from "@/shared/queries/admin/companies";
-import type { Company } from "@/shared/queries/admin/companies";
+} from "@/shared/queries/companies";
+import type { Company } from "@/shared/queries/companies";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
+import extractDriveId from "@/shared/utils/googleDriveHelper";
 
 interface AddEditCompanyModalProps {
   isOpen: boolean;
@@ -40,7 +41,7 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
         description: company.description || "",
         website: company.website || "",
         brief: company.brief || "",
-        logoId: "",
+        logoId: extractDriveId(company.logo || ""),
       });
     } else {
       setFormData({
@@ -96,9 +97,7 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
         toast.success("Company created successfully!");
       }
       onClose();
-    } catch (error: any) {
-      console.error("Error saving company:", error);
-      console.error("Error response:", error.response?.data);
+    } catch (error) {
       toast.error(getErrorMessage(error));
     }
   };
@@ -118,79 +117,56 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
     >
       <div className="space-y-5">
         <InputField
-          label="Company Name *"
+          labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
+          label="Company Name*"
           id="company-name"
           value={formData.companyName}
-          onChange={(val: any) => {
-            const v = val?.target?.value !== undefined ? val.target.value : val;
-            setFormData((prev) => ({ ...prev, companyName: v }));
-          }}
+          onChange={(val) => setFormData((prev) => ({ ...prev, companyName: val.target.value }))}
           placeholder="e.g., Acme Corporation"
         />
 
         <InputField
+          labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
           label="Business Type"
           id="company-business-type"
           value={formData.businessType}
-          onChange={(val: any) => {
-            const v = val?.target?.value !== undefined ? val.target.value : val;
-            setFormData((prev) => ({ ...prev, businessType: v }));
-          }}
+          onChange={(val) => setFormData((prev) => ({ ...prev, businessType: val.target.value }))}
           placeholder="e.g., Technology, Healthcare"
         />
 
-        <div>
-          <label className="block text-sm font-medium text-contrast mb-1.5">
-            Description
-          </label>
-          <textarea
-            value={formData.description}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, description: e.target.value }))
-            }
-            placeholder="Describe the company..."
-            rows={3}
-            className="w-full px-4 py-2.5 rounded-lg border border-contrast/20 bg-background text-contrast placeholder:text-inactive-tab-text focus:outline-none focus:ring-2 focus:ring-secondary/50 resize-none"
-          />
-        </div>
+        <TextAreaField
+          labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
+          label="Description"
+          id="company-description"
+          value={formData.description}
+          onChange={(val) => setFormData((prev) => ({ ...prev, description: val.target.value }))}
+          placeholder="Describe the company..."
+        />
 
         <InputField
+          labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
           label="Website"
           id="company-website"
           value={formData.website}
-          onChange={(val: any) => {
-            const v = val?.target?.value !== undefined ? val.target.value : val;
-            setFormData((prev) => ({ ...prev, website: v }));
-          }}
+          onChange={(val) => setFormData((prev) => ({ ...prev, website: val.target.value }))}
           placeholder="e.g., https://example.com"
         />
 
         <InputField
+          labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
           label="Brief"
           id="company-brief"
           value={formData.brief}
-          onChange={(val: any) => {
-            const v = val?.target?.value !== undefined ? val.target.value : val;
-            setFormData((prev) => ({ ...prev, brief: v }));
-          }}
+          onChange={(val) => setFormData((prev) => ({ ...prev, brief: val.target.value }))}
           placeholder="Short summary of the company"
         />
 
         <InputField
+          labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
           label="Logo ID (Google Drive)"
           id="company-logo-id"
           value={formData.logoId}
-          onChange={(val: any) => {
-            const v = val?.target?.value !== undefined ? val.target.value : val;
-            // Extract drive ID from URL if pasted
-            const match =
-              typeof v === "string"
-                ? v.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
-                  v.match(/id=([a-zA-Z0-9_-]+)/)
-                : null;
-            const id = match ? match[1] : v;
-            setFormData((prev) => ({ ...prev, logoId: id }));
-          }}
+          onChange={(val) => setFormData((prev) => ({ ...prev, logoId: extractDriveId(val.target.value) }))}
           placeholder="Paste ID or full Google Drive URL"
         />
 

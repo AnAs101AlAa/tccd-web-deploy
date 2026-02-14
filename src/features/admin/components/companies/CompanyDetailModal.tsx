@@ -1,5 +1,5 @@
-import { Modal } from "tccd-ui";
-import type { Company } from "@/shared/queries/admin/companies";
+import { LazyImageLoader, Modal } from "tccd-ui";
+import type { Company } from "@/shared/queries/companies";
 import { FiGlobe, FiBriefcase, FiFileText, FiInfo } from "react-icons/fi";
 
 interface CompanyDetailModalProps {
@@ -26,10 +26,10 @@ const CompanyDetailModal: React.FC<CompanyDetailModalProps> = ({
         {/* Logo */}
         <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-contrast/10 bg-contrast/5 flex items-center justify-center">
           {company.logo ? (
-            <img
+            <LazyImageLoader
               src={company.logo}
               alt={company.companyName}
-              className="w-full h-full object-cover"
+              objectClassName="w-full h-full object-contain"
             />
           ) : (
             <FiBriefcase className="w-10 h-10 text-inactive-tab-text" />
