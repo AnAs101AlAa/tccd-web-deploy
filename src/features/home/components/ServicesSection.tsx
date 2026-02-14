@@ -12,7 +12,7 @@ import { ServiceCard } from "./ServiceCard";
 
 const ServicesSection = () => {
   return (
-    <section className="py-10 md:py-16 lg:py-24">
+    <section className="py-4 md:py-16 lg:py-24">
       <div className="container px-3 md:px-6 mx-auto">
         <div className="flex flex-col items-center justify-center space-y-2 md:space-y-4 text-center">
           <div className="space-y-1 md:space-y-2">

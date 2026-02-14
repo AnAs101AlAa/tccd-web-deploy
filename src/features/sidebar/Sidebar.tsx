@@ -10,6 +10,7 @@ import {
 import { IoHome } from "react-icons/io5";
 import TCCDLogo from "/TCCD_logo.svg";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useLogout } from "@/shared/queries/auth";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -27,6 +28,7 @@ interface NavItem {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { mutateAsync: logoutAsync } = useLogout();
 
   const navItems: NavItem[] = [
     {
@@ -68,8 +70,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
     }
   };
 
-  const handleLogout = () => {
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logoutAsync();
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
   };
 
   const isActive = (path: string) => location.pathname.startsWith(path);
@@ -132,7 +139,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                     }
                   `}
                 >
-                  <span className="flex-shrink-0">{item.icon}</span>
+                  <span className="shrink-0">{item.icon}</span>
                   <span className="text-sm">{item.label}</span>
                 </button>
               ))}
@@ -153,7 +160,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                 transition-all duration-200
               "
             >
-              <span className="flex-shrink-0">
+              <span className="shrink-0">
                 <IoHome className="w-5 h-5" />
               </span>
               <span className="text-sm font-medium">back to home</span>
@@ -170,7 +177,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                 text-red-500/80 hover:bg-red-500/10 hover:text-red-500
               "
             >
-              <span className="flex-shrink-0">
+              <span className="shrink-0">
                 <FiLogOut className="w-5 h-5" />
               </span>
               <span className="text-sm font-medium">Log Out</span>
