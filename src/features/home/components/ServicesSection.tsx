@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa";
 import { GiPublicSpeaker } from "react-icons/gi";
 import { MdOutlineEventAvailable } from "react-icons/md";
-import { ServiceCard } from "./ServiceCard";
+import { ServiceCard } from "./components/ServiceCard";
 
 const ServicesSection = () => {
   return (

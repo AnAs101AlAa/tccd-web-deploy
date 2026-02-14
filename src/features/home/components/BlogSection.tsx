@@ -1,14 +1,16 @@
 import { Pagination } from "@/shared/components/pagination";
-import { BlogPostCard } from "./BlogPostCard";
-import { useState, useEffect, useRef } from "react";
+import { usePostsPerPage } from "../hooks/usePostsPerPage";
+import { BlogPostCard } from "./components/BlogPostCard";
+import { useState, useRef } from "react";
 import type { CommunityPost } from "@/shared/types";
 import { useGetAllPosts } from "@/shared/queries/posts";
+import { useIntersectionObserver } from "@/shared/hooks/useIntersectionObserver";
 
 const BlogSection = () => {
-  const [isVisible, setIsVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [postsPerPage, setPostsPerPage] = useState<number>(2);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const isVisible = useIntersectionObserver(sectionRef, { threshold: 0.1 });
+  const postsPerPage = usePostsPerPage();
 
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -16,46 +18,6 @@ const BlogSection = () => {
 
   const latestPosts = data?.posts || [];
   const totalPages = data?.totalPages || 0;
-
-  // Set posts per page based on screen size
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1536) {
-        setPostsPerPage(3); // lg screens - 3 posts per page
-      } else if (window.innerWidth >= 768) {
-        setPostsPerPage(2); // md screens - 2 posts per page
-      } else {
-        setPostsPerPage(1); // sm screens - 1 post per page
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
 
   return (
     <section className="py-10 md:py-16 bg-gray-50 transition-transform duration-700 ease-out">
@@ -109,8 +71,6 @@ const BlogSection = () => {
               ))}
             </div>
 
-            {/* Navigation arrows - only show if there are multiple pages */}
-            {/* Shared Pagination Component */}
             <div className="flex justify-center mt-5 md:mt-8">
               <Pagination
                 currentPage={currentPage}

@@ -5,6 +5,8 @@ import type { CommunityPost } from "@/shared/types";
 import { Button, LazyImageLoader } from "tccd-ui";
 import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 
+const animationCache = new Map<string, number>();
+
 export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
   const navigate = useNavigate();
   const handleClick = () => {
@@ -13,7 +15,9 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
 
   const wholeInfoRef = useRef<HTMLDivElement>(null);
   const mainInfoRef = useRef<HTMLDivElement>(null);
-  const [translateValue, setTranslateValue] = useState(0);
+  const [translateValue, setTranslateValue] = useState(() => {
+    return animationCache.get(post.id) || 0;
+  });
   const [isTapped, setIsTapped] = useState(false);
 
   useEffect(() => {
@@ -25,7 +29,9 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
       const wholeH = wholeEl.scrollHeight;
       const mainH = mainEl.getBoundingClientRect().height;
       const diff = wholeH - mainH - 16;
-      setTranslateValue(diff > 0 ? diff : 0);
+      const val = diff > 0 ? diff : 0;
+      setTranslateValue(val);
+      animationCache.set(post.id, val);
     };
 
     update();
@@ -43,7 +49,7 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
       window.removeEventListener("resize", update);
       window.removeEventListener("load", update);
     };
-  }, [post.description]);
+  }, [post.description, post.id]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -102,7 +108,7 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
         </div>
 
         <div className="transition-all duration-500 ease-in-out transform">
-          <div className="text-gray-600 text-[14px] line-clamp-6 mb-3">
+          <div className="text-gray-600 text-[14px] line-clamp-3 mb-3">
             <HTMLFormattedText content={post.description} />
           </div>
 
