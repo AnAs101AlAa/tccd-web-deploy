@@ -48,7 +48,7 @@ const GenderDistributionChart: React.FC = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-muted-primary/20 shadow-sm h-full flex flex-col justify-between">
+    <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm h-full flex flex-col justify-between">
       <h3 className="text-lg font-semibold text-contrast mb-2">
         Gender Distribution
       </h3>

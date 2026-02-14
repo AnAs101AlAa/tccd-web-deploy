@@ -4,6 +4,7 @@ import {
   FiMapPin,
   FiUsers,
   FiBarChart2,
+  FiBriefcase,
   FiLogOut,
 } from "react-icons/fi";
 import { IoHome } from "react-icons/io5";
@@ -51,6 +52,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       label: "Statistics",
       icon: <FiBarChart2 className="w-5 h-5" />,
       path: "/admin/statistics",
+    },
+    {
+      id: "companies",
+      label: "Companies",
+      icon: <FiBriefcase className="w-5 h-5" />,
+      path: "/admin/companies",
     },
   ];
 
