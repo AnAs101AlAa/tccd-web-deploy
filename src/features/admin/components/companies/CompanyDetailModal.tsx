@@ -45,7 +45,7 @@ const CompanyDetailModal: React.FC<CompanyDetailModalProps> = ({
         <div className="w-full space-y-4">
           {company.businessType && (
             <div className="flex items-start gap-3">
-              <FiBriefcase className="w-5 h-5 text-secondary mt-0.5 flex-shrink-0" />
+              <FiBriefcase className="w-5 h-5 text-secondary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs font-medium text-inactive-tab-text uppercase tracking-wider">
                   Business Type
@@ -59,7 +59,7 @@ const CompanyDetailModal: React.FC<CompanyDetailModalProps> = ({
 
           {company.website && (
             <div className="flex items-start gap-3">
-              <FiGlobe className="w-5 h-5 text-secondary mt-0.5 flex-shrink-0" />
+              <FiGlobe className="w-5 h-5 text-secondary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs font-medium text-inactive-tab-text uppercase tracking-wider">
                   Website
@@ -78,7 +78,7 @@ const CompanyDetailModal: React.FC<CompanyDetailModalProps> = ({
 
           {company.brief && (
             <div className="flex items-start gap-3">
-              <FiInfo className="w-5 h-5 text-secondary mt-0.5 flex-shrink-0" />
+              <FiInfo className="w-5 h-5 text-secondary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs font-medium text-inactive-tab-text uppercase tracking-wider">
                   Brief
@@ -90,7 +90,7 @@ const CompanyDetailModal: React.FC<CompanyDetailModalProps> = ({
 
           {company.description && (
             <div className="flex items-start gap-3">
-              <FiFileText className="w-5 h-5 text-secondary mt-0.5 flex-shrink-0" />
+              <FiFileText className="w-5 h-5 text-secondary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs font-medium text-inactive-tab-text uppercase tracking-wider">
                   Description
