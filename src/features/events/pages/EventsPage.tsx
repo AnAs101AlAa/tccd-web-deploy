@@ -154,7 +154,7 @@ const EventsPage = () => {
                       onLearnMore={onLearnMore}
                     />
                   )}
-                  gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  gridCols="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3"
                   getKey={(event: Event) => event.id}
                 />
                 <Pagination
@@ -210,7 +210,7 @@ const EventsPage = () => {
                   items={apiPastEvents.items}
                   emptyMessage="No past events to display."
                   renderCard={(event: Event) => <PastEventCard event={event} />}
-                  gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  gridCols="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3"
                   getKey={(event: Event) => event.id}
                 />
                 {apiPastEvents.totalPages > 1 && (

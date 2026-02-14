@@ -112,7 +112,7 @@ const GalleryPage = () => {
                   items={apiGalleryEvents.items}
                   emptyMessage="No gallery items at the moment. Check back soon!"
                   renderCard={(item: Event) => <EventGalleryCard {...item} />}
-                  gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  gridCols="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3"
                   getKey={(item: Event) => item.id}
                 />
 

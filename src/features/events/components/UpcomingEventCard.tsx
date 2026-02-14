@@ -6,6 +6,7 @@ import EVENT_TYPES from "@/constants/EventTypes";
 import format from "@/shared/utils/dateFormater";
 import { useCurrentUser } from "@/shared/store";
 import toast from "react-hot-toast";
+import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 
 interface Props {
   event: Event;
@@ -105,7 +106,7 @@ const UpcomingEventCard: React.FC<Props> = ({
 
         <div className="transition-all duration-500 ease-in-out transform">
           <p className="text-[13px] md:text-[14px] lg:text-[15px] leading-relaxed text-gray-700 line-clamp-6">
-            {event.description}
+            <HTMLFormattedText content={event.description} />
           </p>
 
           <div className="flex gap-3 mt-4">

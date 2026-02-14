@@ -40,28 +40,18 @@ export const useUpdateEventPoster = () => {
   });
 };
 
-export const useAddEventMedia = () => {
-  const queryClient = useQueryClient();
-  
+export const useAddEventMedia = () => {  
   return useMutation({
     mutationKey: ["events", "addMedia"],
     mutationFn: ({ eventId, mediaFileIds }: { eventId: string; mediaFileIds: string[] }) =>
       eventsApi.addEventMedia(eventId, mediaFileIds),
-    onSuccess: (_, { eventId }) => {
-      queryClient.invalidateQueries({ queryKey: ["events", "detail", eventId] });
-    },
   });
 };
 
-export const useDeleteEventMedia = () => {
-  const queryClient = useQueryClient();
-  
+export const useDeleteEventMedia = () => {  
   return useMutation({
     mutationKey: ["events", "deleteMedia"],
     mutationFn: (eventMediaId: string) => eventsApi.deleteEventMedia(eventMediaId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["events"] });
-    },
   });
 };
 
@@ -85,27 +75,33 @@ export const useDeleteEvent = () => {
 }
 
 export const useAddSponsorToEvent = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationKey: ["events", "addSponsor"],
     mutationFn: ({ eventId, companyId }: { eventId: string; companyId: string }) =>
       eventsApi.addSponsorToEvent(eventId, companyId),
-    onSuccess: (_, { eventId }) => {
-      queryClient.invalidateQueries({ queryKey: ["events", "sponsors", eventId] });
-    },
   });
 };
 
 export const useRemoveSponsorFromEvent = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationKey: ["events", "removeSponsor"],
     mutationFn: ({ eventId, companyId }: { eventId: string; companyId: string }) =>
       eventsApi.removeSponsorFromEvent(eventId, companyId),
-    onSuccess: (_, { eventId }) => {
-      queryClient.invalidateQueries({ queryKey: ["events", "sponsors", eventId] });
-    },
   });
 };
+
+export const useAddEventSlot = () => {
+  return useMutation({
+    mutationKey: ["events", "addSlot"],
+    mutationFn: ({ eventId, startTime, endTime }: { eventId: string; startTime: string; endTime: string }) =>
+      eventsApi.addEventSlot(eventId, startTime, endTime),
+  });
+}
+
+export const useRemoveEventSlot = () => {
+  return useMutation({
+    mutationKey: ["events", "removeSlot"],
+    mutationFn: ({ eventId, slotId }: { eventId: string; slotId: string }) =>
+      eventsApi.removeEventSlot(eventId, slotId)
+  });
+}

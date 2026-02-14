@@ -4,6 +4,7 @@ import { useCreatePost, useAddPostMedia, useUpdatePost, useDeletePostMedia } fro
 import { z, ZodError } from "zod";
 import toast from "react-hot-toast";
 import extractDriveId from "@/shared/utils/googleDriveHelper";
+import { TagStringFormatter } from "@/shared/utils/stringTagFormatter";
 
 export const postSchema = z.object({
     name: z.string().min(1, "Title is required and cannot be empty"),
@@ -29,7 +30,7 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
 
     useEffect(() => {
         if(initialData.id !== "") {
-            setPostData(initialData);
+            setPostData({...initialData, description: TagStringFormatter(initialData.description)});
             setOriginalMedia(initialData.media || []);
             setNewMedia([]);
             setDeletedMedia([]);

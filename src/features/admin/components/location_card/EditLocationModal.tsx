@@ -87,51 +87,37 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Location Name */}
-        <div>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Location Name"
-                id="location-name"
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="e.g., Grand Conference Hall"
-                error={errors.name?.message}
-              />
-            )}
-          />
-          {errors.name && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.name.message}
-            </p>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Location Name"
+              id="location-name"
+              value={field.value}
+              onChange={field.onChange}
+              placeholder="e.g., Grand Conference Hall"
+              error={errors.name?.message}
+            />
           )}
-        </div>
+        />
 
-        {/* Capacity */}
-        <div>
-          <Controller
-            name="capacity"
-            control={control}
-            render={({ field }) => (
-              <NumberField
-                label="Capacity"
-                value={field.value?.toString() || ""}
-                onChange={(val: string | number) =>
-                  field.onChange(parseInt(val.toString(), 10) || 0)
-                }
-                placeholder="e.g., 500"
-                error={errors.capacity?.message}
-              />
-            )}
-          />
-          {errors.capacity && (
-            <p className="text-red-600 text-sm mt-1" role="alert">
-              {errors.capacity.message}
-            </p>
+        <Controller
+          name="capacity"
+          control={control}
+          render={({ field }) => (
+            <NumberField
+              id="location-capacity"
+              label="Capacity"
+              value={field.value?.toString() || ""}
+              onChange={(val: string | number) =>
+                field.onChange(parseInt(val.toString(), 10) || 0)
+              }
+              placeholder="e.g., 500"
+              error={errors.capacity?.message}
+            />
           )}
-        </div>
+        />
 
         <div className="bg-blue-50 border border-blue-200 rounded-md p-4 text-blue-700 text-sm">
           <strong>Note:</strong> Only name and capacity can be updated.

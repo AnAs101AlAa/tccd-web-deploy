@@ -139,3 +139,20 @@ export const useForgotPassword = () => {
     },
   });
 };
+
+export const useVerifyStudent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (token: string) =>
+      authApiInstance.verifyStudent(token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authKeys.all });
+      toast.success("Email verified successfully! You can now log in.");
+    },
+    onError: (error: unknown) => {
+      const message = getErrorMessage(error);
+      toast.error(message || "Email verification failed. Please try again.");
+    },
+  });
+};

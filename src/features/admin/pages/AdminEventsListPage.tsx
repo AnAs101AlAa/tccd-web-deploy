@@ -228,7 +228,7 @@ const AdminEventsListPage = () => {
                         }}
                       />
                     )}
-                    gridCols="grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+                    gridCols="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"
                     getKey={(event: Event) => event.id}
                   />
                   <Pagination
@@ -286,7 +286,7 @@ const AdminEventsListPage = () => {
                   <GenericGrid
                     items={pastData.items}
                     emptyMessage="No past events found."
-                    gridCols="grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+                    gridCols="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"
                     getKey={(event: Event) => event.id}
                     renderCard={(event: Event) => (
                       <PastEventCard

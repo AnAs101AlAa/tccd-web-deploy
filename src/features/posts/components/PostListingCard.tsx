@@ -3,6 +3,7 @@ import { Button, LazyImageLoader } from "tccd-ui";
 import format from "@/shared/utils/dateFormater";
 import { FaImage } from "react-icons/fa";
 import extractDriveId from "@/shared/utils/googleDriveHelper";
+import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 
 export interface PostCardProps {
   post: CommunityPost;
@@ -45,8 +46,8 @@ export default function PostCard({ post, setEditing, setDeleting }: PostCardProp
             <strong>Created:</strong> {format(new Date(post.createdAt), "full")}
           </p>
 
-          <p className="text-contrast/80 text-[13px] md:text-[14px] lg:text-[15px]">
-            {post.description || "No description."}
+          <p className="text-contrast/80 text-[13px] md:text-[14px] lg:text-[15px] line-clamp-4">
+            <HTMLFormattedText content={post.description || "No description."} />
           </p>
         </div>
         <div className="flex justify-center gap-2 items-center">
