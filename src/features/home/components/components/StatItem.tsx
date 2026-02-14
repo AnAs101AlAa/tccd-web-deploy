@@ -1,10 +1,4 @@
-import { FaBriefcase, FaGraduationCap } from "react-icons/fa";
-import { IconType } from "react-icons";
-
-interface StatsCounterProps {
-  companyCount: number;
-  eventsCount: number;
-}
+import type { IconType } from "react-icons";
 
 interface StatItemProps {
   positionClass: string;
@@ -44,29 +38,4 @@ const StatItem = ({
   </div>
 );
 
-const StatsCounter = ({ companyCount, eventsCount }: StatsCounterProps) => {
-  return (
-    <>
-      <StatItem
-        positionClass="-right-1 -bottom-1"
-        bgClass="bg-secondary"
-        iconBgClass="bg-[#1d4259]"
-        Icon={FaGraduationCap}
-        labelCount={companyCount}
-        labelText="Companies affliated"
-        labelColorClass="text-blue-100"
-      />
-      <StatItem
-        positionClass="-left-2 -top-2"
-        bgClass="bg-primary"
-        iconBgClass="bg-[#b33432]"
-        Icon={FaBriefcase}
-        labelCount={eventsCount}
-        labelText="Completed Events"
-        labelColorClass="text-red-100"
-      />
-    </>
-  );
-};
-
-export default StatsCounter;
+export default StatItem;

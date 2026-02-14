@@ -1,12 +1,13 @@
-import { FaChevronRight } from "react-icons/fa";
-import StatsCounter from "./components/StatsCounter";
+import { FaChevronRight, FaGraduationCap, FaBriefcase } from "react-icons/fa";
+import StatItem from "./components/StatItem";
 import { useNavigate } from "react-router-dom";
 import type { StudentUser } from "@/shared/types/users";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useCurrentUser } from "@/shared/store";
 import { isAdmin } from "@/shared/types/users";
 import { animateCounter } from "../utils/utils";
-import { Button, ButtonTypes, ButtonWidths } from "tccd-ui";
+import { Button, ButtonTypes, ButtonWidths, LazyImageLoader } from "tccd-ui";
+import { BACKGROUND_PATTERN } from "../constants";
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -17,13 +18,13 @@ const HeroSection = () => {
   ]);
   const [usersCount, setUsersCount] = useState<number>(30);
 
-  const handleEventClick = () => {
+  const handleEventClick = useCallback(() => {
     navigate("/events");
-  };
+  }, [navigate]);
 
   const userData = useCurrentUser() as StudentUser | null;
 
-  const handleLoginClick = () => {
+  const handleLoginClick = useCallback(() => {
     if (userData && isAdmin(userData)) {
       navigate("/admin/events");
     } else if (userData && userData.id != "") {
@@ -31,7 +32,7 @@ const HeroSection = () => {
     } else {
       navigate("/login");
     }
-  };
+  }, [userData, navigate]);
 
   useEffect(() => {
     const handleActiveUsers = async () => {
@@ -63,8 +64,7 @@ const HeroSection = () => {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23ffffff' fillOpacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+            backgroundImage: BACKGROUND_PATTERN,
             backgroundSize: "60px 60px",
           }}
         />
@@ -129,10 +129,12 @@ const HeroSection = () => {
                     key={index}
                     className="inline-block h-8 md:h-10 w-8 md:w-10 rounded-full border-2 border-[#295E7E] bg-white/90 overflow-hidden"
                   >
-                    <img
+                    <LazyImageLoader
                       src={user}
                       alt={`User ${index + 1}`}
                       className="h-full w-full object-cover"
+                      width="100%"
+                      height="100%"
                     />
                   </div>
                 ))}
@@ -146,17 +148,36 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Right column with image and stats - hidden on mobile screens */}
+          {/* Right column with image and stats */}
           <div className="hidden md:block relative mx-auto lg:mx-0 fade-in-right">
             <div className="relative z-10 overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-2 shadow-2xl">
               <div className="aspect-4/3 overflow-hidden rounded-xl">
-                <img className="w-full h-full inset-0" src="home.jpeg" />
+                <LazyImageLoader
+                  className="w-full h-full inset-0"
+                  src="home.jpeg"
+                  alt="Hero Image"
+                  width="100%"
+                  height="100%"
+                />
               </div>
 
-              {/* Stats overlays */}
-              <StatsCounter
-                companyCount={companyCount}
-                eventsCount={eventsCount}
+              <StatItem
+                positionClass="-right-1 -bottom-1"
+                bgClass="bg-secondary"
+                iconBgClass="bg-[#1d4259]"
+                Icon={FaGraduationCap}
+                labelCount={companyCount}
+                labelText="Companies affliated"
+                labelColorClass="text-blue-100"
+              />
+              <StatItem
+                positionClass="-left-2 -top-2"
+                bgClass="bg-primary"
+                iconBgClass="bg-[#b33432]"
+                Icon={FaBriefcase}
+                labelCount={eventsCount}
+                labelText="Completed Events"
+                labelColorClass="text-red-100"
               />
             </div>
 
