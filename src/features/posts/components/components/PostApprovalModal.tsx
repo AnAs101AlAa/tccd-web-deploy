@@ -18,8 +18,8 @@ export default function PostApprovalModal({
   const { mutate: approvePost, isPending } = useApprovePost();
 
   const newApprovalStatus = !currentApprovalStatus;
-  const action = newApprovalStatus ? 'approve' : 'unapprove';
-  const actionCapitalized = newApprovalStatus ? 'Approve' : 'Unapprove';
+  const action = newApprovalStatus ? 'publish' : 'private';
+  const actionCapitalized = newApprovalStatus ? 'Publish' : 'Private';
 
   const handleApprove = () => {
     if (!postId) return;

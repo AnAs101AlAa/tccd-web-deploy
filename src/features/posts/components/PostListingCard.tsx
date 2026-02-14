@@ -21,10 +21,10 @@ export default function PostCard({ post, setEditing, setDeleting, setApproving }
     <div className="w-full max-w-xl mx-auto bg-white shadow-md rounded-2xl transition hover:shadow-lg relative h-full flex flex-col">
       <div className="absolute top-3 right-3 z-10">
         <span
-          className={`inline-flex items-center px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-full shadow-lg backdrop-blur-sm transition-all ${
+          className={`inline-flex items-center px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide rounded-full transition-all ${
             post.isApproved
-              ? "bg-linear-to-r from-green-500 to-emerald-600 text-white border border-green-300/50 hover:shadow-green-500/50"
-              : "bg-linear-to-r from-gray-600 to-gray-700 text-white border border-gray-400/50 hover:shadow-gray-500/50"
+              ? "bg-green-100 text-green-600 border border-green-500"
+              : "bg-red-100 text-red-600 border border-red-500"
           }`}
         >
           {post.isApproved ? "Public" : "Private"}
@@ -55,7 +55,7 @@ export default function PostCard({ post, setEditing, setDeleting, setApproving }
           <Button 
             type={post.isApproved ? "basic" : "primary"} 
             onClick={() => setApproving(post)} 
-            buttonText={post.isApproved ? "Unapprove" : "Approve"} 
+            buttonText={post.isApproved ? "Private" : "Publish"} 
             width="small" 
           />
           <Button type="secondary" onClick={() => setEditing(post)} buttonText="Edit" width="small" />

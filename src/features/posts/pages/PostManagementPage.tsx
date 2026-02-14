@@ -127,9 +127,9 @@ export const PostManagementPage = () => {
             </div>
           ) : (
             <>
-              <div className="flex flex-col md:flex-row md:flex-wrap gap-[2%] gap-y-5">
+              <div className="gap-3 grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3">
                 {posts.map((post: CommunityPost) => (
-                  <div key={post.id} className="w-full md:w-[49%] xl:w-[32%]">
+                  <div key={post.id} className="w-full">
                     <PostCard
                       post={post}
                       setEditing={setSelectedPost}
