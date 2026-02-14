@@ -116,7 +116,7 @@ const EventsPage = () => {
                 onSearch={(params) => handleApplyFilters(params)}
               />
             </div>
-            <hr className="mb-4 mt-0 border-t border-gray-400/80" />
+            <hr className="mb-4 -mt-2 border-t border-gray-400/80" />
             {isLoadingUpcoming && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
                 <div className="text-center">
@@ -166,7 +166,7 @@ const EventsPage = () => {
                 />
               </>
             )}
-            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
+            <div className="h-1 bg-linear-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
           </section>
           {/* Past Events Section */}
           <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
@@ -220,7 +220,7 @@ const EventsPage = () => {
                 )}
               </>
             )}
-            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
+            <div className="h-1 bg-linear-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
           </section>
         </main>
       </div>

@@ -19,7 +19,7 @@ export const CompanyRepInfoStep = ({ control }: CompanyRepInfoStepProps) => {
   const [fileName, setFileName] = useState<string>("");
   const fileRef = useRef<File | null>(null);
 
-  const { data: companiesData, isLoading } = useGetCompanies({pageIndex: 1, pageSize: 100 });
+  const { data: companiesData, isLoading } = useGetCompanies(1, 100);
 
   // Sync showRegisterCompany with form value
   const isNewCompany = control._getWatch("isNewCompany");
@@ -29,7 +29,7 @@ export const CompanyRepInfoStep = ({ control }: CompanyRepInfoStepProps) => {
   const filteredCompanies = companies.filter(
     (company) =>
       company.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      company.businessType.toLowerCase().includes(searchQuery.toLowerCase())
+      company.businessType.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // Sync fileName and fileRef with form value on mount or when proofFile changes
@@ -43,7 +43,7 @@ export const CompanyRepInfoStep = ({ control }: CompanyRepInfoStepProps) => {
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: File) => void
+    onChange: (value: File) => void,
   ) => {
     const file = e.target.files?.[0];
     if (file) {

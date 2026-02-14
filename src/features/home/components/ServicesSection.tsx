@@ -22,7 +22,7 @@ const ServicesSection = () => {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tighter sm:text-4xl lg:text-5xl text-blue-950">
               Career Advancement Opportunities
             </h2>
-            <p className="max-w-[900px] text-sm md:text-base lg:text-xl/relaxed text-gray-500">
+            <p className="max-w-225 text-sm md:text-base lg:text-xl/relaxed text-gray-500">
               TCCD aims at offering career advancement opportunities for
               undergraduates and graduates in all engineering disciplines. We
               bridge the gap between students and industry through various
@@ -31,45 +31,45 @@ const ServicesSection = () => {
           </div>
         </div>
 
-        <div className="mx-auto grid max-w-5xl items-center gap-3 md:gap-6 py-6 md:py-8 lg:py-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto grid max-w-5xl items-center gap-3 md:gap-6 pt-6 md:pt-8 lg:pt-12 pb-3 md:pb-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <ServiceCard
             icon={
-              <FaLaptopCode className="h-8 w-8 md:h-10 md:w-10 text-[#cd3a38]" />
+              <FaLaptopCode className="h-8 w-8 md:h-10 md:w-10 text-primary" />
             }
             title="Training Courses"
             description="Specialized technical courses to enhance your skills and prepare you for the job market in various engineering fields."
           />
           <ServiceCard
             icon={
-              <GiPublicSpeaker className="h-8 w-8 md:h-10 md:w-10 text-[#295E7E]" />
+              <GiPublicSpeaker className="h-8 w-8 md:h-10 md:w-10 text-secondary" />
             }
             title="Workshops"
             description="Hands-on workshops led by industry professionals to develop practical skills essential for your engineering career."
           />
           <ServiceCard
             icon={
-              <FaBriefcase className="h-8 w-8 md:h-10 md:w-10 text-[#cd3a38]" />
+              <FaBriefcase className="h-8 w-8 md:h-10 md:w-10 text-primary" />
             }
             title="Job Fairs"
             description="Connect directly with potential employers at our job fairs featuring companies from various engineering sectors."
           />
           <ServiceCard
             icon={
-              <FaAward className="h-8 w-8 md:h-10 md:w-10 text-[#295E7E]" />
+              <FaAward className="h-8 w-8 md:h-10 md:w-10 text-secondary" />
             }
             title="Competitions"
             description="Showcase your talents and problem-solving abilities in engineering competitions judged by industry experts."
           />
           <ServiceCard
             icon={
-              <FaBuilding className="h-8 w-8 md:h-10 md:w-10 text-[#cd3a38]" />
+              <FaBuilding className="h-8 w-8 md:h-10 md:w-10 text-primary" />
             }
             title="Exhibitions"
             description="Display your projects and innovations at exhibitions attended by industry leaders and potential employers."
           />
           <ServiceCard
             icon={
-              <MdOutlineEventAvailable className="h-8 w-8 md:h-10 md:w-10 text-[#295E7E]" />
+              <MdOutlineEventAvailable className="h-8 w-8 md:h-10 md:w-10 text-secondary" />
             }
             title="Recruitment Events"
             description="Dedicated recruitment events where companies interview and select candidates for internships and jobs."
@@ -80,14 +80,14 @@ const ServicesSection = () => {
         <div className="mx-auto grid max-w-5xl items-center gap-3 md:gap-6 py-1 md:py-2 grid-cols-1 md:grid-cols-2">
           <ServiceCard
             icon={
-              <FaUsers className="h-8 w-8 md:h-10 md:w-10 text-[#cd3a38]" />
+              <FaUsers className="h-8 w-8 md:h-10 md:w-10 text-primary" />
             }
             title="Seminars & Lectures"
             description="Informative sessions by industry leaders and academics covering emerging trends and technologies in engineering."
           />
           <ServiceCard
             icon={
-              <FaHandshake className="h-8 w-8 md:h-10 md:w-10 text-[#295E7E]" />
+              <FaHandshake className="h-8 w-8 md:h-10 md:w-10 text-secondary" />
             }
             title="Industry Connections"
             description="We establish valuable links between senior students, fresh graduates, and industry partners for career opportunities."

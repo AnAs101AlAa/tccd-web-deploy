@@ -1,4 +1,3 @@
-
 import type Event from "@/shared/types/events";
 import type { EventSlot } from "@/shared/types/events";
 import { eventFormSchema } from "./eventFormSchema";
@@ -13,7 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const extractDriveId = (urlOrId: string): string => {
   if (!urlOrId) return "";
-  
+
   const patterns = [
     /\/file\/d\/([a-zA-Z0-9_-]+)/,
     /\/folders\/([a-zA-Z0-9_-]+)/,
@@ -21,15 +20,15 @@ const extractDriveId = (urlOrId: string): string => {
     /[?&]id=([a-zA-Z0-9_-]+)/,
     /\/open\?id=([a-zA-Z0-9_-]+)/,
   ];
-  
+
   for (const pattern of patterns) {
     const match = urlOrId.match(pattern);
     if (match) return match[1];
-  }  
+  }
   return urlOrId;
 };
 
-const validateAllFields = (formValues : Event) => {
+const validateAllFields = (formValues: Event) => {
   const result = eventFormSchema.safeParse(formValues);
   const errors: Partial<Record<keyof Event, string>> = {};
   if (!result.success) {
@@ -47,8 +46,16 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   const [locationNameKey, setLocationNameKey] = useState<string|undefined>(undefined);
   const [companyNameKey, setCompanyNameKey] = useState<string|undefined>(undefined);
 
-  const { data: locations, isLoading: locationsLoading } = useGetLocations(1, 100, locationNameKey);
-  const { data: companies, isLoading: companiesLoading } = useGetCompanies({ companyName: companyNameKey, pageIndex: 1, pageSize: 100 });
+  const { data: locations, isLoading: locationsLoading } = useGetLocations(
+    1,
+    100,
+    locationNameKey,
+  );
+  const { data: companies, isLoading: companiesLoading } = useGetCompanies(
+    1,
+    100,
+    companyNameKey,
+  );
   const { data: eventSponsors } = useGetEventSponsors(event?.id || "");
 
   const createEventMutation = useCreateEvent();
@@ -65,7 +72,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   const [originalMedia, setOriginalMedia] = useState<any[]>([]);
   const [deletedMediaIds, setDeletedMediaIds] = useState<string[]>([]);
   const [newMediaIds, setNewMediaIds] = useState<string[]>([]);
-  const [,setOriginalPosterId] = useState<string>("");
+  const [, setOriginalPosterId] = useState<string>("");
   const [formValues, setFormValues] = useState<Event>({
     id: "",
     name: "",
@@ -84,7 +91,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     slots: [],
   });
   const [errors, setErrors] = useState<{ [key in keyof Event]?: string }>({});
-  
+
   const [isAddingMedia, setIsAddingMedia] = useState<boolean>(false);
   const [currentMediaInput, setCurrentMediaInput] = useState<string>("");
 
@@ -95,12 +102,12 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     if (event) {
       const posterId = extractDriveId(event.eventImage || "");
       setOriginalPosterId(posterId);
-      
+
       const mediaArray = event.eventMedia || (event as any).medias || [];
-      
+
       if (Array.isArray(mediaArray) && mediaArray.length > 0) {
         const firstItem = mediaArray[0];
-        if (firstItem && typeof firstItem === 'object' && 'id' in firstItem) {
+        if (firstItem && typeof firstItem === "object" && "id" in firstItem) {
           setOriginalMedia(mediaArray as any[]);
         } else {
           setOriginalMedia([]);
@@ -108,15 +115,15 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
       } else {
         setOriginalMedia([]);
       }
-      
+
       setDeletedMediaIds([]);
       setNewMediaIds([]);
 
       const roomsArray = (event as any).rooms || event.locations || [];
-      const locationIds = Array.isArray(roomsArray) 
-        ? roomsArray.map((loc: any) => typeof loc === 'string' ? loc : loc.id)
+      const locationIds = Array.isArray(roomsArray)
+        ? roomsArray.map((loc: any) => (typeof loc === "string" ? loc : loc.id))
         : [];
-      
+
       setFormValues({
         ...event,
         eventImage: extractDriveId(event.eventImage || ""),
@@ -129,16 +136,20 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     }
   }, [event]);
 
-  const handleInputChange = (field: keyof Event, value: string| number) => {
-      const finalValue = field === "eventImage" && typeof value === "string" 
-        ? extractDriveId(value) 
+  const handleInputChange = (field: keyof Event, value: string | number) => {
+    const finalValue =
+      field === "eventImage" && typeof value === "string"
+        ? extractDriveId(value)
         : value;
-      
-      setFormValues((prev: Event) => ({ ...prev, [field]: finalValue }));
 
-      if (errors[field as keyof Event]) {
-        setErrors((prev: { [key in keyof Event]?: string }) => ({ ...prev, [field]: undefined }));
-      }
+    setFormValues((prev: Event) => ({ ...prev, [field]: finalValue }));
+
+    if (errors[field as keyof Event]) {
+      setErrors((prev: { [key in keyof Event]?: string }) => ({
+        ...prev,
+        [field]: undefined,
+      }));
+    }
   };
 
   const handleAddMedia = (url: string) => {
@@ -223,7 +234,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
       console.error("Validation errors:", validationErrors);
       return;
     }
-    
+
     try {
       if (isEditMode && event) {
         await updateEventMutation.mutateAsync({
@@ -251,13 +262,19 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
 
         for (const sponsor of formValues.sponsors || []) {
           if (!eventSponsors?.find((s) => s.id === sponsor.id)) {
-            await addSponsorToEventMutation.mutateAsync({ eventId: event.id, companyId: sponsor.id });
+            await addSponsorToEventMutation.mutateAsync({
+              eventId: event.id,
+              companyId: sponsor.id,
+            });
           }
         }
 
         for (const sponsor of eventSponsors || []) {
           if (!formValues.sponsors?.find((s) => s.id === sponsor.id)) {
-            await removeSponsorFromEventMutation.mutateAsync({ eventId: event.id, companyId: sponsor.id });
+            await removeSponsorFromEventMutation.mutateAsync({
+              eventId: event.id,
+              companyId: sponsor.id,
+            });
           }
         }
 
@@ -277,9 +294,10 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
         toast.success("Event updated successfully!");
         onClose();
       } else {
-        const createdEvent = await createEventMutation.mutateAsync(finalizedValue);
+        const createdEvent =
+          await createEventMutation.mutateAsync(finalizedValue);
         const eventId = createdEvent?.id || createdEvent?.data?.id;
-        
+
         if (eventId) {
           if (formValues.eventImage) {
             await updateEventPosterMutation.mutateAsync({
@@ -302,9 +320,9 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
       }
     } catch (error) {
       toast.error(
-        isEditMode 
+        isEditMode
           ? "Failed to update event. Please try again."
-          : "Failed to create event. Please try again."
+          : "Failed to create event. Please try again.",
       );
       console.error("Event save error:", error);
     }
@@ -314,9 +332,12 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     formValues,
     setFormValues,
     handleInputChange,
-    isSubmitting: createEventMutation.isPending || updateEventMutation.isPending || 
-                  updateEventPosterMutation.isPending || addEventMediaMutation.isPending || 
-                  deleteEventMediaMutation.isPending,
+    isSubmitting:
+      createEventMutation.isPending ||
+      updateEventMutation.isPending ||
+      updateEventPosterMutation.isPending ||
+      addEventMediaMutation.isPending ||
+      deleteEventMediaMutation.isPending,
     errors,
     locations: locations || [],
     locationsLoading,

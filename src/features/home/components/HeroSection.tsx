@@ -55,7 +55,7 @@ const HeroSection = () => {
   }
 
   const companyCounter = async () => {
-    const totalSteps = 15;
+    const totalSteps = 30;
     const startSpeed = 5;
     const endSpeed = 80;
     const initialDelay = 300;
@@ -73,10 +73,10 @@ const HeroSection = () => {
   };
 
   const eventsCounter = async () => {
-    const totalSteps = 20;
+    const totalSteps = 40;
     const startSpeed = 5;
     const endSpeed = 80;
-    const initialDelay = 300;
+    const initialDelay = 200;
   
     await new Promise(resolve => setTimeout(resolve, initialDelay));
   
@@ -189,7 +189,7 @@ const HeroSection = () => {
               </div>
 
               {/* Stats overlays */}
-              <div className="absolute -right-1 -bottom-1 z-20 rounded-xl bg-[#295E7E] p-4 shadow-xl">
+              <div className="absolute -right-1 -bottom-1 z-20 rounded-xl bg-secondary p-4 shadow-xl">
                 <div className="flex items-center gap-2">
                   <div className="rounded-full bg-[#1d4259] p-1">
                     <FaGraduationCap className="h-5 w-5 text-white" />
@@ -203,7 +203,7 @@ const HeroSection = () => {
                 </div>
               </div>
 
-              <div className="absolute -left-2 -top-2 z-20 rounded-xl bg-[#cd3a38] p-4 shadow-xl">
+              <div className="absolute -left-2 -top-2 z-20 rounded-xl bg-primary p-4 shadow-xl">
                 <div className="flex items-center gap-2">
                   <div className="rounded-full bg-[#b33432] p-1">
                     <FaBriefcase className="h-5 w-5 text-white" />
@@ -219,8 +219,8 @@ const HeroSection = () => {
             </div>
 
             {/* blur effects */}
-            <div className="absolute -z-10 h-40 w-40 rounded-full bg-[#295E7E] blur-[100px] -top-10 -left-5 opacity-50"></div>
-            <div className="absolute -z-10 h-40 w-40 rounded-full bg-[#cd3a38] blur-[100px] -bottom-10 -right-5 opacity-50"></div>
+            <div className="absolute -z-10 h-40 w-40 rounded-full bg-secondary blur-[100px] -top-10 -left-5 opacity-50"></div>
+            <div className="absolute -z-10 h-40 w-40 rounded-full bg-primary blur-[100px] -bottom-10 -right-5 opacity-50"></div>
           </div>
         </div>
       </div>

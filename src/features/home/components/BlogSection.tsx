@@ -7,7 +7,7 @@ import { useGetAllPosts } from "@/shared/queries/posts";
 const BlogSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [postsPerPage, setPostsPerPage] = useState<number>(3);
+  const [postsPerPage, setPostsPerPage] = useState<number>(2);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const gridRef = useRef<HTMLDivElement>(null);
@@ -20,7 +20,7 @@ const BlogSection = () => {
   // Set posts per page based on screen size
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= 1536) {
         setPostsPerPage(3); // lg screens - 3 posts per page
       } else if (window.innerWidth >= 768) {
         setPostsPerPage(2); // md screens - 2 posts per page
@@ -91,7 +91,7 @@ const BlogSection = () => {
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-blue-950">
               Engineering Insights
             </h2>
-            <p className="max-w-[800px] text-gray-500 md:text-xl/relaxed">
+            <p className="max-w-200 text-gray-500 md:text-xl/relaxed">
               Explore the latest articles, research, and perspectives from our
               engineering community.
             </p>
@@ -118,7 +118,7 @@ const BlogSection = () => {
         ) : latestPosts.length > 0 ? (
           <>
             <div
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 overflow-x-hidden pb-4"
+              className="grid md:grid-cols-2 2xl:grid-cols-3 gap-5 overflow-x-hidden pb-4"
               ref={gridRef}
             >
               {latestPosts.map((post: CommunityPost) => (
@@ -131,7 +131,7 @@ const BlogSection = () => {
 
             {/* Navigation arrows - only show if there are multiple pages */}
             {totalPages > 1 && (
-              <div className="flex justify-center mt-5 md:mt-8 items-center gap-4">
+              <div className="flex justify-center mt-1 md:mt-3 items-center gap-4">
                 <button
                   onClick={handlePrev}
                   className="p-2 rounded-full bg-blue-50 hover:bg-blue-100 transition-colors"
