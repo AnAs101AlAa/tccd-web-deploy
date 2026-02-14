@@ -1,5 +1,4 @@
 import { useMemo, useState, useEffect } from "react";
-import { FaHandshake } from "react-icons/fa";
 import { useGetEventSponsors } from "@/shared/queries/events";
 import { LazyImageLoader } from "tccd-ui";
 
@@ -111,21 +110,15 @@ export default function EventSponsorSection({ eventId }: { eventId: string }) {
                                 className="flex-none text-center"
                                 style={{ flex: `0 0 ${sponsorItemWidth}%` }}
                             >
-                                <div className="aspect mb-2 sm:mb-3">
-                                    {sponsor.logo ? (
-                                        <LazyImageLoader
-                                            src={sponsor.logo}
-                                            alt={sponsor.companyName}
-                                            width="100%"
-                                            height="100%"
-                                            className="w-full h-full object-contain rounded-lg"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">
-                                            <FaHandshake className="text-gray-400 text-2xl sm:text-3xl md:text-4xl mb-1 sm:mb-2" />
-                                            <p className="text-gray-500 text-[10px] sm:text-xs md:text-sm font-medium">Sponsor</p>
-                                        </div>
-                                    )}
+                                <div className="aspect mb-2 sm:mb-3 h-27">
+                                    <LazyImageLoader
+                                        src={sponsor.logo}
+                                        alt={sponsor.companyName}
+                                        width="100%"
+                                        height="100%"
+                                        objectClassName="object-contain"
+                                        className="w-full h-full rounded-lg"
+                                    />
                                 </div>
                                 <p className="text-xs sm:text-sm md:text-base lg:text-lg font-semibold text-gray-800 line-clamp-2">{sponsor.companyName}</p>
                             </div>

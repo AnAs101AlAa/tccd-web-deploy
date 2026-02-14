@@ -9,12 +9,14 @@ import { LoadingPage, Button, ErrorScreen } from "tccd-ui";
 import PostDeleteModal from "../components/components/PostDeleteModal";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import ManagePostModal from "../components/components/ManagePostModal";
+import PostApprovalModal from "../components/components/PostApprovalModal";
 
 export const PostManagementPage = () => {
   const [searchKey, setSearchKey] = useState("");
   const [selectedPost, setSelectedPost] = useState<CommunityPost | null>(null);
   const [createPost, setCreatePost] = useState<boolean>(false);
   const [deletedPost, setDeletedPost] = useState<string | null>(null);
+  const [approvingPost, setApprovingPost] = useState<CommunityPost | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -74,6 +76,12 @@ export const PostManagementPage = () => {
         onClose={() => setDeletedPost(null)}
         postId={deletedPost}
       />
+      <PostApprovalModal
+        isOpen={approvingPost !== null}
+        onClose={() => setApprovingPost(null)}
+        postId={approvingPost?.id || null}
+        currentApprovalStatus={approvingPost?.isApproved || false}
+      />
       {(createPost || selectedPost) && (
         <ManagePostModal
           initialData={selectedPost || undefined}
@@ -119,13 +127,14 @@ export const PostManagementPage = () => {
             </div>
           ) : (
             <>
-              <div className="flex flex-col md:flex-row md:flex-wrap gap-[2%] gap-y-5">
+              <div className="gap-3 grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3">
                 {posts.map((post: CommunityPost) => (
-                  <div key={post.id} className="w-full md:w-[49%] xl:w-[32%]">
+                  <div key={post.id} className="w-full">
                     <PostCard
                       post={post}
                       setEditing={setSelectedPost}
                       setDeleting={setDeletedPost}
+                      setApproving={setApprovingPost}
                     />
                   </div>
                 ))}
