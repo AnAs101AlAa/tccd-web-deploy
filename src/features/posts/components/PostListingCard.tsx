@@ -9,9 +9,10 @@ export interface PostCardProps {
   post: CommunityPost;
   setEditing: (post: CommunityPost) => void;
   setDeleting: (postId: string) => void;
+  setApproving: (post: CommunityPost) => void;
 }
 
-export default function PostCard({ post, setEditing, setDeleting }: PostCardProps) {
+export default function PostCard({ post, setEditing, setDeleting, setApproving }: PostCardProps) {
   const imageUrl = post.media && post.media.length > 0 && post.media[0]
     ? extractDriveId(post.media[0].mediaUrl)
     : null;
@@ -50,7 +51,13 @@ export default function PostCard({ post, setEditing, setDeleting }: PostCardProp
             <HTMLFormattedText content={post.description || "No description."} />
           </p>
         </div>
-        <div className="flex justify-center gap-2 items-center">
+        <div className="flex justify-center gap-2 items-center flex-wrap">
+          <Button 
+            type={post.isApproved ? "basic" : "primary"} 
+            onClick={() => setApproving(post)} 
+            buttonText={post.isApproved ? "Unapprove" : "Approve"} 
+            width="small" 
+          />
           <Button type="secondary" onClick={() => setEditing(post)} buttonText="Edit" width="small" />
           <Button type="danger" onClick={() => setDeleting(post.id)} buttonText="Delete" width="small" />
         </div>

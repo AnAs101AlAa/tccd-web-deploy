@@ -9,12 +9,14 @@ import { LoadingPage, Button, ErrorScreen } from "tccd-ui";
 import PostDeleteModal from "../components/components/PostDeleteModal";
 import UpperHeader from "@/shared/components/mainpages/UpperHeader";
 import ManagePostModal from "../components/components/ManagePostModal";
+import PostApprovalModal from "../components/components/PostApprovalModal";
 
 export const PostManagementPage = () => {
   const [searchKey, setSearchKey] = useState("");
   const [selectedPost, setSelectedPost] = useState<CommunityPost | null>(null);
   const [createPost, setCreatePost] = useState<boolean>(false);
   const [deletedPost, setDeletedPost] = useState<string | null>(null);
+  const [approvingPost, setApprovingPost] = useState<CommunityPost | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -74,6 +76,12 @@ export const PostManagementPage = () => {
         onClose={() => setDeletedPost(null)}
         postId={deletedPost}
       />
+      <PostApprovalModal
+        isOpen={approvingPost !== null}
+        onClose={() => setApprovingPost(null)}
+        postId={approvingPost?.id || null}
+        currentApprovalStatus={approvingPost?.isApproved || false}
+      />
       {(createPost || selectedPost) && (
         <ManagePostModal
           initialData={selectedPost || undefined}
@@ -126,6 +134,7 @@ export const PostManagementPage = () => {
                       post={post}
                       setEditing={setSelectedPost}
                       setDeleting={setDeletedPost}
+                      setApproving={setApprovingPost}
                     />
                   </div>
                 ))}

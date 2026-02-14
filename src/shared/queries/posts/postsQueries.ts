@@ -75,6 +75,18 @@ export const useUpdatePost = () => {
   });
 };
 
+export const useApprovePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ postId, isApproved }: { postId: string; isApproved: boolean }) =>
+      postsApi.approvePost(postId, isApproved),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: postsKeys.lists() });
+    }
+  });
+};
+
 export const useDeletePost = () => {
   const queryClient = useQueryClient();
 
