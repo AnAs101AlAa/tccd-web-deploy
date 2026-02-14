@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { loginSchema } from "../../schemas";
 import type { LoginFormData } from "../../schemas";
 import { useAuth } from "../../hooks";
@@ -8,7 +8,7 @@ import { FormInput, SubmitButton } from "../../components";
 import tccdLogo from "/TCCD_logo.svg";
 
 export const LoginPage = () => {
-  const { handleLogin, isLoggingIn, isAuthenticated, loginHolder } = useAuth();
+  const { handleLogin, isLoggingIn, /*isAuthenticated, loginHolder*/ } = useAuth();
 
   const {
     control,
@@ -24,10 +24,10 @@ export const LoginPage = () => {
     },
   });
 
-  // // Redirect if already authenticated
-  if (isAuthenticated && !loginHolder) {
-    return <Navigate to="/" replace />;
-  }
+  // // // Redirect if already authenticated
+  // if (isAuthenticated && !loginHolder) {
+  //   return <Navigate to="/" replace />;
+  // }
 
   const onSubmit = async (data: LoginFormData) => {
     await handleLogin(data);
