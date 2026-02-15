@@ -6,17 +6,11 @@ import {
 } from "@/shared/queries/companies";
 import { Button, LazyImageLoader } from "tccd-ui";
 import { Pagination } from "@/shared/components/pagination";
-import type {
-  Company,
-  CompaniesQueryParams,
-} from "@/shared/queries/companies";
-import {
-  FiEdit,
-  FiBriefcase,
-} from "react-icons/fi";
+import type { Company, CompaniesQueryParams } from "@/shared/queries/companies";
+import { FiEdit, FiBriefcase } from "react-icons/fi";
 import { TbTrash } from "react-icons/tb";
 import { LuExpand } from "react-icons/lu";
-import { BsClipboard2XFill, BsClipboard2CheckFill  } from "react-icons/bs";
+import { BsClipboard2XFill, BsClipboard2CheckFill } from "react-icons/bs";
 import CompanyDetailModal from "./CompanyDetailModal";
 import AddEditCompanyModal from "./AddEditCompanyModal";
 import ConfirmActionModal from "@/shared/components/modals/ConfirmActionModal";
@@ -132,12 +126,21 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
   }
 
   const ActionButtons = ({ company }: { company: Company }) => (
-    <div className="flex items-center justify-center md:justify-start w-full gap-2" onClick={(e) => e.stopPropagation()}>
-      <Button 
+    <div
+      className="flex items-center justify-center md:justify-start w-full gap-2"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <Button
         type="tertiary"
         className="md:py-1.5 md:px-3"
         width="fit"
-        buttonIcon={!company.isApproved ? <BsClipboard2CheckFill className="size-4 md:size-4.5" /> : <BsClipboard2XFill className="size-4 md:size-4.5" />}
+        buttonIcon={
+          !company.isApproved ? (
+            <BsClipboard2CheckFill className="size-4 md:size-4.5" />
+          ) : (
+            <BsClipboard2XFill className="size-4 md:size-4.5" />
+          )
+        }
         onClick={() => handleToggleApproval(company)}
         disabled={updateApprovalMutation.isPending}
       />
@@ -334,7 +337,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
 
         {/* Pagination */}
         {paginationData && paginationData.totalPages > 1 && (
-          <div className="-mt-3">
+          <div className="mt-4">
             <Pagination
               currentPage={paginationData.pageIndex}
               totalPages={paginationData.totalPages}
