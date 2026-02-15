@@ -127,7 +127,8 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                                         alt={event.name}
                                         width="100%"
                                         height="100%"
-                                        className="h-full w-full rounded-md sm:rounded-lg object-contain"
+                                        objectClassName="object-contain"
+                                        className="h-full w-full rounded-md sm:rounded-lg"
                                     />
                                 </div>
                             ) : (

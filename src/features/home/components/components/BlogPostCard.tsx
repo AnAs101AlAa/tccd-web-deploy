@@ -108,7 +108,7 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
         </div>
 
         <div className="transition-all duration-500 ease-in-out transform">
-          <div className="text-gray-600 text-[14px] line-clamp-3 mb-3">
+          <div className="text-gray-600 text-[14px] line-clamp-5 mb-3">
             <HTMLFormattedText content={post.description} />
           </div>
 

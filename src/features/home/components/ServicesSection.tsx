@@ -11,7 +11,7 @@ const ServicesSection = () => {
   const secondGridServices = SERVICES_DATA.slice(6);
 
   return (
-    <section className="py-10 md:py-16 lg:py-24 transition-transform duration-700 ease-out">
+    <section className="py-4 md:py-16 lg:py-24 transition-transform duration-700 ease-out">
       <div
         ref={sectionRef}
         className={`container px-3 md:px-6 mx-auto ${
