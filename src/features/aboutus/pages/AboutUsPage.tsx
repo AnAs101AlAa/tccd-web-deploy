@@ -150,7 +150,7 @@ export const AboutUsPage = () => {
         />
 
         <div className="mx-auto text-center mt-8 md:mt-16">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 bg-linear-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent">
             Board members
           </h1>
           <p className="text-gray-600 text-sm md:text-base lg:text-lg max-w-3xl mx-auto px-4 mb-4">
@@ -162,13 +162,13 @@ export const AboutUsPage = () => {
         <div className="max-w-7xl mx-auto px-4 md:px-5 relative pb-8 md:pb-12">
           <button
             onClick={() => scrollBoard(-1)}
-            className="absolute left-2 md:left-0 lg:-left-0 top-1/2 -translate-y-1/2 bg-white rounded-full w-9 h-9 md:w-10 md:h-10 shadow-lg z-10 hover:cursor-pointer hover:bg-gray-50 flex items-center justify-center transition-all duration-300"
+            className="absolute left-2 md:left-0 lg:left-0 top-1/2 -translate-y-1/2 bg-white rounded-full w-9 h-9 md:w-10 md:h-10 shadow-lg z-10 hover:cursor-pointer hover:bg-gray-50 flex items-center justify-center transition-all duration-300"
           >
             <FaArrowLeft className="text-gray-800 text-sm md:text-base" />
           </button>
           <button
             onClick={() => scrollBoard(1)}
-            className="absolute right-2 md:right-0 lg:-right-0 top-1/2 -translate-y-1/2 bg-white rounded-full w-9 h-9 md:w-10 md:h-10 shadow-lg z-10 hover:cursor-pointer hover:bg-gray-50 flex items-center justify-center transition-all duration-300"
+            className="absolute right-2 md:right-0 lg:right-0 top-1/2 -translate-y-1/2 bg-white rounded-full w-9 h-9 md:w-10 md:h-10 shadow-lg z-10 hover:cursor-pointer hover:bg-gray-50 flex items-center justify-center transition-all duration-300"
           >
             <FaArrowRight className="text-gray-800 text-sm md:text-base" />
           </button>
@@ -179,7 +179,7 @@ export const AboutUsPage = () => {
             {(boardMembers as BoardMember[]).map((member, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-56 md:w-64 bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center"
+                className="shrink-0 w-56 md:w-64 bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center"
               >
                 <img
                   src={member.ImgSrc || ABOUT_US_IMAGE}
@@ -205,7 +205,7 @@ export const AboutUsPage = () => {
         </div>
 
         <div className="mx-auto text-center mt-4 md:mt-8">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 bg-linear-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent">
             Website Founders
           </h1>
           <p className="text-gray-600 text-sm md:text-base lg:text-lg max-w-3xl mx-auto px-4 mb-4">
@@ -218,13 +218,13 @@ export const AboutUsPage = () => {
         <div className="max-w-7xl mx-auto px-4 md:px-5 relative pb-8 md:pb-16">
           <button
             onClick={() => scrollFounders(-1)}
-            className="absolute left-2 md:left-0 lg:-left-0 top-1/2 -translate-y-1/2 bg-white rounded-full w-9 h-9 md:w-10 md:h-10 shadow-lg z-10 hover:cursor-pointer hover:bg-gray-50 flex items-center justify-center transition-all duration-300"
+            className="absolute left-2 md:left-0 lg:left-0 top-1/2 -translate-y-1/2 bg-white rounded-full w-9 h-9 md:w-10 md:h-10 shadow-lg z-10 hover:cursor-pointer hover:bg-gray-50 flex items-center justify-center transition-all duration-300"
           >
             <FaArrowLeft className="text-gray-800 text-sm md:text-base" />
           </button>
           <button
             onClick={() => scrollFounders(1)}
-            className="absolute right-2 md:right-0 lg:-right-0 top-1/2 -translate-y-1/2 bg-white rounded-full w-9 h-9 md:w-10 md:h-10 shadow-lg z-10 hover:cursor-pointer hover:bg-gray-50 flex items-center justify-center transition-all duration-300"
+            className="absolute right-2 md:right-0 lg:right-0 top-1/2 -translate-y-1/2 bg-white rounded-full w-9 h-9 md:w-10 md:h-10 shadow-lg z-10 hover:cursor-pointer hover:bg-gray-50 flex items-center justify-center transition-all duration-300"
           >
             <FaArrowRight className="text-gray-800 text-sm md:text-base" />
           </button>
@@ -235,7 +235,7 @@ export const AboutUsPage = () => {
             {(websiteFounders as WebsiteFounder[]).map((founder, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-56 md:w-64 bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center"
+                className="shrink-0 w-56 md:w-64 bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center"
               >
                 <img
                   src={founder.ImgSrc || ABOUT_US_IMAGE}
@@ -263,7 +263,7 @@ export const AboutUsPage = () => {
                       className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center bg-[#EA4335] text-white rounded-full hover:bg-[#d33426] transition-all hover:scale-110 cursor-pointer shadow-md"
                       title="Copy email to clipboard"
                     >
-                      <SiGmail size={16} className="md:w-[18px] md:h-[18px]" />
+                      <SiGmail size={16} className="md:w-4.5 md:h-4.5" />
                     </button>
                   )}
                   {founder.linkedin && (
@@ -276,7 +276,7 @@ export const AboutUsPage = () => {
                     >
                       <FaLinkedin
                         size={16}
-                        className="md:w-[18px] md:h-[18px]"
+                        className="md:w-4.5 md:h-4.5"
                       />
                     </a>
                   )}
@@ -288,7 +288,7 @@ export const AboutUsPage = () => {
                       className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center bg-[#333333] text-white rounded-full hover:bg-[#222222] transition-all hover:scale-110 cursor-pointer shadow-md"
                       title="Copy GitHub URL to clipboard"
                     >
-                      <FaGithub size={16} className="md:w-[18px] md:h-[18px]" />
+                      <FaGithub size={16} className="md:w-4.5 md:h-4.5" />
                     </button>
                   )}
                 </div>
@@ -297,7 +297,7 @@ export const AboutUsPage = () => {
           </div>
         </div>
 
-        <div className="relative py-12 md:py-16 px-4 md:px-5 bg-gradient-to-br from-[#44697E] via-[#5a7a8f] to-[#CD3A38] overflow-hidden">
+        <div className="relative py-12 md:py-16 px-4 md:px-5 bg-linear-to-br from-[#44697E] via-[#5a7a8f] to-[#CD3A38] overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 mb-12 md:mb-16">
               <div className="relative order-1 md:order-2">
@@ -308,7 +308,7 @@ export const AboutUsPage = () => {
                   <img
                     src={VisionIcon}
                     alt="Vision"
-                    className="w-9 h-10 mb-1 md:mb-3 md:w-[54px] md:h-[56px]"
+                    className="w-9 h-10 mb-1 md:mb-3 md:w-13.5 md:h-14"
                   />
                   <h3 className="text-[#44697E] text-lg md:text-2xl font-bold">
                     Vision
@@ -333,7 +333,7 @@ export const AboutUsPage = () => {
                   <img
                     src={MissionIcon}
                     alt="Mission"
-                    className="w-9 h-9 mb-1 md:mb-3 md:w-[48px] md:h-[48px]"
+                    className="w-9 h-9 mb-1 md:mb-3 md:w-12 md:h-12"
                   />
                   <h3 className="text-[#CD3A38] text-lg md:text-2xl font-bold">
                     Mission
@@ -358,7 +358,7 @@ export const AboutUsPage = () => {
                   <img
                     src={GoalIcon}
                     alt="Goals"
-                    className="w-9 h-9 mb-1 md:mb-3 md:w-[48px] md:h-[48px]"
+                    className="w-9 h-9 mb-1 md:mb-3 md:w-12 md:h-12"
                   />
                   <h3 className="text-[#44697E] text-lg md:text-2xl font-bold">
                     Goals
@@ -411,10 +411,10 @@ export const AboutUsPage = () => {
           </div>
         </div>
 
-        <section className="bg-gradient-to-br from-gray-50 to-white py-12 md:py-16 px-4 md:px-5 mb-16 md:mb-0">
+        <section className="bg-linear-to-br from-gray-50 to-white py-8 md:py-16 px-4 md:px-5">
           <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8 lg:p-12">
             <div className="text-center mb-8 md:mb-12">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent mb-3 md:mb-4">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-linear-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent mb-3 md:mb-4">
                 Get in Touch
               </h2>
               <p className="text-[#295E7E] text-sm md:text-base ">
@@ -525,7 +525,7 @@ export const AboutUsPage = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-4 bg-gradient-to-r transition-all duration-300 cursor-pointer from-[#295E7E] to-[#CD3A38] text-white rounded-full font-semibold hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-8 py-4 bg-linear-to-r transition-all duration-300 cursor-pointer from-[#295E7E] to-[#CD3A38] text-white rounded-full font-semibold hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </button>

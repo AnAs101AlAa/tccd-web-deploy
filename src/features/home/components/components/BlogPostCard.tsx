@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FaCalendarAlt } from "react-icons/fa";
+import { MdCalendarMonth } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import type { CommunityPost } from "@/shared/types";
 import { Button, LazyImageLoader } from "tccd-ui";
 import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
+
+const animationCache = new Map<string, number>();
 
 export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
   const navigate = useNavigate();
@@ -13,7 +15,9 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
 
   const wholeInfoRef = useRef<HTMLDivElement>(null);
   const mainInfoRef = useRef<HTMLDivElement>(null);
-  const [translateValue, setTranslateValue] = useState(0);
+  const [translateValue, setTranslateValue] = useState(() => {
+    return animationCache.get(post.id) || 0;
+  });
   const [isTapped, setIsTapped] = useState(false);
 
   useEffect(() => {
@@ -25,7 +29,9 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
       const wholeH = wholeEl.scrollHeight;
       const mainH = mainEl.getBoundingClientRect().height;
       const diff = wholeH - mainH - 16;
-      setTranslateValue(diff > 0 ? diff : 0);
+      const val = diff > 0 ? diff : 0;
+      setTranslateValue(val);
+      animationCache.set(post.id, val);
     };
 
     update();
@@ -43,7 +49,7 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
       window.removeEventListener("resize", update);
       window.removeEventListener("load", update);
     };
-  }, [post.description]);
+  }, [post.description, post.id]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -59,14 +65,14 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
   }, []);
 
   return (
-    <div className="relative w-full h-112.5 md:h-118.75 lg:h-125 group bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform duration-300 flex flex-col">
+    <div className="relative w-full h-70 md:h-80 lg:h-85 group bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform duration-300 flex flex-col">
       {post.media?.[0] && post.media[0].mediaUrl !== "" ? (
         <LazyImageLoader
           src={post.media[0].mediaUrl}
           alt={post.name}
           width="100%"
           height="100%"
-          objectClassName="object-top"
+          objectClassName="object-cover object-top"
           className="absolute inset-0"
         />
       ) : (
@@ -84,12 +90,12 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
         style={{ "--y": `${translateValue}px` } as React.CSSProperties}
       >
         <div ref={mainInfoRef}>
-          <h3 className="text-xl font-bold text-blue-950 mb-2">
+          <h3 className="text-[22px] md:text-[23px] lg:text-[24px] font-bold text-contrast mb-2">
             {post.name}
           </h3>
 
-          <div className="flex items-center text-sm text-gray-500 mb-2">
-            <FaCalendarAlt className="h-4 w-4 mr-2 text-red-600" />
+          <div className="flex items-center text-sm text-inactive-tab-text mb-2">
+            <MdCalendarMonth className="size-4 md:size-4.5 mr-1 text-primary" />
             {new Date(post.createdAt).toLocaleString("en-US", {
               weekday: "long",
               year: "numeric",
@@ -102,7 +108,7 @@ export const BlogPostCard = ({ post }: { post: CommunityPost }) => {
         </div>
 
         <div className="transition-all duration-500 ease-in-out transform">
-          <div className="text-gray-600 text-[14px] line-clamp-6 mb-3">
+          <div className="text-gray-600 text-[14px] line-clamp-5 mb-3">
             <HTMLFormattedText content={post.description} />
           </div>
 

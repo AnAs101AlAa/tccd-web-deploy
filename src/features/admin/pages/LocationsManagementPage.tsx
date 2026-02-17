@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import { LoadingPage, ErrorScreen, Button } from "tccd-ui";
 import { useGetLocations } from "@/shared/queries/admin";
-import { LocationCard, AddLocationModal } from "../components/location_card";
+import { LocationCard, AddLocationModal } from "../components/locations";
 import { usePagination } from "@/shared/hooks";
 import { Pagination } from "@/shared/components/pagination";
 import GenericGrid from "@/shared/components/GenericGrid";
-import LocationFilter from "../components/LocationFilter";
+import LocationFilter from "../components/locations/LocationFilter";
 import type { Location } from "@/shared/queries/admin";
 import { FiPlus } from "react-icons/fi";
 import { WithLayout } from "@/shared/components/hoc";
@@ -81,7 +81,7 @@ const LocationsManagementPage = () => {
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-[29px] md:text-[32px] lg:text-[34px] font-bold text-contrast">
-              Locations Management
+              Locations
             </h1>
             <p className="text-inactive-tab-text text-[15px] md:text-[16px] lg:text-[18px]">
               Manage event locations and venues
