@@ -1,0 +1,56 @@
+name: Pull Latest from Source
+on:
+  repository_dispatch:
+    types: [source_pushed]
+
+jobs:
+  pull_sync_and_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Dest Repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.REPO_TOKEN }}
+
+      - name: Checkout Source Repo
+        uses: actions/checkout@v4
+        with:
+          repository: TCCD-CUFE/tccd-web-frontend
+          token: ${{ secrets.REPO_TOKEN }}
+          path: temp_source_folder
+
+      - name: Sync files and protect workflows
+        run: |
+          rsync -av --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='temp_source_folder/' \
+            temp_source_folder/ ./
+          
+          rm -rf temp_source_folder
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' 
+
+      - name: Install Dependencies
+        run: npm install 
+
+      - name: Test React Build
+        run: npm run build 
+
+
+      # This step ONLY runs if 'npm run build' is successful
+      - name: Commit and Push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          
+          if git diff-index --quiet HEAD; then
+            echo "No changes to sync."
+          else
+            git commit -m "Auto-sync code from Niazi-64/source"
+            git push origin main
+          fi
