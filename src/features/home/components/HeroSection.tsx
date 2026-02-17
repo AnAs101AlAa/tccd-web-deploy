@@ -138,7 +138,7 @@ const HeroSection = () => {
             </p>
 
             {/* Call-to-action buttons */}
-            <div className="flex sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 sm:pt-4">
               <button
                 className="bg-primary cursor-pointer hover:bg-[#b33432] text-[14px] md:text-[16px] lg:text-[18px] text-white border-0 rounded-full w-fit px-4 md:px-8 py-2 md:py-3 font-medium flex items-center justify-center"
                 onClick={handleEventClick}
