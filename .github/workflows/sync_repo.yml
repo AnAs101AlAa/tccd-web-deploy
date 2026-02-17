@@ -10,7 +10,7 @@ jobs:
       - name: Checkout Dest Repo
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.REPO_TOKEN }}
+          token: ${{ github.token }}
 
       - name: Checkout Source Repo
         uses: actions/checkout@v4
