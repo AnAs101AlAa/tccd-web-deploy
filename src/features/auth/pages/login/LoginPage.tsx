@@ -24,7 +24,7 @@ export const LoginPage = () => {
     },
   });
 
-  // Redirect if already authenticated
+  // // Redirect if already authenticated
   if (isAuthenticated && !loginHolder) {
     return <Navigate to="/" replace />;
   }
