@@ -7,30 +7,26 @@ jobs:
   pull_sync_and_build:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout Dest Repo
         uses: actions/checkout@v4
         with:
           token: ${{ github.token }}
+          fetch-depth: 0
 
-      - name: Checkout Source Repo
-        uses: actions/checkout@v4
-        with:
-          repository: TCCD-CUFE/tccd-web-frontend
-          token: ${{ secrets.REPO_TOKEN }}
-          path: temp_source_folder
-
-
+      # 2. Pull from Source Repo 
       - name: Pull from Source Repo
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           
           # Add the source repo using your Read-Only token
-          git remote add source_repo https://x-access-token:${{ secrets.REPO_TOKEN }}@github.com/TCCD-CUFE/tccd-web-frontend
+          git remote add source_repo https://x-access-token:${{ secrets.REPO_TOKEN }}@github.com/TCCD-CUFE/tccd-web-frontend.git
           
           # Pull and merge the code
-          git pull source_repo main --no-rebase
+          git pull source_repo main --no-rebase --allow-unrelated-histories
 
+      # 3. Test React Build
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -42,9 +38,7 @@ jobs:
       - name: Test React Build
         run: npm run build 
 
-
-      # This step ONLY runs if 'npm run build' is successful
+      # 4. Push if Build Succeeds
       - name: Push changes
         run: |
-          # Git pull already made the commit, so we just push it!
           git push origin main
