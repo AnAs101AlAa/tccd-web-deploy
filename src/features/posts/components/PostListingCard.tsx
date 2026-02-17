@@ -30,18 +30,18 @@ export default function PostCard({
 
   return (
     <div
-      className="group relative w-full max-w-xl mx-auto"
+      className="group relative w-full max-w-xl mx-auto h-full py-1"
       onClick={onSelect}
     >
       <div
-        className={`pointer-events-none absolute -inset-[1px] rounded-[11px] bg-gradient-to-r from-primary via-secondary to-primary transition-all duration-300 ${
+        className={`pointer-events-none absolute -inset-px rounded-[11px] bg-linear-to-r from-primary via-secondary to-primary transition-all duration-300 ${
           isSelected
             ? "opacity-100 animate-pulse"
             : "opacity-0 group-hover:opacity-100 group-hover:animate-pulse"
         }`}
       />
       <div
-        className={`relative bg-white border shadow-sm rounded-lg transition duration-200 hover:shadow-md hover:-translate-y-0.5 focus-within:ring-2 h-full flex flex-col overflow-hidden ${
+        className={`relative bg-white border shadow-sm rounded-lg transition duration-200 hover:shadow-md hover:scale-[1.004] focus-within:ring-2 h-full flex flex-col overflow-hidden ${
           isSelected
             ? "border-transparent ring-2 ring-primary/20"
             : "border-contrast/10 focus-within:ring-primary/20"

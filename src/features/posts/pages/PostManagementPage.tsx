@@ -1,7 +1,7 @@
 import { PostSearchFilter } from "../components/PostSearchFilter";
 import PostCard from "../components/PostListingCard";
 import type { CommunityPost } from "@/shared/types/postTypes";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import Pagination from "@/shared/components/pagination/Pagination";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import { useGetAllPosts } from "@/shared/queries/posts";
@@ -9,9 +9,9 @@ import { LoadingPage, Button, ErrorScreen } from "tccd-ui";
 import PostDeleteModal from "../components/components/PostDeleteModal";
 import ManagePostModal from "../components/components/ManagePostModal";
 import PostApprovalModal from "../components/components/PostApprovalModal";
+import { POST_SORT_OPTIONS } from "../constants/postConstans";
 
 export const PostManagementPage = () => {
-  const [searchKey, setSearchKey] = useState("");
   const [selectedPost, setSelectedPost] = useState<CommunityPost | null>(null);
   const [createPost, setCreatePost] = useState<boolean>(false);
   const [deletedPost, setDeletedPost] = useState<string | null>(null);
@@ -21,7 +21,6 @@ export const PostManagementPage = () => {
   const [pageSize, setPageSize] = useState(() =>
     typeof window !== "undefined" && window.innerWidth < 768 ? 3 : 6
   );
-  const [sortMode, setSortMode] = useState<"newest" | "oldest" | "public-first" | "private-first">("newest");
   const [isCompactView, setIsCompactView] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const postsSectionRef = useRef<HTMLElement | null>(null);
@@ -41,31 +40,24 @@ export const PostManagementPage = () => {
 
   const [activeFilters, setActiveFilters] = useState<{
     name?: string;
-  }>({});
+    orderBy?: string;
+    descending?: boolean;
+  }>({
+    orderBy: POST_SORT_OPTIONS[0].value,
+    descending: true
+  });
 
-  const { data, isLoading, isError } = useGetAllPosts(currentPage, pageSize, activeFilters);
+  const backendFilters = {
+    ...activeFilters,
+    orderBy: activeFilters.orderBy?.replace(/(Desc|Asc)$/, '') || undefined,
+  };
+
+  const { data, isLoading, isError } = useGetAllPosts(currentPage, pageSize, backendFilters);
 
   const posts = data?.posts || [];
   const totalPages = data?.totalPages || 0;
   const publicPostsCount = posts.filter((post: CommunityPost) => post.isApproved).length;
   const privatePostsCount = posts.length - publicPostsCount;
-  const sortedPosts = useMemo(() => {
-    const list = [...posts];
-
-    if (sortMode === "public-first") {
-      return list.sort((a, b) => Number(b.isApproved) - Number(a.isApproved));
-    }
-
-    if (sortMode === "private-first") {
-      return list.sort((a, b) => Number(a.isApproved) - Number(b.isApproved));
-    }
-
-    return list.sort((a, b) => {
-      const timeA = new Date(a.createdAt).getTime();
-      const timeB = new Date(b.createdAt).getTime();
-      return sortMode === "oldest" ? timeA - timeB : timeB - timeA;
-    });
-  }, [posts, sortMode]);
 
   useEffect(() => {
     if (!isLoading && (data || isError)) {
@@ -78,19 +70,14 @@ export const PostManagementPage = () => {
   }, [pageSize]);
 
   const handleSearch = () => {
-    const filters: { name?: string } = {};
-
-    if (searchKey.trim()) {
-      filters.name = searchKey.trim();
-    }
-
-    setActiveFilters(filters);
     setCurrentPage(1);
   };
 
   const handleClearFilters = () => {
-    setSearchKey("");
-    setActiveFilters({});
+    setActiveFilters({
+      orderBy: POST_SORT_OPTIONS[0].value,
+      descending: true
+    });
     setCurrentPage(1);
   };
 
@@ -140,8 +127,8 @@ export const PostManagementPage = () => {
         />
       )}
       <div className="min-h-screen bg-background py-4 md:py-8 px-4 md:px-8">
-        <main className="w-full max-w-[1600px] mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
+        <main className="w-full max-w-400 mx-auto">
+          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3 mb-4 md:mb-6">
             <div>
               <p className="text-[12px] md:text-[13px] tracking-wide uppercase font-semibold text-inactive-tab-text">
                 Content Management
@@ -163,24 +150,11 @@ export const PostManagementPage = () => {
 
           <section
             ref={postsSectionRef}
-            className="relative overflow-hidden rounded-xl border border-contrast/10 bg-gradient-to-b from-background/85 to-background/65 p-4 sm:p-5 lg:p-6 shadow-sm"
+            className="relative overflow-hidden rounded-xl border border-contrast/10 bg-linear-to-b from-background/85 to-background/65 p-4 sm:p-5 lg:p-6 shadow-sm"
           >
             <div className="pointer-events-none absolute -top-20 -right-12 h-48 w-48 rounded-full bg-primary/8 blur-2xl" />
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
-              <div>
-                <h2 className="text-[21px] md:text-[22px] lg:text-[23px] font-semibold text-secondary">
-                  All Posts
-                </h2>
-                <p className="text-[13px] md:text-[14px] text-inactive-tab-text">
-                  Review, search, and manage post visibility.
-                </p>
-              </div>
-              <span className="inline-flex items-center rounded-md border border-contrast/15 bg-background/80 px-2.5 py-1 text-[12px] font-medium text-secondary">
-                {posts.length} {posts.length === 1 ? "post" : "posts"} on this page
-              </span>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-4">
+            <div className="grid grid-cols-3 gap-2.5 mb-4">
               <div className="rounded-lg border border-contrast/10 bg-white/70 px-3 py-2">
                 <p className="text-[11px] uppercase tracking-wide text-inactive-tab-text font-semibold">
                   Total
@@ -203,8 +177,11 @@ export const PostManagementPage = () => {
 
             <div className="mb-4 md:mb-6">
               <PostSearchFilter
-                searchKey={searchKey}
-                onSearchChange={setSearchKey}
+                searchKey={activeFilters.name || ""}
+                orderBy={POST_SORT_OPTIONS.find(option => option.value === activeFilters.orderBy) || POST_SORT_OPTIONS[0]}
+                onOrderByChange={(option) => setActiveFilters(prev => ({ ...prev, orderBy: option.value }))}
+                onSearchChange={(val) => setActiveFilters(prev => ({ ...prev, name: val }))}
+                setDescending={(desc) => setActiveFilters(prev => ({ ...prev, descending: desc }))}
                 onSearch={handleSearch}
                 onClear={handleClearFilters}
               />
@@ -228,24 +205,7 @@ export const PostManagementPage = () => {
             ) : (
               <>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-                  <p className="text-[12px] md:text-[13px] text-inactive-tab-text">
-                    Page {currentPage} of {Math.max(totalPages, 1)}
-                  </p>
                   <div className="flex flex-wrap items-center gap-2">
-                    <label className="inline-flex items-center gap-1 rounded-md border border-contrast/20 bg-white/80 px-2 py-1 text-[12px] text-secondary">
-                      <span className="text-inactive-tab-text font-medium">Sort</span>
-                      <select
-                        value={sortMode}
-                        onChange={(e) => setSortMode(e.target.value as typeof sortMode)}
-                        className="bg-transparent text-[12px] font-medium focus:outline-none"
-                        aria-label="Sort posts"
-                      >
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="public-first">Public first</option>
-                        <option value="private-first">Private first</option>
-                      </select>
-                    </label>
                     <button
                       type="button"
                       onClick={() => setIsCompactView((prev) => !prev)}
@@ -265,8 +225,8 @@ export const PostManagementPage = () => {
                   </div>
                 </div>
                 <div className={`${isCompactView ? "gap-3 md:gap-4" : "gap-4 md:gap-5"} grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3`}>
-                  {sortedPosts.map((post: CommunityPost) => (
-                    <div key={post.id} className="w-full">
+                  {posts.map((post: CommunityPost) => (
+                    <div key={post.id} className="w-full py-4">
                       <PostCard
                         post={post}
                         compact={isCompactView}
