@@ -7,38 +7,52 @@ jobs:
   pull_sync_and_build:
     runs-on: ubuntu-latest
     steps:
-
       - name: Checkout Dest Repo
         uses: actions/checkout@v4
         with:
           token: ${{ github.token }}
-          fetch-depth: 0
 
-      # 2. Pull from Source Repo 
-      - name: Pull from Source Repo
+      - name: Checkout Source Repo
+        uses: actions/checkout@v4
+        with:
+          repository: TCCD-CUFE/tccd-web-frontend
+          token: ${{ secrets.REPO_TOKEN }}
+          path: temp_source_folder
+
+      - name: Sync files and protect workflows
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          rsync -av --delete \
+            --exclude='netlify.toml' \
+            --exclude='public/_redirects' \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='temp_source_folder/' \
+            temp_source_folder/ ./
           
-          # Add the source repo using your Read-Only token
-          git remote add source_repo https://${{ secrets.REPO_TOKEN }}@github.com/TCCD-CUFE/tccd-web-frontend
-          
-          # Pull and merge the code
-          git pull source_repo main --no-rebase --allow-unrelated-histories
+          rm -rf temp_source_folder
 
-      # 3. Test React Build
+ 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20' 
 
       - name: Install Dependencies
-        run: npm install 
+        run: npm install
 
       - name: Test React Build
         run: npm run build 
 
-      # 4. Push if Build Succeeds
-      - name: Push changes
+      # This step ONLY runs if 'npm run build' is successful
+      - name: Commit and Push changes
         run: |
-          git push origin main
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          
+          if git diff-index --quiet HEAD; then
+            echo "No changes to sync."
+          else
+            git commit -m "Auto-sync code from Niazi-64/source"
+            git push origin main
+          fi
