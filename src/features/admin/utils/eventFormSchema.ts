@@ -17,6 +17,27 @@ export const eventFormSchema = z.object({
   type: z.custom<EventTypes>((val) => EVENT_TYPES.map((t) => t.value).includes(val as EventTypes), {
     message: "Invalid event type.",
   }),
-  eventImage: z.string({message: "Event image URL is required."}).min(1, {message: "Event image URL is required."}),
+  eventImage: z.string({message: "Event image URL is required."}).min(1, {message: "Event image URL is required."}).optional(),
   registrationDeadline: z.string().optional(),
+  slots: z.array(z.object({
+    startTime: z.string(),
+    endTime: z.string(),
+  })).optional(),
+}).refine((data) => {
+  // If no slots, validation passes
+  if (!data.slots || data.slots.length === 0) {
+    return true;
+  }
+  
+  const eventDate = new Date(data.date);
+  
+  // Check all slots start and end after the event date
+  return data.slots.every(slot => {
+    const slotStart = new Date(slot.startTime);
+    const slotEnd = new Date(slot.endTime);
+    return slotStart >= eventDate && slotEnd >= eventDate;
+  });
+}, {
+  message: "All event slots must start and end on or after the event date.",
+  path: ["slots"],
 });

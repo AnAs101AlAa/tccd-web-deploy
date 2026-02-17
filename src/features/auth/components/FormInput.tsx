@@ -1,6 +1,6 @@
 import { Controller } from "react-hook-form";
 import type { Control, FieldValues, Path } from "react-hook-form";
-import { InputField, PasswordField } from "tccd-ui";
+import { InputField, PasswordField, DropdownMenu } from "tccd-ui";
 
 /**
  * Form Input Component Props
@@ -18,6 +18,7 @@ export interface FormInputProps<T extends FieldValues = FieldValues> {
   id?: string;
   dir?: string;
   disabled?: boolean;
+  options?: { label: string; value: string }[]; // For dropdowns
 }
 
 /**
@@ -50,11 +51,13 @@ export function FormInput<T extends FieldValues = FieldValues>({
   placeholder = "",
   id,
   type,
+  options,
 }: // Unused props for now, but kept in interface for API consistency
 // autoComplete, dir, disabled
 FormInputProps<T>) {
   const inputId = id || name || label.toLowerCase().replace(/\s+/g, "-");
   const isPasswordField = type === "password";
+  const isDropdwn = type === "dropdown";
 
   return (
     <div className="w-full">
@@ -75,6 +78,16 @@ FormInputProps<T>) {
                     id={name}
                   />
                 </div>
+              ) : isDropdwn ? (
+                <DropdownMenu
+                  label={label}
+                  labelClassName="text-[13px] text-contrast/60"
+                  options={options || []}
+                  value={field.value || ""}
+                  error={error?.message}
+                  id={name}
+                  onChange={(value) => field.onChange(value)}
+                />
               ) : (
                 <InputField
                   labelClassName="text-[13px] text-contrast/60"
@@ -85,17 +98,6 @@ FormInputProps<T>) {
                   onChange={field.onChange}
                   error={error?.message}
                 />
-              )}
-
-              {/* Display error message */}
-              {error && (
-                <p
-                  id={`${inputId}-error`}
-                  className="mt-1 text-sm text-red-600"
-                  role="alert"
-                >
-                  {error.message}
-                </p>
               )}
 
               {/* Display helper text when no error */}

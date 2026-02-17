@@ -3,12 +3,12 @@ import { AuthApi } from "./authApi";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
 import { useUserActions } from "@/shared/queries/user/userHooks";
-import type { 
-  LoginCredentials, 
-  StudentSignupCredentials, 
+import type {
+  LoginCredentials,
+  StudentSignupCredentials,
   BusinessRepSignupCredentials,
   FacultySignupCredentials,
-  ForgotPasswordCredentials 
+  ForgotPasswordCredentials,
 } from "./types";
 import type { AnyUser } from "@/shared/types/users";
 
@@ -29,13 +29,16 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (credentials: LoginCredentials) =>
       authApiInstance.login(credentials),
-    onSuccess: (data: AnyUser) => {
-      console.log(data)
-      login(data);
+    onSuccess: (user: AnyUser) => {
+      login(user);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Login successful!");
     },
-    onError: (error: unknown) => {
+    onError: (error: any) => {
+      if(error.response?.status === 401) {
+        toast.error("Invalid email or password. Please try again.");
+        return;
+      }
       const message = getErrorMessage(error);
       toast.error(message || "Login failed. Please try again.");
     },
@@ -66,15 +69,12 @@ export const useLogout = () => {
 };
 
 export const useSignupStudent = () => {
-  const { login } = useUserActions();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (credentials: StudentSignupCredentials) =>
       authApiInstance.signupStudent(credentials),
-    onSuccess: (data: AnyUser) => {
-      console.log(data)
-      login(data);
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Account created successfully!");
     },
@@ -92,8 +92,8 @@ export const useSignupBusinessRep = () => {
   return useMutation({
     mutationFn: (credentials: BusinessRepSignupCredentials) =>
       authApiInstance.signupBusinessRep(credentials),
-    onSuccess: (data: AnyUser) => {
-      login(data);
+    onSuccess: (user: AnyUser) => {
+      login(user);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Account created successfully!");
     },
@@ -111,8 +111,8 @@ export const useSignupFaculty = () => {
   return useMutation({
     mutationFn: (credentials: FacultySignupCredentials) =>
       authApiInstance.signupFaculty(credentials),
-    onSuccess: (data: AnyUser) => {
-      login(data);
+    onSuccess: (user: AnyUser) => {
+      login(user);
       queryClient.invalidateQueries({ queryKey: authKeys.all });
       toast.success("Account created successfully!");
     },
@@ -136,6 +136,23 @@ export const useForgotPassword = () => {
     onError: (error: unknown) => {
       const message = getErrorMessage(error);
       toast.error(message || "Failed to send reset email. Please try again.");
+    },
+  });
+};
+
+export const useVerifyStudent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (token: string) =>
+      authApiInstance.verifyStudent(token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authKeys.all });
+      toast.success("Email verified successfully! You can now log in.");
+    },
+    onError: (error: unknown) => {
+      const message = getErrorMessage(error);
+      toast.error(message || "Email verification failed. Please try again.");
     },
   });
 };

@@ -116,7 +116,7 @@ const EventsPage = () => {
                 onSearch={(params) => handleApplyFilters(params)}
               />
             </div>
-            <hr className="mb-4 mt-0 border-t border-gray-400/80" />
+            <hr className="mb-4 -mt-2 border-t border-gray-400/80" />
             {isLoadingUpcoming && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
                 <div className="text-center">
@@ -154,7 +154,7 @@ const EventsPage = () => {
                       onLearnMore={onLearnMore}
                     />
                   )}
-                  gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  gridCols="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3"
                   getKey={(event: Event) => event.id}
                 />
                 <Pagination
@@ -166,10 +166,10 @@ const EventsPage = () => {
                 />
               </>
             )}
-            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
+            <div className="h-1 bg-linear-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
           </section>
           {/* Past Events Section */}
-          <section className="mb-6 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
+          <section className="mb-4 md:mb-10 shadow-lg p-2 md:p-3 relative pb-5 md:pb-7 bg-background rounded-t-2xl">
             <div className="flex flex-col md:gap-1 gap-0 mb-2 sm:mb-4">
               <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
                 Past Events
@@ -210,7 +210,7 @@ const EventsPage = () => {
                   items={apiPastEvents.items}
                   emptyMessage="No past events to display."
                   renderCard={(event: Event) => <PastEventCard event={event} />}
-                  gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  gridCols="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3"
                   getKey={(event: Event) => event.id}
                 />
                 {apiPastEvents.totalPages > 1 && (
@@ -220,7 +220,7 @@ const EventsPage = () => {
                 )}
               </>
             )}
-            <div className="h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
+            <div className="h-1 bg-linear-to-r from-secondary via-primary to-secondary rounded-full absolute left-0 right-0 w-full bottom-0"></div>
           </section>
         </main>
       </div>

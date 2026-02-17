@@ -6,7 +6,14 @@ import type {
   FacultySignupCredentials,
   ForgotPasswordCredentials,
 } from "./types";
-import type { AnyUser, StudentUser, VolunteeringUser, BusinessRepUser, FacultyMemberUser, AdminUser } from "@/shared/types/users";
+import type {
+  AnyUser,
+  StudentUser,
+  VolunteeringUser,
+  BusinessRepUser,
+  FacultyMemberUser,
+  AdminUser,
+} from "@/shared/types/users";
 
 const AUTH_ROUTE = "/v1/Auth/";
 
@@ -14,7 +21,7 @@ export class AuthApi {
   async login(credentials: LoginCredentials): Promise<AnyUser> {
     const { data } = await systemApi.post(AUTH_ROUTE + "login", credentials);
     const response = data.data;
-    
+
     // Map API response to our user types
     const baseUser = {
       id: response.id,
@@ -23,15 +30,14 @@ export class AuthApi {
       phoneNumber: "", // Not provided in login response
       email: credentials.email, // Use from credentials
       gender: response.gender,
-      profilePicture: response.profileImage,
       status: response.status,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isDeleted: false,
     };
-    
+
     const roles = response.roles || [];
-    
+
     // Map based on role and available profile data
     if (roles.includes("Admin")) {
       return {
@@ -40,65 +46,77 @@ export class AuthApi {
         adminLevel: 1,
       } as AdminUser;
     }
-    
-    if (response.studentProfile) {
+
+    // Handle Student role (even if profile is incomplete/null)
+    if (response.role === "Student" || roles.includes("Student")) {
       const student = response.studentProfile;
-      
-      // Check if they're also a volunteer
-      if (student.volunteeringProfile) {
+
+      // If they have a volunteering profile
+      if (student?.volunteeringProfile) {
         return {
           ...baseUser,
           role: "Volunteer" as const,
-          gpa: student.gpa,
-          graduationYear: student.graduationYear,
-          department: student.department,
-          faculty: student.faculty,
-          university: student.university,
+          gpa: student.gpa || 0,
+          graduationYear: student.graduationYear || new Date().getFullYear(),
+          department: student.department || "",
+          faculty: student.faculty || "",
+          university: student.university || "",
           cv: student.cv,
           linkedin: student.linkedIn,
           gitHub: student.gitHub,
-          committeeAffiliation: student.volunteeringProfile.committeeAffiliation,
+          committeeAffiliation:
+            student.volunteeringProfile.committeeAffiliation,
           position: student.volunteeringProfile.position,
         } as VolunteeringUser;
       }
-      
+
+      // Regular student (with or without profile data)
       return {
         ...baseUser,
         role: "Student" as const,
-        gpa: student.gpa,
-        graduationYear: student.graduationYear,
-        department: student.department,
-        faculty: student.faculty,
-        university: student.university,
-        cv: student.cv,
-        linkedin: student.linkedIn,
-        gitHub: student.gitHub,
+        gpa: student?.gpa || 0,
+        graduationYear: student?.graduationYear || new Date().getFullYear() + 4,
+        // graduationYear: student?.graduationYear || null,
+        department: student?.department || "",
+        faculty: student?.faculty || "",
+        university: student?.university || "",
+        cv: student?.cv,
+        linkedin: student?.linkedIn,
+        gitHub: student?.gitHub,
       } as StudentUser;
     }
-    
-    if (response.businessRepProfile) {
+
+    // Handle BusinessRep role (even if profile is incomplete/null)
+    if (response.role === "BusinessRep" || roles.includes("BusinessRep")) {
       return {
         ...baseUser,
         role: "BusinessRep" as const,
-        companyId: "", // Not provided in login response
-        jobTitle: response.businessRepProfile.position,
+        companyId: response.businessRepProfile?.companyId || "",
+        jobTitle: response.businessRepProfile?.position || "",
       } as BusinessRepUser;
     }
-    
-    if (response.facultyMemberProfile) {
+
+    // Handle Faculty roles (TA/DR) (even if profile is incomplete/null)
+    if (
+      response.role === "TA" ||
+      response.role === "DR" ||
+      roles.includes("TA") ||
+      roles.includes("DR")
+    ) {
       const faculty = response.facultyMemberProfile;
-      const facultyRole = roles.includes("TA") ? "TA" : roles.includes("DR") ? "DR" : "TA";
-      
+      const facultyRole =
+        roles.includes("TA") || response.role === "TA" ? "TA" : "DR";
+
       return {
         ...baseUser,
         role: facultyRole as "TA" | "DR",
-        university: faculty.universityName,
-        faculty: faculty.facultyName,
-        department: faculty.department,
+        university: faculty?.universityName || "",
+        faculty: faculty?.facultyName || "",
+        department: faculty?.department || "",
       } as FacultyMemberUser;
     }
-    
-    // Default to admin if no profile matches
+
+    // Default to admin if no role matches
     return {
       ...baseUser,
       role: "Admin" as const,
@@ -114,7 +132,7 @@ export class AuthApi {
   async signupStudent(credentials: StudentSignupCredentials) {
     const { data } = await systemApi.post(
       AUTH_ROUTE + "register-student",
-      credentials
+      credentials,
     );
     return data.data;
   }
@@ -142,15 +160,15 @@ export class AuthApi {
     if (credentials.newCompany) {
       formData.append(
         "newCompany.companyName",
-        credentials.newCompany.companyName
+        credentials.newCompany.companyName,
       );
       formData.append(
         "newCompany.businessType",
-        credentials.newCompany.businessType
+        credentials.newCompany.businessType,
       );
       formData.append(
         "newCompany.description",
-        credentials.newCompany.description
+        credentials.newCompany.description,
       );
       formData.append("newCompany.website", credentials.newCompany.website);
       formData.append("newCompany.brief", credentials.newCompany.brief);
@@ -165,7 +183,7 @@ export class AuthApi {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     return data.data;
   }
@@ -193,7 +211,7 @@ export class AuthApi {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     return data.data;
   }
@@ -201,7 +219,15 @@ export class AuthApi {
   async forgotPassword(credentials: ForgotPasswordCredentials) {
     const { data } = await systemApi.post(
       AUTH_ROUTE + "forgot-password",
-      credentials
+      credentials,
+    );
+    return data;
+  }
+
+  async verifyStudent(token: string) {
+    const { data } = await systemApi.post(
+      AUTH_ROUTE + `verify-student`,
+        { token }
     );
     return data;
   }

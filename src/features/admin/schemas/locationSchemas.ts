@@ -17,67 +17,12 @@ const capacitySchema = z
   .number()
   .int("Capacity must be a whole number")
   .positive("Capacity must be greater than 0")
-  .max(100000, "Capacity seems unrealistic (max 100,000)");
+  .max(10000, "Capacity seems unrealistic (max 10,000)");
 
 /**
- * Schema for base64 image validation
+ * Schema for room image ID validation (Google Drive ID)
  */
-const base64ImageSchema = z
-  .string()
-  .min(1, "Image is required")
-  .refine(
-    (value) => {
-      // Check if it's a valid base64 data URL
-      const base64Regex = /^data:image\/(png|jpg|jpeg|gif|webp|svg\+xml);base64,/;
-      return base64Regex.test(value);
-    },
-    {
-      message: "Invalid image format. Please upload a valid image file.",
-    }
-  );
-
-/**
- * Schema for address validation (optional)
- */
-const addressSchema = z
-  .string()
-  .trim()
-  .optional()
-  .refine(
-    (value) => {
-      if (!value || value.length === 0) return true;
-      return value.length >= 10;
-    },
-    {
-      message: "Please provide a complete address",
-    }
-  );
-
-/**
- * Schema for description validation (optional)
- */
-const descriptionSchema = z
-  .string()
-  .trim()
-  .optional()
-  .refine(
-    (value) => {
-      if (!value || value.length === 0) return true;
-      return value.length >= 10;
-    },
-    {
-      message: "Description should be at least 10 characters",
-    }
-  )
-  .refine(
-    (value) => {
-      if (!value) return true;
-      return value.length <= 500;
-    },
-    {
-      message: "Description must not exceed 500 characters",
-    }
-  );
+const roomImageSchema = z.string().trim().min(1, "Image ID is required");
 
 /**
  * Edit Location Form Schema
@@ -92,18 +37,17 @@ const descriptionSchema = z
 export const editLocationSchema = z.object({
   name: locationNameSchema,
   capacity: capacitySchema,
-  image: base64ImageSchema,
-  address: addressSchema,
-  description: descriptionSchema,
 });
 
 export type EditLocationFormData = z.infer<typeof editLocationSchema>;
 
 /**
  * Create Location Form Schema
- *
- * Same as edit schema for now, but separated for future flexibility
  */
-export const createLocationSchema = editLocationSchema;
+export const createLocationSchema = z.object({
+  name: locationNameSchema,
+  capacity: capacitySchema,
+  roomImageFileId: roomImageSchema,
+});
 
 export type CreateLocationFormData = z.infer<typeof createLocationSchema>;

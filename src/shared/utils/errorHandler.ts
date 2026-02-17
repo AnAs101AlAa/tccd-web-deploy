@@ -1,20 +1,21 @@
 import axios from "axios";
 
-/**
- * Extracts a meaningful error message from an Axios error or a generic error.
- * @param error - The error object to process.
- * @returns A user-friendly error message.
- */
 export function getErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
+    const data = error.response?.data as any;
+    if (data?.errors) {
+      if (typeof data.errors === "object") {
+        return Object.values(data.errors).flat().join(", ");
+      }
+      return JSON.stringify(data.errors);
+    }
     return (
-      error.response?.data?.message || // API-provided message
-      error.response?.statusText || // HTTP status text
+      data?.message || 
+      error.response?.statusText || 
       error.message ||
-      "An error occurred while fetching data" // Default fallback
+      "An error occurred while fetching data"
     );
   }
 
-  // Handle non-Axios errors (e.g., network issues, JS errors)
   return error instanceof Error ? error.message : "Unexpected error occurred";
 }

@@ -1,27 +1,37 @@
-import { useState } from "react";
-import { LazyImageLoader } from "tccd-ui";
-import { FaEdit, FaTrash, FaMapMarkerAlt, FaUsers } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { FaEdit, FaTrash, FaUsers } from "react-icons/fa";
 import type { Location } from "@/shared/queries/admin";
 import EditLocationModal from "./EditLocationModal";
 import DeleteLocationConfirmation from "./DeleteLocationConfirmation";
+import roomFallback from "@/assets/room.png";
 
 interface LocationCardProps {
   location: Location;
 }
 
-/**
- * LocationCard Component
- * Reusable component for displaying location entities with edit/delete capabilities.
- * Features:
- * - Fixed 16:9 aspect ratio with object-fit: cover for responsive image handling
- * - Placeholder support for missing images
- * - Distinctive action buttons (Edit in blue, Delete in red/warning color)
- * - Fully responsive design (mobile-first approach)
- * - Accessibility support with ARIA labels
- */
 const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const getImageUrl = (fileId: string | undefined | null) => {
+    if (!fileId) return roomFallback;
+    return `https://lh3.googleusercontent.com/d/${fileId}`;
+  };
+
+  const [imageSrc, setImageSrc] = useState(getImageUrl(location.roomImage));
+  const [hasError, setHasError] = useState(false);
+
+  // Update image source when location changes
+  useEffect(() => {
+    setImageSrc(getImageUrl(location.roomImage));
+    setHasError(false);
+  }, [location.roomImage]);
+
+  const handleImageError = () => {
+    if (!hasError) {
+      setImageSrc(roomFallback);
+      setHasError(true);
+    }
+  };
 
   const handleEditClick = () => {
     setIsEditModalOpen(true);
@@ -30,7 +40,6 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
   const handleDeleteClick = () => {
     setIsDeleteModalOpen(true);
   };
-
 
   return (
     <>
@@ -41,12 +50,13 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
       >
         {/* Image Container - 16:9 Aspect Ratio */}
         <div className="relative w-full aspect-video overflow-hidden bg-gray-200">
-          <LazyImageLoader
-            src={location.image}
+          <img
+            key={location.roomImage} // Ensure re-render on image change
+            src={imageSrc}
             alt={`${location.name} venue`}
-            width="100%"
-            height="100%"
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+            onError={handleImageError}
           />
 
           {/* Gradient Overlay - Visible on Hover */}
@@ -82,19 +92,6 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
 
           {/* Location Details */}
           <div className="space-y-2 mb-4 flex-grow">
-            {/* Address */}
-            {location.address && (
-              <div className="flex items-start gap-1 md:gap-2 text-gray-600">
-                <FaMapMarkerAlt
-                  className="size-4 flex-shrink-0 text-primary"
-                  aria-hidden="true"
-                />
-                <p className="text-[13px] sm:text-sm line-clamp-2 font-semibold">
-                  {location.address}
-                </p>
-              </div>
-            )}
-
             {/* Capacity */}
             <div className="flex items-center gap-2 text-gray-700">
               <FaUsers
@@ -110,13 +107,6 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
               </p>
             </div>
           </div>
-
-          {/* Description */}
-          {location.description && (
-            <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 mb-3">
-              {location.description}
-            </p>
-          )}
 
           {/* Action Buttons - Mobile/Tablet View (Below content) */}
           <div className="flex gap-2 md:gap-3 mt-auto pt-3 border-t border-gray-200 lg:hidden">

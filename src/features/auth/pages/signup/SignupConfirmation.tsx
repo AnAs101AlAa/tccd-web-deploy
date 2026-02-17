@@ -18,10 +18,9 @@ export default function SignupConfirmation() {
   );
 
   useEffect(() => {
-    console.log(userStatus,userFullName)
     if (userStatus === "Approved") {
       const timer = setTimeout(() => {
-        navigate("/"); //speculatory home page sublink
+        navigate("/");
       }, 5000);
 
       return () => clearTimeout(timer);
@@ -32,7 +31,7 @@ export default function SignupConfirmation() {
     return (
       <ErrorScreen
         title="Error Logging In"
-        message="There was an error loggin you in, please try again later or contact support"
+        message="There was an error logging you in, please try again later or contact support"
       />
     );
   }
@@ -72,9 +71,9 @@ export default function SignupConfirmation() {
 
     default:
       return (
-        <ErrorScreen
-          title="Error Signing Up"
-          message="There was an error signing you up, please try again later or contact support"
+        <InfoScreen
+          title="Account Under Review"
+          message="Thank you for signing up! Your account is currently under review. You will receive an email notification once your account has been approved."
         />
       );
   }

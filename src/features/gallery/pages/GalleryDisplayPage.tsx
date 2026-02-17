@@ -10,7 +10,7 @@ import type { EventMedia } from "@/shared/types";
 export default function GalleryDisplayPage() {
   const { id } = useParams();
   const { data: galleryData, isLoading, isError } = useGetEventById(id || "");
-
+  
   useEffect (() => {
     if (isError) {
       toast.error("Failed to load gallery data. Please try again later.");

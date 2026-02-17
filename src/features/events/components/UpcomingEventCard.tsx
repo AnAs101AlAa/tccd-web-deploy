@@ -4,14 +4,18 @@ import { useRef, useEffect, useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
 import EVENT_TYPES from "@/constants/EventTypes";
 import format from "@/shared/utils/dateFormater";
+import { useCurrentUser } from "@/shared/store";
+import toast from "react-hot-toast";
+import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
+import { motion } from "framer-motion";
 
-interface Props {
+interface UpcomingEventCardProps {
   event: Event;
   onBookNow: (id: string) => void;
   onLearnMore: (id: string) => void;
 }
 
-const UpcomingEventCard: React.FC<Props> = ({
+const UpcomingEventCard: React.FC<UpcomingEventCardProps> = ({
   event,
   onBookNow,
   onLearnMore,
@@ -20,7 +24,9 @@ const UpcomingEventCard: React.FC<Props> = ({
   const mainInfoRef = useRef<HTMLDivElement>(null);
   const [translateValue, setTranslateValue] = useState(260);
   const [isTapped, setIsTapped] = useState(false);
-  
+  const [isHovered, setIsHovered] = useState(false);
+  const currentUser = useCurrentUser();
+
   useEffect(() => {
     const wholeEl = wholeInfoRef.current;
     const mainEl = mainInfoRef.current;
@@ -65,7 +71,9 @@ const UpcomingEventCard: React.FC<Props> = ({
 
   return (
     <div
-      className="relative w-full h-[240px] md:h-[270px] lg:h-[300px] group bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform duration-300 flex flex-col"
+      className="relative w-full h-60 md:h-67.5 lg:h-75 group bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform duration-300 flex flex-col"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <LazyImageLoader
         src={event.eventImage}
@@ -75,13 +83,13 @@ const UpcomingEventCard: React.FC<Props> = ({
         className="absolute top-0 inset-0"
       />
 
-      <div
+      <motion.div
         ref={wholeInfoRef}
         onClick={() => setIsTapped(!isTapped)}
-        className={`absolute bottom-0 w-full flex flex-col justify-start p-2 px-3 transition-all duration-500 ease-in-out group-hover:translate-y-0 ${
-          isTapped ? "translate-y-0" : "translate-y-[var(--y)]"
-        } bg-background space-y-2`}
-        style={{ "--y": `${translateValue}px` } as React.CSSProperties}
+        className="absolute bottom-0 w-full flex flex-col justify-start p-2 px-3 bg-background space-y-2"
+        initial={{ y: translateValue }}
+        animate={{ y: isHovered || isTapped ? 0 : translateValue }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         <div ref={mainInfoRef}>
           <div className="flex gap-1 items-center">
@@ -101,16 +109,21 @@ const UpcomingEventCard: React.FC<Props> = ({
         </div>
 
         <div className="transition-all duration-500 ease-in-out transform">
-          <p className="text-[13px] md:text-[14px] lg:text-[15px] leading-relaxed text-gray-700">
-            {event.description}
+          <p className="text-[13px] md:text-[14px] lg:text-[15px] leading-relaxed text-gray-700 line-clamp-6">
+            <HTMLFormattedText content={event.description} />
           </p>
 
-          <div className="flex gap-3 mt-4">
+          <div className="flex gap-1.5 md:gap-3 mt-4">
             <Button
               buttonText="Book Now"
               type="primary"
-              width="small"
+              width="fit"
+              className="md:py-1.5 md:px-4 text-[10px] lg:text-[11px]"
               onClick={() => {
+                if (!currentUser.id) {
+                  toast.error("Please log in to be able to register in events.");
+                  return;
+                }
                 onBookNow(event.id);
               }}
             />
@@ -118,14 +131,15 @@ const UpcomingEventCard: React.FC<Props> = ({
             <Button
               buttonText="Learn More"
               type="secondary"
-              width="small"
+              width="fit"
+              className="md:py-1.5 md:px-4 text-[10px] lg:text-[11px]"
               onClick={() => {
                 onLearnMore(event.id);
               }}
             />
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

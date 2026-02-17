@@ -5,7 +5,8 @@ export interface Company {
   description: string;
   website: string;
   brief: string;
-  logo: string;
+  logo: string | null;
+  isApproved: boolean;
 }
 
 export interface CompaniesResponse {
@@ -21,4 +22,40 @@ export interface CompaniesResponse {
     hasPreviousPage: boolean;
     hasNextPage: boolean;
   };
+}
+
+export interface CompanyResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: Company;
+}
+
+export interface CreateCompanyPayload {
+  companyName: string;
+  businessType: string;
+  description?: string;
+  website?: string;
+  brief?: string;
+  logoId?: string;
+}
+
+export interface UpdateCompanyPayload {
+  companyName?: string;
+  businessType?: string;
+  description?: string;
+  website?: string;
+  brief?: string;
+  isApproved?: boolean;
+  logoId?: string;
+}
+
+export interface CompaniesQueryParams {
+  page: number;
+  count: number;
+  CompanyName?: string;
+  BusinessType?: string;
+  IsApproved?: boolean;
+  OrderBy?: string;
+  Descending?: boolean;
 }

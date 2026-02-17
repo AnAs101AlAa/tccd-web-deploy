@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import { LoadingPage, ErrorScreen, Button } from "tccd-ui";
 import { useGetLocations } from "@/shared/queries/admin";
-import { LocationCard, AddLocationModal } from "../components/location_card";
+import { LocationCard, AddLocationModal } from "../components/locations";
 import { usePagination } from "@/shared/hooks";
 import { Pagination } from "@/shared/components/pagination";
 import GenericGrid from "@/shared/components/GenericGrid";
-import LocationFilter from "../components/LocationFilter";
+import LocationFilter from "../components/locations/LocationFilter";
 import type { Location } from "@/shared/queries/admin";
 import { FiPlus } from "react-icons/fi";
 import { WithLayout } from "@/shared/components/hoc";
@@ -36,11 +36,8 @@ const LocationsManagementPage = () => {
 
     if (searchTerm.trim()) {
       const search = searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (location) =>
-          location.name.toLowerCase().includes(search) ||
-          location.address?.toLowerCase().includes(search) ||
-          location.description?.toLowerCase().includes(search),
+      filtered = filtered.filter((location) =>
+        location.name.toLowerCase().includes(search),
       );
     }
 
@@ -80,19 +77,20 @@ const LocationsManagementPage = () => {
 
   return (
     <WithLayout>
-      <div className="py-8 px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="py-4 md:py-8 px-4 md:px-8">
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-1 md:mb-2">
-              Locations Management
+            <h1 className="text-[29px] md:text-[32px] lg:text-[34px] font-bold text-contrast">
+              Locations
             </h1>
-            <p className="text-gray-600 text-[16px] md:text-[18px]">
+            <p className="text-inactive-tab-text text-[15px] md:text-[16px] lg:text-[18px]">
               Manage event locations and venues
             </p>
           </div>
           <Button
             onClick={() => setIsAddModalOpen(true)}
             type="primary"
+            width="fit"
             buttonText="Add location"
             buttonIcon={<FiPlus className="size-4" />}
           />
