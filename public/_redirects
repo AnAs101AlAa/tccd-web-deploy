@@ -1,0 +1,2 @@
+/api/*  https://tccd-web-backend.runasp.net/api/:splat  200
+/*      /index.html   200
