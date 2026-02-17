@@ -21,7 +21,7 @@ jobs:
           git config user.email "github-actions@github.com"
           
           # Add the source repo using your Read-Only token
-          git remote add source_repo https://x-access-token:${{ secrets.REPO_TOKEN }}@github.com/TCCD-CUFE/tccd-web-frontend.git
+          git remote add source_repo https://${{ secrets.REPO_TOKEN }}@github.com/TCCD-CUFE/tccd-web-frontend.git
           
           # Pull and merge the code
           git pull source_repo main --no-rebase --allow-unrelated-histories
