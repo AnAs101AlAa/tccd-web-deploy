@@ -1,3 +1,4 @@
+import type { Tickets, TicketStatus } from "@/shared/types";
 import { systemApi } from "../AxoisInstance";
 import type { Gender } from "@/shared/types/users";
 
@@ -37,6 +38,12 @@ export interface UpdateStudentProfileResponse {
 
 export interface UpdateStudentCVResponse {
   cv: string;
+}
+
+export interface RegistrationQueryParams {
+  page?: number;
+  count?: number;
+  status?: TicketStatus;
 }
 
 export class UserApi {
@@ -86,5 +93,10 @@ export class UserApi {
     return {
       cv: response.cv,
     };
+  }
+
+  async getUserRegistrations(params?: RegistrationQueryParams): Promise<Tickets> {
+    const { data }  = await systemApi.get(`${USER_ROUTE}/registrations`, { params });
+    return data.data;
   }
 }
