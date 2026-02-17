@@ -7,6 +7,7 @@ on:
 jobs:
   dispatch:
     runs-on: ubuntu-latest
+    if: github.repository == 'TCCD-CUFE/tccd-web-frontend'
     steps:
       - name: Send Notfication
         run: |
