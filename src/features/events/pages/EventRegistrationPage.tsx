@@ -11,45 +11,71 @@ import {
   FaArrowLeft,
   FaArrowRight,
 } from "react-icons/fa6";
-import type Event from "@/shared/types/events";
 import { useSelector } from "react-redux";
-import { Checkbox } from "tccd-ui";
+import { useParams } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Checkbox, LoadingPage, ErrorScreen } from "tccd-ui";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import type { StudentUser } from "@/shared/types";
 import { TextDisplayEdit, DropdownMenu, Button } from "tccd-ui";
 import { TicketRulesModal } from "../components";
+import { getErrorMessage } from "@/shared/utils/errorHandler";
+import { useEventRegistration } from "../hooks";
+
+/**
+ * Creates a Zod schema for the registration form.
+ * The `slotId` field is conditionally required based on whether the event has slots.
+ */
+const createRegistrationSchema = (hasSlots: boolean) =>
+  z.object({
+    slotId: hasSlots
+      ? z.string().min(1, "Please select a time slot")
+      : z.string().optional(),
+  });
+
+type RegistrationFormData = z.infer<
+  ReturnType<typeof createRegistrationSchema>
+>;
 
 export default function EventRegisterForm() {
+  const { id } = useParams<{ id: string }>();
+  const eventId = id ?? "";
   const storedUser = useSelector((state: { user: StudentUser }) => state.user);
-  const event: Event = {
-    id: "1",
-    name: "Web Development Workshop",
-    description:
-      "Learn modern web development with React and TypeScript. This hands-on workshop will cover the fundamentals of building responsive web applications.",
-    eventMedia: [],
-    registrationDeadline: "2025-10-20T23:59:00Z",
-    eventImage:
-      "https://images.unsplash.com/photo-1760340769739-653d00200baf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470",
-    date: "2025-10-25T14:00:00Z",
-    locations: ["Tech Lab, Building A"],
-    type: "Workshop",
-    capacity: 50,
-    isApproved: true,
-    registeredCount: 35,
-    attendeeCount: 0,
-  }; //useSelector((state: {event: Event}) => state.event);
+  const { event, hasSlots, slotOptions, isLoading, error } =
+    useEventRegistration(eventId);
+
+  const { control, handleSubmit } = useForm<RegistrationFormData>({
+    resolver: zodResolver(createRegistrationSchema(hasSlots)),
+    mode: "onChange",
+    defaultValues: {
+      slotId: "",
+    },
+  });
 
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>(
-    "Afternoon (2:00 PM - 6:00PM)",
-  );
   const [checkboxes, setCheckboxes] = useState<boolean[]>([false, false]);
-
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showRules, setShowRules] = useState<boolean>(false);
   const fileBrowseRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
   const totalSteps = 3;
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
+  if (error || !event) {
+    return (
+      <WithLayout>
+        <ErrorScreen
+          message={getErrorMessage(error)}
+          title="Failed to load event details."
+        />
+      </WithLayout>
+    );
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -65,8 +91,25 @@ export default function EventRegisterForm() {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
+  const onSubmit = (data: RegistrationFormData) => {
+    console.log("Registration submitted:", data);
+    setIsSubmitting(true);
+    // TODO: Integrate with registration API mutation
+  };
+
   const capacityUsage = (event.registeredCount / event.capacity) * 100;
   const progressPercentage = (currentStep / totalSteps) * 100;
+
+  const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  const formattedTime = new Date(event.date).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
 
   return (
     <WithLayout>
@@ -102,7 +145,7 @@ export default function EventRegisterForm() {
                       Date & Time
                     </p>
                     <p className="text-sm font-semibold text-foreground">
-                      Oct 25, 2025 • 2:00 PM
+                      {formattedDate} • {formattedTime}
                     </p>
                   </div>
                 </div>
@@ -250,17 +293,46 @@ export default function EventRegisterForm() {
                     </div>
                   </div>
 
-                  {/* University */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-foreground">
-                      University
-                    </label>
-                    <TextDisplayEdit
-                      label=""
-                      value={storedUser.university}
-                      disabled={true}
-                      placeholder="Select your university"
-                    />
+                  <div
+                    className={`grid grid-cols-1 ${hasSlots ? "md:grid-cols-2" : ""} gap-4 md:gap-6`}
+                  >
+                    {/* University */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-foreground">
+                        University
+                      </label>
+                      <TextDisplayEdit
+                        label=""
+                        value={storedUser.university}
+                        disabled={true}
+                        placeholder="Select your university"
+                      />
+                    </div>
+
+                    {/* Time Slot — Data-driven: only shown if event has slots */}
+                    {hasSlots && (
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-foreground">
+                          Preferred Time Slot
+                        </label>
+                        <Controller
+                          name="slotId"
+                          control={control}
+                          render={({
+                            field,
+                            fieldState: { error: fieldError },
+                          }) => (
+                            <DropdownMenu
+                              label=""
+                              value={field.value || ""}
+                              options={slotOptions}
+                              onChange={(val) => field.onChange(val)}
+                              error={fieldError?.message}
+                            />
+                          )}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -333,32 +405,6 @@ export default function EventRegisterForm() {
                         value={storedUser.department}
                         disabled={true}
                         placeholder="Select your department"
-                      />
-                    </div>
-                  </Activity>
-
-                  {/* Time Slot for Jobfairs */}
-                  <Activity
-                    mode={event.type === "Jobfair" ? "visible" : "hidden"}
-                  >
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-foreground">
-                        Preferred Time Slot
-                      </label>
-                      <DropdownMenu
-                        label=""
-                        value={selectedTimeSlot}
-                        options={[
-                          {
-                            label: "Morning (10:00 AM - 1:00 PM)",
-                            value: "Morning (10:00 AM - 1:00 PM)",
-                          },
-                          {
-                            label: "Afternoon (2:00 PM - 6:00 PM)",
-                            value: "Afternoon (2:00 PM - 6:00 PM)",
-                          },
-                        ]}
-                        onChange={(val) => setSelectedTimeSlot(val)}
                       />
                     </div>
                   </Activity>
@@ -516,7 +562,7 @@ export default function EventRegisterForm() {
             {currentStep === totalSteps ? (
               <Button
                 type="primary"
-                onClick={() => setIsSubmitting(true)}
+                onClick={handleSubmit(onSubmit)}
                 buttonText={
                   isSubmitting ? "Submitting..." : "Submit Registration"
                 }

@@ -8,8 +8,15 @@ export interface Sponsor {
   logo: string; // This is the banner/logo image URL
 }
 
+export interface EventRoom {
+  id: string;
+  name: string;
+  capacity: number;
+  roomImage: string;
+}
+
 export interface EventSlot {
-  id?: string;
+  id: string;
   startTime: string;
   endTime: string;
 }
@@ -33,6 +40,7 @@ export default interface Event {
   eventMedia?: EventMedia[] | string[];
   sponsors?: Sponsor[];
   slots?: EventSlot[];
+  rooms?: EventRoom[];
 }
 
 export interface EventResponse {
