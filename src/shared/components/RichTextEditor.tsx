@@ -77,19 +77,19 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     {
       icon: <FaBold />,
       label: "Bold",
-      action: () => insertMarkup("*b*", "*b*"),
+      action: () => insertMarkup("*b*", "*/b*"),
       shortcut: "Ctrl+B",
     },
     {
       icon: <FaItalic />,
       label: "Italic",
-      action: () => insertMarkup("*i*", "*i*"),
+      action: () => insertMarkup("*i*", "*/i*"),
       shortcut: "Ctrl+I",
     },
     {
       icon: <FaUnderline />,
       label: "Underline",
-      action: () => insertMarkup("*u*", "*u*"),
+      action: () => insertMarkup("*u*", "*/u*"),
       shortcut: "Ctrl+U",
     },
     {
@@ -104,13 +104,13 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     if (e.ctrlKey || e.metaKey) {
       if (e.key === "b") {
         e.preventDefault();
-        insertMarkup("*b*", "*b*");
+        insertMarkup("*b*", "*/b*");
       } else if (e.key === "i") {
         e.preventDefault();
-        insertMarkup("*i*", "*i*");
+        insertMarkup("*i*", "*/i*");
       } else if (e.key === "u") {
         e.preventDefault();
-        insertMarkup("*u*", "*u*");
+        insertMarkup("*u*", "*/u*");
       }
     } else if (e.shiftKey && e.key === "Enter") {
       e.preventDefault();
