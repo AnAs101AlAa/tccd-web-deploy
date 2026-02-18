@@ -7,6 +7,7 @@ on:
 jobs:
   dispatch:
     runs-on: ubuntu-latest
+    if: github.repository == 'TCCD-CUFE/tccd-web-frontend'
     steps:
       - name: Send Notfication
         run: |
@@ -14,4 +15,4 @@ jobs:
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/repos/AnAs101AlAa/tccd-web-deploy/dispatches \
-          -d '{"event_type": "source_pushed"}'
+          -d '{"event_type": "source_pushed"}' 
