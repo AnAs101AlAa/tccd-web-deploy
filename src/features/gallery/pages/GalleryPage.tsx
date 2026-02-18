@@ -72,8 +72,8 @@ const GalleryPage = () => {
         />
 
         <main className="w-full xl:w-[80%] xl:mx-auto px-6 py-5">
-          <section className="mb-16">
-            <div className="mb-6">
+          <section>
+            <div className="mb-6 bg-white shadow-lg p-3 pb-2 rounded-lg border-b-4 border-secondary">
               <EventsFilter
                 searchParams={queryParams}
                 onSearch={(params) => handleApplyFilters(params)}
@@ -112,7 +112,7 @@ const GalleryPage = () => {
                   items={apiGalleryEvents.items}
                   emptyMessage="No gallery items at the moment. Check back soon!"
                   renderCard={(item: Event) => <EventGalleryCard {...item} />}
-                  gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  gridCols="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3"
                   getKey={(item: Event) => item.id}
                 />
 

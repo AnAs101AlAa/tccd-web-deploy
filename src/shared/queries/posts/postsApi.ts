@@ -120,6 +120,23 @@ export class PostsApi {
       };
     }
   }
+
+  async approvePost(id: string, isApproved: boolean): Promise<CommunityPost> {
+    const response = await systemApi.patch(`${POSTS_ROUTE}/${id}/approve`, { isApproved });
+    if (response.data.success && response.data.data) {
+      const item = response.data.data;
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        media: item.medias || [],
+        priority: item.priority,
+        isApproved: item.isApproved,
+        createdAt: item.createdAt,
+      };
+    }
+    throw new Error("Failed to approve post");
+  }
    
   async deletePost(id: string): Promise<void> {
     await systemApi.delete(`${POSTS_ROUTE}/${id}`);

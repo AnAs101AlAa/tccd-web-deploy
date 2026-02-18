@@ -274,7 +274,9 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
                         StartDate: date || undefined,
                       })
                     }
-                    maxDate={maxDate}
+                    maxDate={tempSelectedParams.EndDate 
+                      ? formatDate(new Date(tempSelectedParams.EndDate)) 
+                      : maxDate}
                   />
                   <DatePicker
                     label="End Date"
@@ -289,6 +291,9 @@ const EventsFilter = ({ searchParams, onSearch, maxDate }: EventsFilterProps) =>
                         EndDate: date || undefined,
                       })
                     }
+                    minDate={tempSelectedParams.StartDate 
+                      ? formatDate(new Date(tempSelectedParams.StartDate)) 
+                      : undefined}
                     maxDate={maxDate}
                   />
                 </div>

@@ -16,7 +16,7 @@ const PastEventsPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const currentDate = new Date();
-  const todayFormatted = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+  const todayFormatted = currentDate.toISOString().split('T')[0];
   
   // Detect screen size
   useEffect(() => {
@@ -35,7 +35,7 @@ const PastEventsPage = () => {
     PageSize: isMobile ? 6 : 12
   });
 
-  const { data, isLoading, error, refetch } = useGetAllPastEvents(searchParams);
+  const { data, isLoading, error } = useGetAllPastEvents(searchParams);
 
   const apiPastEvents = data?.items || [];
   const totalPages = data?.totalPages || 0;
@@ -56,9 +56,6 @@ const PastEventsPage = () => {
     };
     setSearchParams(updatedParams);
     setCurrentPage(1); // Reset to page 1 when applying filters
-
-    // Force refetch with new filters
-    setTimeout(() => refetch(), 0);
   };
 
   const handlePageChange = (page: number) => {

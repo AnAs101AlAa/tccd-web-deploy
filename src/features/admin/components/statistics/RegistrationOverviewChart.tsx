@@ -68,7 +68,7 @@ const RegistrationOverviewChart: React.FC = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-muted-primary/20 shadow-sm flex flex-col items-center">
+    <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm flex flex-col items-center h-full">
       <h3 className="text-lg font-semibold text-contrast self-start mb-4">
         Attendance Overview
       </h3>

@@ -3,7 +3,6 @@ import type { Ticket } from "@/shared/types/profile";
 import TicketPoster from "./TicketPoster";
 import AttendeeInfo from "./AttendeeInfo";
 import TicketQRCode from "./TicketQRCode";
-import TicketDivider from "./TicketDivider";
 
 interface EventTicketCardProps {
   ticket: Ticket;
@@ -32,11 +31,11 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
           {ticket.eventTitle}
         </h1>
 
-        <TicketDivider />
+        <div className="border-t-2 border-dashed border-gray-300 my-6"/>
 
         <AttendeeInfo userDetails={userDetails} />
 
-        <TicketDivider />
+        <div className="border-t-2 border-dashed border-gray-300 my-6"/>
 
         <TicketQRCode
           qrCodeSrc={ticket.qrCode}
