@@ -1,6 +1,5 @@
 import { useState, Activity } from "react";
 import {
-  FaCalendar,
   FaMapPin,
   FaUsers,
   FaArrowLeft,
@@ -8,6 +7,7 @@ import {
   FaCircleCheck,
   FaTriangleExclamation,
 } from "react-icons/fa6";
+import { MdCalendarMonth } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
@@ -121,8 +121,8 @@ export default function EventRegisterForm() {
   return (
     <WithLayout>
       <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
-      <div className="w-full mx-auto min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
-        <div className="max-w-2xl mx-auto">
+      <div className="w-full mx-auto min-h-screen bg-linear-to-br from-slate-50 to-slate-100 py-8 px-4">
+        <div className="max-w-4xl mx-auto">
           {/* Registration Success State */}
           {isRegistered && (
             <div className="mb-8 bg-white rounded-xl p-8 shadow-md border border-green-200 text-center">
@@ -140,7 +140,7 @@ export default function EventRegisterForm() {
           {/* Eligibility Warning */}
           {!isEligible && (
             <div className="mb-6 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-              <FaTriangleExclamation className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+              <FaTriangleExclamation className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
               <div>
                 <p className="text-sm font-semibold text-amber-800">
                   You are not eligible to register for this event.
@@ -162,7 +162,7 @@ export default function EventRegisterForm() {
                 alt={event.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4">
                 <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
                   {event.name}
@@ -177,7 +177,7 @@ export default function EventRegisterForm() {
             <div className="p-6 border-b border-slate-200">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div className="flex items-start gap-3">
-                  <FaCalendar className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <MdCalendarMonth className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                   <div>
                     <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
                       Date & Time
@@ -188,7 +188,7 @@ export default function EventRegisterForm() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <FaMapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <FaMapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                   <div>
                     <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
                       Location
@@ -199,7 +199,7 @@ export default function EventRegisterForm() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <FaUsers className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <FaUsers className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                   <div>
                     <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
                       Spots Available
@@ -223,7 +223,7 @@ export default function EventRegisterForm() {
                 </div>
                 <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 ease-out"
+                    className="h-full bg-linear-to-r from-primary to-secondary transition-all duration-500 ease-out"
                     style={{ width: `${capacityUsage}%` }}
                   />
                 </div>
@@ -250,7 +250,7 @@ export default function EventRegisterForm() {
             </div>
             <div className="w-full h-2 bg-slate-200  rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 ease-out"
+                className="h-full bg-linear-to-r from-primary to-secondary transition-all duration-500 ease-out"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
@@ -265,13 +265,16 @@ export default function EventRegisterForm() {
                 Confirm
               </span>
             </div>
+            <p className="text-sm text-muted-foreground mt-4">
+              <strong>Note:</strong> Your profile data are auto filled and unchangeable, if you wish to update them please update them in your profile page .
+            </p>
           </div>
           {/* Form Content Card */}
           <div className="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden mb-8">
             {/* Step 1: Personal Information */}
             <Activity mode={currentStep === 1 ? "visible" : "hidden"}>
-              <div className="p-6 md:p-8 border-b border-slate-200 dark:border-slate-700">
-                <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
+              <div className="p-6 md:p-8">
+                <h2 className="text-xl md:text-2xl font-bold text-foreground">
                   Personal Information
                 </h2>
                 <p className="text-sm text-muted-foreground mb-6">
@@ -462,51 +465,47 @@ export default function EventRegisterForm() {
 
                 <div className="space-y-6">
                   {/* Agreements Section */}
-                  <div className="space-y-4">
-                    <p className="text-sm font-semibold text-foreground">
+                  <div className="space-y-2">
+                    <p className="text-sm font-semibold text-foreground mb-4">
                       Accept our Terms & Policies
                     </p>
 
-                    <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                      <Checkbox
-                        checked={checkboxes[0]}
-                        onChange={() => {
-                          const temp = [...checkboxes];
-                          temp[0] = !temp[0];
-                          setCheckboxes(temp);
-                        }}
-                        label={
-                          <span className="text-sm text-muted-foreground leading-relaxed">
-                            I agree to have my professional data shared with
-                            relevant companies for development and recruiting
-                            purposes
-                          </span>
-                        }
-                      />
-                    </div>
+                    <Checkbox
+                      checked={checkboxes[0]}
+                      onChange={() => {
+                        const temp = [...checkboxes];
+                        temp[0] = !temp[0];
+                        setCheckboxes(temp);
+                      }}
+                      label={
+                        <span className="text-sm text-muted-foreground leading-relaxed">
+                          I agree to have my professional data shared with
+                          relevant companies for development and recruiting
+                          purposes
+                        </span>
+                      }
+                    />
 
-                    <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                      <Checkbox
-                        checked={checkboxes[1]}
-                        onChange={() => {
-                          const temp = [...checkboxes];
-                          temp[1] = !temp[1];
-                          setCheckboxes(temp);
-                        }}
-                        label={
-                          <span className="text-sm text-muted-foreground leading-relaxed">
-                            I agree to the{" "}
-                            <button
-                              type="button"
-                              onClick={() => setShowRules(true)}
-                              className="text-secondary font-semibold hover:underline transition-colors inline"
-                            >
-                              Ticket Admission and Cancellation Policy
-                            </button>
-                          </span>
-                        }
-                      />
-                    </div>
+                    <Checkbox
+                      checked={checkboxes[1]}
+                      onChange={() => {
+                        const temp = [...checkboxes];
+                        temp[1] = !temp[1];
+                        setCheckboxes(temp);
+                      }}
+                      label={
+                        <span className="text-sm text-muted-foreground leading-relaxed">
+                          I agree to the{" "}
+                          <button
+                            type="button"
+                            onClick={() => setShowRules(true)}
+                            className="text-secondary font-semibold hover:underline transition-colors inline"
+                          >
+                            Ticket Admission and Cancellation Policy
+                          </button>
+                        </span>
+                      }
+                    />
                   </div>
                 </div>
               </div>
