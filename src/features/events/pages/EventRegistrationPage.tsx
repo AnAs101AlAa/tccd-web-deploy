@@ -1,15 +1,12 @@
-import React from "react";
-
-import { useState, useRef, Activity } from "react";
+import { useState, Activity } from "react";
 import {
-  FaX,
-  FaCheck,
   FaCalendar,
   FaMapPin,
   FaUsers,
-  FaFileArrowUp,
   FaArrowLeft,
   FaArrowRight,
+  FaCircleCheck,
+  FaTriangleExclamation,
 } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -17,6 +14,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Checkbox, LoadingPage, ErrorScreen } from "tccd-ui";
+import toast from "react-hot-toast";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import type { StudentUser } from "@/shared/types";
 import { TextDisplayEdit, DropdownMenu, Button } from "tccd-ui";
@@ -42,9 +40,22 @@ type RegistrationFormData = z.infer<
 export default function EventRegisterForm() {
   const { id } = useParams<{ id: string }>();
   const eventId = id ?? "";
-  const storedUser = useSelector((state: { user: StudentUser }) => state.user);
-  const { event, hasSlots, slotOptions, isLoading, error } =
-    useEventRegistration(eventId);
+  const storedUser = useSelector(
+    (state: { user: { currentUser: StudentUser } }) => state.user.currentUser,
+  );
+
+  const {
+    event,
+    hasSlots,
+    slotOptions,
+    isLoading,
+    error,
+    isEligible,
+    eligibilityReason,
+    register,
+    isRegistering,
+    isRegistered,
+  } = useEventRegistration(eventId);
 
   const { control, handleSubmit } = useForm<RegistrationFormData>({
     resolver: zodResolver(createRegistrationSchema(hasSlots)),
@@ -56,10 +67,8 @@ export default function EventRegisterForm() {
 
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [checkboxes, setCheckboxes] = useState<boolean[]>([false, false]);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showRules, setShowRules] = useState<boolean>(false);
-  const fileBrowseRef = useRef<HTMLInputElement>(null);
-  const [files, setFiles] = useState<File[]>([]);
+
   const totalSteps = 3;
 
   if (isLoading) {
@@ -77,12 +86,6 @@ export default function EventRegisterForm() {
     );
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFiles([...files, ...Array.from(e.target.files)]);
-    }
-  };
-
   const handleNextStep = () => {
     if (currentStep < totalSteps) setCurrentStep(currentStep + 1);
   };
@@ -92,9 +95,13 @@ export default function EventRegisterForm() {
   };
 
   const onSubmit = (data: RegistrationFormData) => {
-    console.log("Registration submitted:", data);
-    setIsSubmitting(true);
-    // TODO: Integrate with registration API mutation
+    // Resolve slot: user-selected > first available slot
+    const slotId = data.slotId || event.slots?.[0]?.id;
+    if (!slotId) {
+      toast.error("No time slot available, cannot register.");
+      return; // No slot available — cannot register
+    }
+    register(slotId);
   };
 
   const capacityUsage = (event.registeredCount / event.capacity) * 100;
@@ -116,6 +123,37 @@ export default function EventRegisterForm() {
       <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
       <div className="w-full mx-auto min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
         <div className="max-w-2xl mx-auto">
+          {/* Registration Success State */}
+          {isRegistered && (
+            <div className="mb-8 bg-white rounded-xl p-8 shadow-md border border-green-200 text-center">
+              <FaCircleCheck className="w-16 h-16 text-green-500 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-foreground mb-2">
+                Registration Successful!
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                You have been successfully registered for{" "}
+                <span className="font-semibold">{event.name}</span>.
+              </p>
+            </div>
+          )}
+
+          {/* Eligibility Warning */}
+          {!isEligible && (
+            <div className="mb-6 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <FaTriangleExclamation className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-semibold text-amber-800">
+                  You are not eligible to register for this event.
+                </p>
+                {eligibilityReason && (
+                  <p className="text-xs text-amber-700 mt-1">
+                    {eligibilityReason}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Hero Event Card */}
           <div className="mb-8 rounded-xl overflow-hidden shadow-lg bg-white border border-slate-200">
             <div className="relative h-48 md:h-56 overflow-hidden">
@@ -412,88 +450,19 @@ export default function EventRegisterForm() {
               </div>
             </Activity>
 
-            {/* Step 3: Documents & Agreements */}
+            {/* Step 3: Terms & Agreements */}
             <Activity mode={currentStep === 3 ? "visible" : "hidden"}>
               <div className="p-6 md:p-8">
                 <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
-                  Documents & Agreements
+                  Terms & Agreements
                 </h2>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Upload required documents and accept terms
+                  Review and accept our terms to complete your registration
                 </p>
 
                 <div className="space-y-6">
-                  {/* File Upload Section */}
-                  <div className="space-y-3">
-                    <label className="text-sm font-semibold text-foreground flex items-center gap-2">
-                      <FaFileArrowUp className="w-4 h-4 text-primary" />
-                      Required Documents
-                    </label>
-                    <p className="text-xs text-muted-foreground">
-                      Please upload your ID picture, CV, and relevant
-                      certificates
-                    </p>
-
-                    {/* Drag and Drop Area */}
-                    <div
-                      className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary hover:bg-primary/5 transition-colors cursor-pointer"
-                      onClick={() => fileBrowseRef.current?.click()}
-                    >
-                      <FaFileArrowUp className="w-8 h-8 mx-auto mb-3 text-primary/60" />
-                      <p className="font-semibold text-foreground mb-1">
-                        Drag files here or click to browse
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Supported formats: PDF, DOC, JPG, PNG (Max 10MB each)
-                      </p>
-                    </div>
-
-                    <input
-                      ref={fileBrowseRef}
-                      id="fileInput"
-                      type="file"
-                      multiple
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-
-                    {/* Files List */}
-                    {files.length > 0 && (
-                      <div className="space-y-2">
-                        <p className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                          {files.length} file{files.length !== 1 ? "s" : ""}{" "}
-                          selected
-                        </p>
-                        <div className="space-y-2">
-                          {files.map((file, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center justify-between p-3 bg-secondary/10 border border-secondary/30 rounded-lg hover:bg-secondary/15 transition-colors group"
-                            >
-                              <div className="flex items-center gap-2 min-w-0">
-                                <FaCheck className="w-4 h-4 text-secondary flex-shrink-0" />
-                                <span className="text-sm font-medium text-foreground truncate">
-                                  {file.name}
-                                </span>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setFiles(files.filter((_, i) => i !== index))
-                                }
-                                className="ml-2 p-1.5 hover:bg-secondary/30 rounded-md transition-colors flex-shrink-0"
-                              >
-                                <FaX className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
                   {/* Agreements Section */}
-                  <div className="border-t border-slate-200 pt-6 space-y-4">
+                  <div className="space-y-4">
                     <p className="text-sm font-semibold text-foreground">
                       Accept our Terms & Policies
                     </p>
@@ -564,11 +533,16 @@ export default function EventRegisterForm() {
                 type="primary"
                 onClick={handleSubmit(onSubmit)}
                 buttonText={
-                  isSubmitting ? "Submitting..." : "Submit Registration"
+                  isRegistering ? "Submitting..." : "Submit Registration"
                 }
                 width="auto"
-                loading={isSubmitting}
-                disabled={!checkboxes[0] || !checkboxes[1]}
+                loading={isRegistering}
+                disabled={
+                  !checkboxes[0] ||
+                  !checkboxes[1] ||
+                  !isEligible ||
+                  isRegistered
+                }
               />
             ) : (
               <Button
