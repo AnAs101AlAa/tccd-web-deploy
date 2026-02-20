@@ -130,7 +130,7 @@ export default function TicketTab() {
             items={tickets.items}
             emptyMessage="You haven't registered for any events yet. Explore our events and book your spot!"
             renderCard={(ticket: Ticket) => <TicketCard ticket={ticket} />}
-            gridCols="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3"
+            gridCols="grid-cols-1 md:grid-cols-2"
             getKey={(ticket: Ticket) => ticket.eventSlotId}
           />
 
