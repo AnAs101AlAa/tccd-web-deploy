@@ -1,15 +1,25 @@
 import { systemApi } from "../AxoisInstance";
-import type { StudentUser } from "@/shared/types";
+import type { EligibilityResponse, RegistrationResponse } from "./types";
 
-const EVENT_ROUTE = "/v1/Event/";
+const EVENT_ROUTE = "/v1/events";
 
 export class EventRegisterApi {
-  async getCurrentUser(): Promise<StudentUser> {
-    const { data } = await systemApi.get("/v1/User/current");
-    return data;
+  async checkEligibility(eventId: string): Promise<EligibilityResponse> {
+    const { data } = await systemApi.get(
+      `${EVENT_ROUTE}/${eventId}/registrations/is-eligible`,
+    );
+    return data.data ?? data;
   }
-  async registerForEvent(eventName: string, userData: StudentUser) {
-    const { data } = await systemApi.post(`${EVENT_ROUTE}${eventName}/register`, userData);
-    return data;
+
+  async registerForEvent(
+    eventId: string,
+    eventSlotId: string,
+  ): Promise<RegistrationResponse> {
+    const { data } = await systemApi.post(
+      `${EVENT_ROUTE}/${eventId}/slots/${eventSlotId}/registrations/register`,
+    );
+    return data.data ?? data;
   }
 }
+
+export const eventRegisterApi = new EventRegisterApi();

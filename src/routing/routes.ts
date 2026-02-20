@@ -80,6 +80,7 @@ export const routes: Route[] = [
     path: "/events/register/:id",
     Component: EventRegistrationPage,
     protected: true,
+    roles: ["student", "Volunteeringmember"],
   },
   {
     path: "/admin/events",
