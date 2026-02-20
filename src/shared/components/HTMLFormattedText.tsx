@@ -12,9 +12,12 @@ export function HTMLFormattedText({ content, className }: RenderHtmlProps) {
   // Transform custom markup to HTML tags
   const transformCustomMarkup = (text: string): string => {
     return text
-      .replace(/\*b\*(.*?)\*b\*/g, "<b>$1</b>") // Bold
-      .replace(/\*i\*(.*?)\*i\*/g, "<i>$1</i>") // Italic
-      .replace(/\*u\*(.*?)\*u\*/g, "<u>$1</u>") // Underline
+      .replace(/\*b\*([\s\S]*?)\*\/b\*/g, "<b>$1</b>") // Bold (new format)
+      .replace(/\*b\*([\s\S]*?)\*b\*/g, "<b>$1</b>") // Bold (old format - backward compatibility)
+      .replace(/\*i\*([\s\S]*?)\*\/i\*/g, "<i>$1</i>") // Italic (new format)
+      .replace(/\*i\*([\s\S]*?)\*i\*/g, "<i>$1</i>") // Italic (old format - backward compatibility)
+      .replace(/\*u\*([\s\S]*?)\*\/u\*/g, "<u>$1</u>") // Underline (new format)
+      .replace(/\*u\*([\s\S]*?)\*u\*/g, "<u>$1</u>") // Underline (old format - backward compatibility)
       .replace(/\*br\*/g, "<br />"); // Line break
   };
 
