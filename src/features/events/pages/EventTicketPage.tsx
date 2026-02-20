@@ -2,16 +2,11 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import EventTicketCard from "../components/EventTicketCard";
-import { mockTickets } from "@/features/profile/mocks/mockTickets";
-import { mockUser } from "@/features/profile/mocks/mockUser";
 import { IoArrowBack } from "react-icons/io5";
 
 const EventTicketPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-
-  // Find the ticket by id
-  const ticket = mockTickets.find((t) => t.id === id);
 
   if (!ticket) {
     return (
