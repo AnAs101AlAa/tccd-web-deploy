@@ -73,5 +73,10 @@ export interface EventQueryParams {
   PageSize?: number;
 }
 
-export type EventTypes = "Workshop" | "Jobfair" | "Researchday" | "Fieldtrip" | "Sessions"
+export type EventTypes =
+  | "Workshop"
+  | "Jobfair"
+  | "Researchday"
+  | "Fieldtrip"
+  | "Sessions";
 export type EventOrderBy = "Name" | "Date" | "Location" | "Type";
