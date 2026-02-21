@@ -3,16 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { LazyImageLoader } from "tccd-ui";
 import { FaCalendar } from "react-icons/fa";
 import format from "@/shared/utils/dateFormater";
-import { useAppDispatch } from "@/shared/store/hooks";
-import { setSelectedTicket } from "@/shared/store/slices/ticketSlice";
 
 export default function TicketCard({ ticket }: { ticket: Ticket }) {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
   const handleClick = () => {
-    dispatch(setSelectedTicket(ticket));
-    navigate(`/tickets/${ticket.eventSlotId}`);
+    navigate(`/tickets/${ticket.event.id}`);
   };
 
   const statusStyles = () => {

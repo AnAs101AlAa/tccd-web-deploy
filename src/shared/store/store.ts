@@ -10,7 +10,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import { persistConfig } from "./persistConfig";
-import { userReducer, ticketReducer } from "./slices";
+import { userReducer } from "./slices";
 import type { UserState } from "./slices/userSlice";
 
 /**
@@ -29,7 +29,6 @@ import type { UserState } from "./slices/userSlice";
 export const store = configureStore({
   reducer: {
     user: persistReducer<UserState, UnknownAction>(persistConfig, userReducer),
-    ticket: ticketReducer,
   },
 
   middleware: (getDefaultMiddleware) =>

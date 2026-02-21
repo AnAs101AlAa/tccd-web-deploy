@@ -1,5 +1,5 @@
 import React from "react";
-import type { Ticket } from "@/shared/types/profile";
+import type { Registration } from "@/shared/types/profile";
 import TicketPoster from "./TicketPoster";
 import AttendeeInfo from "./AttendeeInfo";
 import {
@@ -14,7 +14,7 @@ import {
 import format from "@/shared/utils/dateFormater";
 
 interface EventTicketCardProps {
-  ticket: Ticket;
+  registration: Registration;
   userDetails: {
     englishFullName: string;
     arabicFullName: string;
@@ -24,21 +24,20 @@ interface EventTicketCardProps {
 }
 
 const EventTicketCard: React.FC<EventTicketCardProps> = ({
-  ticket,
+  registration,
   userDetails,
 }) => {
-  const { event } = ticket;
+  const { event, eventSlot } = registration;
 
+  // Room names as locations
   const roomNames = event.rooms?.map((room) => room.name).filter(Boolean);
-
-  const matchedSlot = event.slots?.find((s) => s.id === ticket.eventSlotId);
 
   return (
     <div className="w-full max-w-4xl mx-auto bg-background rounded-lg shadow-lg overflow-hidden">
       <TicketPoster
         posterSrc={event.eventImage}
         eventTitle={event.name}
-        status={ticket.status}
+        status={registration.status}
       />
 
       <div className="p-4 pt-4 sm:p-6 md:p-8">
@@ -76,11 +75,11 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
             />
           )}
 
-          {matchedSlot && (
+          {eventSlot && (
             <InfoItem
               icon={<FaClock className="w-4 h-4 text-primary" />}
               label="Time Slot"
-              value={`${format(matchedSlot.startTime, "hourFull")} – ${format(matchedSlot.endTime, "hourFull")}`}
+              value={`${format(eventSlot.startTime, "hourFull")} – ${format(eventSlot.endTime, "hourFull")}`}
             />
           )}
 
@@ -99,7 +98,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
           <InfoItem
             icon={<FaClipboardList className="w-4 h-4 text-primary" />}
             label="Registered At"
-            value={format(ticket.registeredAt, "stringed")}
+            value={format(registration.registeredAt, "stringed")}
           />
         </div>
 
@@ -140,6 +139,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
   );
 };
 
+/** Reusable info row */
 const InfoItem: React.FC<{
   icon: React.ReactNode;
   label: string;
