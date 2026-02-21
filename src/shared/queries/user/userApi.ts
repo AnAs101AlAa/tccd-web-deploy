@@ -7,6 +7,7 @@ const USER_ROUTE = "/v1/User";
 export interface UpdateUserProfilePayload {
   englishName: string;
   arabicName: string;
+  phoneNumber: string;
   gender: Gender;
 }
 
@@ -14,6 +15,7 @@ export interface UpdateUserProfileResponse {
   englishFullName: string;
   arabicFullName: string;
   gender: Gender;
+  phoneNumber: string;
 }
 
 export interface UpdateStudentProfilePayload {
@@ -57,6 +59,7 @@ export class UserApi {
       englishFullName: response.englishName,
       arabicFullName: response.arabicName,
       gender: response.gender,
+      phoneNumber: response.phoneNumber,
     };
   }
 
