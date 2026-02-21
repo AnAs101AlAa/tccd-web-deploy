@@ -22,6 +22,8 @@ jobs:
       - name: Sync files and protect workflows
         run: |
           rsync -av --delete \
+            --exclude='netlify.toml' \
+            --exclude='public/_redirects' \
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='temp_source_folder/' \
@@ -29,17 +31,17 @@ jobs:
           
           rm -rf temp_source_folder
 
+ 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20' 
 
       - name: Install Dependencies
-        run: npm install 
+        run: npm install
 
       - name: Test React Build
         run: npm run build 
-
 
       # This step ONLY runs if 'npm run build' is successful
       - name: Commit and Push changes
