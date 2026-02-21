@@ -3,57 +3,20 @@ import { useParams, useNavigate } from "react-router-dom";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import EventTicketCard from "../components/EventTicketCard";
 import { IoArrowBack } from "react-icons/io5";
-import { useGetUserRegistrations } from "@/shared/queries/user/userQueries";
+import { useAppSelector } from "@/shared/store/hooks";
+import { selectSelectedTicket } from "@/shared/store/selectors/ticketSelectors";
 import { useCurrentUser } from "@/shared/queries/user/userHooks";
 
 const EventTicketPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
+  const ticket = useAppSelector(selectSelectedTicket);
 
-  const {
-    data: tickets,
-    isLoading,
-    isError,
-    refetch,
-  } = useGetUserRegistrations();
+  // Ensure the stored ticket matches the route param
+  const isMatchingTicket = ticket && ticket.eventSlotId === id;
 
-  const ticket = tickets?.items.find((t) => t.eventSlotId === id);
-
-  if (isLoading) {
-    return (
-      <WithLayout>
-        <div className="min-h-screen bg-background-contrast flex items-center justify-center p-4">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
-            <p className="text-lg text-secondary font-medium">
-              Loading ticket...
-            </p>
-          </div>
-        </div>
-      </WithLayout>
-    );
-  }
-
-  if (isError) {
-    return (
-      <WithLayout>
-        <div className="min-h-screen bg-background-contrast flex items-center justify-center p-4">
-          <div className="text-center">
-            <p className="text-lg text-red-600 mb-4">Failed to load ticket</p>
-            <button
-              onClick={() => refetch()}
-              className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors"
-            >
-              Retry
-            </button>
-          </div>
-        </div>
-      </WithLayout>
-    );
-  }
-
-  if (!ticket) {
+  if (!isMatchingTicket) {
     return (
       <WithLayout>
         <div className="min-h-screen bg-background-contrast flex items-center justify-center p-4">
@@ -62,13 +25,14 @@ const EventTicketPage: React.FC = () => {
               Ticket Not Found
             </h1>
             <p className="text-label mb-6">
-              The ticket you're looking for doesn't exist.
+              The ticket you're looking for doesn't exist or has expired from
+              your session.
             </p>
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/profile")}
               className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors"
             >
-              Go Back
+              Go to Profile
             </button>
           </div>
         </div>
