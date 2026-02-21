@@ -96,7 +96,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   const [currentMediaInput, setCurrentMediaInput] = useState<string>("");
 
   const [isAddingSlot, setIsAddingSlot] = useState<boolean>(false);
-  const [currentSlotInput, setCurrentSlotInput] = useState<EventSlot>({ startTime: "", endTime: "" });
+  const [currentSlotInput, setCurrentSlotInput] = useState<EventSlot>({id: "", startTime: "", endTime: "" });
 
   useEffect(() => {
     if (event) {
@@ -194,6 +194,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     endDate.setHours(endHour, endMin, 0, 0);
     
     const slotWithTimestamp = {
+      id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15),
       startTime: startDate.toISOString(),
       endTime: endDate.toISOString(),
     };
@@ -202,7 +203,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
       ...prev,
       slots: [...(prev.slots || []), slotWithTimestamp],
     }));
-    setCurrentSlotInput({ startTime: "", endTime: "" });
+    setCurrentSlotInput({ id: "", startTime: "", endTime: "" });
     setIsAddingSlot(false);
   }
 

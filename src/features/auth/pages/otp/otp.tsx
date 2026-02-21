@@ -61,29 +61,45 @@ const OTPPage: React.FC = () => {
     }
 
     setIsLoading(true);
-    const success = await verifyOtp(otpValue);
-    setIsLoading(false);
-
-    if (success) {
-      toast.success("OTP verified successfully!");
-      // Navigate to reset password page or dashboard
-      navigate("/reset-password", { state: { email, otp: otpValue } });
-    } else {
-      toast.error("Invalid OTP. Please try again.");
+    try {
+      const success = await verifyOtp(email, otpValue);
+      if (success) {
+        toast.success("OTP verified successfully!");
+        navigate("/reset-password", { state: { email, otp: otpValue } });
+      } else {
+        toast.error("Verification failed. Please try again.");
+        setOtp(Array(6).fill(""));
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 300);
+        inputsRef.current[0]?.focus();
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Verification failed. Please try again.";
+      toast.error(message);
       setOtp(Array(6).fill(""));
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 300);
       inputsRef.current[0]?.focus();
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleResendClick = async () => {
     setIsResending(true);
-    await resendOtp();
-    setIsResending(false);
-    toast.success("OTP resent to your email!");
-    setOtp(Array(6).fill(""));
-    inputsRef.current[0]?.focus();
+    try {
+      await resendOtp(email);
+      toast.success("OTP resent to your email!");
+      setOtp(Array(6).fill(""));
+      inputsRef.current[0]?.focus();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to resend the code. Please try again.";
+      toast.error(message);
+    } finally {
+      setIsResending(false);
+    }
   };
 
   const isOtpComplete = otp.every((digit) => digit !== "");

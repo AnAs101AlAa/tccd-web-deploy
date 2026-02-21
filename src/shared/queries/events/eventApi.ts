@@ -1,7 +1,7 @@
 import type { EventQueryParams, EventResponse } from "@/shared/types/events";
 import { systemApi } from "../AxoisInstance";
 import type Event from "@/shared/types/events";
-import type { Sponsor } from "@/shared/types/events";
+import type { Sponsor, EventRoom, EventSlot } from "@/shared/types/events";
 
 const EVENT_ROUTE = "/v1/Event";
 const SPONSOR_ROUTE = "/v1/Sponsors";
@@ -54,6 +54,21 @@ export class EventApi {
     const response = await systemApi.get(`${EVENT_ROUTE}/${id}`);
     if (response.data.success && response.data.data) {
       const item = response.data.data;
+      const rooms: EventRoom[] = (item.rooms || []).map(
+        (room: any): EventRoom => ({
+          id: room.id,
+          name: room.name,
+          capacity: room.capacity,
+          roomImage: room.roomImage || "",
+        }),
+      );
+      const slots: EventSlot[] = (item.slots || []).map(
+        (slot: any): EventSlot => ({
+          id: slot.id,
+          startTime: slot.startTime,
+          endTime: slot.endTime,
+        }),
+      );
       return {
         id: item.id,
         name: item.name,
@@ -61,7 +76,7 @@ export class EventApi {
         eventImage: item.eventImage || "",
         type: item.type,
         date: item.date,
-        locations: item.rooms.map((loc: any) => loc.name),
+        locations: rooms.map((r) => r.name),
         isApproved: item.isApproved,
         capacity: item.capacity,
         registeredCount: item.registrationCount,
@@ -71,6 +86,8 @@ export class EventApi {
         eventMedia: item.medias || [],
         createdAt: item.createdAt,
         updatedOn: item.updatedOn,
+        rooms,
+        slots: slots.length > 0 ? slots : undefined,
       };
     }
 

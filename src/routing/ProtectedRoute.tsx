@@ -1,6 +1,8 @@
 import { Navigate } from "react-router-dom";
 import { useAppSelector } from "@/shared/store/hooks";
 import { selectUserRole, selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
+import { useVerifyToken } from "@/shared/queries/auth";
+import { useEffect, useState } from "react";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -21,6 +23,18 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children, roles, redirectTo = "/login" }: ProtectedRouteProps) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const userRole = useAppSelector(selectUserRole);
+  const verifyTokenMutation = useVerifyToken();
+  const [isTokenVerified, setIsTokenVerified] = useState(true);
+  
+  useEffect(() => {
+    try {
+      if (isAuthenticated) {
+        verifyTokenMutation.mutate();
+      }
+    } catch {
+      setIsTokenVerified(false);
+    }
+  }, [isAuthenticated]);
 
   if (!isAuthenticated) {
     return <Navigate to={redirectTo} replace />;
@@ -30,8 +44,7 @@ const ProtectedRoute = ({ children, roles, redirectTo = "/login" }: ProtectedRou
     const hasRequiredRole = roles.some(
       (role) => role.toLowerCase() === userRole.toLowerCase()
     );
-    
-    if (!hasRequiredRole) {
+    if (!hasRequiredRole && !verifyTokenMutation.isPending && !isTokenVerified) {
       return <Navigate to="/" replace />;
     }
   }

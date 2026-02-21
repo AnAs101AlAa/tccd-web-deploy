@@ -1,27 +1,51 @@
 
-export const verifyOtp = async (otp: string): Promise<boolean> => {
-  try {
-    // api vesification
-    // const response = await fetch("/api/verify-otp", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ otp }),
-    // });
-    // return response.ok;
+import { systemApi } from "../AxoisInstance";
+import type { AxiosError } from "axios";
 
-    // testing
-    return otp === "123456";
+interface OtpApiResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: string;
+}
+
+const getVerifyOtpErrorMessage = (error: unknown): string => {
+  const axiosError = error as AxiosError<OtpApiResponse>;
+
+  if (!axiosError.response) {
+    return "Unable to connect. Please check your internet connection and try again.";
+  }
+
+  const { status } = axiosError.response;
+
+  if (status === 400) {
+    return "The code you entered is incorrect or has expired. Please double-check and try again.";
+  }
+  if (status === 500) {
+    return "Something went wrong on our end. Please try again in a moment.";
+  }
+
+  return "Verification failed. Please try again.";
+};
+
+export const verifyOtp = async (email: string, otp: string): Promise<boolean> => {
+  try {
+    const { data } = await systemApi.post<OtpApiResponse>("/v1/Auth/verify-otp", {
+      email,
+      otp,
+    });
+    return data.success;
   } catch (error) {
-    console.error("Error verifying OTP:", error);
-    return false;
+    throw new Error(getVerifyOtpErrorMessage(error));
   }
 };
 
-export const resendOtp = async (): Promise<void> => {
+export const resendOtp = async (email: string): Promise<void> => {
   try {
-    // api resend
-    // await fetch("/api/resend-otp", { method: "POST" });
+    await systemApi.post("/v1/Auth/forgot-password", { email });
   } catch (error) {
-    console.error("Error resending OTP:", error);
+    throw new Error(
+      "Failed to resend the code. Please check your connection and try again."
+    );
   }
 };
