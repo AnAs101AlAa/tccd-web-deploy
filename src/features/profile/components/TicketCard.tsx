@@ -6,6 +6,11 @@ import format from "@/shared/utils/dateFormater";
 
 export default function TicketCard({ ticket }: { ticket: Ticket }) {
   const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/tickets/${ticket.event.id}`);
+  };
+
   const statusStyles = () => {
     switch (ticket.status) {
       case "Approved":
@@ -20,7 +25,7 @@ export default function TicketCard({ ticket }: { ticket: Ticket }) {
   };
   return (
     <div
-      onClick={() => navigate(`/tickets/${ticket.eventSlotId}`)}
+      onClick={handleClick}
       className="relative flex items-center m-auto gap-2 lg:gap-3 border-1 border-gray-300 rounded-lg w-full lg:h-[320px] md:h-[280px] h-[240px] cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out"
     >
       <div className="absolute top-0 left-0 inset-0 rounded-lg">

@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { UserApi, type UpdateUserProfilePayload, type UpdateStudentProfilePayload, type RegistrationQueryParams } from "./userApi";
+import {
+  UserApi,
+  type UpdateUserProfilePayload,
+  type UpdateStudentProfilePayload,
+  type RegistrationQueryParams,
+} from "./userApi";
 import { useUserActions } from "./userHooks";
 
 export const userKeys = {
@@ -54,5 +59,13 @@ export const useGetUserRegistrations = (params?: RegistrationQueryParams) => {
   return useQuery({
     queryKey: [...userKeys.profile(), "registrations", params],
     queryFn: () => userApiInstance.getUserRegistrations(params),
-  })
-}
+  });
+};
+
+export const useGetUserRegistration = (eventId: string) => {
+  return useQuery({
+    queryKey: [...userKeys.profile(), "registration", eventId],
+    queryFn: () => userApiInstance.getUserRegistration(eventId),
+    enabled: !!eventId,
+  });
+};

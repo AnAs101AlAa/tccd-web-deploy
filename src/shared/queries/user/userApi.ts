@@ -1,4 +1,4 @@
-import type { Tickets, TicketStatus } from "@/shared/types";
+import type { Tickets, TicketStatus, Registration } from "@/shared/types";
 import { systemApi } from "../AxoisInstance";
 import type { Gender } from "@/shared/types/users";
 
@@ -49,12 +49,14 @@ export interface RegistrationQueryParams {
 }
 
 export class UserApi {
-  async updateUserProfile(payload: UpdateUserProfilePayload): Promise<UpdateUserProfileResponse> {
+  async updateUserProfile(
+    payload: UpdateUserProfilePayload,
+  ): Promise<UpdateUserProfileResponse> {
     const { data } = await systemApi.put(USER_ROUTE, payload);
-    
+
     // Only extract the fields we updated from the response
     const response = data.data;
-    
+
     return {
       englishFullName: response.englishName,
       arabicFullName: response.arabicName,
@@ -63,12 +65,17 @@ export class UserApi {
     };
   }
 
-  async updateStudentProfile(payload: UpdateStudentProfilePayload): Promise<UpdateStudentProfileResponse> {
-    const { data } = await systemApi.put(`${USER_ROUTE}/student-profile`, payload);
-    
+  async updateStudentProfile(
+    payload: UpdateStudentProfilePayload,
+  ): Promise<UpdateStudentProfileResponse> {
+    const { data } = await systemApi.put(
+      `${USER_ROUTE}/student-profile`,
+      payload,
+    );
+
     // Only extract the fields we updated from the response
     const response = data.data;
-    
+
     return {
       gpa: response.gpa,
       graduationYear: response.graduationYear,
@@ -82,24 +89,39 @@ export class UserApi {
 
   async updateStudentCV(cvFile: File): Promise<UpdateStudentCVResponse> {
     const formData = new FormData();
-    formData.append('cvFile', cvFile);
-    
-    const { data } = await systemApi.patch(`${USER_ROUTE}/student-profile/cv`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    formData.append("cvFile", cvFile);
+
+    const { data } = await systemApi.patch(
+      `${USER_ROUTE}/student-profile/cv`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       },
-    });
-    
+    );
+
     // Only extract the CV field from the response
     const response = data.data;
-    
+
     return {
       cv: response.cv,
     };
   }
 
-  async getUserRegistrations(params?: RegistrationQueryParams): Promise<Tickets> {
-    const { data }  = await systemApi.get(`${USER_ROUTE}/registrations`, { params });
+  async getUserRegistrations(
+    params?: RegistrationQueryParams,
+  ): Promise<Tickets> {
+    const { data } = await systemApi.get(`${USER_ROUTE}/registrations`, {
+      params,
+    });
+    return data.data;
+  }
+
+  async getUserRegistration(eventId: string): Promise<Registration> {
+    const { data } = await systemApi.get(
+      `${USER_ROUTE}/registration/${eventId}`,
+    );
     return data.data;
   }
 }
