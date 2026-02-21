@@ -3,10 +3,55 @@ import { useParams, useNavigate } from "react-router-dom";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import EventTicketCard from "../components/EventTicketCard";
 import { IoArrowBack } from "react-icons/io5";
+import { useGetUserRegistrations } from "@/shared/queries/user/userQueries";
+import { useCurrentUser } from "@/shared/queries/user/userHooks";
 
 const EventTicketPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const currentUser = useCurrentUser();
+
+  const {
+    data: tickets,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetUserRegistrations();
+
+  const ticket = tickets?.items.find((t) => t.eventSlotId === id);
+
+  if (isLoading) {
+    return (
+      <WithLayout>
+        <div className="min-h-screen bg-background-contrast flex items-center justify-center p-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
+            <p className="text-lg text-secondary font-medium">
+              Loading ticket...
+            </p>
+          </div>
+        </div>
+      </WithLayout>
+    );
+  }
+
+  if (isError) {
+    return (
+      <WithLayout>
+        <div className="min-h-screen bg-background-contrast flex items-center justify-center p-4">
+          <div className="text-center">
+            <p className="text-lg text-red-600 mb-4">Failed to load ticket</p>
+            <button
+              onClick={() => refetch()}
+              className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </WithLayout>
+    );
+  }
 
   if (!ticket) {
     return (
@@ -33,11 +78,18 @@ const EventTicketPage: React.FC = () => {
 
   const userDetails = {
     englishFullName:
-      "englishFullName" in mockUser ? mockUser.englishFullName : "N/A",
+      currentUser && "englishFullName" in currentUser
+        ? currentUser.englishFullName
+        : "N/A",
     arabicFullName:
-      "arabicFullName" in mockUser ? mockUser.arabicFullName : "N/A",
-    phoneNumber: "phoneNumber" in mockUser ? mockUser.phoneNumber : "N/A",
-    email: "email" in mockUser ? mockUser.email : "N/A",
+      currentUser && "arabicFullName" in currentUser
+        ? currentUser.arabicFullName
+        : "N/A",
+    phoneNumber:
+      currentUser && "phoneNumber" in currentUser
+        ? currentUser.phoneNumber
+        : "N/A",
+    email: currentUser && "email" in currentUser ? currentUser.email : "N/A",
   };
 
   return (
