@@ -114,7 +114,6 @@ const StudentInfoDisplay: React.FC<StudentInfoDisplayProps> = ({ user }) => {
     <>
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {primaryDetailsWithIcons
-          .filter((detail) => detail.value)
           .map((detail) => (
             <InfoField
               key={detail.label}

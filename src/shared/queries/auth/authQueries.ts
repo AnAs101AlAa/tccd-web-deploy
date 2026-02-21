@@ -57,18 +57,6 @@ export const useLogout = () => {
       toast.success("Logged out successfully!");
     },
     onError: (error: unknown) => {
-      if (
-        typeof error === "object" &&
-        error !== null &&
-        "response" in error &&
-        typeof (error as { response?: unknown }).response === "object" &&
-        (error as { response?: { status?: number } }).response?.status === 401
-      ) {
-        queryClient.removeQueries({ queryKey: authKeys.all });
-        logout();
-        toast.success("Logged out successfully!");
-        return;
-      }
       const message = getErrorMessage(error);
       toast.error(message || "Logout failed. Please try again.");
     },
@@ -166,5 +154,12 @@ export const useVerifyStudent = () => {
       const message = getErrorMessage(error);
       toast.error(message || "Email verification failed. Please try again.");
     },
+  });
+};
+
+export const useVerifyToken = () => {
+  return useMutation({
+    mutationFn: () =>
+      authApiInstance.verifyToken(),
   });
 };
