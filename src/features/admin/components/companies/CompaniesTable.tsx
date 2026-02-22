@@ -219,7 +219,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                           <FiBriefcase className="w-4 h-4 text-inactive-tab-text" />
                         )}
                       </div>
-                      <span className="font-medium text-contrast">
+                      <span className="font-medium text-contrast whitespace-nowrap">
                         {company.companyName}
                       </span>
                     </div>
