@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useGetCompanies,
   useDeleteCompany,
@@ -34,11 +34,16 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
   const deleteMutation = useDeleteCompany();
   const updateApprovalMutation = useUpdateCompanyApproval();
 
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
+  useEffect(() => {
+    onPageChange(currentPage);
+  }, [currentPage, onPageChange]);
+  
   const handleView = (company: Company) => {
     setSelectedCompany(company);
     setIsDetailOpen(true);
@@ -339,9 +344,9 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
         {paginationData && paginationData.totalPages > 1 && (
           <div className="mt-4">
             <Pagination
-              currentPage={paginationData.pageIndex}
+              currentPage={currentPage}
               totalPages={paginationData.totalPages}
-              onPageChange={onPageChange}
+              onPageChange={setCurrentPage}
             />
           </div>
         )}
