@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   useGetCompanies,
   useDeleteCompany,
@@ -34,15 +34,10 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
   const deleteMutation = useDeleteCompany();
   const updateApprovalMutation = useUpdateCompanyApproval();
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-
-  useEffect(() => {
-    onPageChange(currentPage);
-  }, [currentPage, onPageChange]);
   
   const handleView = (company: Company) => {
     setSelectedCompany(company);
@@ -231,7 +226,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                   </td>
                   <td className="px-4 py-3">
                     {company.businessType ? (
-                      <span className="inline-flex items-center px-3 py-0.5 shadow-sm rounded-full text-[13px] font-semibold bg-contrast/10 text-contrast">
+                      <span className="inline-flex items-center whitespace-nowrap px-3 py-0.5 shadow-sm rounded-full text-[13px] font-semibold bg-contrast/10 text-contrast">
                         {company.businessType}
                       </span>
                     ) : (
@@ -344,9 +339,9 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
         {paginationData && paginationData.totalPages > 1 && (
           <div className="mt-4">
             <Pagination
-              currentPage={currentPage}
+              currentPage={paginationData.pageIndex}
               totalPages={paginationData.totalPages}
-              onPageChange={setCurrentPage}
+              onPageChange={onPageChange}
             />
           </div>
         )}
