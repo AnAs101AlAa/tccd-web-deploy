@@ -19,6 +19,7 @@ export interface EventSlot {
   id: string;
   startTime: string;
   endTime: string;
+  capacity: number;
 }
 
 export default interface Event {

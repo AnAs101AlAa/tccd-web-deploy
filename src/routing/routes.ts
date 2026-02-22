@@ -32,24 +32,24 @@ export interface Route {
 }
 
 export const routes: Route[] = [
-  { path: "/", Component: HomePage },
+  { path: "/", Component: HomePage, protected: true, roles: ["all"] },
   { path: "/login", Component: LoginPage },
   { path: "/sign-up", Component: SignupPage },
   { path: "/sign-up/confirmation", Component: SignupConfirmation },
   { path: "/sign-up/verification/:token", Component: SignupVerification },
   { path: "/forgot-password", Component: ForgotPasswordPage },
-  { path: "/aboutus", Component: AboutUsPage },
-  { path: "/events/:id", Component: EventDetailsPage },
-  { path: "/events", Component: EventsPage },
-  { path: "/past-events", Component: PastEventsPage },
-  { path: "/gallery", Component: GalleryPage },
+  { path: "/aboutus", Component: AboutUsPage, protected: true, roles: ["all"] },
+  { path: "/events/:id", Component: EventDetailsPage, protected: true, roles: ["all"] },
+  { path: "/events", Component: EventsPage, protected: true, roles: ["all"] },
+  { path: "/past-events", Component: PastEventsPage, protected: true, roles: ["all"] },
+  { path: "/gallery", Component: GalleryPage, protected: true, roles: ["all"] },
   {
     path: "/profile",
     Component: ProfilePage,
     protected: true,
     roles: ["student"],
   },
-  { path: "/gallery/view/:id", Component: GalleryDisplayPage },
+  { path: "/gallery/view/:id", Component: GalleryDisplayPage, protected: true, roles: ["all"] },
   {
     path: "/tickets/:id",
     Component: EventTicketPage,
@@ -69,7 +69,7 @@ export const routes: Route[] = [
     protected: true,
     roles: ["Admin", "Volunteeringmember"],
   },
-  { path: "/posts/:id", Component: PostPage },
+  { path: "/posts/:id", Component: PostPage, protected: true, roles: ["all"] },
   {
     path: "/admin/locations",
     Component: LocationsManagementPage,
