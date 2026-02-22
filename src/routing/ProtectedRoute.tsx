@@ -33,17 +33,21 @@ const ProtectedRoute = ({ children, roles, redirectTo = "/login" }: ProtectedRou
   const dispatch = useDispatch(); 
 
   useEffect(() => {
-    try {
-      if (isAuthenticated) {
-        verifyTokenMutation.mutate();
-      }
-    } catch {
-      dispatch(clearUser());
-      toast.error("Session expired. Please log in again to regain access to your account.");
-      if(!isAllRolesAllowed) {
-        navigate("/login");
+    const tryToken = async () => {
+      try {
+        if (isAuthenticated) {
+          await verifyTokenMutation.mutateAsync();
+        }
+      } catch{
+        dispatch(clearUser());
+        toast.error("Session expired. Please log in again to regain access to your account.");
+        if(!isAllRolesAllowed) {
+          navigate("/login");
+        }
       }
     }
+
+    tryToken();
   }, [isAuthenticated]);
 
   if (!isAuthenticated && !verifyTokenMutation.isPending && !isAllRolesAllowed) {
