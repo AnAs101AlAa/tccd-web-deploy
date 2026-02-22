@@ -67,6 +67,7 @@ export class EventApi {
           id: slot.id,
           startTime: slot.startTime,
           endTime: slot.endTime,
+          capacity: slot.capacity,
         }),
       );
       return {
@@ -78,7 +79,7 @@ export class EventApi {
         date: item.date,
         locations: rooms.map((r) => r.name),
         isApproved: item.isApproved,
-        capacity: item.capacity,
+        capacity: slots.reduce((total, s) => total + s.capacity, 0),
         registeredCount: item.registrationCount,
         attendeeCount: item.attendeeCount,
         registrationDeadline: item.registrationDeadline,

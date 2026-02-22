@@ -132,13 +132,13 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
             width={ButtonWidths.AUTO}
             disabled={updateLocationMutation.isPending}
           />
-          <button
-            type="submit"
+          <Button
+            type="primary"
             disabled={updateLocationMutation.isPending}
-            className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {updateLocationMutation.isPending ? "Saving..." : "Save Changes"}
-          </button>
+            buttonText={updateLocationMutation.isPending ? "Saving..." : "Save Changes"}
+            onClick={handleSubmit(onSubmit)}
+            
+          />
         </div>
       </form>
     </Modal>

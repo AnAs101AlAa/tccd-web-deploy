@@ -93,8 +93,8 @@ export const useRemoveSponsorFromEvent = () => {
 export const useAddEventSlot = () => {
   return useMutation({
     mutationKey: ["events", "addSlot"],
-    mutationFn: ({ eventId, startTime, endTime }: { eventId: string; startTime: string; endTime: string }) =>
-      eventsApi.addEventSlot(eventId, startTime, endTime),
+    mutationFn: ({ eventId, startTime, endTime, capacity }: { eventId: string; startTime: string; endTime: string; capacity: number }) =>
+      eventsApi.addEventSlot(eventId, startTime, endTime, capacity),
   });
 }
 
