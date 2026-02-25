@@ -27,6 +27,7 @@ export interface UpdateLocationPayload {
   id?: string;
   name: string;
   capacity: number;
+  roomImageFileId: string;
 }
 
 /**
