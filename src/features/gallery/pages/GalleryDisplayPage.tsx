@@ -1,12 +1,12 @@
 import { useParams } from "react-router-dom";
 import FullscreenMediaViewer from "@/shared/components/MediaViewer/MediaViewer";
 import { FaChevronLeft } from "react-icons/fa6";
-import tccdLogo from "/TCCD_logo.svg";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { useGetEventById } from "@/shared/queries/events/eventQueries";
 import { mapEventMediaList } from "../utils/TypeMappingFunction";
 import type { EventMedia } from "@/shared/types";
+
 export default function GalleryDisplayPage() {
   const { id } = useParams();
   const { data: galleryData, isLoading, isError } = useGetEventById(id || "");
@@ -31,7 +31,7 @@ export default function GalleryDisplayPage() {
                 </div>
                 <p className="text-contrast font-medium text-[14px] md:text-[16px] mt-1">Explore the collection of media from the <span className="font-bold">{galleryData?.name}</span> event.</p>
             </div>
-            <img src={tccdLogo} alt="TCCD Logo" className="md:block hidden h-9 md:mr-6 mr-3" />
+            <img src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg" alt="TCCD Logo" className="md:block hidden h-9 md:mr-6 mr-3" />
         </div>
         {isLoading && <p>Loading...</p>}
       <FullscreenMediaViewer items={mapEventMediaList(galleryData?.eventMedia as EventMedia[] || [])} />

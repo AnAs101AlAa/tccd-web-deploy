@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import ProfileAvatar from "./components/ProfileAvatar";
 import ProfileMenu from "./components/ProfileMenu";
-import logo from "/TCCD_logo.svg";
 import facultyLogo from "@/assets/faculty.png";
 import universityLogo from "@/assets/university.png";
 import { useAppSelector } from "@/shared/store/hooks";
@@ -51,7 +50,7 @@ const Navbar = () => {
               </Link>
             );
           })}
-          <img src={logo} alt="TCCD" className="h-[28px] xl:h-[26px] w-auto" />
+          <img src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg" alt="TCCD" className="h-[28px] xl:h-[26px] w-auto" />
           {NAV_ITEMS.slice(Math.ceil(NAV_ITEMS.length / 2)).map(({ to, title }) => {
             const active =
               to === "/" ? pathname === "/" : pathname.startsWith(to);

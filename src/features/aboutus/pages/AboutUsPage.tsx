@@ -16,7 +16,6 @@ import MissionIcon from "@/assets/mission.svg";
 import GoalIcon from "@/assets/goal.svg";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import ABOUT_US_HEADER_IMAGE from "@/assets/aboutusTopHeader.jpg";
-import ABOUT_US_IMAGE from "/user.jpg";
 
 export const AboutUsPage = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -182,14 +181,14 @@ export const AboutUsPage = () => {
                 className="shrink-0 w-56 md:w-64 bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center"
               >
                 <img
-                  src={member.ImgSrc || ABOUT_US_IMAGE}
+                  src={member.ImgSrc || "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"}
                   alt={`${member.Name} - Board Member`}
                   className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover object-center mx-auto mb-3 md:mb-4 bg-gray-200"
                   loading="lazy"
                   onError={(e) => {
                     const target = e.currentTarget as HTMLImageElement;
-                    if (target.src !== ABOUT_US_IMAGE) {
-                      target.src = ABOUT_US_IMAGE;
+                    if (target.src !== "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif") {
+                      target.src = "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif";
                     }
                   }}
                 />
@@ -238,14 +237,14 @@ export const AboutUsPage = () => {
                 className="shrink-0 w-56 md:w-64 bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center"
               >
                 <img
-                  src={founder.ImgSrc || ABOUT_US_IMAGE}
+                  src={founder.ImgSrc || "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"}
                   alt={`${founder.Name} - Website Founder`}
                   className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover object-center mx-auto mb-3 md:mb-4 bg-gray-200"
                   loading="lazy"
                   onError={(e) => {
                     const target = e.currentTarget as HTMLImageElement;
-                    if (target.src !== ABOUT_US_IMAGE) {
-                      target.src = ABOUT_US_IMAGE;
+                    if (target.src !== "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif") {
+                      target.src = "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif";
                     }
                   }}
                 />
