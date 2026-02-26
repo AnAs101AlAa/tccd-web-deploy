@@ -88,7 +88,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
 
             <RichTextEditor
               label="Description"
-              labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
+              labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1 font-semibold"
               value={formValues.description || ""}
               placeholder="Enter detailed event description"
               onChange={(value) => handleInputChange("description", value)}
@@ -133,7 +133,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                 onChange={(val) => setLocationNameKey(val || undefined)}
                 className="lg:w-full"
               />
-              <div className="h-48 lg:h-56 overflow-y-auto border border-gray-400 rounded-2xl p-2">
+              <div className="h-50 lg:h-72.5 overflow-y-auto border border-gray-400 rounded-2xl p-2">
                 {locationsLoading ? (
                   <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">Loading locations...</p>
                 ) : (
@@ -236,7 +236,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                               </div>
                               <button
                                 onClick={() => handleRemoveOriginalMedia(media.id)}
-                                className="text-contrast hover:text-primary cursor-pointer flex-shrink-0"
+                                className="text-contrast hover:text-primary cursor-pointer shrink-0"
                                 title="Mark for deletion"
                               >
                                 <TbTrash className="size-4" />
@@ -256,7 +256,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                             </div>
                             <button
                               onClick={() => handleRemoveNewMedia(index)}
-                              className="text-contrast hover:text-primary cursor-pointer flex-shrink-0"
+                              className="text-contrast hover:text-primary cursor-pointer shrink-0"
                             >
                               <TbTrash className="size-4" />
                             </button>
@@ -341,9 +341,9 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                               });
                             }}
                           />
-                          <div className="flex-1 flex gap-2 items-center">
-                            <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-contrast">{company.companyName}</p>
-                            <p className="text-sm text-gray-500">{company.businessType}</p>
+                          <div className="flex-1 flex gap-2 items-center justify-between">
+                            <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-contrast line-clamp-1">{company.companyName}</p>
+                            <p className="text-sm text-gray-500 line-clamp-1">{company.businessType}</p>
                           </div>
                         </div>
                       ))
@@ -384,7 +384,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                         return (
                           <div key={index} className="p-2 border border-gray-300 rounded-2xl bg-gray-50">
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-sm text-gray-700 truncate">{`${format(slot.startTime, "hourFull")} - ${format(slot.endTime, "hourFull")}`}</span>
+                              <span className="text-sm text-gray-700 truncate">{`${format(slot.startTime, "hourFull")} - ${format(slot.endTime, "hourFull")} - ${slot.capacity} attendees`}</span>
                               <button
                                 onClick={() => handleRemoveSlot(index)}
                                 className="text-contrast hover:text-primary cursor-pointer shrink-0"
@@ -406,6 +406,14 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                           <Timepicker
                             value={currentSlotInput.endTime}
                             onChange={(val) => setCurrentSlotInput((prev) => ({ ...prev, endTime: val }))}
+                          />
+                          <InputField
+                            label=""
+                            labelClassName="hidden"
+                            value={currentSlotInput.capacity?.toString() || ""}
+                            placeholder="Capacity"
+                            onChange={(e) => setCurrentSlotInput((prev) => ({ ...prev, capacity: parseInt(e.target.value) || 0 }))}
+                            id="slotCapacity"
                           />
                           <Button
                             buttonIcon={<FaCheck className="size-3" />}

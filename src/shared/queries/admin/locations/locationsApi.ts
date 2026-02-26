@@ -46,7 +46,7 @@ export class LocationsApi {
     id: string,
     payload: UpdateLocationPayload,
   ): Promise<Location> {
-    const { data } = await systemApi.patch(`${LOCATIONS_ROUTE}/${id}`, payload);
+    const { data } = await systemApi.put(`${LOCATIONS_ROUTE}/${id}`, payload);
     return data.data;
   }
 

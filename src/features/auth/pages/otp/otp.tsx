@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { verifyOtp, resendOtp } from "../../../../shared/queries/otp/otp";
-import tccdLogo from "/TCCD_logo.svg";
 import toast from "react-hot-toast";
 import { Button } from "tccd-ui";
 import { AiOutlineArrowLeft, AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -126,7 +125,7 @@ const OTPPage: React.FC = () => {
             aria-labelledby="otp-title"
           >
             <header className="w-full flex flex-col gap-3 text-center items-center">
-              <img src={tccdLogo} width={100} alt="TCCD Logo" />
+              <img src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg" width={100} alt="TCCD Logo" />
               <h2 id="otp-title" className="text-2xl font-bold text-[#3B3D41]">
                 Verify Your Email
               </h2>

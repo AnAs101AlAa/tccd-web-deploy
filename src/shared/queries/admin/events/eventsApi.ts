@@ -1,3 +1,4 @@
+import type { EventSlot } from "@/shared/types/events";
 import { systemApi } from "../../AxoisInstance";
 import type Event from "@/shared/types/events";
 
@@ -79,7 +80,7 @@ export class EventsApi {
       `${EVENTS_ROUTE}`,
       { params: queryParams }
     );
-    return data.data.items.map((item: any) => ({...item, locations: item.rooms, eventMedia: item.medias} as Event)) as Event[];
+    return data.data.items.map((item: any) => ({...item, locations: item.rooms, eventMedia: item.medias, capacity: item.slots?.reduce((sum: number, slot: EventSlot) => sum + (slot.capacity || 0), 0) || 0} as Event)) as Event[];
   }
 
   async deleteEvent(id: string) {
@@ -99,10 +100,11 @@ export class EventsApi {
     await systemApi.delete(`${SPONSOR_ROUTE}/${eventId}/${companyId}`);
   }
 
-  async addEventSlot(eventId: string, startTime: string, endTime: string): Promise<void> {
+  async addEventSlot(eventId: string, startTime: string, endTime: string, capacity: number): Promise<void> {
     await systemApi.post(`/v1/Event/${eventId}/slots`, {
       startTime,
       endTime,
+      capacity,
     });
   }
 

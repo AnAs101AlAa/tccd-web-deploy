@@ -37,6 +37,7 @@ const roomImageSchema = z.string().trim().min(1, "Image ID is required");
 export const editLocationSchema = z.object({
   name: locationNameSchema,
   capacity: capacitySchema,
+  roomImageFileId: roomImageSchema,
 });
 
 export type EditLocationFormData = z.infer<typeof editLocationSchema>;

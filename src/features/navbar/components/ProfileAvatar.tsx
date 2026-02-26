@@ -10,7 +10,7 @@ const ProfileAvatar = ({ onClick }: ProfileAvatarProps) => {
   return (
     <div data-profile-avatar>
       <Avatar
-        src={'/user.jpg'}
+        src={'https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif'}
         alt="Profile"
         size="42px"
         backgroundColor="#ffffff"

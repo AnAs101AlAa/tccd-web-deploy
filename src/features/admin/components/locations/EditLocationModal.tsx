@@ -17,6 +17,7 @@ import {
 } from "@/features/admin/schemas";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
+import extractGoogleDriveId from "@/shared/utils/googleDriveHelper";
 
 interface EditLocationModalProps {
   location: Location;
@@ -34,8 +35,7 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const updateLocationMutation = useUpdateLocation();
-
+  const updateLocationMutation = useUpdateLocation();  
   const {
     control,
     handleSubmit,
@@ -46,7 +46,8 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
     defaultValues: {
       name: location.name,
       capacity: location.capacity,
-    },
+      roomImageFileId: extractGoogleDriveId(location.roomImage),
+    }
   });
 
   // Reset form when location changes
@@ -54,6 +55,7 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
     reset({
       name: location.name,
       capacity: location.capacity,
+      roomImageFileId: extractGoogleDriveId(location.roomImage),
     });
   }, [location, reset]);
 
@@ -65,6 +67,7 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
           id: location.id,
           name: data.name.trim(),
           capacity: data.capacity,
+          roomImageFileId: data.roomImageFileId,
         },
       });
 
@@ -119,9 +122,30 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
           )}
         />
 
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 text-blue-700 text-sm">
-          <strong>Note:</strong> Only name and capacity can be updated.
-        </div>
+        <Controller
+          name="roomImageFileId"
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Google Drive Image ID"
+              id="location-image"
+              value={field.value}
+              onChange={(e: any) => {
+                const val =
+                  e?.target?.value !== undefined ? e.target.value : e;
+                const match =
+                  typeof val === "string"
+                    ? val.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+                      val.match(/id=([a-zA-Z0-9_-]+)/)
+                    : null;
+                const id = match ? match[1] : val;
+                field.onChange(id);
+              }}
+              placeholder="Paste ID or full Google Drive URL"
+              error={errors.roomImageFileId?.message}
+            />
+          )}
+        />
 
         {/* Action Buttons */}
         <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
@@ -132,13 +156,13 @@ const EditLocationModal: React.FC<EditLocationModalProps> = ({
             width={ButtonWidths.AUTO}
             disabled={updateLocationMutation.isPending}
           />
-          <button
-            type="submit"
+          <Button
+            type="primary"
             disabled={updateLocationMutation.isPending}
-            className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {updateLocationMutation.isPending ? "Saving..." : "Save Changes"}
-          </button>
+            buttonText={updateLocationMutation.isPending ? "Saving..." : "Save Changes"}
+            onClick={handleSubmit(onSubmit)}
+            
+          />
         </div>
       </form>
     </Modal>

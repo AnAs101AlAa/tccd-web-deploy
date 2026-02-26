@@ -5,7 +5,6 @@ import { forgotPasswordSchema } from "../../schemas";
 import type { ForgotPasswordFormData } from "../../schemas";
 import { useAuth } from "../../hooks";
 import { FormInput, SubmitButton } from "../../components";
-import tccdLogo from "/TCCD_logo.svg";
 
 /**
  * ForgotPasswordPage Component
@@ -61,7 +60,7 @@ export const ForgotPasswordPage = () => {
           aria-labelledby="forgot-password-title"
         >
           <header className="w-full flex flex-col gap-3 text-center items-center">
-            <img src={tccdLogo} width={100} alt="TCCD Logo" />
+            <img src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg" width={100} alt="TCCD Logo" />
             <h2 id="forgot-password-title" className="text-2xl font-bold text-[#3B3D41]">
               Reset Password
             </h2>

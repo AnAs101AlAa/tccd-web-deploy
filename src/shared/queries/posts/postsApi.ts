@@ -16,8 +16,8 @@ export class PostsApi {
     }
   ) {
     const params: any = {
-      page,
-      count,
+      pageNumber: page,
+      pageSize: count,
     };
 
     if (filters?.name) {

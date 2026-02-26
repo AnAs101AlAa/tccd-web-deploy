@@ -14,7 +14,7 @@ const HeroSection = () => {
   const [eventsCount, setEventsCounter] = useState<number>(0);
   const [companyCount, setCompanyCount] = useState<number>(0);
   const [activeUsers, setActiveUsers] = useState<string[]>([
-    ...Array(5).fill("user.jpg"),
+    ...Array(5).fill("https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"),
   ]);
   const [usersCount, setUsersCount] = useState<number>(30);
 
@@ -40,14 +40,14 @@ const HeroSection = () => {
         const response = { pictures: [], activeUserCount: 25 };
         setActiveUsers([
           ...response.pictures,
-          ...Array(Math.max(0, 5 - response.pictures.length)).fill("user.jpg"),
+          ...Array(Math.max(0, 5 - response.pictures.length)).fill("https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"),
         ]);
         const inflation =
           response.activeUserCount + Math.floor(Math.random() * 21) + 10;
         setUsersCount(inflation);
       } catch (error) {
         console.error("Error fetching active users:", error);
-        setActiveUsers([...Array(5).fill("user.jpg")]);
+        setActiveUsers([...Array(5).fill("https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif")]);
         setUsersCount(30);
       }
     };
@@ -154,7 +154,7 @@ const HeroSection = () => {
               <div className="aspect-4/3 overflow-hidden rounded-xl">
                 <LazyImageLoader
                   className="w-full h-full inset-0"
-                  src="home.jpeg"
+                  src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/home_qd2zhq.jpg"
                   alt="Hero Image"
                   width="100%"
                   height="100%"

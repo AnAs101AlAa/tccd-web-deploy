@@ -22,20 +22,21 @@ export const eventFormSchema = z.object({
   slots: z.array(z.object({
     startTime: z.string(),
     endTime: z.string(),
+    capacity: z.number().min(0, {message: "Can't allocate a slot with no capacity."}),
   })).optional(),
 }).refine((data) => {
-  // If no slots, validation passes
   if (!data.slots || data.slots.length === 0) {
     return true;
   }
   
-  const eventDate = new Date(data.date);
-  
-  // Check all slots start and end after the event date
   return data.slots.every(slot => {
-    const slotStart = new Date(slot.startTime);
-    const slotEnd = new Date(slot.endTime);
-    return slotStart >= eventDate && slotEnd >= eventDate;
+    const getMinutes = (d: string) => {
+      const date = new Date(d);
+      return date.getHours() * 60 + date.getMinutes();
+    };
+    const startMinutes = getMinutes(slot.startTime);
+    const endMinutes = getMinutes(slot.endTime);
+    return startMinutes !== endMinutes;
   });
 }, {
   message: "All event slots must start and end on or after the event date.",

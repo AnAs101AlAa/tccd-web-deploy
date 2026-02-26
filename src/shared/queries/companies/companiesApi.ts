@@ -21,8 +21,8 @@ export class CompaniesApi {
     descending?: boolean,
   ): Promise<CompaniesResponse> {
     const queryParams: Record<string, string | number | boolean | undefined> = {
-      page,
-      count,
+      pageNumber: page,
+      pageSize: count,
       ...(companyName ? { CompanyName: companyName } : {}),
       ...(businessType ? { BusinessType: businessType } : {}),
       ...(isApproved !== undefined ? { IsApproved: isApproved } : {}),

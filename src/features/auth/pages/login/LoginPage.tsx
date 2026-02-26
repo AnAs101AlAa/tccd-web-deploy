@@ -5,7 +5,6 @@ import { loginSchema } from "../../schemas";
 import type { LoginFormData } from "../../schemas";
 import { useAuth } from "../../hooks";
 import { FormInput, SubmitButton } from "../../components";
-import tccdLogo from "/TCCD_logo.svg";
 
 export const LoginPage = () => {
   const { handleLogin, isLoggingIn, isAuthenticated, loginHolder } = useAuth();
@@ -41,7 +40,7 @@ export const LoginPage = () => {
           aria-labelledby="login-title"
         >
           <header className="w-full flex flex-col gap-3 text-center items-center">
-            <img src={tccdLogo} width={100} alt="azha-logo" />
+            <img src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg" width={100} alt="azha-logo" />
             <h2 className="text-2xl font-bold text-[#3B3D41]">Welcome Back</h2>
           </header>
 
