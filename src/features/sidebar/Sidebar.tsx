@@ -8,7 +8,6 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 import { IoHome } from "react-icons/io5";
-import TCCDLogo from "/TCCD_logo.svg";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLogout } from "@/shared/queries/auth";
 
@@ -112,7 +111,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           <div className="px-6 pb-8 flex justify-center">
             <img
               onClick={() => navigate("/")}
-              src={TCCDLogo}
+              src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg"
               alt="TCCD Logo"
               className="h-9 md:h-10 w-auto object-contain cursor-pointer"
             />

@@ -26,7 +26,6 @@ import {
   SubmitButton,
 } from "../../components";
 import { Button } from "tccd-ui";
-import tccdLogo from "/TCCD_logo.svg";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 
@@ -200,7 +199,7 @@ export const SignupPage = () => {
         >
           <header className="w-full flex flex-col gap-3 items-center mb-8">
             <p className="text-[#636569] font-bold">join us</p>
-            <img src={tccdLogo} width={80} alt="TCCD Logo" />
+            <img src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg" width={80} alt="TCCD Logo" />
             <h2 id="signup-title" className="text-2xl font-bold text-[#3B3D41]">
               TCCD Portal
             </h2>
