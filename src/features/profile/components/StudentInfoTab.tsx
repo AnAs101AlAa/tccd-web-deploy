@@ -18,7 +18,7 @@ const StudentInfoTab: React.FC<StudentInfoTabProps> = ({
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [displayUser, setDisplayUser] = useState<StudentLikeUser>(user);
-
+  
   useEffect(() => {
     setDisplayUser(user);
   }, [user]);

@@ -120,7 +120,7 @@ const UpcomingEventCard: React.FC<UpcomingEventCardProps> = ({
               width="fit"
               className="md:py-1.5 md:px-4 text-[10px] lg:text-[11px]"
               onClick={() => {
-                if (!currentUser.id) {
+                if (!currentUser?.id) {
                   toast.error("Please log in to be able to register in events.");
                   return;
                 }

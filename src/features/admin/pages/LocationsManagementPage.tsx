@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { LoadingPage, ErrorScreen, Button } from "tccd-ui";
+import { ErrorScreen, Button } from "tccd-ui";
 import { useGetLocations } from "@/shared/queries/admin";
 import { LocationCard, AddLocationModal } from "../components/locations";
 import { usePagination } from "@/shared/hooks";
@@ -58,10 +58,6 @@ const LocationsManagementPage = () => {
       itemsPerPageDesktop: 12,
     });
 
-  if (isLoading) {
-    return <LoadingPage />;
-  }
-
   if (isError) {
     return (
       <ErrorScreen
@@ -105,15 +101,26 @@ const LocationsManagementPage = () => {
           searchPlaceholder="Search by name, address, or description..."
         />
 
-        <GenericGrid
-          items={paginatedItems}
-          emptyMessage="No locations found. Start by adding your first location to manage events."
-          renderCard={(location: Location) => (
-            <LocationCard location={location} />
-          )}
-          gridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-          getKey={(location: Location) => location.id}
-        />
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center min-h-[30vh] w-full">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-contrast mx-auto mb-4"></div>
+              <p className="text-lg text-secondary font-medium">
+                Loading locations...
+              </p>
+            </div>
+          </div>
+        ) : (
+          <GenericGrid
+            items={paginatedItems}
+            emptyMessage="No locations found. Start by adding your first location to manage events."
+            renderCard={(location: Location) => (
+              <LocationCard location={location} />
+            )}
+            gridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+            getKey={(location: Location) => location.id}
+          />
+        )}
 
         <Pagination
           currentPage={currentPage}

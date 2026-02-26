@@ -168,3 +168,10 @@ export const useVerifyStudent = () => {
     },
   });
 };
+
+export const useVerifyToken = () => {
+  return useMutation({
+    mutationFn: () =>
+      authApiInstance.verifyToken(),
+  });
+};
