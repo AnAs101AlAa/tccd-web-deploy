@@ -16,8 +16,8 @@ const PastEventsPage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const currentDate = new Date();
-  const todayFormatted = currentDate.toISOString().split('T')[0];
-  
+  const todayFormatted = currentDate.toISOString().split("T")[0];
+
   // Detect screen size
   useEffect(() => {
     const checkMobile = () => {
@@ -32,16 +32,19 @@ const PastEventsPage = () => {
     EndDate: currentDate.toISOString(),
     OrderBy: "Date",
     Descending: true,
-    PageSize: isMobile ? 6 : 12
+    PageSize: isMobile ? 6 : 12,
   });
 
-  const { data, isLoading, error } = useGetAllPastEvents(searchParams);
+  const { data, isLoading, error } = useGetAllPastEvents({
+    ...searchParams,
+    PageNumber: currentPage,
+  });
 
   const apiPastEvents = data?.items || [];
   const totalPages = data?.totalPages || 0;
 
   useEffect(() => {
-    if (!isLoading && (data)) {
+    if (!isLoading && data) {
       setIsInitialLoad(false);
     }
   }, [isLoading]);
