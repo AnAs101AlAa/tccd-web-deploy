@@ -226,7 +226,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                   </td>
                   <td className="px-4 py-3">
                     {company.businessType ? (
-                      <span className="inline-flex items-center whitespace-nowrap px-2.5 py-1 shadow-sm rounded-full text-[13px] bg-gray-500/10 text-contrast">
+                      <span className="inline-flex items-center px-3 py-0.5 shadow-sm rounded-full text-[13px] font-semibold bg-contrast/10 text-contrast">
                         {company.businessType}
                       </span>
                     ) : (

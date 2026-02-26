@@ -70,8 +70,7 @@ export const routes: Route[] = [
     protected: true,
     roles: ["Admin", "Volunteeringmember"],
   },
-  { path: "/posts/:id", Component: PostPage, protected: true, roles: ["all"] },
-  { path: "/events/register/:id", Component: EventRegistrationPage },
+  { path: "/posts/:id", Component: PostPage },
   {
     path: "/admin/locations",
     Component: LocationsManagementPage,
