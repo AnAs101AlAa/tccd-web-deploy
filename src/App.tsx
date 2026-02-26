@@ -1,5 +1,5 @@
 import { routes } from "@/routing/routes";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
@@ -15,30 +15,29 @@ function ScrollToTop() {
   return null;
 }
 
-
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <ScrollToTop />
       <Toaster />
-        <Routes>
-          {routes.map(({ path, Component, protected: isProtected, roles }) => (
-            <Route 
-              key={path} 
-              path={path} 
-              element={
-                isProtected ? (
-                  <ProtectedRoute roles={roles}>
-                    <Component />
-                  </ProtectedRoute>
-                ) : (
+      <Routes>
+        {routes.map(({ path, Component, protected: isProtected, roles }) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              isProtected ? (
+                <ProtectedRoute roles={roles}>
                   <Component />
-                )
-              } 
-            />
-          ))}
-        </Routes>
-    </BrowserRouter>
+                </ProtectedRoute>
+              ) : (
+                <Component />
+              )
+            }
+          />
+        ))}
+      </Routes>
+    </HashRouter>
   );
 }
 
