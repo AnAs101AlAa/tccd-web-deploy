@@ -1,14 +1,12 @@
-name: CI/CD Pipeline with Security Scan
+name: Frontend Security Scan
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
-  security_and_dispatch:
+  security_scan:
     runs-on: ubuntu-latest
-    if: github.repository == 'TCCD-CUFE/tccd-web-frontend'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,24 +17,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run Dependency Audit
+      - name: Run npm audit (Dependency Scan)
         run: npm audit --audit-level=high || true
+
+      - name: Secret Scanning (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Official SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v7
+        with:
+          args: >
+            -Dsonar.projectKey=TCCD-CUFE_tccd-web-frontend
+            -Dsonar.organization=tccd-cufe
+            -Dsonar.sources=src
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
-
-      - name: Send Notification to Deploy Repo
-        run: |
-          curl -X POST \
-          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/AnAs101AlAa/tccd-web-deploy/dispatches \
-          -d '{"event_type": "source_pushed"}'
