@@ -1,18 +1,42 @@
-name: Notify Destination Repo
+name: CI/CD Pipeline with Security Scan
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  dispatch:
+  security_and_dispatch:
     runs-on: ubuntu-latest
     if: github.repository == 'TCCD-CUFE/tccd-web-frontend'
     steps:
-      - name: Send Notfication
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Dependency Audit
+        run: npm audit --audit-level=high
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Send Notification to Deploy Repo
         run: |
           curl -X POST \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/repos/AnAs101AlAa/tccd-web-deploy/dispatches \
-          -d '{"event_type": "source_pushed"}' 
+          -d '{"event_type": "source_pushed"}'
