@@ -29,6 +29,7 @@ const UsersView = ({ users }: { users: User[] }) => {
       .finally(() => setIsSubmitting(false));
   };
 
+  
   const handleUnbanUser = async (user: User) => {
     setIsSubmitting(true);
     setSelectedUserId(user.id);
