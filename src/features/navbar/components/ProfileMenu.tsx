@@ -4,8 +4,6 @@ import { useAppSelector } from "@/shared/store/hooks";
 import { selectCurrentUser } from "@/shared/store/selectors/userSelectors";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "@/shared/queries/auth";
-import { clearUser } from "@/shared/store";
-import { useDispatch } from "react-redux";
 
 interface ProfileMenuProps {
   isOpen: boolean;
@@ -27,7 +25,6 @@ const ProfileMenu = ({
   const currentUser = useAppSelector(selectCurrentUser);
 
   const menuItems = getProfileMenuItems(currentUser);
-  const dispatch = useDispatch();
 
   const handleMenuItemClick = (action?: string) => {
     if (action === "logout") {
@@ -35,7 +32,6 @@ const ProfileMenu = ({
         try {
           await logoutAsync();
           navigate("/login");
-          dispatch(clearUser());
           onClose();
         } catch (err) {
           console.error("Logout failed:", err);

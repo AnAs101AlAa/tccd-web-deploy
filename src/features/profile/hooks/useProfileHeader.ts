@@ -1,4 +1,4 @@
-import type { AnyUser } from "@/shared/types";
+import type { AnyUser, CompanyUser } from "@/shared/types";
 import {
   isStudent,
   isVolunteer,
@@ -6,31 +6,33 @@ import {
   isBusinessRep,
 } from "@/shared/types";
 
-export const useProfileHeader = (user: AnyUser) => {
+export const useProfileHeader = (user: AnyUser | CompanyUser) => {
+  const normalUser = user as AnyUser; // Type assertion for easier access to common fields
+  const companyUser = user as CompanyUser; // Type assertion for company-specific fields
 
   const getBio = () => {
-    if (isStudent(user) || isVolunteer(user)) {
+    if (isStudent(normalUser) || isVolunteer(normalUser)) {
       const status =
-        new Date().getFullYear() >= user.graduationYear
+        new Date().getFullYear() >= normalUser.graduationYear
           ? "Graduate of"
           : "Student in";
-      return `${status} ${user.university} batch of ${user.graduationYear}`;
+      return `${status} ${normalUser.university} batch of ${normalUser.graduationYear}`;
     }
-    if (isCompany(user)) {
-      return user.brief || user.description;
+    if (isCompany(companyUser)) {
+      return companyUser.brief || companyUser.description;
     }
-    if (isBusinessRep(user)) {
-      return user.jobTitle;
+    if (isBusinessRep(normalUser)) {
+      return normalUser.jobTitle;
     }
     return "TCCD Member";
   };
 
   const getDisplayName = () => {
-    if ("englishFullName" in user) {
-      return user.englishFullName;
+    if ("englishFullName" in normalUser) {
+      return normalUser.englishFullName;
     }
-    if ("companyName" in user) {
-      return user.companyName;
+    if ("companyName" in companyUser) {
+      return companyUser.companyName;
     }
     return "Unknown User";
   };

@@ -10,7 +10,7 @@ import { ErrorScreen, InfoScreen, SuccessScreen } from "tccd-ui";
 
 export default function SignupConfirmation() {
   const navigate = useNavigate();
-  const userStatus: UserStatus = useAppSelector(selectUserStatus);
+  const userStatus: UserStatus | "Unknown" = useAppSelector(selectUserStatus);
   const userFullName: string = useAppSelector(selectUserFullName);
   const userFirstName: string = userFullName.substring(
     0,

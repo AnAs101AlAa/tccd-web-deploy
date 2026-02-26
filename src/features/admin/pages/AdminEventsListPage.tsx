@@ -163,7 +163,7 @@ const AdminEventsListPage = () => {
         <div className="flex flex-col sm:flex-row items-start mb-4 sm:items-center justify-between gap-2 md:gap-4">
           <div>
             <p className="text-[29px] md:text-[32px] lg:text-[34px] font-bold text-contrast">
-              Event Management
+              Events
             </p>
             <p className="text-inactive-tab-text text-[15px] md:text-[16px] lg:text-[18px]">
               Manage all upcoming and past events
@@ -228,7 +228,7 @@ const AdminEventsListPage = () => {
                         }}
                       />
                     )}
-                    gridCols="grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+                    gridCols="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"
                     getKey={(event: Event) => event.id}
                   />
                   <Pagination
@@ -286,7 +286,7 @@ const AdminEventsListPage = () => {
                   <GenericGrid
                     items={pastData.items}
                     emptyMessage="No past events found."
-                    gridCols="grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+                    gridCols="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"
                     getKey={(event: Event) => event.id}
                     renderCard={(event: Event) => (
                       <PastEventCard

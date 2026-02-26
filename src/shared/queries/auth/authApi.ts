@@ -22,13 +22,12 @@ export class AuthApi {
     const { data } = await systemApi.post(AUTH_ROUTE + "login", credentials);
     const response = data.data;
 
-    // Map API response to our user types
     const baseUser = {
       id: response.id,
       englishFullName: response.englishName,
       arabicFullName: response.arabicName,
-      phoneNumber: "", // Not provided in login response
-      email: credentials.email, // Use from credentials
+      phoneNumber: response.phoneNumber,
+      email: credentials.email,
       gender: response.gender,
       status: response.status,
       createdAt: new Date().toISOString(),
@@ -230,5 +229,9 @@ export class AuthApi {
         { token }
     );
     return data;
+  }
+
+  async verifyToken() {
+    await systemApi.get(AUTH_ROUTE + "validate-token");
   }
 }

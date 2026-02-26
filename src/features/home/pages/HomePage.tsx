@@ -7,12 +7,12 @@ import { WithNavbar } from "@/shared/components/hoc";
 export default function HomePage (){
   return (
     <WithNavbar>
-        <div className="flex flex-col">
+      <div className="flex flex-col">
         <HeroSection />
         <BlogSection />
         <StatsSection />
         <ServicesSection />
-        </div>
+      </div>
     </WithNavbar>
   );
 };

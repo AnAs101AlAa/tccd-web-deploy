@@ -3,6 +3,7 @@ import { LazyImageLoader } from "tccd-ui";
 import { useNavigate } from "react-router-dom";
 import type Event from "@/shared/types/events";
 import EVENT_TYPES from "@/constants/EventTypes";
+import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 
 export const EventGalleryCard = (event: Event) => {
     const navigator = useNavigate();
@@ -38,7 +39,7 @@ export const EventGalleryCard = (event: Event) => {
                     {event.name}
                 </h2>
                 <p className="text-gray-600 text-[13px] md:text-[15px] line-clamp-3">
-                    {event.description}
+                    <HTMLFormattedText content={event.description} />
                 </p>
             </div>
         </div>

@@ -1,7 +1,6 @@
 import {
   Modal,
   InputField,
-  TextAreaField,
   DropdownMenu,
   Button,
   SearchField,
@@ -14,9 +13,10 @@ import type Event from "@/shared/types/events";
 import { FaPlus, FaCheck } from "react-icons/fa";
 import { TbTrash } from "react-icons/tb";
 import useEventModalUtils from "../../utils/eventModalUtils";
-import type { Company } from "@/shared/types/companies";
+import type { Company } from "@/shared/queries/companies/types";
 import type { EventSlot } from "@/shared/types/events";
 import format from "@/shared/utils/dateFormater";
+import { RichTextEditor } from "@/shared/components/RichTextEditor";
 
 interface AddEditEventModalProps {
   event?: Event;
@@ -86,12 +86,12 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
               error={errors.name}
             />
 
-            <TextAreaField
+            <RichTextEditor
               label="Description"
               labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
               value={formValues.description || ""}
               placeholder="Enter detailed event description"
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              onChange={(value) => handleInputChange("description", value)}
               id="description"
               maxLength={1000}
               error={errors.description}
@@ -333,7 +333,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                                 const isSelected = currentSponsors.find((sponsor) => sponsor.id === company.id);
                                 const newSponsors = isSelected
                                   ? currentSponsors.filter((sponsor) => sponsor.id !== company.id)
-                                  : [...currentSponsors, company];
+                                  : [...currentSponsors, { ...company, logo: company.logo || "" }];
                                 return {
                                   ...prev,
                                   sponsors: newSponsors,

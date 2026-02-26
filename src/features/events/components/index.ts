@@ -6,5 +6,4 @@ export { default as EventTicketCard } from "./EventTicketCard";
 export { default as TicketPoster } from "./TicketPoster";
 export { default as AttendeeInfo } from "./AttendeeInfo";
 export { default as TicketQRCode } from "./TicketQRCode";
-export { default as TicketDivider } from "./TicketDivider";
 export { default as TicketRulesModal } from "./TicketRulesModal";

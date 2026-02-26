@@ -15,14 +15,12 @@ const TicketPoster: React.FC<TicketPosterProps> = ({
 }) => {
   const statusStyles = () => {
     switch (status) {
-      case "Active":
-        return "bg-success/10 text-success border-success";
-      case "Scanned":
-        return "bg-secondary/10 text-secondary border-secondary";
-      case "Expired":
-        return "bg-label/10 text-label border-label";
-      case "Cancelled":
-        return "bg-error/10 text-error border-error";
+      case "Approved":
+        return "bg-green-500/10 text-green-600 border-green-500";
+      case "Pending":
+        return "bg-yellow-500/10 text-yellow-600 border-yellow-500";
+      case "Rejected":
+        return "bg-red-500/10 text-red-600 border-red-500";
       default:
         return "";
     }

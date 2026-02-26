@@ -50,6 +50,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
         defaultValues: {
             englishFullName: user.englishFullName,
             arabicFullName: user.arabicFullName,
+            phoneNumber: user.phoneNumber,
             gender: user.gender,
             university: user.university,
             faculty: user.faculty,
@@ -68,6 +69,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
         reset({
             englishFullName: user.englishFullName,
             arabicFullName: user.arabicFullName,
+            phoneNumber: user.phoneNumber,
             gender: user.gender,
             university: user.university,
             faculty: user.faculty,
@@ -86,6 +88,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                 updateUserProfileMutation.mutateAsync({
                     englishName: formValues.englishFullName.trim(),
                     arabicName: formValues.arabicFullName.trim(),
+                    phoneNumber: formValues.phoneNumber.trim(),
                     gender: formValues.gender,
                 }),
                 updateStudentProfileMutation.mutateAsync({
@@ -158,6 +161,21 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                                 onChange={(e) => field.onChange(e.target.value)}
                                 id="arabicFullName"
                                 error={errors.arabicFullName?.message}
+                            />
+                        )}
+                    />
+                    <Controller
+                        name="phoneNumber"
+                        control={control}
+                        render={({ field }) => (
+                            <InputField
+                                labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                label="Phone Number"
+                                value={field.value}
+                                placeholder="Enter your phone number"
+                                onChange={(e) => field.onChange(e.target.value)}
+                                id="phoneNumber"
+                                error={errors.phoneNumber?.message}
                             />
                         )}
                     />
@@ -286,22 +304,22 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                             />
                         )}
                     />
+                    <Controller
+                        name="cv"
+                        control={control}
+                        render={({ field }) => (
+                            <InputField
+                                labelClassName="text-contrast text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                label="Google Drive CV Link"
+                                value={field.value ?? ""}
+                                onChange={(e) => field.onChange(extractDriveId(e.target.value) ?? "")}
+                                placeholder="https://drive.google.com/file/d/..."
+                                id="cv"
+                                error={errors.cv?.message}
+                            />
+                        )}
+                    />
                 </div>
-                <Controller
-                    name="cv"
-                    control={control}
-                    render={({ field }) => (
-                        <InputField
-                            labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                            label="Google Drive CV Link"
-                            value={field.value ?? ""}
-                            onChange={(e) => field.onChange(extractDriveId(e.target.value))}
-                            placeholder="https://drive.google.com/file/d/..."
-                            id="cv"
-                            error={errors.cv?.message}
-                        />
-                    )}
-                />
                 <div className="flex items-center justify-center gap-3">
                     <Button
                         buttonText="Cancel"

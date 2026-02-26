@@ -26,7 +26,7 @@ const phoneNumberSchema = z
   .string()
   .min(1, "Phone number is required")
   .regex(
-    /^(\+?\d{1,3}[- ]?)?\d{10,}$/,
+    /^(?:010|011|012|015|\+20)([0-9]{8})$/,
     "Please enter a valid phone number (at least 10 digits)"
   );
 
