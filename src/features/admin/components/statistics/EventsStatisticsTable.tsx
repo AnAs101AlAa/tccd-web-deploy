@@ -3,6 +3,7 @@ import { useGetAllEvents } from "@/shared/queries/events";
 import { Pagination } from "@/shared/components/pagination";
 import type Event from "@/shared/types/events";
 import type { EventQueryParams } from "@/shared/types/events";
+import EVENT_TYPES from "@/constants/EventTypes";
 
 interface EventsStatisticsTableProps {
   onEventSelect: (event: Event) => void;
@@ -94,8 +95,8 @@ const EventsStatisticsTable = ({
                   {formatDate(event.date)}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-contrast/10 text-contrast">
-                    {event.type}
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-sm shadow-sm font-medium bg-gray-500/10 text-contrast border-gray-500">
+                    {EVENT_TYPES.find((type) => type.value === event.type)?.label || event.type}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-secondary font-medium">

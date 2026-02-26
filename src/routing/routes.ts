@@ -22,6 +22,7 @@ import {
   CompaniesPage,
   HomePage,
   PostPage,
+  UsersAdminPage,
 } from "@/features";
 
 export interface Route {
@@ -70,6 +71,7 @@ export const routes: Route[] = [
     roles: ["Admin", "Volunteeringmember"],
   },
   { path: "/posts/:id", Component: PostPage, protected: true, roles: ["all"] },
+  { path: "/events/register/:id", Component: EventRegistrationPage },
   {
     path: "/admin/locations",
     Component: LocationsManagementPage,
@@ -99,5 +101,10 @@ export const routes: Route[] = [
     Component: CompaniesPage,
     protected: true,
     roles: ["Admin"],
+  },
+  { path: "/admin/users",
+    Component: UsersAdminPage,
+    protected: true,
+    roles: ["Admin"] 
   },
 ];
