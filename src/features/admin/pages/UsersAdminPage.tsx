@@ -8,7 +8,11 @@ import { ErrorScreen } from "tccd-ui";
 import UsersFilter from "../components/users/UsersFilter";
 
 export default function UsersAdminPage() {
-  const [queryParams, setQueryParams] = useState<UserQueryParams>({
+  const [userQueryParams, setUserQueryParams] = useState<UserQueryParams>({
+    page: 1,
+    count: 20,
+  });
+  const [volunteerQueryParams, setVolunteerQueryParams] = useState<UserQueryParams>({
     page: 1,
     count: 20,
   });
@@ -21,7 +25,7 @@ export default function UsersAdminPage() {
     volunteeringMemberError,
     refetchStudent,
     refetchVolunteeringMember
-  } = useUsers(queryParams);
+  } = useUsers({ userQueryParams, volunteerQueryParams });
 
   if (volunteeringMemberError && studentError) {
     return (
@@ -36,22 +40,35 @@ export default function UsersAdminPage() {
 
   return (
     <WithLayout>
-      <div className="w-full mx-auto space-y-4 md:space-y-6">
-        <div className="bg-white rounded-2xl md:rounded-4xl shadow-lg md:shadow-xl p-4 sm:p-5 md:p-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-5">
-            <h1 className="text-2xl sm:text-3xl font-bold text-secondary">
-              User Management
-            </h1>
-          </div>
-          <div className="mb-3">
+      <div className="py-4 md:py-8 px-4 md:px-8">
+        <div className="mb-4">
+          <h1 className="text-[28px] md:text-[32px] lg:text-[34px] font-bold text-contrast">
+            Users
+          </h1>
+          <p className="text-inactive-tab-text text-[15px] md:text-[16px] lg:text-[18px]">
+            Manage all registered users, including students and volunteering members, manage account access and view user details and member profiles.
+          </p>
+        </div>
+
+        <section
+          id="all-users-section"
+          className="rounded-xl mb-4 md:mb-6 border border-contrast/10 bg-background/60 p-4 sm:p-5 lg:p-6 shadow-sm"
+        >
+          <div className="flex flex-col gap-3">
+            <div>
+              <h2 className="text-[22px] md:text-[23px] lg:text-[24px] font-bold text-secondary">
+                General Users
+              </h2>
+              <p className="text-[14px] md:text-[15px] lg:text-[16px] text-inactive-tab-text">
+                View and manage all registered users.
+              </p>
+            </div>
             <UsersFilter
-              searchParams={queryParams}
-              onSearch={(params) => setQueryParams(params)}
+              searchParams={userQueryParams}
+              onSearch={(params) => setUserQueryParams(params)}
             />
+            <hr className="border-t border-gray-400/60 -mt-2 mb-3 shadow-lg" />
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
-            Student Users
-          </h2>
           {isLoadingStudent && (
             <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
               <div className="text-center">
@@ -82,20 +99,38 @@ export default function UsersAdminPage() {
               <UsersList users={studentUsers.items} />
               <div className="mt-4 md:mt-6">
                 <Pagination
-                  currentPage={queryParams.page}
+                  currentPage={userQueryParams.page}
                   totalPages={Math.ceil(
-                    studentUsers.totalCount / queryParams.count,
+                    studentUsers.totalCount / userQueryParams.count,
                   )}
                   onPageChange={(page) => {
-                    setQueryParams((prev) => ({ ...prev, page }));
+                    setUserQueryParams((prev) => ({ ...prev, page }));
                   }}
                 />
               </div>
             </>
           )}
-          <h2 className="text-2xl sm:text-3xl font-bold text-secondary">
-            Volunteering Members
-          </h2>
+        </section>
+        
+        <section
+          id="volunteering-section"
+          className="rounded-xl mb-4 md:mb-6 border border-contrast/10 bg-background/60 p-4 sm:p-5 lg:p-6 shadow-sm"
+        >
+          <div className="flex flex-col gap-3">
+            <div>
+              <h2 className="text-[22px] md:text-[23px] lg:text-[24px] font-bold text-secondary">
+                Volunteering Members
+              </h2>
+              <p className="text-[14px] md:text-[15px] lg:text-[16px] text-inactive-tab-text">
+                View and manage all volunteering members.
+              </p>
+            </div>
+            <UsersFilter
+              searchParams={volunteerQueryParams}
+              onSearch={(params) => setVolunteerQueryParams(params)}
+            />
+            <hr className="border-t border-gray-400/60 -mt-2 mb-3 shadow-lg" />
+          </div>
           {isLoadingVolunteeringMember && (
             <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
               <div className="text-center">
@@ -126,18 +161,18 @@ export default function UsersAdminPage() {
               <UsersList users={volunteeringMemberUsers.items} />
               <div className="mt-4 md:mt-6">
                 <Pagination
-                  currentPage={queryParams.page}
+                  currentPage={volunteerQueryParams.page}
                   totalPages={Math.ceil(
-                    volunteeringMemberUsers.totalCount / queryParams.count,
+                    volunteeringMemberUsers.totalCount / volunteerQueryParams.count,
                   )}
                   onPageChange={(page) => {
-                    setQueryParams((prev) => ({ ...prev, page }));
+                    setVolunteerQueryParams((prev) => ({ ...prev, page }));
                   }}
                 />
               </div>
             </>
           )}
-        </div>
+        </section>
       </div>
     </WithLayout>
   );

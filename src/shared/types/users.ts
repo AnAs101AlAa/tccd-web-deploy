@@ -86,7 +86,6 @@ export interface AdminUser extends User {
 export type AnyUser =
   | StudentUser
   | VolunteeringUser
-  | CompanyUser
   | BusinessRepUser
   | FacultyMemberUser
   | AdminUser

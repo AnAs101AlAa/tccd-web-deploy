@@ -1,6 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { eventApi } from "./eventApi";
+import { eventRegisterApi } from "./eventRegisterApi";
 import type { EventQueryParams } from "@/shared/types";
+import { getErrorMessage } from "@/shared/utils/errorHandler";
+import toast from "react-hot-toast";
 
 export const eventKeys = {
   all: ["events"] as const,
@@ -13,6 +16,8 @@ export const eventKeys = {
   detail: (id: string) => [...eventKeys.all, "detail", id] as const,
   sponsors: (eventId: string) =>
     [...eventKeys.all, "sponsors", eventId] as const,
+  eligibility: (eventId: string) =>
+    [...eventKeys.all, "eligibility", eventId] as const,
 };
 
 export const useGetAllEvents = (params?: EventQueryParams) => {
@@ -23,7 +28,7 @@ export const useGetAllEvents = (params?: EventQueryParams) => {
     },
     staleTime: 5 * 60 * 1000,
   });
-}
+};
 
 export const useGetAllUpcomingEvents = (params?: EventQueryParams) => {
   return useQuery({
@@ -56,5 +61,40 @@ export const useGetEventSponsors = (eventId: string) => {
     queryFn: () => eventApi.getSponsorsByEventId(eventId),
     enabled: !!eventId,
     staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useCheckEligibility = (eventId: string) => {
+  return useQuery({
+    queryKey: eventKeys.eligibility(eventId),
+    queryFn: () => eventRegisterApi.checkEligibility(eventId),
+    enabled: !!eventId,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useRegisterForEvent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      eventId,
+      eventSlotId,
+    }: {
+      eventId: string;
+      eventSlotId: string;
+    }) => eventRegisterApi.registerForEvent(eventId, eventSlotId),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: eventKeys.detail(variables.eventId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: eventKeys.eligibility(variables.eventId),
+      });
+      toast.success("Registration successful! 🎉");
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error));
+    },
   });
 };

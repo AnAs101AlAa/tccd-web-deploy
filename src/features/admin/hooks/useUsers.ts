@@ -1,11 +1,27 @@
 import { useGetUsers } from "@/shared/queries/admin/users/userQueries";
 import type { UserQueryParams } from "@/shared/queries/admin/users/userTypes";
 
+type UseUsersParams = {
+  userQueryParams: UserQueryParams;
+  volunteerQueryParams: UserQueryParams;
+};
+
 /**
  * Custom hook to fetch student and volunteering member users
  * Returns loading states, error states, and user data
  */
-export const useUsers = (params?: UserQueryParams) => {
+export const useUsers = (params?: UserQueryParams | UseUsersParams) => {
+  // Support separate params for users and volunteers
+  let userParams: UserQueryParams;
+  let volunteerParams: UserQueryParams;
+  if (params && 'userQueryParams' in params && 'volunteerQueryParams' in params) {
+    userParams = params.userQueryParams;
+    volunteerParams = params.volunteerQueryParams;
+  } else {
+    userParams = params as UserQueryParams;
+    volunteerParams = params as UserQueryParams;
+  }
+
   // Fetch student users
   const {
     data: studentUsers,
@@ -13,9 +29,9 @@ export const useUsers = (params?: UserQueryParams) => {
     error: studentError,
     refetch: refetchStudent,
   } = useGetUsers({
-    ...params,
+    ...userParams,
     Role: "Student",
-  } as UserQueryParams);
+  });
 
   // Fetch volunteering member users
   const {
@@ -24,9 +40,9 @@ export const useUsers = (params?: UserQueryParams) => {
     error: volunteeringMemberError,
     refetch: refetchVolunteeringMember,
   } = useGetUsers({
-    ...params,
+    ...volunteerParams,
     Role: "VolunteeringMember",
-  } as UserQueryParams);
+  });
 
   // Combined loading state
   const isLoading = isLoadingStudent || isLoadingVolunteeringMember;

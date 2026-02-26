@@ -3,8 +3,6 @@ import CardView from "@/shared/components/adminTables/CardView";
 import type {
   User,
   UserStatus,
-  UserRole,
-  StudentProfile,
 } from "@/shared/queries/admin/users/userTypes";
 import {
   useBanUser,
@@ -76,35 +74,26 @@ const UsersView = ({ users }: { users: User[] }) => {
       width: "w-1/6",
       formatter: (value: string | undefined, user?: User) => {
         return (
-          <div className="flex items-center gap-2">
-            {user?.profileImage && (
-              <img
-                src={user.profileImage}
-                alt={value || ""}
-                className="w-8 h-8 rounded-full object-cover"
-              />
+          <div className="text-contrast">
+            <div>{value || user?.arabicName || "N/A"}</div>
+            {user?.arabicName && value && (
+              <div className="text-sm text-text-muted-foreground">
+                {user.arabicName}
+              </div>
             )}
-            <div>
-              <div>{value || user?.arabicName || "N/A"}</div>
-              {user?.arabicName && value && (
-                <div className="text-xs text-text-muted-foreground">
-                  {user.arabicName}
-                </div>
-              )}
-            </div>
           </div>
         );
       },
     },
     {
-      label: "Role",
-      key: "role" as keyof User,
-      formatter: (value: UserRole | undefined) => value || "N/A",
+      label: "Email",
+      key: "email" as keyof User,
+      formatter: (value: string | undefined) => value || "N/A",
     },
     {
-      label: "Profile Type",
-      key: "id" as keyof User,
-      formatter: (_: any, user?: User) => getProfileInfo(user!).type,
+      label: "Phone Number",
+      key: "phoneNumber" as keyof User,
+      formatter: (value: string | undefined) => value || "N/A",
     },
     {
       label: "Details",
@@ -131,12 +120,14 @@ const UsersView = ({ users }: { users: User[] }) => {
       key: "status" as keyof User,
       formatter: (value: UserStatus) => (
         <span
-          className={`px-2 py-1 rounded text-xs font-medium ${
-            value === "Banned"
-              ? "bg-red-100 text-red-800"
+          className={`px-2.5 py-1 rounded-full text-xs border shadow-sm font-medium ${
+            (value === "Banned" || value === "Rejected")
+              ? "bg-red-500/10 text-red-700 border-red-500"
               : value === "Approved"
-                ? "bg-green-100 text-green-800"
-                : "bg-gray-100 text-gray-800"
+              ? "bg-green-500/10 text-green-600 border-green-500"
+              : value === "Pending"
+              ? "bg-blue-500/10 text-blue-700 border-blue-500"
+              : "bg-gray-500/10 text-gray-700 border-gray-500"
           }`}
         >
           {value}
@@ -148,37 +139,43 @@ const UsersView = ({ users }: { users: User[] }) => {
   // Card view fields
   const cardFields = [
     {
-      label: "Role",
-      key: "role" as keyof User,
-      formatter: (value: UserRole | undefined) => value || "N/A",
+      label: "Email",
+      key: "email" as keyof User,
+      formatter: (value: string | undefined) => value || "N/A",
+    },
+    {
+      label: "Phone Number",
+      key: "phoneNumber" as keyof User,
+      formatter: (value: string | undefined) => value || "N/A",
     },
     {
       label: "Gender",
       key: "gender" as keyof User,
+      formatter: (value: string | undefined) => (
+        <div className="text-contrast w-1/3">
+          {value || "N/A"}
+        </div>
+      ),
     },
     {
       label: "Status",
       key: "status" as keyof User,
       formatter: (value: UserStatus) => {
-        const statusStyles: Record<UserStatus, string> = {
-          Pending: "bg-yellow-100 text-yellow-800",
-          Approved: "bg-green-100 text-green-800",
-          Rejected: "bg-orange-100 text-orange-800",
-          Banned: "bg-red-100 text-red-800",
-        };
         return (
-          <span
-            className={`px-2 py-1 rounded text-xs font-medium ${statusStyles[value]}`}
-          >
-            {value}
-          </span>
-        );
-      },
-    },
-    {
-      label: "Profile Type",
-      key: "id" as keyof User,
-      formatter: (_: any, user?: User) => getProfileInfo(user!).type,
+        <span
+          className={`px-2.5 py-1 rounded-full text-xs border shadow-sm font-medium ${
+            (value === "Banned" || value === "Rejected")
+              ? "bg-red-500/10 text-red-700 border-red-500"
+              : value === "Approved"
+              ? "bg-green-500/10 text-green-600 border-green-500"
+              : value === "Pending"
+              ? "bg-blue-500/10 text-blue-700 border-blue-500"
+              : "bg-gray-500/10 text-gray-700 border-gray-500"
+          }`}
+        >
+          {value}
+        </span>
+      )},
     },
     {
       label: "Details",
@@ -194,49 +191,6 @@ const UsersView = ({ users }: { users: User[] }) => {
             </div>
           </div>
         );
-      },
-    },
-    // Conditionally show student-specific fields
-    {
-      label: "LinkedIn",
-      key: "studentProfile" as keyof User,
-      formatter: (profile: StudentProfile) => {
-        if (!profile?.linkedIn) return null;
-        return (
-          <a
-            href={profile.linkedIn}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
-          >
-            View Profile
-          </a>
-        );
-      },
-    },
-    {
-      label: "GitHub",
-      key: "studentProfile" as keyof User,
-      formatter: (profile: StudentProfile) => {
-        if (!profile?.github) return null;
-        return (
-          <a
-            href={profile.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
-          >
-            View Profile
-          </a>
-        );
-      },
-    },
-    {
-      label: "Committee",
-      key: "studentProfile" as keyof User,
-      formatter: (profile: StudentProfile) => {
-        if (!profile?.volunteeringProfile) return null;
-        return `${profile.volunteeringProfile.committeeAffiliation} - ${profile.volunteeringProfile.committePosition}`;
       },
     },
   ];

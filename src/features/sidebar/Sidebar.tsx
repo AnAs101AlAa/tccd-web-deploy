@@ -163,7 +163,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
               <span className="shrink-0">
                 <IoHome className="w-5 h-5" />
               </span>
-              <span className="text-sm font-medium">back to home</span>
+              <span className="text-sm font-medium">Back to home</span>
             </button>
             <button
               onClick={handleLogout}

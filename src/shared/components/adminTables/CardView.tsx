@@ -43,7 +43,7 @@ const CardView = <T extends { id?: string }>({
   }, [items]);
 
   return (
-    <div className="lg:hidden divide-y divide-surface-glass-border/10">
+    <div className="lg:hidden divide-y divide-gray-300">
       {modalTitle && confirmationAction && (
         <ConfirmActionModal
           item={items.find((item) => item.id === showDeleteModal) as T}
@@ -58,10 +58,10 @@ const CardView = <T extends { id?: string }>({
 
       {displayedItems && displayedItems.length > 0 ? (
         displayedItems.map((item, index) => (
-          <div key={item.id || index} className="p-4 space-y-3">
+          <div key={item.id || index} className="p-2 pb-4 space-y-3">
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-semibold text-text-title text-[18px] md:text-[20px]">
+                <p className="font-semibold text-text-title text-[20px] md:text-[20px]">
                   {String(item[titleKey]) || "N/A"}
                 </p>
               </div>
@@ -77,7 +77,7 @@ const CardView = <T extends { id?: string }>({
                 return (
                   <div
                     key={idx}
-                    className={field.fullWidth ? "col-span-2" : ""}
+                    className={field.fullWidth ? "col-span-2" : "min-w-1/3"}
                   >
                     <span className="font-medium text-text-muted-foreground mb-1">
                       {field.label}

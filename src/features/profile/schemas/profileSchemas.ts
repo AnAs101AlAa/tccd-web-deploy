@@ -50,6 +50,14 @@ const arabicFullNameSchema = z
     }
   );
 
+const phoneNumberSchema = z
+  .string()
+  .min(1, "Phone number is required")
+    .regex(
+      /^(?:01[0125][0-9]{8}|\\+201[0125][0-9]{8})$/,
+      "Please enter a valid phone number"
+    );
+
 /**
  * Gender Schema
  */
@@ -174,6 +182,7 @@ const githubSchema = z
 export const editStudentProfileSchema = z.object({
   englishFullName: englishFullNameSchema,
   arabicFullName: arabicFullNameSchema,
+  phoneNumber: phoneNumberSchema,
   gender: genderSchema,
   university: universitySchema,
   faculty: facultySchema,
@@ -182,7 +191,7 @@ export const editStudentProfileSchema = z.object({
   gpa: gpaSchema,
   linkedin: linkedinSchema,
   gitHub: githubSchema,
-  cv: z.string().optional(),
+  cv: z.string().optional().nullable(),
 });
 
 export type EditStudentProfileFormData = z.infer<typeof editStudentProfileSchema>;

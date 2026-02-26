@@ -53,13 +53,13 @@ const Table = <T extends { id?: string }>({
           onSubmit={(item: T) => confirmationAction(item)}
         />
       )}
-      <table className="w-full">
-        <thead className="bg-muted-primary/10">
+      <table className="w-full border border-gray-200">
+        <thead className="bg-contrast/5">
           <tr>
             {columns.map((column, idx) => (
               <th
                 key={idx}
-                className={`whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-text-muted-foreground ${
+                className={`whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text ${
                   column.width || ""
                 }`}
               >
@@ -67,14 +67,14 @@ const Table = <T extends { id?: string }>({
               </th>
             ))}
             {renderActions && (
-              <th className="px-4 py-3 text-left text-sm font-medium text-text-muted-foreground whitespace-nowrap">
+              <th className="px-4 py-3 text-left text-sm font-medium text-inactive-tab-text whitespace-nowrap">
                 Actions
               </th>
             )}
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-surface-glass-border/10">
+        <tbody className="divide-y divide-gray-200">
           {displayedItems && displayedItems.length > 0 ? (
             displayedItems.map((item, index) => (
               <tr
@@ -89,7 +89,7 @@ const Table = <T extends { id?: string }>({
 
                   return (
                     <td key={idx} className={`px-4 py-3 ${column.width || ""}`}>
-                      <div className="font-medium text-text-body-main whitespace-nowrap">
+                      <div className="font-medium text-contrast whitespace-nowrap">
                         {displayValue}
                       </div>
                     </td>
@@ -97,7 +97,7 @@ const Table = <T extends { id?: string }>({
                 })}
                 {renderActions && (
                   <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-2">
+                    <div className="flex items-center gap-2">
                       {renderActions(
                         item,
                         (id) => setShowDeleteModal(id),

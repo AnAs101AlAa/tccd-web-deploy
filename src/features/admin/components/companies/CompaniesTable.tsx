@@ -38,7 +38,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-
+  
   const handleView = (company: Company) => {
     setSelectedCompany(company);
     setIsDetailOpen(true);
@@ -219,14 +219,14 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                           <FiBriefcase className="w-4 h-4 text-inactive-tab-text" />
                         )}
                       </div>
-                      <span className="font-medium text-contrast">
+                      <span className="font-medium text-contrast whitespace-nowrap">
                         {company.companyName}
                       </span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     {company.businessType ? (
-                      <span className="inline-flex items-center px-3 py-0.5 shadow-sm rounded-full text-[13px] font-semibold bg-contrast/10 text-contrast">
+                      <span className="inline-flex items-center whitespace-nowrap px-2.5 py-1 shadow-sm rounded-full text-[13px] bg-gray-500/10 text-contrast">
                         {company.businessType}
                       </span>
                     ) : (

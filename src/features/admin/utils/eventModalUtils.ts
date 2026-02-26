@@ -96,7 +96,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   const [currentMediaInput, setCurrentMediaInput] = useState<string>("");
 
   const [isAddingSlot, setIsAddingSlot] = useState<boolean>(false);
-  const [currentSlotInput, setCurrentSlotInput] = useState<EventSlot>({ startTime: "", endTime: "" });
+  const [currentSlotInput, setCurrentSlotInput] = useState<EventSlot>({id: "", startTime: "", endTime: "", capacity: 0});
 
   useEffect(() => {
     if (event) {
@@ -171,18 +171,31 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
       return;
     }
     
-    if (!currentSlotInput.startTime || !currentSlotInput.endTime) {
-      toast.error("Please select both start and end times.");
+    if (!currentSlotInput.startTime || !currentSlotInput.endTime || !currentSlotInput.capacity) {
+      toast.error("Please select both start and end times and capacity.");
       return;
     }
 
-    const [startHour, startMin] = currentSlotInput.startTime.split(':').map(Number);
-    const [endHour, endMin] = currentSlotInput.endTime.split(':').map(Number);
+    const parseTime = (timeStr: string) => {
+      if (timeStr.includes('T')) {
+        const date = new Date(timeStr);
+        return [date.getHours(), date.getMinutes()];
+      }
+      const [h, m] = timeStr.split(':').map(Number);
+      return [h, m];
+    };
+    const [startHour, startMin] = parseTime(currentSlotInput.startTime);
+    const [endHour, endMin] = parseTime(currentSlotInput.endTime);
     const startMinutes = startHour * 60 + startMin;
-    const endMinutes = endHour * 60 + endMin;
+    let endMinutes = endHour * 60 + endMin;
     
-    if (startMinutes >= endMinutes) {
-      toast.error("Start time must be before end time.");
+    let crossesMidnight = false;
+    if (endMinutes < startMinutes) {
+      endMinutes += 24 * 60;
+      crossesMidnight = true;
+    }
+    if (startMinutes === endMinutes) {
+      toast.error("Start and end time cannot be the same.");
       return;
     }
     
@@ -192,17 +205,21 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     
     const endDate = new Date(eventDate);
     endDate.setHours(endHour, endMin, 0, 0);
+    if (crossesMidnight) {
+      endDate.setDate(endDate.getDate() + 1);
+    }
     
     const slotWithTimestamp = {
+      id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15),
       startTime: startDate.toISOString(),
       endTime: endDate.toISOString(),
     };
     
     setFormValues((prev) => ({
       ...prev,
-      slots: [...(prev.slots || []), slotWithTimestamp],
+      slots: [...(prev.slots || []), { ...slotWithTimestamp, capacity: currentSlotInput.capacity }],
     }));
-    setCurrentSlotInput({ startTime: "", endTime: "" });
+    setCurrentSlotInput({ id: "", startTime: "", endTime: "", capacity: 0 });
     setIsAddingSlot(false);
   }
 
@@ -226,6 +243,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
       eventImage: formValues.eventImage || "",
     };
 
+    console.log("Finalized form values for submission:", finalizedValue);
     const validationErrors = validateAllFields(finalizedValue);
 
     if (Object.keys(validationErrors).length > 0) {
@@ -280,7 +298,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
 
         for (const slot of formValues.slots || []) {
           if (!event.slots?.find((s) => s.startTime === slot.startTime && s.endTime === slot.endTime)) {
-            await addEventSlotMutation.mutateAsync({ eventId: event.id, startTime: slot.startTime, endTime: slot.endTime });
+            await addEventSlotMutation.mutateAsync({ eventId: event.id, startTime: slot.startTime, endTime: slot.endTime, capacity: slot.capacity || 0 });
           }
         }
 

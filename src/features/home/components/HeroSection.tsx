@@ -180,8 +180,6 @@ const HeroSection = () => {
                 labelColorClass="text-red-100"
               />
             </div>
-
-            {/* blur effects */}
             <div className="absolute -z-10 h-40 w-40 rounded-full bg-secondary blur-[100px] -top-10 -left-5 opacity-50"></div>
             <div className="absolute -z-10 h-40 w-40 rounded-full bg-primary blur-[100px] -bottom-10 -right-5 opacity-50"></div>
           </div>
