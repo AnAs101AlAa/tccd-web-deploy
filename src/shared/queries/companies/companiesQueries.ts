@@ -3,7 +3,6 @@ import { companiesApi } from "./companiesApi";
 import type { CreateCompanyPayload, UpdateCompanyPayload } from "./types";
 
 // ── Public hooks ────────────────────────────────────────────
-
 export const useGetCompanies = (
   page: number = 1,
   count: number = 10,
