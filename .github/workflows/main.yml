@@ -29,9 +29,14 @@ jobs:
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5
+        with:
+          args: >
+            -Dsonar.projectKey=TCCD-CUFE_tccd-web-frontend
+            -Dsonar.organization=tccd-cufe
+            -Dsonar.sources=src
+            -Dsonar.host.url=https://sonarcloud.io
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
 
       - name: Send Notification to Deploy Repo
         run: |
