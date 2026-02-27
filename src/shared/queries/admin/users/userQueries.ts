@@ -11,18 +11,18 @@ export function useGetUsers(params?: UserQueryParams) {
   });
 }
 
-export function useGetPendingAccounts(page?: number, count?: number) {
-    return useQuery({
-        queryKey: ["admin", "pending-accounts", page, count],
-        queryFn: async () => usersApi.fetchPendingAccounts(page, count),
-    });
+export function useGetPendingAccounts(PageNumber?: number, PageSize?: number) {
+  return useQuery({
+    queryKey: ["admin", "pending-accounts", PageNumber, PageSize],
+    queryFn: async () => usersApi.fetchPendingAccounts(PageNumber, PageSize),
+  });
 }
 
 export function useApproveUser(userId: string) {
-    return useMutation({
-        mutationKey: ["admin", "users", "approve", userId],
-        mutationFn: async () => usersApi.approveUser(userId),
-    })
+  return useMutation({
+    mutationKey: ["admin", "users", "approve", userId],
+    mutationFn: async () => usersApi.approveUser(userId),
+  });
 }
 
 export function useRejectUser(userId: string) {

@@ -9,8 +9,8 @@ import type { CompaniesQueryParams } from "@/shared/queries/companies";
 
 const CompaniesPage: React.FC = () => {
   const [queryParams, setQueryParams] = useState<CompaniesQueryParams>({
-    page: 1,
-    count: 10,
+    PageNumber: 1,
+    PageSize: 10,
     OrderBy: "CreatedAt",
     Descending: true,
   });
@@ -25,7 +25,7 @@ const CompaniesPage: React.FC = () => {
   const handleSearch = useCallback(() => {
     setQueryParams((prev) => ({
       ...prev,
-      page: 1,
+      PageNumber: 1,
       CompanyName: searchInput.trim() || undefined,
       BusinessType: businessTypeFilter.trim() || undefined,
       IsApproved: approvalFilter === "" ? undefined : approvalFilter === "true",
@@ -41,7 +41,7 @@ const CompaniesPage: React.FC = () => {
   ]);
 
   const handlePageChange = useCallback((newPage: number) => {
-    setQueryParams((prev) => ({ ...prev, page: newPage }));
+    setQueryParams((prev) => ({ ...prev, PageNumber: newPage }));
   }, []);
 
   return (

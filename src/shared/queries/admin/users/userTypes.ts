@@ -5,8 +5,10 @@ export interface UserQueryParams {
   IsDeleted?: boolean;
   Role?: UserRole;
   Status?: UserStatus;
-  page: number;
-  count: number;
+  PageNumber: number;
+  PageSize: number;
+  OrderBy?: string;
+  Descending?: boolean;
 }
 
 export interface User {

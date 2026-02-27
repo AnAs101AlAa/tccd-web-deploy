@@ -23,8 +23,8 @@ interface CompaniesTableProps {
 
 const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
   const { data: response, isLoading } = useGetCompanies(
-    queryParams.page,
-    queryParams.count,
+    queryParams.PageNumber,
+    queryParams.PageSize,
     queryParams.CompanyName,
     queryParams.BusinessType,
     queryParams.IsApproved,

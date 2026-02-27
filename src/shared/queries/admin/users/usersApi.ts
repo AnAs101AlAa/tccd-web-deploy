@@ -10,11 +10,11 @@ export class UsersApi {
   }
 
   async fetchPendingAccounts(
-    page: number = 1,
-    count: number = 10,
+    PageNumber: number = 1,
+    PageSize: number = 10,
   ): Promise<UserResponse> {
     const response = await systemApi.get(`${USERS_ROUTE}/pending-accounts`, {
-      params: { page, count },
+      params: { PageNumber: PageNumber, PageSize: PageSize },
     });
     return response.data.data;
   }
