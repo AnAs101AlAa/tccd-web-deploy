@@ -4,8 +4,18 @@ import { eventFormSchema } from "./eventFormSchema";
 import { useGetLocations } from "@/shared/queries/admin/locations/locationsQueries";
 import { useEffect, useState } from "react";
 import EVENT_TYPES from "@/constants/EventTypes";
-import { useCreateEvent, useUpdateEvent, useUpdateEventPoster, useAddEventMedia, useDeleteEventMedia, useAddSponsorToEvent, useRemoveSponsorFromEvent, useAddEventSlot, useRemoveEventSlot } from "@/shared/queries/admin/events/eventsQueries";
-import toast from "react-hot-toast";  
+import {
+  useCreateEvent,
+  useUpdateEvent,
+  useUpdateEventPoster,
+  useAddEventMedia,
+  useDeleteEventMedia,
+  useAddSponsorToEvent,
+  useRemoveSponsorFromEvent,
+  useAddEventSlot,
+  useRemoveEventSlot,
+} from "@/shared/queries/admin/events/eventsQueries";
+import toast from "react-hot-toast";
 import { useGetCompanies } from "@/shared/queries/companies";
 import { useGetEventSponsors } from "@/shared/queries/events";
 import { useQueryClient } from "@tanstack/react-query";
@@ -40,17 +50,27 @@ const validateAllFields = (formValues: Event) => {
   return errors;
 };
 
-export default function useEventModalUtils({event, onClose}: {event?: Event; onClose: () => void;}) {
+export default function useEventModalUtils({
+  event,
+  onClose,
+}: {
+  event?: Event;
+  onClose: () => void;
+}) {
   const queryClient = useQueryClient();
 
-  const [locationNameKey, setLocationNameKey] = useState<string|undefined>(undefined);
-  const [companyNameKey, setCompanyNameKey] = useState<string|undefined>(undefined);
-
-  const { data: locations, isLoading: locationsLoading } = useGetLocations(
-    1,
-    100,
-    locationNameKey,
+  const [locationNameKey, setLocationNameKey] = useState<string | undefined>(
+    undefined,
   );
+  const [companyNameKey, setCompanyNameKey] = useState<string | undefined>(
+    undefined,
+  );
+
+  const { data: locations, isLoading: locationsLoading } = useGetLocations({
+    PageNumber: 1,
+    PageSize: 100,
+    Name: locationNameKey,
+  });
   const { data: companies, isLoading: companiesLoading } = useGetCompanies(
     1,
     100,
@@ -164,13 +184,13 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   const handleRemoveNewMedia = (index: number) => {
     setNewMediaIds((prev) => prev.filter((_, i) => i !== index));
   };
-  
+
   const handleAddSlot = () => {
     if (!formValues.date) {
       toast.error("Please select event date first.");
       return;
     }
-    
+
     if (!currentSlotInput.startTime || !currentSlotInput.endTime || !currentSlotInput.capacity) {
       toast.error("Please select both start and end times and capacity.");
       return;
@@ -188,7 +208,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     const [endHour, endMin] = parseTime(currentSlotInput.endTime);
     const startMinutes = startHour * 60 + startMin;
     let endMinutes = endHour * 60 + endMin;
-    
+
     let crossesMidnight = false;
     if (endMinutes < startMinutes) {
       endMinutes += 24 * 60;
@@ -198,37 +218,37 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
       toast.error("Start and end time cannot be the same.");
       return;
     }
-    
-    const eventDate = new Date(formValues.date);    
+
+    const eventDate = new Date(formValues.date);
     const startDate = new Date(eventDate);
     startDate.setHours(startHour, startMin, 0, 0);
-    
+
     const endDate = new Date(eventDate);
     endDate.setHours(endHour, endMin, 0, 0);
     if (crossesMidnight) {
       endDate.setDate(endDate.getDate() + 1);
     }
-    
+
     const slotWithTimestamp = {
       id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15),
       startTime: startDate.toISOString(),
       endTime: endDate.toISOString(),
     };
-    
+
     setFormValues((prev) => ({
       ...prev,
       slots: [...(prev.slots || []), { ...slotWithTimestamp, capacity: currentSlotInput.capacity }],
     }));
     setCurrentSlotInput({ id: "", startTime: "", endTime: "", capacity: 0 });
     setIsAddingSlot(false);
-  }
+  };
 
   const handleRemoveSlot = (index: number) => {
     setFormValues((prev) => ({
       ...prev,
       slots: prev.slots?.filter((_, i) => i !== index),
     }));
-  }
+  };
 
   const handleSave = async () => {
     const registrationDeadlineDate = formValues.date ? new Date(formValues.date) : new Date();
@@ -297,14 +317,32 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
         }
 
         for (const slot of formValues.slots || []) {
-          if (!event.slots?.find((s) => s.startTime === slot.startTime && s.endTime === slot.endTime)) {
-            await addEventSlotMutation.mutateAsync({ eventId: event.id, startTime: slot.startTime, endTime: slot.endTime, capacity: slot.capacity || 0 });
+          if (
+            !event.slots?.find(
+              (s) =>
+                s.startTime === slot.startTime && s.endTime === slot.endTime,
+            )
+          ) {
+            await addEventSlotMutation.mutateAsync({
+              eventId: event.id,
+              startTime: slot.startTime,
+              endTime: slot.endTime,
+              capacity: slot.capacity || 0,
+            });
           }
         }
 
         for (const slot of event.slots || []) {
-          if (!formValues.slots?.find((s) => s.startTime === slot.startTime && s.endTime === slot.endTime)) {
-            await removeEventSlotMutation.mutateAsync({ eventId: event.id, slotId: slot.id || "" });
+          if (
+            !formValues.slots?.find(
+              (s) =>
+                s.startTime === slot.startTime && s.endTime === slot.endTime,
+            )
+          ) {
+            await removeEventSlotMutation.mutateAsync({
+              eventId: event.id,
+              slotId: slot.id || "",
+            });
           }
         }
 
@@ -331,7 +369,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
             });
           }
         }
-        
+
         queryClient.invalidateQueries({ queryKey: ["events"] });
         toast.success("Event created successfully!");
         onClose();

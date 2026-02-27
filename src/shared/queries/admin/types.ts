@@ -34,7 +34,20 @@ export interface UpdateLocationPayload {
  * Response from location API endpoints
  */
 export interface LocationResponse {
-  data: Location | Location[];
-  message?: string;
-  success: boolean;
+  items: Location[];
+  pageIndex: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+export interface LocationsQueryParams {
+  PageNumber: number;
+  PageSize: number;
+  Name?: string;
+  Capacity?: number;
+  OrderBy?: string;
+  Descending?: boolean;
 }
