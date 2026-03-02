@@ -11,6 +11,8 @@ import { ErrorScreen, InfoScreen, SuccessScreen } from "tccd-ui";
 export default function SignupConfirmation() {
   const navigate = useNavigate();
   const userStatus: UserStatus | "Unknown" = useAppSelector(selectUserStatus);
+  const userRole = useAppSelector((state) => state.user.currentUser?.role);
+
   const userFullName: string = useAppSelector(selectUserFullName);
   const userFirstName: string = userFullName.substring(
     0,
@@ -27,6 +29,15 @@ export default function SignupConfirmation() {
     }
   }, [userStatus, navigate]);
 
+  if(userRole === "Student") {
+    return (
+      <SuccessScreen
+        title='Activate Your Account'
+        message='Thank you for signing up! Please check your email for an activation link to verify your account. If you do not see the email, please check your spam folder or contact support.'
+      />
+    );
+  }
+  
   if (!userStatus) {
     return (
       <ErrorScreen

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   accountTypeSchema,
   basicInfoSchema,
@@ -100,9 +100,13 @@ export const SignupPage = () => {
     },
   });
 
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/", { replace: true });
+    }
+  }, []);
 
   // Get step labels
   const getStepLabels = () => {
