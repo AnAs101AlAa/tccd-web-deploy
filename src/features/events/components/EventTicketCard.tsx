@@ -1,7 +1,9 @@
 import React from "react";
 import type { Registration } from "@/shared/types/profile";
-import TicketPoster from "./TicketPoster";
 import AttendeeInfo from "./AttendeeInfo";
+import TicketQRCode from "./TicketQRCode";
+import { useGetEventQRCode } from "@/shared/queries/events/eventQueries";
+import EVENT_TYPES from "@/constants/EventTypes";
 import {
   FaCalendar,
   FaMapMarkerAlt,
@@ -32,25 +34,45 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
   // Room names as locations
   const roomNames = event.rooms?.map((room) => room.name).filter(Boolean);
 
+  const {
+    data: qrData,
+    isLoading: isQRLoading,
+  } = useGetEventQRCode(event.id, registration.status === "Approved");
+
+  // Map backend event type value to human-readable label
+  const eventTypeLabel =
+    EVENT_TYPES.find((t) => t.value === event.type)?.label ?? event.type;
+
+  const statusStyles = {
+    Approved: "bg-green-500/10 text-green-600 border-green-500",
+    Pending: "bg-yellow-500/10 text-yellow-600 border-yellow-500",
+    Rejected: "bg-red-500/10 text-red-600 border-red-500",
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto bg-background rounded-lg shadow-lg overflow-hidden">
-      <TicketPoster
-        posterSrc={event.eventImage}
-        eventTitle={event.name}
-        status={registration.status}
-      />
-
-      <div className="p-4 pt-4 sm:p-6 md:p-8">
-        {/* Event Title */}
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-contrast mb-2">
+      <div className="p-4 pt-6 sm:p-6 md:p-8">
+        {/* Event Name — centered */}
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-contrast text-center mb-2 leading-tight">
           {event.name}
         </h1>
 
-        {/* Event Type Badge */}
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary mb-4">
-          <FaTag className="w-3 h-3" />
-          {event.type}
-        </span>
+        {/* Event Type + Status Badges */}
+        <div className="flex items-center justify-center gap-3 mb-5">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-primary/10 text-primary">
+            <FaTag className="w-3 h-3" />
+            {eventTypeLabel}
+          </span>
+          <span
+            className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold border-2 ${statusStyles[registration.status] ?? ""
+              }`}
+          >
+            {registration.status}
+          </span>
+        </div>
+
+        {/* Divider below title/tags */}
+        <hr className="border-gray-200 mb-6" />
 
         {/* Description */}
         {event.description && (
@@ -127,6 +149,25 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
                 </div>
               ))}
             </div>
+          </>
+        )}
+
+        {/* QR Code Section */}
+        {registration.status === "Approved" && (
+          <>
+            <div className="border-t-2 border-dashed border-gray-300 my-6" />
+            {isQRLoading ? (
+              <div className="flex items-center justify-center h-48">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary" />
+              </div>
+            ) : qrData?.base64Image ? (
+              <TicketQRCode
+                qrCodeSrc={`data:image/png;base64,${qrData.base64Image}`}
+                eventTitle={event.name}
+              />
+            ) : (
+              <p className="text-sm text-label text-center">QR code unavailable</p>
+            )}
           </>
         )}
 

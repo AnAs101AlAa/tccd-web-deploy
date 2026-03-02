@@ -18,6 +18,8 @@ export const eventKeys = {
     [...eventKeys.all, "sponsors", eventId] as const,
   eligibility: (eventId: string) =>
     [...eventKeys.all, "eligibility", eventId] as const,
+  qrCode: (eventId: string) =>
+    [...eventKeys.all, "qrCode", eventId] as const,
 };
 
 export const useGetAllEvents = (params?: EventQueryParams) => {
@@ -70,6 +72,16 @@ export const useCheckEligibility = (eventId: string) => {
     queryFn: () => eventRegisterApi.checkEligibility(eventId),
     enabled: !!eventId,
     staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetEventQRCode = (eventId: string, enabled = true) => {
+  return useQuery({
+    queryKey: eventKeys.qrCode(eventId),
+    queryFn: () => eventApi.getEventQRCode(eventId),
+    enabled: !!eventId && enabled,
+    staleTime: 10 * 60 * 1000,
+    retry: false,
   });
 };
 
