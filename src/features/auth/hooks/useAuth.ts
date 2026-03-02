@@ -21,6 +21,8 @@ import type {
   UserType,
 } from "../schemas";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/shared/store";
 
 /**
  * Custom Auth Hook
@@ -30,6 +32,8 @@ import { useState } from "react";
  */
 export const useAuth = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
   const isAuthenticated = useIsAuthenticated();
   const currentUser = useCurrentUser();
   const [loginHolder, setLoginHolder] = useState(false);
@@ -80,7 +84,7 @@ export const useAuth = () => {
     try {
       if (userType === "student") {
         const studentData = additionalData as StudentInfoFormData;
-        await signupStudentMutation.mutateAsync({
+        const userData = await signupStudentMutation.mutateAsync({
           email: basicData.email,
           password: basicData.password,
           englishName: basicData.englishFullName,
@@ -91,6 +95,8 @@ export const useAuth = () => {
           faculty: studentData.faculty,
           department: studentData.department || "",
         });
+        dispatch(setUser({...userData, role: "Student"}));
+
       } else if (userType === "company_representative") {
         const companyData = additionalData as CompanyRepInfoFormData;
         await signupBusinessRepMutation.mutateAsync({

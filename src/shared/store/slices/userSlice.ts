@@ -69,7 +69,7 @@ const userSlice = createSlice({
       action: PayloadAction<AnyUser>,
     ) => {
       state.currentUser = action.payload;
-      state.isAuthenticated = true;
+      state.isAuthenticated = action.payload && action.payload.status === "Approved" ? true : false;
       state.error = null;
       state.lastUpdated = Date.now();
     },

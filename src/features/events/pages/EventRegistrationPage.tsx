@@ -329,7 +329,7 @@ export default function EventRegisterForm() {
                         label=""
                         value={storedUser.phoneNumber}
                         disabled={true}
-                        placeholder="+20 123 456 7890"
+                        placeholder="01234567890"
                       />
                     </div>
                   </div>
