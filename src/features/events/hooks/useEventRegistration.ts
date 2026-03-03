@@ -50,7 +50,7 @@ export const useEventRegistration = (eventId: string) => {
   }, [event?.slots]);
 
   const isEligible = eligibility?.isEligible ?? false;
-  const eligibilityReason = eligibility?.reason;
+  const eligibilityReason = eligibility?.message;
 
   const register = async (slotId: string) => {
     try {

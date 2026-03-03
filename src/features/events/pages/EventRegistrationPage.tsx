@@ -117,7 +117,7 @@ export default function EventRegisterForm() {
     minute: "2-digit",
     hour12: true,
   });
-
+  
   return (
     <WithLayout>
       <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
@@ -134,23 +134,6 @@ export default function EventRegisterForm() {
                 You have been successfully registered for{" "}
                 <span className="font-semibold">{event.name}</span>.
               </p>
-            </div>
-          )}
-
-          {/* Eligibility Warning */}
-          {!isEligible && (
-            <div className="mb-6 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-              <FaTriangleExclamation className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm font-semibold text-amber-800">
-                  You are not eligible to register for this event.
-                </p>
-                {eligibilityReason && (
-                  <p className="text-xs text-amber-700 mt-1">
-                    {eligibilityReason}
-                  </p>
-                )}
-              </div>
             </div>
           )}
 
@@ -512,6 +495,23 @@ export default function EventRegisterForm() {
             </Activity>
           </div>
 
+          {/* Eligibility Warning */}
+          {!isEligible && (
+            <div className="mb-6 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <FaTriangleExclamation className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
+              <div>
+                <p className="text-sm font-semibold text-amber-800">
+                  You are not eligible to register for this event.
+                </p>
+                {eligibilityReason && (
+                  <p className="text-sm text-amber-700 mt-1">
+                    {eligibilityReason}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          
           {/* Navigation Buttons */}
           <div className="mt-8 flex items-center justify-between gap-3">
             <Button
