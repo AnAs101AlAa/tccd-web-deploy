@@ -140,7 +140,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                         render={({ field }) => (
                             <InputField
                                 labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                                label="English Name"
+                                label="English Name *"
                                 value={field.value}
                                 placeholder="Enter at least 3 names (e.g., John Michael Doe)"
                                 onChange={(e) => field.onChange(e.target.value)}
@@ -155,7 +155,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                         render={({ field }) => (
                             <InputField
                                 labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                                label="Arabic Name"
+                                label="Arabic Name (الاسم بالعربية) *"
                                 value={field.value}
                                 placeholder="أدخل ثلاثة أسماء على الأقل"
                                 onChange={(e) => field.onChange(e.target.value)}
@@ -170,7 +170,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                         render={({ field }) => (
                             <InputField
                                 labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                                label="Phone Number"
+                                label="Phone Number *"
                                 value={field.value}
                                 placeholder="Enter your phone number"
                                 onChange={(e) => field.onChange(e.target.value)}
@@ -185,7 +185,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                         render={({ field }) => (
                             <DropdownMenu
                                 labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                                label="Gender"
+                                label="Gender *"
                                 options={genderOptions}
                                 value={field.value}
                                 onChange={field.onChange}
@@ -200,7 +200,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                         render={({ field }) => (
                             <DropdownMenu
                                 labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                                label="University"
+                                label="University *"
                                 value={field.value}
                                 options={UniversityList.map((uni) => ({ label: uni, value: uni }))}
                                 placeholder="Enter university"
@@ -216,7 +216,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                         render={({ field }) => (
                             <DropdownMenu
                                 labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                                label="Faculty"
+                                label="Faculty *"
                                 value={field.value}
                                 options={FacultyList.map((faculty) => ({ label: faculty, value: faculty }))}
                                 placeholder="Enter faculty"
@@ -233,7 +233,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                             render={({ field }) => (
                                 <DropdownMenu
                                     labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                                    label="Department"
+                                    label="Department *"
                                     value={field.value}
                                     options={DepartmentList.map((dept) => ({ label: dept, value: dept }))}
                                     placeholder="Enter department"
@@ -251,7 +251,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                             <NumberField
                                 id="graduationYear"
                                 labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                                label="Graduation Year"
+                                label="Graduation Year *"
                                 value={field.value}
                                 placeholder="Enter graduation year"
                                 onChange={(val) => field.onChange(val.toString())}
@@ -266,7 +266,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                             <NumberField
                                 id="gpa"
                                 labelClassName="text-contrast text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                                label="GPA"
+                                label="GPA *"
                                 value={field.value}
                                 placeholder="Enter GPA"
                                 onChange={(val) => field.onChange(val.toString())}

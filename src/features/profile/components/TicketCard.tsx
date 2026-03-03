@@ -1,8 +1,10 @@
 import type { Ticket } from "@/shared/types/profile";
 import { useNavigate } from "react-router-dom";
 import { LazyImageLoader } from "tccd-ui";
-import { FaCalendar } from "react-icons/fa";
+import EVENT_TYPES from "@/constants/EventTypes";
+import { MdCalendarMonth } from "react-icons/md";
 import format from "@/shared/utils/dateFormater";
+import { Button } from "tccd-ui";
 
 export default function TicketCard({ ticket }: { ticket: Ticket }) {
   const navigate = useNavigate();
@@ -14,21 +16,22 @@ export default function TicketCard({ ticket }: { ticket: Ticket }) {
   const statusStyles = () => {
     switch (ticket.status) {
       case "Approved":
-        return "bg-green-500";
+        return "bg-green-500/10 text-green-600 border-green-500";
       case "Pending":
-        return "bg-yellow-500";
+        return "bg-yellow-500/10 text-yellow-600 border-yellow-500";
       case "Rejected":
-        return "bg-primary";
+        return "bg-red-500/10 text-red-600 border-red-500";
       default:
         return "";
     }
   };
+
   return (
     <div
       onClick={handleClick}
-      className="relative flex items-center m-auto gap-2 lg:gap-3 border-1 border-gray-300 rounded-lg w-full lg:h-[320px] md:h-[280px] h-[240px] cursor-pointer bg-background hover:scale-[102%] transition duration-300 ease-in-out"
+      className="relative flex flex-col shadow-md border border-gray-300 rounded-lg w-full lg:h-[320px] md:h-[280px] h-[240px] cursor-pointer bg-background"
     >
-      <div className="absolute top-0 left-0 inset-0 rounded-lg">
+
         <LazyImageLoader
           src={ticket.event.eventImage}
           alt={ticket.event.name}
@@ -36,20 +39,31 @@ export default function TicketCard({ ticket }: { ticket: Ticket }) {
           height="100%"
           className="rounded-lg"
         />
-      </div>
-      <div className="bg-background w-full absolute bottom-0 p-4 border-t border-gray-200 rounded-b-lg pb-5">
-        <p className="text-secondary font-bold text-[20px] md:text-[21px] lg:text-[23px] md:mb-2">
+      <div className="bg-background w-full flex-1 pt-2 pb-3 px-3 rounded-b-lg">
+        <div className="flex gap-1 items-center">
+          <span className="text-primary text-[13px] md:text-[15px] font-semibold">
+            {EVENT_TYPES.find((type) => type.value === ticket.event.type)?.label ||
+            "Other"}
+          </span>
+          <span className="text-gray-400">|</span>
+          <span className="text-inactive-tab-text text-[12px] md:text-[14px] font-semibold">
+            <MdCalendarMonth className="text-inactive-tab-text mr-1 size-3.5 lg:size-4 -mt-1 inline" />
+            {format(ticket.event.date, "stringed")}
+          </span>
+        </div>
+        <p className="font-bold text-contrast text-[22px] md:text-[23px] lg:text-[24px] mb-1">
           {ticket.event.name}
         </p>
-        <div className="flex items-center gap-2">
-          <FaCalendar className="size-4 text-primary" />
-          <p className="text-contrast text-[11px] md:text-[12px] lg:text-[13px]">
-            {format(ticket.event.date, "stringed")}
-          </p>
-        </div>
+        <Button
+          buttonText="View Details"
+          type="secondary"
+          width="fit"
+          className="md:py-1.5 md:px-4 text-[10px] lg:text-[11px]"
+          onClick={handleClick}
+        />
       </div>
       <span
-        className={`absolute top-2 right-2 px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-full font-medium ${statusStyles()} text-white!`}
+        className={`absolute top-2 right-2 inline-flex items-center px-2.5 py-1 shadow-sm border rounded-full text-xs font-medium ${statusStyles()}`}
       >
         {ticket.status}
       </span>
