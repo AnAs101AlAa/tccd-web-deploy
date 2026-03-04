@@ -105,16 +105,16 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
             />
           )}
 
-          <InfoItem
+          {/* <InfoItem
             icon={<FaHourglassEnd className="w-4 h-4 text-primary" />}
             label="Registration Deadline"
             value={format(event.registrationDeadline, "stringed")}
-          />
+          /> */}
 
           <InfoItem
             icon={<FaUsers className="w-4 h-4 text-primary" />}
             label="Capacity"
-            value={`${event.registeredCount ?? event.attendeeCount} / ${event.capacity}`}
+            value={eventSlot.capacity.toString()}
           />
 
           <InfoItem
