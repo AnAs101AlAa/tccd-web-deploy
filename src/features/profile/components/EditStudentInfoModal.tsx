@@ -279,7 +279,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                         control={control}
                         render={({ field }) => (
                             <InputField
-                                labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                labelClassName="text-contrast text-[13px] md:text-[14px] lg:text-[15px] mb-1"
                                 label="LinkedIn"
                                 value={field.value ?? ""}
                                 placeholder="https://linkedin.com/in/..."

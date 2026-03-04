@@ -53,18 +53,18 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
     <div className="w-full max-w-4xl mx-auto bg-background rounded-lg shadow-lg overflow-hidden">
       <div className="p-4 pt-6 sm:p-6 md:p-8">
         {/* Event Name — centered */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-contrast text-center mb-2 leading-tight">
+        <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-contrast text-center mb-2 leading-tight">
           {event.name}
-        </h1>
+        </p>
 
         {/* Event Type + Status Badges */}
         <div className="flex items-center justify-center gap-3 mb-5">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-primary/10 text-primary">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-semibold bg-primary/10 text-primary">
             <FaTag className="w-3 h-3" />
             {eventTypeLabel}
           </span>
           <span
-            className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold border-2 ${statusStyles[registration.status] ?? ""
+            className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border-2 ${statusStyles[registration.status] ?? ""
               }`}
           >
             {registration.status}
@@ -72,11 +72,11 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
         </div>
 
         {/* Divider below title/tags */}
-        <hr className="border-gray-200 mb-6" />
+        <hr className="border-gray-200 mb-3" />
 
         {/* Description */}
         {event.description && (
-          <p className="text-sm sm:text-base text-secondary mb-6 leading-relaxed">
+          <p className="text-sm sm:text-base text-contrast mb-6 leading-relaxed">
             {event.description}
           </p>
         )}
