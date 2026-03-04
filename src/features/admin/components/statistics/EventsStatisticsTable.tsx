@@ -129,7 +129,7 @@ const EventsStatisticsTable = ({
                 <span className="font-medium text-inactive-tab-text block mb-0.5">
                   Date
                 </span>
-                <span className="text-secondary">{formatDate(event.date)}</span>
+                <span className="text-secondary">{format(event.date, "stringed")}</span>
               </div>
               <div>
                 <span className="font-medium text-inactive-tab-text block mb-0.5">
