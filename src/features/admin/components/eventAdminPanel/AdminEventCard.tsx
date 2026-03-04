@@ -1,7 +1,7 @@
 import type Event from "@/shared/types/events";
 import { useNavigate } from "react-router-dom";
 import { Button, LazyImageLoader } from "tccd-ui";
-import Format from "@/shared/utils/dateFormater";
+import format from "@/shared/utils/dateFormater";
 import { MdCalendarMonth, MdGroups } from "react-icons/md";
 import EVENT_TYPES from "@/constants/EventTypes";
 import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
@@ -41,7 +41,7 @@ export default function AdminEventCard({
         <div className="flex items-center text-[13px] md:text-[14px] font-semibold text-inactive-tab-text">
           <div className="flex flex-row items-center">
             <MdCalendarMonth className=" mr-1 size-4 lg:size-4.5 -mt-0.5" />
-            {Format(event.date, "stringed")}
+            {format(event.date, "stringed")}
           </div>
           <span className="mx-1.5 text-inactive-tab-text">|</span>
           <div className="flex flex-row items-center">

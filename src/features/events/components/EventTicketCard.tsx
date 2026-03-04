@@ -11,7 +11,6 @@ import {
   FaUsers,
   FaTag,
   FaClipboardList,
-  FaHourglassEnd,
 } from "react-icons/fa";
 import format from "@/shared/utils/dateFormater";
 
@@ -104,12 +103,6 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
               value={`${format(eventSlot.startTime, "hourFull")} – ${format(eventSlot.endTime, "hourFull")}`}
             />
           )}
-
-          {/* <InfoItem
-            icon={<FaHourglassEnd className="w-4 h-4 text-primary" />}
-            label="Registration Deadline"
-            value={format(event.registrationDeadline, "stringed")}
-          /> */}
 
           <InfoItem
             icon={<FaUsers className="w-4 h-4 text-primary" />}

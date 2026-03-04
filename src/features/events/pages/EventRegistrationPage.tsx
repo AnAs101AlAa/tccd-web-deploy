@@ -23,6 +23,7 @@ import { getErrorMessage } from "@/shared/utils/errorHandler";
 import { useEventRegistration } from "../hooks";
 import EVENT_TYPES from "@/constants/EventTypes";
 import RegistrationConfirmationModal from "../components/RegistrationConfirmationModal";
+import format from "@/shared/utils/dateFormater";
 
 /**
  * Creates a Zod schema for the registration form.
@@ -113,16 +114,7 @@ export default function EventRegisterForm() {
   const capacityUsage = (event.registeredCount / event.capacity) * 100;
   const progressPercentage = (currentStep / totalSteps) * 100;
 
-  const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-  const formattedTime = new Date(event.date).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
+  const formattedDate = format(event.date, "stringed");
   
   return (
     <WithLayout>
@@ -178,7 +170,7 @@ export default function EventRegisterForm() {
                       Date & Time
                     </p>
                     <p className="text-sm font-semibold text-foreground">
-                      {formattedDate} • {formattedTime}
+                      {formattedDate}
                     </p>
                   </div>
                 </div>
@@ -494,7 +486,7 @@ export default function EventRegisterForm() {
                           <button
                             type="button"
                             onClick={() => setShowRules(true)}
-                            className="text-secondary font-semibold hover:underline transition-colors inline"
+                            className="text-secondary font-semibold transition-colors inline underline cursor-pointer hover:text-secondary/80"
                           >
                             Ticket Admission and Cancellation Policy
                           </button>
@@ -535,7 +527,7 @@ export default function EventRegisterForm() {
               disabled={currentStep === 1}
             />
 
-            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <div className="text-sm font-semibold text-muted-foreground uppercase">
               Step {currentStep} / {totalSteps}
             </div>
 
