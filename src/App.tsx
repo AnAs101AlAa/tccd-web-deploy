@@ -23,7 +23,7 @@ function App() {
       <Toaster
         position="top-right"
         reverseOrder={false}
-        gutter={20}
+        gutter={8}
         toastOptions={{
           duration: 4000,
           style: {
