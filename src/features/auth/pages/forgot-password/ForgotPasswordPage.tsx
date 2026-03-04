@@ -50,7 +50,7 @@ export const ForgotPasswordPage = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-white to-[#f8f6f1] text-[#121212]">
+    <main className="min-h-screen bg-linear-to-b from-white via-white to-[#f8f6f1] text-[#121212]">
       <form 
         className="mx-auto grid min-h-screen max-w-7xl place-items-center px-4 pb-16"
         onSubmit={handleSubmit(onSubmit)}

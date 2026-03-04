@@ -157,6 +157,7 @@ const EventsPage = () => {
                   gridCols="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3"
                   getKey={(event: Event) => event.id}
                 />
+                <div className="my-3"/>
                 <Pagination
                   currentPage={apiUpcomingEvents.pageIndex}
                   totalPages={apiUpcomingEvents.totalPages}

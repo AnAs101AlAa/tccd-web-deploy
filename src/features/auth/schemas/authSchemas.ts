@@ -128,6 +128,12 @@ export const studentInfoSchema = z.object({
   university: z.string().min(1, "University is required"),
   faculty: z.string().min(1, "Faculty is required"),
   department: z.string().optional(),
+  graduationYear: z.number()
+    .int("Graduation year must be an integer")
+    .max(new Date().getFullYear() + 10, "Graduation year cannot be more than 10 years in the future"),
+  gpa: z.number()
+    .min(0, "GPA cannot be less than 0")
+    .max(4, "GPA cannot be greater than 4"),
 })
 .refine(
   (data) => {

@@ -94,6 +94,8 @@ export const useAuth = () => {
           university: studentData.university,
           faculty: studentData.faculty,
           department: studentData.department || "",
+          gpa: studentData.gpa,
+          graduationYear: studentData.graduationYear,
         });
         dispatch(setUser({...userData, role: "Student"}));
 

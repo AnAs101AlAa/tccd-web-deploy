@@ -1,6 +1,6 @@
 import { Controller } from "react-hook-form";
 import type { Control, FieldValues, Path } from "react-hook-form";
-import { InputField, PasswordField, DropdownMenu } from "tccd-ui";
+import { InputField, PasswordField, NumberField, DropdownMenu } from "tccd-ui";
 
 /**
  * Form Input Component Props
@@ -57,7 +57,8 @@ export function FormInput<T extends FieldValues = FieldValues>({
 FormInputProps<T>) {
   const inputId = id || name || label.toLowerCase().replace(/\s+/g, "-");
   const isPasswordField = type === "password";
-  const isDropdwn = type === "dropdown";
+  const isDropdown = type === "dropdown";
+  const isNumberField = type === "number";
 
   return (
     <div className="w-full">
@@ -78,7 +79,7 @@ FormInputProps<T>) {
                     id={name}
                   />
                 </div>
-              ) : isDropdwn ? (
+              ) : isDropdown ? (
                 <DropdownMenu
                   label={label}
                   labelClassName="text-[13px] text-contrast/60"
@@ -87,6 +88,15 @@ FormInputProps<T>) {
                   error={error?.message}
                   id={name}
                   onChange={(value) => field.onChange(value)}
+                />
+              ) : isNumberField ? (
+                <NumberField
+                  label={label}
+                  labelClassName="text-[13px] text-contrast/60"
+                  value={field.value || ""}
+                  onChange={(val: string | number) => field.onChange(val || 0)}
+                  error={error?.message}
+                  id={name}
                 />
               ) : (
                 <InputField

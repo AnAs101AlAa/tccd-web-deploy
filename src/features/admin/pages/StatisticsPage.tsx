@@ -7,6 +7,8 @@ import UniversityDistributionChart from "../components/statistics/UniversityDist
 import DepartmentAttendanceChart from "../components/statistics/DepartmentAttendanceChart";
 import EventsStatisticsTable from "../components/statistics/EventsStatisticsTable";
 import { IoArrowBack } from "react-icons/io5";
+import format from "@/shared/utils/dateFormater";
+
 import type Event from "@/shared/types/events";
 
 const StatisticsPage: React.FC = () => {
@@ -63,11 +65,7 @@ const StatisticsPage: React.FC = () => {
                   </h2>
                   <p className="text-[14px] md:text-[15px] text-inactive-tab-text">
                     {selectedEvent.type} •{" "}
-                    {new Date(selectedEvent.date).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
+                    {format(selectedEvent.date, "stringed")}
                   </p>
                 </div>
               </div>
