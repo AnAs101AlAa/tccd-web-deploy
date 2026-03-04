@@ -59,7 +59,7 @@ export default function EventRegisterForm() {
     isRegistered,
   } = useEventRegistration(eventId);
 
-  const { control, handleSubmit } = useForm<RegistrationFormData>({
+  const { control, handleSubmit, watch } = useForm<RegistrationFormData>({
     resolver: zodResolver(createRegistrationSchema(hasSlots)),
     mode: "onChange",
     defaultValues: {
@@ -72,6 +72,8 @@ export default function EventRegisterForm() {
   const [showRules, setShowRules] = useState<boolean>(false);
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);  
+
+  const watchedSlotId = watch("slotId");
 
   const totalSteps = 3;
 
@@ -560,6 +562,7 @@ export default function EventRegisterForm() {
                 buttonText="Next"
                 buttonIcon={<FaArrowRight className="w-4 h-4" />}
                 width="auto"
+                disabled={currentStep === 1 && watchedSlotId === ""}
               />
             )}
           </div>

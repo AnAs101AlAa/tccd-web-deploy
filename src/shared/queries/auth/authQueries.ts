@@ -39,8 +39,7 @@ export const useLogin = () => {
         toast.error("Invalid email or password. Please try again.");
         return;
       }
-      const message = getErrorMessage(error);
-      toast.error(message || "Login failed. Please try again.");
+      toast.error("Login failed. Please try again.");
     },
   });
 };
