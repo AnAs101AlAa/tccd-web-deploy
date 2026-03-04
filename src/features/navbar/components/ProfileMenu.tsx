@@ -125,12 +125,12 @@ const ProfileMenu = ({
                   size={position === "top" ? 15 : 17}
                   color={item.iconColor}
                 />
-                <h3
+                <p
                   className={`text-[13px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold`}
                   style={{ color: item.iconColor }}
                 >
                   {item.title}
-                </h3>
+                </p>
               </div>
             );
           })}

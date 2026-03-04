@@ -13,10 +13,6 @@ const HeroSection = () => {
   const navigate = useNavigate();
   const [eventsCount, setEventsCounter] = useState<number>(0);
   const [companyCount, setCompanyCount] = useState<number>(0);
-  const [activeUsers, setActiveUsers] = useState<string[]>([
-    ...Array(5).fill("https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"),
-  ]);
-  const [usersCount, setUsersCount] = useState<number>(30);
 
   const handleEventClick = useCallback(() => {
     navigate("/events");
@@ -35,26 +31,8 @@ const HeroSection = () => {
   }, [userData, navigate]);
 
   useEffect(() => {
-    const handleActiveUsers = async () => {
-      try {
-        const response = { pictures: [], activeUserCount: 25 };
-        setActiveUsers([
-          ...response.pictures,
-          ...Array(Math.max(0, 5 - response.pictures.length)).fill("https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"),
-        ]);
-        const inflation =
-          response.activeUserCount + Math.floor(Math.random() * 21) + 10;
-        setUsersCount(inflation);
-      } catch (error) {
-        console.error("Error fetching active users:", error);
-        setActiveUsers([...Array(5).fill("https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif")]);
-        setUsersCount(30);
-      }
-    };
-
     animateCounter(setEventsCounter, 40, 5, 80, 200);
     animateCounter(setCompanyCount, 30, 5, 80, 300);
-    handleActiveUsers();
   }, []);
 
   return (
@@ -118,33 +96,6 @@ const HeroSection = () => {
                 onClick={handleLoginClick}
                 className="text-[14px] md:text-[16px] lg:text-[18px] px-8 py-2 md:py-3 text-white border-[#295E7E] bg-[#295E7E] hover:bg-[#1d4259] hover:text-white hover:border-[#295E7E]"
               />
-            </div>
-
-            {/* Round avatars might remove */}
-            <div className="flex items-center gap-4 md:gap-8 pt-3 md:pt-6">
-              <div className="flex -space-x-2">
-                {/* Active user avatars */}
-                {activeUsers.slice(0, 5).map((user, index) => (
-                  <div
-                    key={index}
-                    className="inline-block h-8 md:h-10 w-8 md:w-10 rounded-full border-2 border-[#295E7E] bg-white/90 overflow-hidden"
-                  >
-                    <LazyImageLoader
-                      src={user}
-                      alt={`User ${index + 1}`}
-                      className="h-full w-full object-cover"
-                      width="100%"
-                      height="100%"
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="text-sm text-blue-100">
-                <span className="font-semibold text-white">
-                  {usersCount > 100 ? "100+" : usersCount}
-                </span>{" "}
-                Active Users
-              </div>
             </div>
           </div>
 

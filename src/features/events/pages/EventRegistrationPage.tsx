@@ -21,6 +21,8 @@ import { TextDisplayEdit, DropdownMenu, Button } from "tccd-ui";
 import { TicketRulesModal } from "../components";
 import { getErrorMessage } from "@/shared/utils/errorHandler";
 import { useEventRegistration } from "../hooks";
+import EVENT_TYPES from "@/constants/EventTypes";
+import RegistrationConfirmationModal from "../components/RegistrationConfirmationModal";
 
 /**
  * Creates a Zod schema for the registration form.
@@ -68,6 +70,8 @@ export default function EventRegisterForm() {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [checkboxes, setCheckboxes] = useState<boolean[]>([false, false]);
   const [showRules, setShowRules] = useState<boolean>(false);
+
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);  
 
   const totalSteps = 3;
 
@@ -121,6 +125,12 @@ export default function EventRegisterForm() {
   return (
     <WithLayout>
       <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
+      <RegistrationConfirmationModal
+        isOpen={isConfirmationOpen}
+        onClose={() => setIsConfirmationOpen(false)}
+        onConfirm={handleSubmit(onSubmit)}
+        isSubmitting={isRegistering}
+      />
       <div className="w-full mx-auto min-h-screen bg-linear-to-br from-slate-50 to-slate-100 py-8 px-4">
         <div className="max-w-4xl mx-auto">
           {/* Registration Success State */}
@@ -151,7 +161,7 @@ export default function EventRegisterForm() {
                   {event.name}
                 </h1>
                 <div className="inline-block bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  {event.type}
+                  {EVENT_TYPES.find((type) => type.value === event.type)?.label ||"Other"}
                 </div>
               </div>
             </div>
@@ -530,7 +540,7 @@ export default function EventRegisterForm() {
             {currentStep === totalSteps ? (
               <Button
                 type="primary"
-                onClick={handleSubmit(onSubmit)}
+                onClick={() => setIsConfirmationOpen(true)}
                 buttonText={
                   isRegistering ? "Submitting..." : "Submit Registration"
                 }

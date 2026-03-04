@@ -55,7 +55,6 @@ export const useEventRegistration = (eventId: string) => {
   const register = async (slotId: string) => {
     try {
       const response = await registerMutation.mutateAsync({ eventId, eventSlotId: slotId });
-      toast.success("Registration successful! Check your profile for details.");
       navigate(`/tickets/${response.eventId}`);
     } catch{
       toast.error("Registration failed. Please try again.");
