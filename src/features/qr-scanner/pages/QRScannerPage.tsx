@@ -2,7 +2,6 @@ import {
   QRCodeScanner,
   ErrorFallback,
   ScannerLoading,
-  UserInfoCard,
 } from "../components";
 import { useQRScanner } from "../hooks";
 import { QrCode, ArrowLeft } from "lucide-react";
@@ -22,7 +21,7 @@ export const QRScannerPage = () => {
   } = useQRScanner();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50 to-indigo-50">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header */}
         <header className="mb-8">
@@ -63,11 +62,6 @@ export const QRScannerPage = () => {
           {/* Error State */}
           {error && !scanResult && (
             <ErrorFallback error={error.message} onReset={reset} />
-          )}
-
-          {/* Success State */}
-          {scanResult && (
-            <UserInfoCard scanResult={scanResult} onClose={reset} />
           )}
         </main>
       </div>
