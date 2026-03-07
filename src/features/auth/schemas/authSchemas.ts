@@ -18,7 +18,7 @@ const passwordSchema = z
   .min(1, "Password is required")
   .min(8, "Password must be at least 8 characters")
   .regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])/,
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#_-])/,
     "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
   );
 
@@ -96,8 +96,8 @@ export type AccountTypeFormData = z.infer<typeof accountTypeSchema>;
 export const basicInfoSchema = z
   .object({
     englishFullName: fullNameSchema.regex(
-      /^[a-zA-Z\s]+$/,
-      "English name must contain only English characters"
+      /^[a-zA-Z\s-]+$/,
+      "English name must contain only English characters and dashes"
     ),
     arabicFullName: arabicNameSchema,
     phoneNumber: phoneNumberSchema,
