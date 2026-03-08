@@ -1,7 +1,7 @@
 [
     {
         "Name": "Youssef Ekramy",
-        "ImgSrc": "",
+        "ImgSrc": "https://res.cloudinary.com/do0yekzmf/image/upload/v1772899770/WhatsApp_Image_2026-03-06_at_00.07.13_phghyt.jpg",
         "Role": "President"
     },
     {
@@ -17,7 +17,7 @@
     {
         "Name": "Basel Amir",
         "Role": "ER and Operations Director",
-        "ImgSrc": ""
+        "ImgSrc": "https://res.cloudinary.com/do0yekzmf/image/upload/v1772899770/WhatsApp_Image_2026-03-07_at_00.30.47_eum1bw.jpg"
     },
     {
         "Name": "Gana Ramadan",
@@ -42,7 +42,7 @@
     {
       "Name": "Kareem Hassan",
       "Role": "Content Creation Head",
-      "ImgSrc": ""
+      "ImgSrc": "https://res.cloudinary.com/do0yekzmf/image/upload/v1772899770/Kareem_Hassan_Photo.jpg_ku9tze.jpg"
     },
     {
       "Name": "Fouad Ismail",
