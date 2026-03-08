@@ -1,9 +1,13 @@
 import React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Registration } from "@/shared/types/profile";
 import AttendeeInfo from "./AttendeeInfo";
 import TicketQRCode from "./TicketQRCode";
-import { useGetEventQRCode } from "@/shared/queries/events/eventQueries";
+import { useGetEventQRCode, useDeleteRegistration } from "@/shared/queries/events/eventQueries";
 import EVENT_TYPES from "@/constants/EventTypes";
+import ConfirmActionModal from "@/shared/components/ConfirmActionModal";
+import { Button, ButtonTypes } from "tccd-ui";
 import {
   FaCalendar,
   FaMapMarkerAlt,
@@ -42,6 +46,20 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
   const eventTypeLabel =
     EVENT_TYPES.find((t) => t.value === event.type)?.label ?? event.type;
 
+  const navigate = useNavigate();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const { mutate: deleteRegistration, isPending: isDeleting } =
+    useDeleteRegistration();
+
+  const handleDeleteConfirm = () => {
+    deleteRegistration(event.id, {
+      onSuccess: () => {
+        setIsConfirmOpen(false);
+        navigate("/profile");
+      },
+    });
+  };
+
   const statusStyles = {
     Approved: "bg-green-500/10 text-green-600 border-green-500",
     Pending: "bg-yellow-500/10 text-yellow-600 border-yellow-500",
@@ -49,6 +67,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
   };
 
   return (
+    <>
     <div className="w-full max-w-4xl mx-auto bg-background rounded-lg shadow-lg overflow-hidden">
       <div className="p-4 pt-6 sm:p-6 md:p-8">
         {/* Event Name — centered */}
@@ -168,8 +187,33 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
 
         {/* Attendee Information */}
         <AttendeeInfo userDetails={userDetails} />
+
+        {/* Cancel Registration */}
+        {registration.status !== "Rejected" && (
+          <>
+            <div className="border-t-2 border-dashed border-gray-300 mt-6 mb-4" />
+            <div className="flex justify-center">
+              <Button
+                type={ButtonTypes.DANGER}
+                buttonText="Cancel Registration"
+                onClick={() => setIsConfirmOpen(true)}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
+
+    <ConfirmActionModal
+      item={event.id}
+      isOpen={isConfirmOpen}
+      onClose={() => setIsConfirmOpen(false)}
+      title="Cancel Registration"
+      subtitle={`Are you sure you want to cancel your registration for "${event.name}"? This action cannot be undone.`}
+      onSubmit={handleDeleteConfirm}
+      isSubmitting={isDeleting}
+    />
+  </>
   );
 };
 

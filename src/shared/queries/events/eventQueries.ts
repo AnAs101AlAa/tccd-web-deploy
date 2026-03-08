@@ -85,6 +85,24 @@ export const useGetEventQRCode = (eventId: string, enabled = true) => {
   });
 };
 
+export const useDeleteRegistration = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (eventId: string) =>
+      eventRegisterApi.deleteRegistration(eventId),
+    onSuccess: (_data, eventId) => {
+      queryClient.invalidateQueries({ queryKey: eventKeys.eligibility(eventId) });
+      queryClient.invalidateQueries({ queryKey: ["user", "profile", "registrations"] });
+      queryClient.removeQueries({ queryKey: eventKeys.qrCode(eventId) });
+      toast.success("Registration cancelled successfully.");
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error));
+    },
+  });
+};
+
 export const useRegisterForEvent = () => {
   const queryClient = useQueryClient();
 
