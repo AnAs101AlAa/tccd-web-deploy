@@ -63,7 +63,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
   const statusStyles = {
     Approved: "bg-green-500/10 text-green-600 border-green-500",
     Pending: "bg-yellow-500/10 text-yellow-600 border-yellow-500",
-    Rejected: "bg-red-500/10 text-red-600 border-red-500",
+    Cancelled: "bg-red-500/10 text-red-600 border-red-500",
   };
 
   return (
@@ -189,7 +189,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
         <AttendeeInfo userDetails={userDetails} />
 
         {/* Cancel Registration */}
-        {registration.status !== "Rejected" && (
+        {registration.status !== "Cancelled" && (
           <>
             <div className="border-t-2 border-dashed border-gray-300 mt-6 mb-4" />
             <div className="flex justify-center">
@@ -212,6 +212,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
       subtitle={`Are you sure you want to cancel your registration for "${event.name}"? This action cannot be undone.`}
       onSubmit={handleDeleteConfirm}
       isSubmitting={isDeleting}
+      actionButtonText="Proceed"
     />
   </>
   );
