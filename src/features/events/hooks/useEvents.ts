@@ -8,14 +8,21 @@ import type { EventQueryParams } from "@/shared/types";
  * Custom hook to fetch upcoming and past events
  * Returns loading states, error states, and event data
  */
-export const useEvents = (params? : EventQueryParams, dontFilterOnPast?: boolean) => {
+export const useEvents = (
+  upcomingParams?: EventQueryParams,
+  pastParams?: EventQueryParams,
+) => {
   // Fetch upcoming events
   const {
     data: upcomingEvents,
     isLoading: isLoadingUpcoming,
     error: upcomingError,
     refetch: refetchUpcoming,
-  } = useGetAllUpcomingEvents({...params, OrderBy: "Date", Descending: false});
+  } = useGetAllUpcomingEvents({
+    ...upcomingParams,
+    OrderBy: upcomingParams?.OrderBy || "Date",
+    Descending: upcomingParams?.Descending ?? false,
+  });
 
   // Fetch past events
   const {
@@ -23,7 +30,11 @@ export const useEvents = (params? : EventQueryParams, dontFilterOnPast?: boolean
     isLoading: isLoadingPast,
     error: pastError,
     refetch: refetchPast,
-  } = useGetAllPastEvents(dontFilterOnPast ? {PageSize: 6, OrderBy: "Date", Descending: true} : {...params, OrderBy:"Date", Descending: true});
+  } = useGetAllPastEvents({
+    ...pastParams,
+    OrderBy: pastParams?.OrderBy || "Date",
+    Descending: pastParams?.Descending ?? true,
+  });
 
   // Combined loading state
   const isLoading = isLoadingUpcoming || isLoadingPast;

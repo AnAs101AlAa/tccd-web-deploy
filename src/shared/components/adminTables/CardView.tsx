@@ -12,8 +12,9 @@ interface CardViewProps<T> {
   }[];
   modalTitle?: string;
   modalSubTitle?: string;
+  modalConfirmText?: string;
   isSubmitting?: boolean;
-  confirmationAction?: (item: T) => void;
+  confirmationAction?: (item: T) => void | Promise<void>;
   renderButtons?: (
     item: T,
     triggerDelete: (id: string) => void,
@@ -29,6 +30,7 @@ const CardView = <T extends { id?: string }>({
   renderedFields,
   modalTitle = "",
   modalSubTitle = "",
+  modalConfirmText = "Confirm",
   confirmationAction,
   isSubmitting = false,
   renderButtons,
@@ -51,8 +53,12 @@ const CardView = <T extends { id?: string }>({
           subtitle={modalSubTitle}
           isOpen={!!showDeleteModal}
           onClose={() => setShowDeleteModal("")}
-          onSubmit={(target: T) => confirmationAction(target)}
+          onSubmit={async (target: T) => {
+            await confirmationAction(target);
+            setShowDeleteModal("");
+          }}
           isSubmitting={isSubmitting}
+          actionButtonText={modalConfirmText}
         />
       )}
 
