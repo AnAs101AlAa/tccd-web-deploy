@@ -26,8 +26,8 @@ export interface Registration {
   eventSlot: EventSlot;
 }
 
-export type TicketStatus = "Pending" | "Approved" | "Rejected";
+export type TicketStatus = "Pending" | "Approved" | "Rejected" | "Cancelled";
 
 export type TicketFilter = TicketStatus | "All";
 
-export const TicketFilterTabs = ["All", "Pending", "Approved", "Rejected"];
+export const TicketFilterTabs = ["All", "Pending", "Approved", "Rejected", "Cancelled"];
