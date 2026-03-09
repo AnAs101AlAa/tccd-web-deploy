@@ -1,12 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { ErrorScreen, Button } from "tccd-ui";
 import { useGetLocations } from "@/shared/queries/admin";
 import { LocationCard, AddLocationModal } from "../components/locations";
-import { usePagination } from "@/shared/hooks";
 import { Pagination } from "@/shared/components/pagination";
 import GenericGrid from "@/shared/components/GenericGrid";
 import LocationFilter from "../components/locations/LocationFilter";
-import type { Location } from "@/shared/queries/admin";
+import type { Location, LocationsQueryParams } from "@/shared/queries/admin";
 import { FiPlus } from "react-icons/fi";
 import { WithLayout } from "@/shared/components/hoc";
 
@@ -16,47 +15,37 @@ import { WithLayout } from "@/shared/components/hoc";
  * Responsive layout that adapts to different screen sizes
  */
 const LocationsManagementPage = () => {
-  const { data: locations, isLoading, isError, error } = useGetLocations();
+  const [queryParams, setQueryParams] = useState<LocationsQueryParams>({
+    PageNumber: 1,
+    PageSize: 12,
+    OrderBy: "Name",
+    Descending: true,
+  });
+
+  const {
+    data: locationsResponse,
+    isLoading,
+    isError,
+    error,
+  } = useGetLocations(queryParams);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const [searchInput, setSearchInput] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
   const [minCapacityInput, setMinCapacityInput] = useState("");
-  const [minCapacity, setMinCapacity] = useState("");
+  const [orderByFilter, setOrderByFilter] = useState("Name");
+  const [descendingFilter, setDescendingFilter] = useState(true);
 
-  const handleSearch = () => {
-    setSearchTerm(searchInput);
-    setMinCapacity(minCapacityInput);
-    setPage(1);
-  };
-
-  const filteredLocations = useMemo(() => {
-    let filtered = locations || [];
-
-    if (searchTerm.trim()) {
-      const search = searchTerm.toLowerCase();
-      filtered = filtered.filter((location) =>
-        location.name.toLowerCase().includes(search),
-      );
-    }
-
-    if (minCapacity) {
-      const minCap = parseInt(minCapacity, 10);
-      if (!isNaN(minCap)) {
-        filtered = filtered.filter((location) => location.capacity >= minCap);
-      }
-    }
-
-    return filtered;
-  }, [locations, searchTerm, minCapacity]);
-
-  const { currentPage, paginatedItems, totalPages, setPage } =
-    usePagination<Location>({
-      items: filteredLocations,
-      itemsPerPageMobile: 6,
-      itemsPerPageDesktop: 12,
-    });
+  const handleSearch = useCallback(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      PageNumber: 1,
+      Name: searchInput.trim() || undefined,
+      Capacity: minCapacityInput ? parseInt(minCapacityInput, 10) : undefined,
+      OrderBy: orderByFilter,
+      Descending: descendingFilter,
+    }));
+  }, [searchInput, minCapacityInput, orderByFilter, descendingFilter]);
 
   if (isError) {
     return (
@@ -97,6 +86,10 @@ const LocationsManagementPage = () => {
           onSearchChange={setSearchInput}
           minCapacity={minCapacityInput}
           onMinCapacityChange={setMinCapacityInput}
+          orderBy={orderByFilter}
+          onOrderByChange={setOrderByFilter}
+          descending={descendingFilter}
+          onDescendingChange={setDescendingFilter}
           onSearch={handleSearch}
           searchPlaceholder="Search by name, address, or description..."
         />
@@ -112,7 +105,7 @@ const LocationsManagementPage = () => {
           </div>
         ) : (
           <GenericGrid
-            items={paginatedItems}
+            items={locationsResponse?.items || []}
             emptyMessage="No locations found. Start by adding your first location to manage events."
             renderCard={(location: Location) => (
               <LocationCard location={location} />
@@ -123,9 +116,11 @@ const LocationsManagementPage = () => {
         )}
 
         <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setPage}
+          currentPage={queryParams.PageNumber}
+          totalPages={locationsResponse?.totalPages || 0}
+          onPageChange={(page) =>
+            setQueryParams((prev) => ({ ...prev, PageNumber: page }))
+          }
         />
 
         <AddLocationModal

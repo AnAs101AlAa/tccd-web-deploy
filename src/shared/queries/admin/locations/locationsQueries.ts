@@ -3,25 +3,13 @@ import { locationsApi } from "./locationsApi";
 import type {
   CreateLocationPayload,
   UpdateLocationPayload,
+  LocationsQueryParams,
 } from "@/shared/queries/admin/types";
 
-export const useGetLocations = (
-  pageIndex: number = 1,
-  pageSize: number = 100,
-  nameKey?: string,
-  capacity?: number,
-  orderBy?: string,
-) => {
+export const useGetLocations = (params: LocationsQueryParams) => {
   return useQuery({
-    queryKey: ["locations", pageIndex, pageSize, nameKey, capacity, orderBy],
-    queryFn: () =>
-      locationsApi.getLocations(
-        pageIndex,
-        pageSize,
-        nameKey,
-        capacity,
-        orderBy,
-      ),
+    queryKey: ["locations", params],
+    queryFn: () => locationsApi.getLocations(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };

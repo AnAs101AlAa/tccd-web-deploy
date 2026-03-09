@@ -9,13 +9,18 @@ import UsersFilter from "../components/users/UsersFilter";
 
 export default function UsersAdminPage() {
   const [userQueryParams, setUserQueryParams] = useState<UserQueryParams>({
-    page: 1,
-    count: 20,
+    PageNumber: 1,
+    PageSize: 20,
+    OrderBy: "CreatedAt",
+    Descending: true,
   });
-  const [volunteerQueryParams, setVolunteerQueryParams] = useState<UserQueryParams>({
-    page: 1,
-    count: 20,
-  });
+  const [volunteerQueryParams, setVolunteerQueryParams] =
+    useState<UserQueryParams>({
+      PageNumber: 1,
+      PageSize: 20,
+      OrderBy: "CreatedAt",
+      Descending: true,
+    });
   const {
     studentUsers,
     volunteeringMemberUsers,
@@ -24,7 +29,8 @@ export default function UsersAdminPage() {
     studentError,
     volunteeringMemberError,
     refetchStudent,
-    refetchVolunteeringMember
+    refetchVolunteeringMember,
+    refetchVolunteeringMember,
   } = useUsers({ userQueryParams, volunteerQueryParams });
 
   if (volunteeringMemberError && studentError) {
@@ -46,7 +52,12 @@ export default function UsersAdminPage() {
             Users
           </h1>
           <p className="text-inactive-tab-text text-[15px] md:text-[16px] lg:text-[18px]">
-            Manage all registered users, including students and volunteering members, manage account access and view user details and member profiles.
+            Manage all registered users, including students and volunteering
+            members, manage account access and view user details and member
+            profiles.
+            Manage all registered users, including students and volunteering
+            members, manage account access and view user details and member
+            profiles.
           </p>
         </div>
 
@@ -99,19 +110,27 @@ export default function UsersAdminPage() {
               <UsersList users={studentUsers.items} />
               <div className="mt-4 md:mt-6">
                 <Pagination
-                  currentPage={userQueryParams.page}
+                  currentPage={userQueryParams.PageNumber}
                   totalPages={Math.ceil(
-                    studentUsers.totalCount / userQueryParams.count,
+                    studentUsers.totalCount / userQueryParams.PageSize,
                   )}
                   onPageChange={(page) => {
-                    setUserQueryParams((prev) => ({ ...prev, page }));
+                    setUserQueryParams((prev) => ({
+                      ...prev,
+                      PageNumber: page,
+                    }));
+                    setUserQueryParams((prev) => ({
+                      ...prev,
+                      PageNumber: page,
+                    }));
                   }}
                 />
               </div>
             </>
           )}
         </section>
-        
+
+
         <section
           id="volunteering-section"
           className="rounded-xl mb-4 md:mb-6 border border-contrast/10 bg-background/60 p-4 sm:p-5 lg:p-6 shadow-sm"
@@ -161,12 +180,20 @@ export default function UsersAdminPage() {
               <UsersList users={volunteeringMemberUsers.items} />
               <div className="mt-4 md:mt-6">
                 <Pagination
-                  currentPage={volunteerQueryParams.page}
+                  currentPage={volunteerQueryParams.PageNumber}
                   totalPages={Math.ceil(
-                    volunteeringMemberUsers.totalCount / volunteerQueryParams.count,
+                    volunteeringMemberUsers.totalCount /
+                      volunteerQueryParams.PageSize,
                   )}
                   onPageChange={(page) => {
-                    setVolunteerQueryParams((prev) => ({ ...prev, page }));
+                    setVolunteerQueryParams((prev) => ({
+                      ...prev,
+                      PageNumber: page,
+                    }));
+                    setVolunteerQueryParams((prev) => ({
+                      ...prev,
+                      PageNumber: page,
+                    }));
                   }}
                 />
               </div>

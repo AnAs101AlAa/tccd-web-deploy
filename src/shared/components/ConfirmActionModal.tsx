@@ -15,7 +15,7 @@ export default function ConfirmActionModal<T>({
   onClose: () => void;
   title: string;
   subtitle: string;
-  onSubmit: (item: T) => void;
+  onSubmit: (item: T) => void | Promise<void>;
   isSubmitting: boolean;
   actionButtonText?: string;
 }) {
