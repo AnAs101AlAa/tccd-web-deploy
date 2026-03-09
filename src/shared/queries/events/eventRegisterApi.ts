@@ -20,6 +20,10 @@ export class EventRegisterApi {
     );
     return data.data ?? data;
   }
+
+  async deleteRegistration(eventId: string): Promise<void> {
+    await systemApi.delete(`${EVENT_ROUTE}/${eventId}/registrations`);
+  }
 }
 
 export const eventRegisterApi = new EventRegisterApi();

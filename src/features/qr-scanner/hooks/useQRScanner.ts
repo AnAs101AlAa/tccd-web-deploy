@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import type { QRScanResult, QRScanError } from "@/shared/types";
-import { useValidateQRCode } from "@/shared/queries/qr-scanner";
+import { useScanQRCode, type QRScanPayload } from "@/shared/queries/tickets";
 import toast from "react-hot-toast";
 
 export function useQRScanner() {
@@ -10,7 +10,7 @@ export function useQRScanner() {
   const [scanResult, setScanResult] = useState<QRScanResult | null>(null);
   const [error, setError] = useState<QRScanError | null>(null);
 
-  const validateQRCode = useValidateQRCode();
+  const scanQRCode = useScanQRCode();
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
     if (detectedCodes.length === 0) return;
@@ -21,16 +21,15 @@ export function useQRScanner() {
 
     try {
       // Parse QR code data
-      const qrData = JSON.parse(detectedCodes[0].rawValue);
+      const qrData: QRScanPayload = JSON.parse(detectedCodes[0].rawValue);
       
-      if (!qrData.userId || !qrData.eventId) {
+      if (!qrData.token) {
         throw new Error("Invalid QR code format");
       }
 
       // Validate with backend
-      const result = await validateQRCode.mutateAsync({
-        userId: qrData.userId,
-        eventId: qrData.eventId,
+      const result = await scanQRCode.mutateAsync({
+        token: qrData.token,
       });
 
       setScanResult(result);
@@ -71,7 +70,6 @@ export function useQRScanner() {
     reset,
   };
 }
-
 function handleError(err: unknown): QRScanError {
   // Handle JSON parse errors
   if (err instanceof SyntaxError) {
@@ -85,7 +83,7 @@ function handleError(err: unknown): QRScanError {
   if (err && typeof err === "object" && "response" in err) {
     const response = (err as { response?: { status?: number; data?: { message?: string } } }).response;
     
-    if (response?.status === 403) {
+    if (response?.status === 400) {
       const message = response.data?.message || "";
       
       if (message.toLowerCase().includes("not started")) {
@@ -108,6 +106,14 @@ function handleError(err: unknown): QRScanError {
         type: "invalid_qr",
         message: "User or event not found. Please scan a valid QR code.",
       };
+    }
+
+    
+    if (response?.status === 409) {
+      return {
+        type: "scan_limit_reached",
+        message: "Scan limit reached for this QR code. No more scans allowed.",
+      }
     }
 
     if (response?.data?.message) {
