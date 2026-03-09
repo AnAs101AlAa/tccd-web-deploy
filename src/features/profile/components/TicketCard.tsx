@@ -21,6 +21,8 @@ export default function TicketCard({ ticket }: { ticket: Ticket }) {
         return "bg-yellow-500/10 text-yellow-600 border-yellow-500";
       case "Cancelled":
         return "bg-red-500/10 text-red-600 border-red-500";
+      case "Cancelled":
+        return "bg-gray-400/10 text-gray-500 border-gray-400";
       default:
         return "";
     }
@@ -32,18 +34,18 @@ export default function TicketCard({ ticket }: { ticket: Ticket }) {
       className="relative flex flex-col shadow-md border border-gray-300 rounded-lg w-full lg:h-[320px] md:h-[280px] h-[240px] cursor-pointer bg-background"
     >
 
-        <LazyImageLoader
-          src={ticket.event.eventImage}
-          alt={ticket.event.name}
-          width="100%"
-          height="100%"
-          className="rounded-lg"
-        />
+      <LazyImageLoader
+        src={ticket.event.eventImage}
+        alt={ticket.event.name}
+        width="100%"
+        height="100%"
+        className="rounded-lg"
+      />
       <div className="bg-background w-full flex-1 pt-2 pb-3 px-3 rounded-b-lg">
         <div className="flex gap-1 items-center">
           <span className="text-primary text-[13px] md:text-[15px] font-semibold">
             {EVENT_TYPES.find((type) => type.value === ticket.event.type)?.label ||
-            "Other"}
+              "Other"}
           </span>
           <span className="text-gray-400">|</span>
           <span className="text-inactive-tab-text text-[12px] md:text-[14px] font-semibold">
