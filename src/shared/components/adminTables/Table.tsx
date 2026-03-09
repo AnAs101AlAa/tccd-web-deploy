@@ -16,9 +16,10 @@ interface TableProps<T> {
     setItem: (item: T) => void,
   ) => React.ReactNode;
   emptyMessage?: string;
-  confirmationAction?: (item: T) => void;
+  confirmationAction?: (item: T) => void | Promise<void>;
   modalTitle?: string;
   modalSubTitle?: string;
+  modalConfirmText?: string;
   isSubmitting?: boolean;
 }
 
@@ -30,6 +31,7 @@ const Table = <T extends { id?: string }>({
   confirmationAction,
   modalTitle = "",
   modalSubTitle = "",
+  modalConfirmText = "Confirm",
   isSubmitting = false,
 }: TableProps<T>) => {
   const [showDeleteModal, setShowDeleteModal] = useState("");
@@ -50,7 +52,11 @@ const Table = <T extends { id?: string }>({
           title={modalTitle}
           subtitle={modalSubTitle}
           isSubmitting={isSubmitting}
-          onSubmit={(item: T) => confirmationAction(item)}
+          actionButtonText={modalConfirmText}
+          onSubmit={async (item: T) => {
+            await confirmationAction(item);
+            setShowDeleteModal("");
+          }}
         />
       )}
       <table className="w-full border border-gray-200">

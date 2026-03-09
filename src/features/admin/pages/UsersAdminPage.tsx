@@ -30,6 +30,7 @@ export default function UsersAdminPage() {
     volunteeringMemberError,
     refetchStudent,
     refetchVolunteeringMember,
+    refetchVolunteeringMember,
   } = useUsers({ userQueryParams, volunteerQueryParams });
 
   if (volunteeringMemberError && studentError) {
@@ -51,6 +52,9 @@ export default function UsersAdminPage() {
             Users
           </h1>
           <p className="text-inactive-tab-text text-[15px] md:text-[16px] lg:text-[18px]">
+            Manage all registered users, including students and volunteering
+            members, manage account access and view user details and member
+            profiles.
             Manage all registered users, including students and volunteering
             members, manage account access and view user details and member
             profiles.
@@ -115,12 +119,17 @@ export default function UsersAdminPage() {
                       ...prev,
                       PageNumber: page,
                     }));
+                    setUserQueryParams((prev) => ({
+                      ...prev,
+                      PageNumber: page,
+                    }));
                   }}
                 />
               </div>
             </>
           )}
         </section>
+
 
         <section
           id="volunteering-section"
@@ -177,6 +186,10 @@ export default function UsersAdminPage() {
                       volunteerQueryParams.PageSize,
                   )}
                   onPageChange={(page) => {
+                    setVolunteerQueryParams((prev) => ({
+                      ...prev,
+                      PageNumber: page,
+                    }));
                     setVolunteerQueryParams((prev) => ({
                       ...prev,
                       PageNumber: page,

@@ -7,6 +7,7 @@ interface GenericGridProps<T> {
   renderCard: (item: T) => ReactNode;
   gridCols?: string;
   getKey?: (item: T) => string | number;
+  gap?: string;
 }
 
 const GenericGrid = <T,>({
@@ -15,6 +16,7 @@ const GenericGrid = <T,>({
   renderCard,
   gridCols = "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
   getKey,
+  gap = "gap-6",
 }: GenericGridProps<T>) => {
   if (items.length === 0) {
     return (
@@ -25,7 +27,7 @@ const GenericGrid = <T,>({
   }
 
   return (
-    <div className={`grid ${gridCols} gap-6`}>
+    <div className={`grid ${gridCols} ${gap}`}>
       <AnimatePresence mode="wait">
         {items.map((item, index) => {
           const key = getKey ? getKey(item) : index;

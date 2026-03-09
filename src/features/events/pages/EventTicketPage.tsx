@@ -95,10 +95,10 @@ const EventTicketPage: React.FC = () => {
       <div className="min-h-screen bg-background-contrast py-4 sm:py-6 md:py-8">
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-secondary hover:text-primary transition-colors mb-6 group"
+            onClick={() => navigate('/profile')}
+            className="flex items-center gap-2 text-secondary hover:text-primary transition-colors mb-4 group"
           >
-            <IoArrowBack className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <IoArrowBack className="w-5 h-5 group-hover:-translate-x-1 transition-transform cursor-pointer" />
             <span className="font-medium">Back to Tickets</span>
           </button>
 

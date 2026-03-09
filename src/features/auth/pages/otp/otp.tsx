@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { verifyOtp, resendOtp } from "../../../../shared/queries/otp/otp";
+import { useVerifyOtp, useResendOtp } from "../../../../shared/queries/otp/otpQueries";
 import toast from "react-hot-toast";
 import { Button } from "tccd-ui";
 import { AiOutlineArrowLeft, AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -12,9 +12,11 @@ const OTPPage: React.FC = () => {
 
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [isShaking, setIsShaking] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isResending, setIsResending] = useState(false);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+
+  // TanStack mutations
+  const verifyOtpMutation = useVerifyOtp();
+  const resendOtpMutation = useResendOtp();
 
   useEffect(() => {
     // Redirect if no email in state
@@ -55,49 +57,35 @@ const OTPPage: React.FC = () => {
   const handleConfirmClick = async () => {
     const otpValue = otp.join("");
     if (otpValue.length < 6) {
-      toast.error("Please enter all 6 digits");
       return;
     }
 
-    setIsLoading(true);
     try {
-      const success = await verifyOtp(email, otpValue);
+      const success = await verifyOtpMutation.mutateAsync({ email, otp: otpValue });
       if (success) {
-        toast.success("OTP verified successfully!");
-        navigate("/reset-password", { state: { email, otp: otpValue } });
+        navigate("/reset-password");
       } else {
-        toast.error("Verification failed. Please try again.");
         setOtp(Array(6).fill(""));
         setIsShaking(true);
         setTimeout(() => setIsShaking(false), 300);
         inputsRef.current[0]?.focus();
       }
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Verification failed. Please try again.";
-      toast.error(message);
+    } catch {
       setOtp(Array(6).fill(""));
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 300);
       inputsRef.current[0]?.focus();
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleResendClick = async () => {
-    setIsResending(true);
     try {
-      await resendOtp(email);
-      toast.success("OTP resent to your email!");
+      await resendOtpMutation.mutateAsync(email);
       setOtp(Array(6).fill(""));
       inputsRef.current[0]?.focus();
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to resend the code. Please try again.";
-      toast.error(message);
-    } finally {
-      setIsResending(false);
+    } catch {
+      // Error is already handled by mutation onError
+      setOtp(Array(6).fill(""));
     }
   };
 
@@ -116,7 +104,7 @@ const OTPPage: React.FC = () => {
         `}
       </style>
 
-      <main className="min-h-screen bg-gradient-to-b from-white via-white to-[#f8f6f1] text-[#121212]">
+      <main className="min-h-screen bg-linear-to-b from-white via-white to-[#f8f6f1] text-[#121212]">
         <div className="mx-auto grid min-h-screen max-w-7xl place-items-center px-4 py-16">
           <section
             className={`w-full max-w-md rounded-2xl border border-black/5 bg-white/80 p-8 shadow-[0_4px_30px_rgba(0,0,0,0.04)] backdrop-blur transition-all ${
@@ -166,9 +154,9 @@ const OTPPage: React.FC = () => {
 
               {/* Confirm Button */}
               <Button
-                buttonText={isLoading ? "Verifying..." : "Verify Code"}
+                buttonText={verifyOtpMutation.isPending ? "Verifying..." : "Verify Code"}
                 buttonIcon={
-                  isLoading ? (
+                  verifyOtpMutation.isPending ? (
                     <AiOutlineLoading3Quarters
                       className="animate-spin"
                       size={18}
@@ -177,8 +165,8 @@ const OTPPage: React.FC = () => {
                 }
                 onClick={handleConfirmClick}
                 type="primary"
-                disabled={isLoading || !isOtpComplete}
-                loading={isLoading}
+                disabled={verifyOtpMutation.isPending || !isOtpComplete}
+                loading={verifyOtpMutation.isPending}
                 width="full"
               />
 
@@ -189,20 +177,20 @@ const OTPPage: React.FC = () => {
                 </p>
                 <button
                   onClick={handleResendClick}
-                  disabled={isResending}
+                  disabled={resendOtpMutation.isPending}
                   className={`text-sm font-semibold transition-colors
                              ${
-                               isResending
+                               resendOtpMutation.isPending
                                  ? "text-gray-400 cursor-not-allowed"
                                  : "text-secondary hover:text-secondary/80 hover:underline"
                              }`}
                 >
-                  {isResending ? "Resending..." : "Resend OTP"}
+                  {resendOtpMutation.isPending ? "Resending..." : "Resend OTP"}
                 </button>
               </div>
 
               {/* Back to Login Link */}
-              <div className="text-center pt-4 border-t border-gray-100">
+              <div className="text-center pt-2 border-t border-gray-100">
                 <Link
                   to="/login"
                   className="text-sm font-medium text-[#5E6064] hover:text-secondary transition-colors inline-flex items-center gap-1"
@@ -212,12 +200,6 @@ const OTPPage: React.FC = () => {
                 </Link>
               </div>
             </div>
-
-            <footer className="mt-8 pt-6 border-t border-gray-100">
-              <p className="text-center text-xs text-[#A5A9B2]">
-                For security reasons, this code will expire in 10 minutes.
-              </p>
-            </footer>
           </section>
         </div>
       </main>

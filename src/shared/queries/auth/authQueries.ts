@@ -18,6 +18,7 @@ export const authKeys = {
   logout: () => [...authKeys.all, "logout"] as const,
   signup: () => [...authKeys.all, "signup"] as const,
   forgotPassword: () => [...authKeys.all, "forgotPassword"] as const,
+  resetPassword: () => [...authKeys.all, "resetPassword"] as const,
 };
 
 const authApiInstance = new AuthApi();
@@ -39,8 +40,7 @@ export const useLogin = () => {
         toast.error("Invalid email or password. Please try again.");
         return;
       }
-      const message = getErrorMessage(error);
-      toast.error(message || "Login failed. Please try again.");
+      toast.error("Login failed. Please try again.");
     },
   });
 };
@@ -136,6 +136,22 @@ export const useForgotPassword = () => {
     onError: (error: unknown) => {
       const message = getErrorMessage(error);
       toast.error(message || "Failed to send reset email. Please try again.");
+    },
+  });
+};
+
+export const useResetPassword = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ password, confirmPassword }: { password: string; confirmPassword: string }) =>
+      authApiInstance.resetPassword(password, confirmPassword),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authKeys.resetPassword() });
+      toast.success("Password reset successfully! You can now log in.");
+    },
+    onError: () => {
+      toast.error("Failed to reset password. Please try using another OTP before resetting.");
     },
   });
 };

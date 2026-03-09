@@ -19,6 +19,8 @@ export interface User {
   profileImage?: string;
   status: UserStatus;
   role?: UserRole;
+  email?: string;
+  phoneNumber?: string;
   studentProfile?: StudentProfile;
   businessRepProfile?: BusinessRepProfile;
   facultyMemberProfile?: FacultyMemberProfile;
@@ -89,3 +91,4 @@ export type CommittePosition =
   | "Director"
   | "VicePresident"
   | "President";
+

@@ -223,6 +223,14 @@ export class AuthApi {
     return data;
   }
 
+  async resetPassword(newPassword: string, passwordConfirm: string) {
+    const { data } = await systemApi.post(
+      AUTH_ROUTE + "reset-password",
+      { newPassword, passwordConfirm }
+    );
+    return data;
+  }
+
   async verifyStudent(token: string) {
     const { data } = await systemApi.post(
       AUTH_ROUTE + `verify-student`,

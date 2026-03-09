@@ -8,6 +8,7 @@ import PosterCard from "@/shared/components/PosterCard";
 import type { EventMedia } from "@/shared/types/events";
 import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 import EventSponsorSection from "./EventSponsorSection";
+import { useIsStudent } from "@/shared/store";
 
 interface EventDetailsPageProps {
     event: Event;
@@ -15,7 +16,6 @@ interface EventDetailsPageProps {
 }
 
 const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
-
     const mediaItems = useMemo(() => {
         const items = [];
         if (event.eventImage) items.push(event.eventImage);
@@ -27,17 +27,17 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
     const [isMediaViewerOpen, setIsMediaViewerOpen] = useState(false);
 
+    const isStudent = useIsStudent();
     const hasMultipleMedia = mediaItems.length > 1;
     const currentMedia = mediaItems[currentMediaIndex];
 
     const canRegister = useMemo(() => {
         const eventDate = new Date(event.date);
         const now = new Date();
-        return now <= eventDate;
+        return now <= eventDate && isStudent;
     }, [event.date]);
 
-    const formattedDate = format(event.date, "date");
-    const formattedTime = format(event.date, "hour");
+    const formattedDate = format(event.date, "stringed");
 
     const handlePrev = () => {
         if (!hasMultipleMedia) return;
@@ -74,9 +74,9 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
             )}
             <section className="px-4 sm:px-6 md:px-10 py-6 sm:py-8 md:py-10">
                 <div className="space-y-6 md:space-y-10">
-                    <div className="border-b border-slate-200 pb-4 sm:pb-5">
-                        <div className="flex items-start justify-between gap-1 sm:gap-2">
-                            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-secondary leading-tight flex-1">
+                    <div className="border-b border-slate-200 pb-2 sm:pb-3">
+                        <div className="flex items-center justify-between gap-1 sm:gap-2">
+                            <p className="text-3xl sm:text-3xl md:text-4xl font-bold text-contrast leading-tight flex-1">
                                 {event.name}
                             </p>
                             {event.type && (
@@ -90,16 +90,16 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                         </p>
                     </div>
 
-                    <div className="-mt-4 md:-mt-8">
-                        <p className="text-lg sm:text-xl md:text-2xl lg:text-[25px] font-semibold text-secondary">
+                    <div className="-mt-2 md:-mt-4">
+                        <p className="text-lg sm:text-xl md:text-2xl lg:text-[25px] font-semibold text-secondary text-center">
                             Track The Event
                         </p>
-                        <p className="text-gray-600 font-medium text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px]">Keep an eye on the event's whereabouts</p>
+                        <p className="text-gray-600 font-medium text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px] text-center">Keep an eye on the event's whereabouts</p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-3">
                             <div className="w-full">
                                 <PosterCard
                                     title="Date"
-                                    data={formattedDate + " at " + formattedTime}
+                                    data={formattedDate}
                                     icon={<FaCalendar className="text-primary size-10 md:size-12 transition-colors duration-300 ease-in-out group-hover:bg-sky-100 bg-sky-50 p-2 rounded-full" />}
                                 />
                             </div>
@@ -114,13 +114,13 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                     </div>
 
                     <div>
-                        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-[25px] font-semibold text-secondary">
+                        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-[25px] font-semibold text-secondary text-center">
                             Event Highlights
                         </h2>
-                        <p className="text-gray-600 font-medium text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px]">Showcase of some selected captures of our event preparations</p>
-                        <div className="relative mt-2 sm:mt-3 overflow-hidden rounded-lg sm:rounded-xl border border-gray-200 p-1.5 sm:p-2 shadow-md bg-linear-to-bl from-primary to-secondary">
+                        <p className="text-gray-600 font-medium text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px] text-center">Showcase of some selected captures of our event preparations</p>
+                        <div className="relative mt-2 sm:mt-3 h-60 md:h-80 lg:h-120 w-fit mx-auto overflow-hidden rounded-lg sm:rounded-xl border border-gray-200 p-1.5 sm:p-2 shadow-md bg-linear-to-bl from-primary to-secondary">
                             {currentMedia ? (
-                                <div className="aspect lg:aspect-19/9 w-full cursor-pointer active:scale-[0.99] sm:hover:scale-[1.01] transition-all duration-300" onClick={() => setIsMediaViewerOpen(true)}>
+                                <div className="aspect h-full lg:aspect-19/9 w-full cursor-pointer active:scale-[0.99] sm:hover:scale-[1.01] transition-all duration-300" onClick={() => setIsMediaViewerOpen(true)}>
                                     <LazyImageLoader
                                         key={currentMedia}
                                         src={currentMedia}
@@ -128,7 +128,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                                         width="100%"
                                         height="100%"
                                         objectClassName="object-contain"
-                                        className="h-full w-full rounded-md sm:rounded-lg"
+                                        className="rounded-md sm:rounded-lg"
                                     />
                                 </div>
                             ) : (
@@ -173,7 +173,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                                         Seats Remaining
                                     </p>
                                     <p className="text-xs sm:text-sm text-gray-600 mt-0.5">
-                                        {Math.max(event.capacity - event.registeredCount, 0)} of {event.capacity} spots available
+                                        {Math.max(event.capacity - event.registeredCount, 0)} spots remaining
                                     </p>
                                 </div>
                             </div>

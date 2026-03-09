@@ -132,6 +132,7 @@ export default function TicketTab() {
             renderCard={(ticket: Ticket) => <TicketCard ticket={ticket} />}
             gridCols="grid-cols-1 md:grid-cols-2"
             getKey={(ticket: Ticket) => ticket.eventSlotId}
+            gap="gap-4"
           />
 
           <Pagination

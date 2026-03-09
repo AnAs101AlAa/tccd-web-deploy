@@ -263,7 +263,6 @@ export default function useEventModalUtils({
       eventImage: formValues.eventImage || "",
     };
 
-    console.log("Finalized form values for submission:", finalizedValue);
     const validationErrors = validateAllFields(finalizedValue);
 
     if (Object.keys(validationErrors).length > 0) {

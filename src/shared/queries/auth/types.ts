@@ -13,6 +13,8 @@ export interface StudentSignupCredentials {
   university: string;
   faculty: string;
   department: string;
+  graduationYear: number;
+  gpa: number;
 }
 
 export interface BusinessRepSignupCredentials {

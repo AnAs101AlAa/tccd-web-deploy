@@ -21,6 +21,9 @@ import { TextDisplayEdit, DropdownMenu, Button } from "tccd-ui";
 import { TicketRulesModal } from "../components";
 import { getErrorMessage } from "@/shared/utils/errorHandler";
 import { useEventRegistration } from "../hooks";
+import EVENT_TYPES from "@/constants/EventTypes";
+import RegistrationConfirmationModal from "../components/RegistrationConfirmationModal";
+import format from "@/shared/utils/dateFormater";
 
 /**
  * Creates a Zod schema for the registration form.
@@ -57,7 +60,7 @@ export default function EventRegisterForm() {
     isRegistered,
   } = useEventRegistration(eventId);
 
-  const { control, handleSubmit } = useForm<RegistrationFormData>({
+  const { control, handleSubmit, watch } = useForm<RegistrationFormData>({
     resolver: zodResolver(createRegistrationSchema(hasSlots)),
     mode: "onChange",
     defaultValues: {
@@ -68,6 +71,10 @@ export default function EventRegisterForm() {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [checkboxes, setCheckboxes] = useState<boolean[]>([false, false]);
   const [showRules, setShowRules] = useState<boolean>(false);
+
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);  
+
+  const watchedSlotId = watch("slotId");
 
   const totalSteps = 3;
 
@@ -107,20 +114,17 @@ export default function EventRegisterForm() {
   const capacityUsage = (event.registeredCount / event.capacity) * 100;
   const progressPercentage = (currentStep / totalSteps) * 100;
 
-  const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-  const formattedTime = new Date(event.date).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-
+  const formattedDate = format(event.date, "stringed");
+  
   return (
     <WithLayout>
       <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
+      <RegistrationConfirmationModal
+        isOpen={isConfirmationOpen}
+        onClose={() => setIsConfirmationOpen(false)}
+        onConfirm={handleSubmit(onSubmit)}
+        isSubmitting={isRegistering}
+      />
       <div className="w-full mx-auto min-h-screen bg-linear-to-br from-slate-50 to-slate-100 py-8 px-4">
         <div className="max-w-4xl mx-auto">
           {/* Registration Success State */}
@@ -134,23 +138,6 @@ export default function EventRegisterForm() {
                 You have been successfully registered for{" "}
                 <span className="font-semibold">{event.name}</span>.
               </p>
-            </div>
-          )}
-
-          {/* Eligibility Warning */}
-          {!isEligible && (
-            <div className="mb-6 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-              <FaTriangleExclamation className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm font-semibold text-amber-800">
-                  You are not eligible to register for this event.
-                </p>
-                {eligibilityReason && (
-                  <p className="text-xs text-amber-700 mt-1">
-                    {eligibilityReason}
-                  </p>
-                )}
-              </div>
             </div>
           )}
 
@@ -168,7 +155,7 @@ export default function EventRegisterForm() {
                   {event.name}
                 </h1>
                 <div className="inline-block bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  {event.type}
+                  {EVENT_TYPES.find((type) => type.value === event.type)?.label ||"Other"}
                 </div>
               </div>
             </div>
@@ -183,7 +170,7 @@ export default function EventRegisterForm() {
                       Date & Time
                     </p>
                     <p className="text-sm font-semibold text-foreground">
-                      {formattedDate} • {formattedTime}
+                      {formattedDate}
                     </p>
                   </div>
                 </div>
@@ -329,7 +316,7 @@ export default function EventRegisterForm() {
                         label=""
                         value={storedUser.phoneNumber}
                         disabled={true}
-                        placeholder="+20 123 456 7890"
+                        placeholder="01234567890"
                       />
                     </div>
                   </div>
@@ -499,7 +486,7 @@ export default function EventRegisterForm() {
                           <button
                             type="button"
                             onClick={() => setShowRules(true)}
-                            className="text-secondary font-semibold hover:underline transition-colors inline"
+                            className="text-secondary font-semibold transition-colors inline underline cursor-pointer hover:text-secondary/80"
                           >
                             Ticket Admission and Cancellation Policy
                           </button>
@@ -512,6 +499,23 @@ export default function EventRegisterForm() {
             </Activity>
           </div>
 
+          {/* Eligibility Warning */}
+          {!isEligible && (
+            <div className="mb-6 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <FaTriangleExclamation className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
+              <div>
+                <p className="text-sm font-semibold text-amber-800">
+                  You are not eligible to register for this event.
+                </p>
+                {eligibilityReason && (
+                  <p className="text-sm text-amber-700 mt-1">
+                    {eligibilityReason}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          
           {/* Navigation Buttons */}
           <div className="mt-8 flex items-center justify-between gap-3">
             <Button
@@ -523,14 +527,14 @@ export default function EventRegisterForm() {
               disabled={currentStep === 1}
             />
 
-            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <div className="text-sm font-semibold text-muted-foreground uppercase">
               Step {currentStep} / {totalSteps}
             </div>
 
             {currentStep === totalSteps ? (
               <Button
                 type="primary"
-                onClick={handleSubmit(onSubmit)}
+                onClick={() => setIsConfirmationOpen(true)}
                 buttonText={
                   isRegistering ? "Submitting..." : "Submit Registration"
                 }
@@ -550,6 +554,7 @@ export default function EventRegisterForm() {
                 buttonText="Next"
                 buttonIcon={<FaArrowRight className="w-4 h-4" />}
                 width="auto"
+                disabled={currentStep === 1 && watchedSlotId === ""}
               />
             )}
           </div>

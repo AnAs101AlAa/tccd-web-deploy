@@ -18,7 +18,7 @@ const passwordSchema = z
   .min(1, "Password is required")
   .min(8, "Password must be at least 8 characters")
   .regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])/,
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#_-])/,
     "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
   );
 
@@ -96,8 +96,8 @@ export type AccountTypeFormData = z.infer<typeof accountTypeSchema>;
 export const basicInfoSchema = z
   .object({
     englishFullName: fullNameSchema.regex(
-      /^[a-zA-Z\s]+$/,
-      "English name must contain only English characters"
+      /^[a-zA-Z\s-]+$/,
+      "English name must contain only English characters and dashes"
     ),
     arabicFullName: arabicNameSchema,
     phoneNumber: phoneNumberSchema,
@@ -128,6 +128,12 @@ export const studentInfoSchema = z.object({
   university: z.string().min(1, "University is required"),
   faculty: z.string().min(1, "Faculty is required"),
   department: z.string().optional(),
+  graduationYear: z.number()
+    .int("Graduation year must be an integer")
+    .max(new Date().getFullYear() + 10, "Graduation year cannot be more than 10 years in the future"),
+  gpa: z.number()
+    .min(0, "GPA cannot be less than 0")
+    .max(4, "GPA cannot be greater than 4"),
 })
 .refine(
   (data) => {

@@ -1,7 +1,7 @@
 const FacultyList = [
     "Engineering",
     "Artificial Intelligence",
-    "computer science", 
+    "Computer Science", 
     "Information Technology",
     "Business Administration",
     "not specified"

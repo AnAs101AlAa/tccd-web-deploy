@@ -95,6 +95,13 @@ export class EventApi {
     throw new Error("Event not found");
   }
 
+  async getEventQRCode(eventId: string): Promise<{ base64Image: string }> {
+    const response = await systemApi.get(
+      `/v1/events/${eventId}/registrations/qr-code`,
+    );
+    return response.data.data;
+  }
+
   async getSponsorsByEventId(eventId: string): Promise<Sponsor[]> {
     const response = await systemApi.get(
       `${SPONSOR_ROUTE}/sponsor/${eventId}/companies`,
