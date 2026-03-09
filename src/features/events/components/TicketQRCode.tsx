@@ -38,11 +38,15 @@ const TicketQRCode: React.FC<TicketQRCodeProps> = ({
           onClick={handleViewQRCode}
           className="border-4 border-primary bg-white p-4 rounded-lg shadow-md mb-4 cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200"
         >
-          <LazyImageLoader
-            src={qrCodeSrc}
-            alt="Ticket QR Code"
-            className="w-48 h-48 sm:w-56 sm:h-56 object-contain"
-          />
+          <div className="w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
+            <LazyImageLoader
+              src={qrCodeSrc}
+              alt="Ticket QR Code"
+              width="100%"
+              height="100%"
+              className="object-contain aspect-square"
+            />
+          </div>
         </div>
         <p className="text-sm text-label flex items-center gap-2">
           <HiOutlineQrCode className="w-5 h-5" />
