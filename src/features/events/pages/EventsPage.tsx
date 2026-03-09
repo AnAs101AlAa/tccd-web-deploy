@@ -28,10 +28,6 @@ const EventsPage = () => {
     PageNumber: 1,
     PageSize: getResponsivePageSize(),
   });
-  const [pastQueryParams, setPastQueryParams] = useState<EventQueryParams>({
-    PageNumber: 1,
-    PageSize: 6,
-  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,7 +42,11 @@ const EventsPage = () => {
   }, []);
 
   useEffect(() => {
-    setQueryParams((prev) => ({ ...prev, PageNumber: pageNumber, PageSize: pageSize }));
+    setQueryParams((prev) => ({
+      ...prev,
+      PageNumber: pageNumber,
+      PageSize: pageSize,
+    }));
   }, [pageNumber, pageSize]);
 
   const handleApplyFilters = (stagingParams: EventQueryParams) => {
@@ -67,22 +67,6 @@ const EventsPage = () => {
     setQueryParams(stagingParams);
   };
 
-  const handleApplyPastFilters = (stagingParams: EventQueryParams) => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-
-    const end = stagingParams.EndDate ? new Date(stagingParams.EndDate) : null;
-
-    if (end && end > now) {
-      toast.error(
-        "End date cannot be in the future, Please head to the Upcoming Events section",
-      );
-      return;
-    }
-
-    setPastQueryParams({ ...stagingParams, PageNumber: 1, PageSize: 6 });
-  };
-
   const {
     upcomingEvents: apiUpcomingEvents,
     pastEvents: apiPastEvents,
@@ -92,11 +76,11 @@ const EventsPage = () => {
     pastError,
     refetchUpcoming,
     refetchPast,
-  } = useEvents(queryParams, pastQueryParams);
+  } = useEvents(queryParams, { PageNumber: 1, PageSize: 6 });
 
   useEvents(
     { ...queryParams, PageNumber: pageNumber + 1, PageSize: pageSize },
-    { ...pastQueryParams, PageNumber: 2, PageSize: 6 },
+    { PageNumber: 2, PageSize: 6 },
   );
 
   const onBookNow = (id: string) => {
@@ -109,7 +93,10 @@ const EventsPage = () => {
   if (upcomingError && pastError) {
     return (
       <WithLayout>
-        <ErrorScreen title="Failed to load Events" message={upcomingError.message} />
+        <ErrorScreen
+          title="Failed to load Events"
+          message={upcomingError.message}
+        />
       </WithLayout>
     );
   }
@@ -202,14 +189,6 @@ const EventsPage = () => {
                 achievements.
               </p>
             </div>
-            <div className="mb-3">
-              <EventsFilter
-                searchParams={pastQueryParams}
-                onSearch={handleApplyPastFilters}
-                maxDate={new Date().toISOString().split("T")[0]}
-              />
-            </div>
-            <hr className="mb-4 -mt-2 border-t border-gray-400/80" />
             {isLoadingPast && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
                 <div className="text-center">
@@ -246,7 +225,11 @@ const EventsPage = () => {
                 />
                 {apiPastEvents.totalPages > 1 && (
                   <div className="flex justify-center w-fit mx-auto pt-4">
-                    <Button type="secondary" onClick={() => navigate("/past-events")} buttonText="View all" />
+                    <Button
+                      type="secondary"
+                      onClick={() => navigate("/past-events")}
+                      buttonText="View all"
+                    />
                   </div>
                 )}
               </>
