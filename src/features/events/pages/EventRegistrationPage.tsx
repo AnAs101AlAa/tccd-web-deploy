@@ -114,6 +114,11 @@ export default function EventRegisterForm() {
   const capacityUsage = (event.registeredCount / event.capacity) * 100;
   const progressPercentage = (currentStep / totalSteps) * 100;
 
+  const selectedSlot = event.slots?.find((s) => s.id === watchedSlotId);
+  const selectedSlotSpotsLeft = selectedSlot
+    ? selectedSlot.capacity - selectedSlot.registrationCount
+    : null;
+
   const formattedDate = format(event.date, "stringed");
   
   return (
@@ -350,13 +355,34 @@ export default function EventRegisterForm() {
                             field,
                             fieldState: { error: fieldError },
                           }) => (
-                            <DropdownMenu
-                              label=""
-                              value={field.value || ""}
-                              options={slotOptions}
-                              onChange={(val) => field.onChange(val)}
-                              error={fieldError?.message}
-                            />
+                            <>
+                              <DropdownMenu
+                                label=""
+                                value={field.value || ""}
+                                options={slotOptions}
+                                onChange={(val) => field.onChange(val)}
+                                error={fieldError?.message}
+                              />
+                              {field.value && (() => {
+                                const selectedSlot = event.slots?.find(
+                                  (s) => s.id === field.value,
+                                );
+                                if (!selectedSlot) return null;
+                                const spotsLeft = selectedSlot.capacity - selectedSlot.registrationCount;
+                                const isLow = spotsLeft <= 10;
+                                return (
+                                  <p
+                                    className={`flex items-center gap-1.5 text-xs font-medium mt-1 ${
+                                      isLow ? "text-red-500" : "text-green-600"
+                                    }`}
+                                  >
+                                    <FaUsers className="w-3 h-3 shrink-0" />
+                                    {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""}{" "}
+                                    remaining for this slot
+                                  </p>
+                                );
+                              })()}
+                            </>
                           )}
                         />
                       </div>
@@ -554,7 +580,13 @@ export default function EventRegisterForm() {
                 buttonText="Next"
                 buttonIcon={<FaArrowRight className="w-4 h-4" />}
                 width="auto"
-                disabled={currentStep === 1 && watchedSlotId === ""}
+                disabled={
+                  (currentStep === 1 && hasSlots && watchedSlotId === "") ||
+                  (currentStep === 1 &&
+                    hasSlots &&
+                    selectedSlotSpotsLeft !== null &&
+                    selectedSlotSpotsLeft <= 0)
+                }
               />
             )}
           </div>
