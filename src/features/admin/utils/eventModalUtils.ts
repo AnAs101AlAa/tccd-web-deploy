@@ -96,7 +96,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
   const [currentMediaInput, setCurrentMediaInput] = useState<string>("");
 
   const [isAddingSlot, setIsAddingSlot] = useState<boolean>(false);
-  const [currentSlotInput, setCurrentSlotInput] = useState<EventSlot>({id: "", startTime: "", endTime: "", capacity: 0});
+  const [currentSlotInput, setCurrentSlotInput] = useState<EventSlot>({id: "", startTime: "", endTime: "", capacity: 0, registrationCount: 0});
 
   useEffect(() => {
     if (event) {
@@ -217,9 +217,9 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
     
     setFormValues((prev) => ({
       ...prev,
-      slots: [...(prev.slots || []), { ...slotWithTimestamp, capacity: currentSlotInput.capacity }],
+      slots: [...(prev.slots || []), { ...slotWithTimestamp, capacity: currentSlotInput.capacity, registrationCount: 0 }],
     }));
-    setCurrentSlotInput({ id: "", startTime: "", endTime: "", capacity: 0 });
+    setCurrentSlotInput({ id: "", startTime: "", endTime: "", capacity: 0, registrationCount: 0 });
     setIsAddingSlot(false);
   }
 
@@ -356,7 +356,7 @@ export default function useEventModalUtils({event, onClose}: {event?: Event; onC
       addEventMediaMutation.isPending ||
       deleteEventMediaMutation.isPending,
     errors,
-    locations: locations || [],
+    locations: locations?.items || [],
     locationsLoading,
     locationNameKey,
     setLocationNameKey,
