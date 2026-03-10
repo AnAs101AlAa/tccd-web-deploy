@@ -20,10 +20,10 @@ export function useGetPendingAccounts(PageNumber?: number, PageSize?: number) {
   });
 }
 
-export function useApproveUser(userId: string) {
+export function useApproveUser() {
   return useMutation({
-    mutationKey: ["admin", "users", "approve", userId],
-    mutationFn: async () => usersApi.approveUser(userId),
+    mutationKey: ["admin", "users", "approve"],
+    mutationFn: async (userId: string) => usersApi.approveUser(userId),
   });
 }
 
