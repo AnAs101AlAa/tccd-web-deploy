@@ -30,7 +30,6 @@ export default function UsersAdminPage() {
     volunteeringMemberError,
     refetchStudent,
     refetchVolunteeringMember,
-    refetchVolunteeringMember,
   } = useUsers({ userQueryParams, volunteerQueryParams });
 
   if (volunteeringMemberError && studentError) {

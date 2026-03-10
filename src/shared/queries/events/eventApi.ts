@@ -68,6 +68,7 @@ export class EventApi {
           startTime: slot.startTime,
           endTime: slot.endTime,
           capacity: slot.capacity,
+          registrationCount: slot.registrationCount ?? 0,
         }),
       );
       return {
