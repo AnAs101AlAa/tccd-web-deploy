@@ -1,4 +1,4 @@
-import { useState, Activity } from "react";
+import { useState, Activity, useEffect } from "react";
 import {
   FaMapPin,
   FaUsers,
@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa6";
 import { MdCalendarMonth } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -46,6 +46,7 @@ export default function EventRegisterForm() {
   const storedUser = useSelector(
     (state: { user: { currentUser: StudentUser } }) => state.user.currentUser,
   );
+  const navigate = useNavigate();
 
   const {
     event,
@@ -71,6 +72,23 @@ export default function EventRegisterForm() {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [checkboxes, setCheckboxes] = useState<boolean[]>([false, false]);
   const [showRules, setShowRules] = useState<boolean>(false);
+
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    if (!checked &&!isLoading && !isEligible && eligibilityReason) {
+      const reasonLower = eligibilityReason.toLowerCase();
+      const isAlreadyRegistered =
+        reasonLower.includes("already") ||
+        reasonLower.includes("registered") ;
+
+      if (isAlreadyRegistered) {
+        toast.error("You are already registered for this event.");
+        setChecked(true);
+        navigate(`/events`);
+      }
+    }
+  }, [isLoading, isEligible, eligibilityReason, navigate,checked,eventId]);
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);  
 
