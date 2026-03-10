@@ -76,11 +76,11 @@ export default function EventRegisterForm() {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    if (!checked &&!isLoading && !isEligible && eligibilityReason) {
+    if (!checked && !isLoading && !isEligible && eligibilityReason) {
       const reasonLower = eligibilityReason.toLowerCase();
       const isAlreadyRegistered =
         reasonLower.includes("already") ||
-        reasonLower.includes("registered") ;
+        reasonLower.includes("registered");
 
       if (isAlreadyRegistered) {
         toast.error("You are already registered for this event.");
@@ -88,9 +88,9 @@ export default function EventRegisterForm() {
         navigate(`/events`);
       }
     }
-  }, [isLoading, isEligible, eligibilityReason, navigate,checked,eventId]);
+  }, [isLoading, isEligible, eligibilityReason, navigate, checked, eventId]);
 
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);  
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
   const watchedSlotId = watch("slotId");
 
@@ -138,7 +138,7 @@ export default function EventRegisterForm() {
     : null;
 
   const formattedDate = format(event.date, "stringed");
-  
+
   return (
     <WithLayout>
       <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
@@ -178,7 +178,7 @@ export default function EventRegisterForm() {
                   {event.name}
                 </h1>
                 <div className="inline-block bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  {EVENT_TYPES.find((type) => type.value === event.type)?.label ||"Other"}
+                  {EVENT_TYPES.find((type) => type.value === event.type)?.label || "Other"}
                 </div>
               </div>
             </div>
@@ -390,9 +390,8 @@ export default function EventRegisterForm() {
                                 const isLow = spotsLeft <= 10;
                                 return (
                                   <p
-                                    className={`flex items-center gap-1.5 text-xs font-medium mt-1 ${
-                                      isLow ? "text-red-500" : "text-green-600"
-                                    }`}
+                                    className={`flex items-center gap-1.5 text-xs font-medium mt-1 ${isLow ? "text-red-500" : "text-green-600"
+                                      }`}
                                   >
                                     <FaUsers className="w-3 h-3 shrink-0" />
                                     {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""}{" "}
@@ -559,7 +558,7 @@ export default function EventRegisterForm() {
               </div>
             </div>
           )}
-          
+
           {/* Navigation Buttons */}
           <div className="mt-8 flex items-center justify-between gap-3">
             <Button

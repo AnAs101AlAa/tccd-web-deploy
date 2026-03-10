@@ -6,12 +6,13 @@ import { useEffect } from "react";
 import { useGetEventById } from "@/shared/queries/events/eventQueries";
 import { mapEventMediaList } from "../utils/TypeMappingFunction";
 import type { EventMedia } from "@/shared/types";
+import { LoadingPage } from "tccd-ui";
 
 export default function GalleryDisplayPage() {
   const { id } = useParams();
   const { data: galleryData, isLoading, isError } = useGetEventById(id || "");
-  
-  useEffect (() => {
+
+  useEffect(() => {
     if (isError) {
       toast.error("Failed to load gallery data. Please try again later.");
     }
@@ -20,20 +21,23 @@ export default function GalleryDisplayPage() {
   if (isError) {
     return <p className="text-red-500">Error loading gallery data.</p>;
   }
-  
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
   return (
     <div className="w-full">
-        <div className="bg-background p-4 shadow-lg flex justify-between items-center mb-2">
-            <div>
-                <div className="flex items-center gap-2">
-                    <FaChevronLeft className="cursor-pointer size-5" onClick={() => window.history.back()} />
-                    <p className="font-bold text-[26px] text-secondary">Event Gallery</p>
-                </div>
-                <p className="text-contrast font-medium text-[14px] md:text-[16px] mt-1">Explore the collection of media from the <span className="font-bold">{galleryData?.name}</span> event.</p>
-            </div>
-            <img src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg" alt="TCCD Logo" className="md:block hidden h-9 md:mr-6 mr-3" />
+      <div className="bg-background p-4 shadow-lg flex justify-between items-center mb-2">
+        <div>
+          <div className="flex items-center gap-2">
+            <FaChevronLeft className="cursor-pointer size-5" onClick={() => window.history.back()} />
+            <p className="font-bold text-[26px] text-secondary">Event Gallery</p>
+          </div>
+          <p className="text-contrast font-medium text-[14px] md:text-[16px] mt-1">Explore the collection of media from the <span className="font-bold">{galleryData?.name}</span> event.</p>
         </div>
-        {isLoading && <p>Loading...</p>}
+        <img src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg" alt="TCCD Logo" className="md:block hidden h-9 md:mr-6 mr-3" />
+      </div>
       <FullscreenMediaViewer items={mapEventMediaList(galleryData?.eventMedia as EventMedia[] || [])} />
     </div>
   );
