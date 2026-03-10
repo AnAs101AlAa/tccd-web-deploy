@@ -301,16 +301,16 @@ export const CompanyRepInfoStep = ({ control }: CompanyRepInfoStepProps) => {
             />
 
             <Controller
-              name="newCompany.brief"
+              name="newCompany.domain"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Brief <span className="text-red-500">*</span>
+                    domain <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     {...field}
-                    placeholder="A short brief about the company..."
+                    placeholder="Company Email Domain"
                     rows={2}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-colors"
                   />

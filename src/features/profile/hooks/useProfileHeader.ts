@@ -19,7 +19,7 @@ export const useProfileHeader = (user: AnyUser | CompanyUser) => {
       return `${status} ${normalUser.university} batch of ${normalUser.graduationYear}`;
     }
     if (isCompany(companyUser)) {
-      return companyUser.brief || companyUser.description;
+      return companyUser.description;
     }
     if (isBusinessRep(normalUser)) {
       return normalUser.jobTitle;

@@ -4,7 +4,7 @@ export interface Company {
   businessType: string;
   description: string;
   website: string;
-  brief: string;
+  domain: string;
   logo: string | null;
   isApproved: boolean;
 }
@@ -36,7 +36,7 @@ export interface CreateCompanyPayload {
   businessType: string;
   description?: string;
   website?: string;
-  brief?: string;
+  domain?: string;
   logoId?: string;
 }
 
@@ -45,7 +45,7 @@ export interface UpdateCompanyPayload {
   businessType?: string;
   description?: string;
   website?: string;
-  brief?: string;
+  domain?: string;
   isApproved?: boolean;
   logoId?: string;
 }

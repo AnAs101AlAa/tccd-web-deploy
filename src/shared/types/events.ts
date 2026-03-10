@@ -4,7 +4,7 @@ export interface Sponsor {
   businessType: string;
   description: string;
   website: string;
-  brief: string;
+  domain: string;
   logo: string; // This is the banner/logo image URL
 }
 

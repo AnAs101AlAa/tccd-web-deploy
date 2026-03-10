@@ -116,7 +116,7 @@ export class EventApi {
           businessType: item.businessType,
           description: item.description,
           website: item.website,
-          brief: item.brief,
+          domain: item.domain,
           logo: item.logo,
         }),
       );

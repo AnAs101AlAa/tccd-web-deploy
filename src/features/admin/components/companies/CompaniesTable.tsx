@@ -189,7 +189,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                   Website
                 </th>
                 <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
-                  Brief
+                  Domain
                 </th>
                 <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
                   Status
@@ -249,7 +249,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                     )}
                   </td>
                   <td className="px-4 py-3 text-secondary max-w-62.5 truncate">
-                    {company.brief || "—"}
+                    {company.domain || "—"}
                   </td>
                   <td className="px-4 py-3">
                     <span
@@ -317,12 +317,12 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
                     )}
                   </span>
                 </div>
-                {company.brief && (
+                {company.domain && (
                   <div>
                     <span className="font-medium text-inactive-tab-text block">
-                      Brief
+                      Domain
                     </span>
-                    <span className="text-secondary">{company.brief}</span>
+                    <span className="text-secondary">{company.domain}</span>
                   </div>
                 )}
               </div>
