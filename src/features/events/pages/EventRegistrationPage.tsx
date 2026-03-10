@@ -1,4 +1,4 @@
-import { useState, Activity } from "react";
+import { useState, Activity, useEffect } from "react";
 import {
   FaMapPin,
   FaUsers,
@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa6";
 import { MdCalendarMonth } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -46,6 +46,7 @@ export default function EventRegisterForm() {
   const storedUser = useSelector(
     (state: { user: { currentUser: StudentUser } }) => state.user.currentUser,
   );
+  const navigate = useNavigate();
 
   const {
     event,
@@ -72,7 +73,24 @@ export default function EventRegisterForm() {
   const [checkboxes, setCheckboxes] = useState<boolean[]>([false, false]);
   const [showRules, setShowRules] = useState<boolean>(false);
 
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);  
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    if (!checked && !isLoading && !isEligible && eligibilityReason) {
+      const reasonLower = eligibilityReason.toLowerCase();
+      const isAlreadyRegistered =
+        reasonLower.includes("already") ||
+        reasonLower.includes("registered");
+
+      if (isAlreadyRegistered) {
+        toast.error("You are already registered for this event.");
+        setChecked(true);
+        navigate(`/events`);
+      }
+    }
+  }, [isLoading, isEligible, eligibilityReason, navigate, checked, eventId]);
+
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
   const watchedSlotId = watch("slotId");
 
@@ -120,7 +138,7 @@ export default function EventRegisterForm() {
     : null;
 
   const formattedDate = format(event.date, "stringed");
-  
+
   return (
     <WithLayout>
       <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
@@ -160,7 +178,7 @@ export default function EventRegisterForm() {
                   {event.name}
                 </h1>
                 <div className="inline-block bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  {EVENT_TYPES.find((type) => type.value === event.type)?.label ||"Other"}
+                  {EVENT_TYPES.find((type) => type.value === event.type)?.label || "Other"}
                 </div>
               </div>
             </div>
@@ -372,9 +390,8 @@ export default function EventRegisterForm() {
                                 const isLow = spotsLeft <= 10;
                                 return (
                                   <p
-                                    className={`flex items-center gap-1.5 text-xs font-medium mt-1 ${
-                                      isLow ? "text-red-500" : "text-green-600"
-                                    }`}
+                                    className={`flex items-center gap-1.5 text-xs font-medium mt-1 ${isLow ? "text-red-500" : "text-green-600"
+                                      }`}
                                   >
                                     <FaUsers className="w-3 h-3 shrink-0" />
                                     {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""}{" "}
@@ -541,7 +558,7 @@ export default function EventRegisterForm() {
               </div>
             </div>
           )}
-          
+
           {/* Navigation Buttons */}
           <div className="mt-8 flex items-center justify-between gap-3">
             <Button
