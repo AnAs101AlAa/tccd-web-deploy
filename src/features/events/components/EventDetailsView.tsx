@@ -118,7 +118,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                             Event Highlights
                         </h2>
                         <p className="text-gray-600 font-medium text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px] text-center">Showcase of some selected captures of our event preparations</p>
-                        <div className="relative mt-2 sm:mt-3 h-60 md:h-80 lg:h-120 w-fit mx-auto overflow-hidden rounded-lg sm:rounded-xl border border-gray-200 p-1.5 sm:p-2 shadow-md bg-linear-to-bl from-primary to-secondary">
+                        <div className="relative mt-2 sm:mt-3 h-60 md:h-80 lg:h-120 w-full flex justify-center items-center overflow-hidden rounded-lg sm:rounded-xl border border-gray-200 p-1.5 sm:p-2 shadow-md bg-linear-to-bl from-primary to-secondary">
                             {currentMedia ? (
                                 <div className="aspect h-full lg:aspect-19/9 w-full cursor-pointer active:scale-[0.99] sm:hover:scale-[1.01] transition-all duration-300" onClick={() => setIsMediaViewerOpen(true)}>
                                     <LazyImageLoader
@@ -159,7 +159,7 @@ const EventDetailsPage = ({ event, onRegister }: EventDetailsPageProps) => {
                             </div>
                         )}
                     </div>
-                    
+
                     <EventSponsorSection eventId={event.id} />
 
                     {canRegister && (
