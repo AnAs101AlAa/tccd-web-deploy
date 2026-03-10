@@ -176,7 +176,11 @@ export const companyRepInfoSchema = z
           .max(1000, "Description should be between 20 and 1000 characters"),
         website: z.string().url("Please enter a valid website URL"),
         domain: z
-          .email("Input must be a valid email")
+          .string()
+          .startsWith("@", { message: "Domain must start with @" })
+          .regex(/@(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,}$/, {
+            message: "Invalid domain format (example: @example.com)",
+          }),
       })
       .optional(),
   })
