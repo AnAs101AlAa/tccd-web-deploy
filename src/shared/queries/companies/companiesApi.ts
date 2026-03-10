@@ -12,8 +12,8 @@ export class CompaniesApi {
   // ── Public endpoints ──────────────────────────────────────
 
   async getCompanies(
-    page: number = 1,
-    count: number = 10,
+    PageNumber: number = 1,
+    PageSize: number = 10,
     companyName?: string,
     businessType?: string,
     isApproved?: boolean,
@@ -21,8 +21,8 @@ export class CompaniesApi {
     descending?: boolean,
   ): Promise<CompaniesResponse> {
     const queryParams: Record<string, string | number | boolean | undefined> = {
-      pageNumber: page,
-      pageSize: count,
+      PageNumber: PageNumber,
+      PageSize: PageSize,
       ...(companyName ? { CompanyName: companyName } : {}),
       ...(businessType ? { BusinessType: businessType } : {}),
       ...(isApproved !== undefined ? { IsApproved: isApproved } : {}),

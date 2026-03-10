@@ -23,8 +23,8 @@ interface CompaniesTableProps {
 
 const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
   const { data: response, isLoading } = useGetCompanies(
-    queryParams.page,
-    queryParams.count,
+    queryParams.PageNumber,
+    queryParams.PageSize,
     queryParams.CompanyName,
     queryParams.BusinessType,
     queryParams.IsApproved,
@@ -38,7 +38,7 @@ const CompaniesTable = ({ queryParams, onPageChange }: CompaniesTableProps) => {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  
+
   const handleView = (company: Company) => {
     setSelectedCompany(company);
     setIsDetailOpen(true);

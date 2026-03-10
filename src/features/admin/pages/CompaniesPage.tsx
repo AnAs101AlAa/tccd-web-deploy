@@ -9,27 +9,39 @@ import type { CompaniesQueryParams } from "@/shared/queries/companies";
 
 const CompaniesPage: React.FC = () => {
   const [queryParams, setQueryParams] = useState<CompaniesQueryParams>({
-    page: 1,
-    count: 10,
+    PageNumber: 1,
+    PageSize: 10,
+    OrderBy: "CreatedAt",
+    Descending: true,
   });
 
   const [searchInput, setSearchInput] = useState("");
   const [businessTypeFilter, setBusinessTypeFilter] = useState("");
   const [approvalFilter, setApprovalFilter] = useState("");
+  const [orderByFilter, setOrderByFilter] = useState("CreatedAt");
+  const [descendingFilter, setDescendingFilter] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const handleSearch = useCallback(() => {
     setQueryParams((prev) => ({
       ...prev,
-      page: 1,
+      PageNumber: 1,
       CompanyName: searchInput.trim() || undefined,
       BusinessType: businessTypeFilter.trim() || undefined,
       IsApproved: approvalFilter === "" ? undefined : approvalFilter === "true",
+      OrderBy: orderByFilter,
+      Descending: descendingFilter,
     }));
-  }, [searchInput, businessTypeFilter, approvalFilter]);
+  }, [
+    searchInput,
+    businessTypeFilter,
+    approvalFilter,
+    orderByFilter,
+    descendingFilter,
+  ]);
 
   const handlePageChange = useCallback((newPage: number) => {
-    setQueryParams((prev) => ({ ...prev, page: newPage }));
+    setQueryParams((prev) => ({ ...prev, PageNumber: newPage }));
   }, []);
 
   return (
@@ -62,6 +74,10 @@ const CompaniesPage: React.FC = () => {
           onBusinessTypeChange={setBusinessTypeFilter}
           approvalStatus={approvalFilter}
           onApprovalStatusChange={setApprovalFilter}
+          orderBy={orderByFilter}
+          onOrderByChange={setOrderByFilter}
+          descending={descendingFilter}
+          onDescendingChange={setDescendingFilter}
         />
 
         {/* Table Section */}

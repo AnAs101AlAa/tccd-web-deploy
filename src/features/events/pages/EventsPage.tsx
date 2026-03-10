@@ -42,7 +42,11 @@ const EventsPage = () => {
   }, []);
 
   useEffect(() => {
-    setQueryParams((prev) => ({ ...prev, PageNumber: pageNumber, PageSize: pageSize }));
+    setQueryParams((prev) => ({
+      ...prev,
+      PageNumber: pageNumber,
+      PageSize: pageSize,
+    }));
   }, [pageNumber, pageSize]);
 
   const handleApplyFilters = (stagingParams: EventQueryParams) => {
@@ -72,9 +76,12 @@ const EventsPage = () => {
     pastError,
     refetchUpcoming,
     refetchPast,
-  } = useEvents(queryParams, true);
+  } = useEvents(queryParams, { PageNumber: 1, PageSize: 6 });
 
-  useEvents({ ...queryParams, PageNumber: pageNumber + 1, PageSize: pageSize }, true);
+  useEvents(
+    { ...queryParams, PageNumber: pageNumber + 1, PageSize: pageSize },
+    { PageNumber: 2, PageSize: 6 },
+  );
 
   const onBookNow = (id: string) => {
     navigate(`/events/register/${id}`);
@@ -86,7 +93,10 @@ const EventsPage = () => {
   if (upcomingError && pastError) {
     return (
       <WithLayout>
-        <ErrorScreen title="Failed to load Events" message={upcomingError.message} />
+        <ErrorScreen
+          title="Failed to load Events"
+          message={upcomingError.message}
+        />
       </WithLayout>
     );
   }
@@ -216,7 +226,11 @@ const EventsPage = () => {
                 />
                 {apiPastEvents.totalPages > 1 && (
                   <div className="flex justify-center w-fit mx-auto pt-4">
-                    <Button type="secondary" onClick={() => navigate("/past-events")} buttonText="View all" />
+                    <Button
+                      type="secondary"
+                      onClick={() => navigate("/past-events")}
+                      buttonText="View all"
+                    />
                   </div>
                 )}
               </>

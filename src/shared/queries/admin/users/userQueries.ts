@@ -1,21 +1,23 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { UserQueryParams } from "./userTypes";
 import { UsersApi } from "./usersApi";
 
 const usersApi = new UsersApi();
 
+const usersQueryKey = ["admin", "users"];
+
 export function useGetUsers(params?: UserQueryParams) {
   return useQuery({
-    queryKey: ["admin", "users", params],
+    queryKey: [...usersQueryKey, params],
     queryFn: async () => usersApi.fetchUsers(params),
   });
 }
 
-export function useGetPendingAccounts(page?: number, count?: number) {
-    return useQuery({
-        queryKey: ["admin", "pending-accounts", page, count],
-        queryFn: async () => usersApi.fetchPendingAccounts(page, count),
-    });
+export function useGetPendingAccounts(PageNumber?: number, PageSize?: number) {
+  return useQuery({
+    queryKey: ["admin", "pending-accounts", PageNumber, PageSize],
+    queryFn: async () => usersApi.fetchPendingAccounts(PageNumber, PageSize),
+  });
 }
 
 export function useApproveUser() {
@@ -25,23 +27,30 @@ export function useApproveUser() {
   });
 }
 
-export function useRejectUser(userId: string) {
+export function useRejectUser() {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["admin", "users", "reject", userId],
-    mutationFn: async () => usersApi.rejectUser(userId),
+    mutationKey: [...usersQueryKey, "reject"],
+    mutationFn: async (userId: string) => usersApi.rejectUser(userId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: usersQueryKey }),
   });
 }
 
-export function useBanUser(userId: string) {
+export function useBanUser() {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["admin", "users", "ban", userId],
-    mutationFn: async () => usersApi.banUser(userId),
+    mutationKey: [...usersQueryKey, "ban"],
+    mutationFn: async (userId: string) => usersApi.banUser(userId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: usersQueryKey }),
   });
 }
 
-export function useUnbanUser(userId: string) {
+export function useUnbanUser() {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["admin", "users", "unban", userId],
-    mutationFn: async () => usersApi.unbanUser(userId),
+    mutationKey: [...usersQueryKey, "unban"],
+    mutationFn: async (userId: string) => usersApi.unbanUser(userId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: usersQueryKey }),
   });
 }
+
