@@ -67,12 +67,12 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
 
   const handleApplyFilters = () => {
     setIsFilterModalOpen(false);
-    onSearch(tempSelectedParams);
+    onSearch({ ...tempSelectedParams, PageNumber: 1 });
   };
 
   const handleClearFilters = () => {
     const clearedParams: UserQueryParams = {
-      PageNumber: tempSelectedParams.PageNumber,
+      PageNumber: 1,
       PageSize: tempSelectedParams.PageSize,
       Gender: undefined,
       Role: undefined,
@@ -96,6 +96,7 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
     const updatedParams = {
       ...tempSelectedParams,
       Gender: undefined,
+      PageNumber: 1,
     };
     setTempSelectedParams(updatedParams);
     onSearch(updatedParams);
@@ -105,6 +106,7 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
     const updatedParams = {
       ...tempSelectedParams,
       Role: undefined,
+      PageNumber: 1,
     };
     setTempSelectedParams(updatedParams);
     onSearch(updatedParams);
@@ -114,6 +116,7 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
     const updatedParams = {
       ...tempSelectedParams,
       IsDeleted: undefined,
+      PageNumber: 1,
     };
     setTempSelectedParams(updatedParams);
     onSearch(updatedParams);
@@ -169,7 +172,7 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
                 buttonIcon={<IoSearch className="size-3.5" />}
                 buttonText="Search"
                 onClick={() => {
-                  onSearch(tempSelectedParams);
+                  onSearch({ ...tempSelectedParams, PageNumber: 1 });
                 }}
                 type="primary"
                 width="full"
@@ -237,6 +240,7 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
                       ...tempSelectedParams,
                       OrderBy: "CreatedAt",
                       Descending: true,
+                      PageNumber: 1,
                     };
                     setTempSelectedParams(updatedParams);
                     onSearch(updatedParams);
