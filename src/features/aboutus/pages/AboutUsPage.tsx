@@ -139,6 +139,12 @@ export const AboutUsPage = () => {
     }
   };
 
+    //   {
+    //     "Name": "Dr Samah El-Shafiey",
+    //     "ImgSrc": "https://res.cloudinary.com/dwqke70ki/image/upload/v1773168405/WhatsApp_Image_2026-03-10_at_7.17.22_PM_tivjfu.jpg",
+    //     "Role": "Associate Professor, Engineering Mathematics and Physics Department, Team Director"
+    // },
+
   return (
     <WithLayout>
       <div className="relative font-sans bg-gray-50">
@@ -150,12 +156,40 @@ export const AboutUsPage = () => {
 
         <div className="mx-auto text-center mt-8 md:mt-16">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 bg-linear-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent">
+            TCCD Director
+          </h1>
+          <div className="shrink-0 flex flex-col md:flex-row justify-center items-center mx-auto w-100 md:w-160 max-w-[96%] bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center">
+            <img
+              src="https://res.cloudinary.com/dwqke70ki/image/upload/v1773168405/WhatsApp_Image_2026-03-10_at_7.17.22_PM_tivjfu.jpg"
+              alt={`Dr Samah El-Shafiey - TCCD Director`}
+              className="w-32 h-32 md:w-36 md:h-36 rounded-full object-cover object-center mx-auto mb-4 md:mb-0 bg-gray-200"
+              loading="lazy"
+              onError={(e) => {
+                const target = e.currentTarget as HTMLImageElement;
+                if (target.src !== "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif") {
+                  target.src = "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif";
+                }
+              }}
+            />
+            <div>
+            <p className="font-bold text-gray-800 text-center text-lg md:text-xl mb-3">
+              Dr Samah El-Shafiey El-Tantawy
+            </p>
+            <p className="text-gray-600 text-sm md:text-base lg:text-md mx-auto px-4 mb-4 max-w-lg">
+              Fostering student growth, bridging academia and industry, and connecting graduates to opportunities, driven by a passion to support and empower.
+            </p>
+            </div>
+          </div>
+
+        </div>
+
+        <div className="mx-auto text-center mt-8 md:mt-16">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 bg-linear-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent">
             Board members
           </h1>
           <p className="text-gray-600 text-sm md:text-base lg:text-lg max-w-3xl mx-auto px-4 mb-4">
-            Meet the dedicated leaders who guide TCCD's strategic vision and
-            ensure our commitment to empowering students and graduates in their
-            career journeys.
+            Meet the dedicated engineering student volunteering leaders who guide TCCD's strategic vision and
+            ensure our commitment to empowering students and graduates in their career journeys.
           </p>
         </div>
         <div className="max-w-7xl mx-auto px-4 md:px-5 relative pb-8 md:pb-12">
@@ -209,9 +243,8 @@ export const AboutUsPage = () => {
           </h1>
           <p className="text-gray-600 text-sm md:text-base lg:text-lg max-w-3xl mx-auto px-4 mb-4">
             With a passion for technology and a commitment to excellence, our
-            founders have been instrumental in shaping the vision and mission of
-            TCCD. giving up their time and effort to make this website a reality
-            and proving that you can make a difference.
+            volunteering founders have been instrumental in shaping the vision and mission of
+            TCCD's digital identity.
           </p>
         </div>
         <div className="max-w-7xl mx-auto px-4 md:px-5 relative pb-8 md:pb-16">

@@ -71,3 +71,7 @@ input[type=password]::-ms-clear {
   -ms-overflow-style: none; 
   scrollbar-width: none;  
 }
+
+html {
+  overscroll-behavior: none;
+}
