@@ -158,7 +158,7 @@ export const AboutUsPage = () => {
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 bg-linear-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent">
             TCCD Director
           </h1>
-          <div className="shrink-0 flex flex-col md:flex-row justify-center mx-auto w-100 md:w-200 max-w-[96%] bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center">
+          <div className="shrink-0 flex flex-col md:flex-row justify-center items-center mx-auto w-100 md:w-160 max-w-[96%] bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center">
             <img
               src="https://res.cloudinary.com/dwqke70ki/image/upload/v1773168405/WhatsApp_Image_2026-03-10_at_7.17.22_PM_tivjfu.jpg"
               alt={`Dr Samah El-Shafiey - TCCD Director`}
@@ -175,9 +175,8 @@ export const AboutUsPage = () => {
             <p className="font-bold text-gray-800 text-center text-lg md:text-xl mb-3">
               Dr Samah El-Shafiey El-Tantawy
             </p>
-            <p className="text-gray-600 text-sm md:text-base lg:text-md mx-auto px-4 mb-4">
-            Meet the dedicated engineering student volunteering leaders who guide TCCD's strategic vision and
-            ensure our commitment to empowering students and graduates in their career journeys.
+            <p className="text-gray-600 text-sm md:text-base lg:text-md mx-auto px-4 mb-4 max-w-lg">
+              Fostering student growth, bridging academia and industry, and connecting graduates to opportunities, driven by a passion to support and empower.
             </p>
             </div>
           </div>
