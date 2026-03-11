@@ -20,11 +20,9 @@ export default function TicketCard({ ticket }: { ticket: Ticket }) {
       case "Pending":
         return "bg-yellow-500/10 text-yellow-600 border-yellow-500";
       case "Cancelled":
-        return "bg-red-500/10 text-red-600 border-red-500";
-      case "Cancelled":
+        return "bg-red-500/30 text-red-700 border-red-500";
+        default:
         return "bg-gray-400/10 text-gray-500 border-gray-400";
-      default:
-        return "";
     }
   };
 
@@ -65,7 +63,7 @@ export default function TicketCard({ ticket }: { ticket: Ticket }) {
         />
       </div>
       <span
-        className={`absolute top-2 right-2 inline-flex items-center px-2.5 py-1 shadow-sm border rounded-full text-xs font-medium ${statusStyles()}`}
+        className={`absolute top-2 right-2 inline-flex items-center px-2.5 py-1 shadow-sm border rounded-full text-xs font-medium backdrop-blur-3xl ${statusStyles()}`}
       >
         {ticket.status}
       </span>
