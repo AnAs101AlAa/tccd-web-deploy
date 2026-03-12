@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, Suspense, lazy } from "react";
 import { WithLayout } from "@/shared/components/hoc";
 import { Button } from "tccd-ui";
 import { MdAdd } from "react-icons/md";
 import CompaniesTable from "../components/companies/CompaniesTable";
 import CompaniesFilter from "../components/companies/CompaniesFilter";
-import AddEditCompanyModal from "../components/companies/AddEditCompanyModal";
+// Modal is only opened by user action — defer its bundle
+const AddEditCompanyModal = lazy(() => import("../components/companies/AddEditCompanyModal"));
 import type { CompaniesQueryParams } from "@/shared/queries/companies";
 
 const CompaniesPage: React.FC = () => {
@@ -102,10 +103,12 @@ const CompaniesPage: React.FC = () => {
 
         {/* Add Company Modal */}
         {isAddModalOpen && (
-          <AddEditCompanyModal
-            isOpen={isAddModalOpen}
-            onClose={() => setIsAddModalOpen(false)}
-          />
+          <Suspense fallback={<div className="loading-state">Loading...</div>}>
+            <AddEditCompanyModal
+              isOpen={isAddModalOpen}
+              onClose={() => setIsAddModalOpen(false)}
+            />
+          </Suspense>
         )}
       </div>
     </WithLayout>

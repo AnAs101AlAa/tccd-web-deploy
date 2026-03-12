@@ -1,10 +1,12 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, Suspense, lazy } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Pagination } from "@/shared/components/pagination";
 import { WithLayout } from "@/shared/components/hoc";
 import EventsFilter from "@/features/events/components/EventsFilter";
 import AdminEventCard from "@/features/admin/components/eventAdminPanel/AdminEventCard";
-import AddEditEventModal from "../components/eventAdminPanel/AddEditEventModal";
+// Modals are only rendered on user interaction — lazy-load to keep initial bundle small
+const AddEditEventModal = lazy(() => import("../components/eventAdminPanel/AddEditEventModal"));
+const ConfirmActionModal = lazy(() => import("@/shared/components/modals/ConfirmActionModal"));
 import { Button } from "tccd-ui";
 import { MdAdd } from "react-icons/md";
 import toast from "react-hot-toast";
@@ -14,11 +16,10 @@ import type { EventQueryParams } from "@/shared/types/events";
 import GenericGrid from "@/shared/components/GenericGrid";
 import { PastEventCard } from "@/features/events/components";
 import { useDeleteEvent } from "@/shared/queries/admin/events/eventsQueries";
-import ConfirmActionModal from "@/shared/components/modals/ConfirmActionModal";
 
 const AdminEventsListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const getPageSize = () => {
     if (typeof window === 'undefined') return 4;
     const width = window.innerWidth;
@@ -30,7 +31,7 @@ const AdminEventsListPage = () => {
     PageNumber: 1,
     PageSize: getPageSize(),
   });
-  
+
   // Update page size on window resize
   useEffect(() => {
     const handleResize = () => {
@@ -320,28 +321,32 @@ const AdminEventsListPage = () => {
         </section>
 
         {isEventModalOpen && (
-          <AddEditEventModal
-            event={selectedEvent}
-            onClose={handleCloseModal}
-          />
+          <Suspense fallback={<div className="loading-state">Loading...</div>}>
+            <AddEditEventModal
+              event={selectedEvent}
+              onClose={handleCloseModal}
+            />
+          </Suspense>
         )}
 
-      {isDeleteModalOpen && (
-        <ConfirmActionModal
-          isOpen={isDeleteModalOpen}
-          onClose={() => setIsDeleteModalOpen(false)}
-          isSubmitting={deleteEventMutation.isPending}
-          title="Confirm Deletion"
-          message={`Are you sure you want to delete the event "${selectedEvent?.name}"? This action cannot be undone.`}
-          onConfirm={() => {
-            if (selectedEvent) {
-              handleDeleteEvent(selectedEvent.id);
-            }
-          }}
-          confirmButtonText="Delete"
-          cancelButtonText="Cancel"
-        />
-      )}
+        {isDeleteModalOpen && (
+          <Suspense fallback={<div className="loading-state">Loading...</div>}>
+            <ConfirmActionModal
+              isOpen={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)}
+              isSubmitting={deleteEventMutation.isPending}
+              title="Confirm Deletion"
+              message={`Are you sure you want to delete the event "${selectedEvent?.name}"? This action cannot be undone.`}
+              onConfirm={() => {
+                if (selectedEvent) {
+                  handleDeleteEvent(selectedEvent.id);
+                }
+              }}
+              confirmButtonText="Delete"
+              cancelButtonText="Cancel"
+            />
+          </Suspense>
+        )}
       </div>
     </WithLayout>
   );

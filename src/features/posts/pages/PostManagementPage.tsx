@@ -1,14 +1,15 @@
 import { PostSearchFilter } from "../components/PostSearchFilter";
 import PostCard from "../components/PostListingCard";
 import type { CommunityPost } from "@/shared/types/postTypes";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense, lazy } from "react";
 import Pagination from "@/shared/components/pagination/Pagination";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import { useGetAllPosts } from "@/shared/queries/posts";
 import { LoadingPage, Button, ErrorScreen } from "tccd-ui";
-import PostDeleteModal from "../components/components/PostDeleteModal";
-import ManagePostModal from "../components/components/ManagePostModal";
-import PostApprovalModal from "../components/components/PostApprovalModal";
+// Post modals are only opened on user action — defer their bundles
+const PostDeleteModal = lazy(() => import("../components/components/PostDeleteModal"));
+const ManagePostModal = lazy(() => import("../components/components/ManagePostModal"));
+const PostApprovalModal = lazy(() => import("../components/components/PostApprovalModal"));
 import { POST_SORT_OPTIONS } from "../constants/postConstans";
 
 export const PostManagementPage = () => {
@@ -105,26 +106,32 @@ export const PostManagementPage = () => {
 
   return (
     <WithLayout>
-      <PostDeleteModal
-        isOpen={deletedPost != null}
-        onClose={() => setDeletedPost(null)}
-        postId={deletedPost}
-      />
-      <PostApprovalModal
-        isOpen={approvingPost !== null}
-        onClose={() => setApprovingPost(null)}
-        postId={approvingPost?.id || null}
-        currentApprovalStatus={approvingPost?.isApproved || false}
-      />
-      {(createPost || selectedPost) && (
-        <ManagePostModal
-          initialData={selectedPost || undefined}
-          onClose={() => {
-            setSelectedPost(null);
-            setCreatePost(false);
-          }}
-          isOpen={createPost || selectedPost !== null}
+      <Suspense fallback={<div className="loading-state">Loading...</div>}>
+        <PostDeleteModal
+          isOpen={deletedPost != null}
+          onClose={() => setDeletedPost(null)}
+          postId={deletedPost}
         />
+      </Suspense>
+      <Suspense fallback={<div className="loading-state">Loading...</div>}>
+        <PostApprovalModal
+          isOpen={approvingPost !== null}
+          onClose={() => setApprovingPost(null)}
+          postId={approvingPost?.id || null}
+          currentApprovalStatus={approvingPost?.isApproved || false}
+        />
+      </Suspense>
+      {(createPost || selectedPost) && (
+        <Suspense fallback={<div className="loading-state">Loading...</div>}>
+          <ManagePostModal
+            initialData={selectedPost || undefined}
+            onClose={() => {
+              setSelectedPost(null);
+              setCreatePost(false);
+            }}
+            isOpen={createPost || selectedPost !== null}
+          />
+        </Suspense>
       )}
       <div className="min-h-screen bg-background py-4 md:py-8 px-4 md:px-8">
         <main className="w-full max-w-400 mx-auto">
@@ -209,11 +216,10 @@ export const PostManagementPage = () => {
                     <button
                       type="button"
                       onClick={() => setIsCompactView((prev) => !prev)}
-                      className={`inline-flex items-center rounded-md border px-2.5 py-1 text-[12px] font-medium transition-colors ${
-                        isCompactView
+                      className={`inline-flex items-center rounded-md border px-2.5 py-1 text-[12px] font-medium transition-colors ${isCompactView
                           ? "border-primary/30 bg-primary/10 text-secondary"
                           : "border-contrast/20 bg-white/80 text-inactive-tab-text"
-                      }`}
+                        }`}
                     >
                       View: {isCompactView ? "Compact" : "Comfortable"}
                     </button>

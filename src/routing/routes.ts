@@ -1,34 +1,56 @@
-import {
-  LoginPage,
-  SignupPage,
-  SignupConfirmation,
-  SignupVerification,
-  ForgotPasswordPage,
-  ResetPasswordPage,
-  AboutUsPage,
-  EventsPage,
-  EventDetailsPage,
-  PastEventsPage,
-  GalleryPage,
-  GalleryDisplayPage,
-  ProfilePage,
-  EventTicketPage,
-  OTPPage,
-  QRScannerPage,
-  LocationsManagementPage,
-  PostManagementPage,
-  EventRegistrationPage,
-  AdminEventsListPage,
-  StatisticsPage,
-  CompaniesPage,
-  HomePage,
-  PostPage,
-  UsersAdminPage,
-} from "@/features";
+import { lazy } from "react";
+import type { ComponentType, LazyExoticComponent } from "react";
+
+// ---------- Route-level code splitting ----------
+// Each page is loaded only when its route is first visited.
+// Named-export pages use .then(m => ({ default: m.X })) to satisfy lazy()'s default-export requirement.
+const LoginPage = lazy(() =>
+  import("@/features/auth/pages/login/LoginPage").then(m => ({ default: m.LoginPage }))
+);
+const SignupPage = lazy(() =>
+  import("@/features/auth/pages/signup/SignupPage").then(m => ({ default: m.SignupPage }))
+);
+const SignupConfirmation = lazy(() => import("@/features/auth/pages/signup/SignupConfirmation"));
+const SignupVerification = lazy(() => import("@/features/auth/pages/signup/SignupVerification"));
+const ForgotPasswordPage = lazy(() =>
+  import("@/features/auth/pages/forgot-password/ForgotPasswordPage").then(m => ({ default: m.ForgotPasswordPage }))
+);
+const OTPPage = lazy(() =>
+  import("@/features/auth/pages/otp/otp").then(m => ({ default: m.OTPPage }))
+);
+const ResetPasswordPage = lazy(() =>
+  import("@/features/auth/pages/reset-password/ResetPasswordPage").then(m => ({ default: m.ResetPasswordPage }))
+);
+const HomePage = lazy(() => import("@/features/home/pages/HomePage"));
+const AboutUsPage = lazy(() =>
+  import("@/features/aboutus/pages/AboutUsPage").then(m => ({ default: m.AboutUsPage }))
+);
+const EventsPage = lazy(() => import("@/features/events/pages/EventsPage"));
+const EventDetailsPage = lazy(() => import("@/features/events/pages/EventDetailsPage"));
+const PastEventsPage = lazy(() => import("@/features/events/pages/PastEventsPage"));
+const EventRegistrationPage = lazy(() => import("@/features/events/pages/EventRegistrationPage"));
+const EventTicketPage = lazy(() => import("@/features/events/pages/EventTicketPage"));
+const GalleryPage = lazy(() => import("@/features/gallery/pages/GalleryPage"));
+const GalleryDisplayPage = lazy(() => import("@/features/gallery/pages/GalleryDisplayPage"));
+const ProfilePage = lazy(() => import("@/features/profile/pages/ProfilePage"));
+const QRScannerPage = lazy(() =>
+  import("@/features/qr-scanner/pages/QRScannerPage").then(m => ({ default: m.QRScannerPage }))
+);
+const PostManagementPage = lazy(() =>
+  import("@/features/posts/pages/PostManagementPage").then(m => ({ default: m.PostManagementPage }))
+);
+const PostPage = lazy(() => import("@/features/home/pages/postPage"));
+const AdminEventsListPage = lazy(() => import("@/features/admin/pages/AdminEventsListPage"));
+const StatisticsPage = lazy(() => import("@/features/admin/pages/StatisticsPage"));
+const CompaniesPage = lazy(() => import("@/features/admin/pages/CompaniesPage"));
+const LocationsManagementPage = lazy(() => import("@/features/admin/pages/LocationsManagementPage"));
+const UsersAdminPage = lazy(() => import("@/features/admin/pages/UsersAdminPage"));
+
+type RouteComponent = ComponentType | LazyExoticComponent<ComponentType>;
 
 export interface Route {
   path: string;
-  Component: React.ComponentType;
+  Component: RouteComponent;
   protected?: boolean;
   roles?: string[];
 }
