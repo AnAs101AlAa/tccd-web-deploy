@@ -76,14 +76,14 @@ const CompanyDetailModal: React.FC<CompanyDetailModalProps> = ({
             </div>
           )}
 
-          {company.domain && (
+          {company.emailDomain && (
             <div className="flex items-start gap-3">
               <FiInfo className="w-5 h-5 text-secondary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs font-medium text-inactive-tab-text uppercase tracking-wider">
-                  Domain
+                  emailDomain
                 </p>
-                <p className="text-contrast">{company.domain}</p>
+                <p className="text-contrast">{company.emailDomain}</p>
               </div>
             </div>
           )}

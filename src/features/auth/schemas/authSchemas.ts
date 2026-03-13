@@ -22,7 +22,7 @@ const passwordSchema = z
   .min(8, "Password must be at least 8 characters")
   .regex(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])/,
-    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
   );
 
 const phoneNumberSchema = z
@@ -175,11 +175,11 @@ export const companyRepInfoSchema = z
           .min(20, "Description should be between 20 and 1000 characters")
           .max(1000, "Description should be between 20 and 1000 characters"),
         website: z.string().url("Please enter a valid website URL"),
-        domain: z
+        emailDomain: z
           .string()
-          .startsWith("@", { message: "Domain must start with @" })
+          .startsWith("@", { message: "emailDomain must start with @" })
           .regex(/^@(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,}$/, {
-            error: "Invalid domain format (example: @example.com)",
+            error: "Invalid emailDomain format (example: @example.com)",
           }),
       })
       .optional(),
@@ -242,7 +242,7 @@ export const signupSchema = z.object({
       businessType: z.string(),
       description: z.string(),
       website: z.string(),
-      domain: z.string(),
+      emailDomain: z.string(),
     })
     .optional(),
   // Faculty fields (optional)

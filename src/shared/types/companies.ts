@@ -4,7 +4,7 @@ export interface Company {
   businessType: string;
   description: string;
   website: string;
-  domain: string;
+  emailDomain: string;
   logo: string;
 }
 

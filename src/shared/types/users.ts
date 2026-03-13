@@ -52,7 +52,7 @@ export interface CompanyUser extends Entity {
   businessType: string;
   description: string;
   website: string;
-  domain: string;
+  emailDomain: string;
   logo: string;
   businessReps?: string[]; // IDs of BusinessRepUser
 }

@@ -170,7 +170,10 @@ export class AuthApi {
         credentials.newCompany.description,
       );
       formData.append("newCompany.website", credentials.newCompany.website);
-      formData.append("newCompany.domain", credentials.newCompany.domain);
+      formData.append(
+        "newCompany.emailDomain",
+        credentials.newCompany.emailDomain,
+      );
     }
 
     formData.append("proofFile", credentials.proofFile);

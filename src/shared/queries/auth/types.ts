@@ -31,7 +31,7 @@ export interface BusinessRepSignupCredentials {
     businessType: string;
     description: string;
     website: string;
-    domain: string;
+    emailDomain: string;
   };
   position: string;
   proofFile: File;

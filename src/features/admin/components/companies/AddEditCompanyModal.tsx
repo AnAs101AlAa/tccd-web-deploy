@@ -26,7 +26,7 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
     businessType: "",
     description: "",
     website: "",
-    domain: "",
+    emailDomain: "",
     logoId: "",
   });
 
@@ -37,7 +37,7 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
         businessType: company.businessType || "",
         description: company.description || "",
         website: company.website || "",
-        domain: company.domain || "",
+        emailDomain: company.emailDomain || "",
         logoId: extractDriveId(company.logo || ""),
       });
     } else {
@@ -46,7 +46,7 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
         businessType: "",
         description: "",
         website: "",
-        domain: "",
+        emailDomain: "",
         logoId: "",
       });
     }
@@ -73,8 +73,8 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
             ...(formData.website.trim()
               ? { website: formData.website.trim() }
               : {}),
-            ...(formData.domain.trim()
-              ? { domain: formData.domain.trim() }
+            ...(formData.emailDomain.trim()
+              ? { emailDomain: formData.emailDomain.trim() }
               : {}),
             ...(formData.logoId ? { logoId: formData.logoId.trim() } : {}),
           },
@@ -90,7 +90,9 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
           ...(formData.website.trim()
             ? { website: formData.website.trim() }
             : {}),
-          ...(formData.domain.trim() ? { domain: formData.domain.trim() } : {}),
+          ...(formData.emailDomain.trim()
+            ? { emailDomain: formData.emailDomain.trim() }
+            : {}),
           ...(formData.logoId ? { logoId: formData.logoId.trim() } : {}),
         });
         toast.success("Company created successfully!");
@@ -161,11 +163,11 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
 
         <InputField
           labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
-          label="domain"
-          id="company-domain"
-          value={formData.domain}
+          label="emailDomain"
+          id="company-emailDomain"
+          value={formData.emailDomain}
           onChange={(val) =>
-            setFormData((prev) => ({ ...prev, domain: val.target.value }))
+            setFormData((prev) => ({ ...prev, emailDomain: val.target.value }))
           }
           placeholder="Short summary of the company"
         />
