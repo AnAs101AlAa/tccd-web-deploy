@@ -178,8 +178,8 @@ export const companyRepInfoSchema = z
         domain: z
           .string()
           .startsWith("@", { message: "Domain must start with @" })
-          .regex(/@(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,}$/, {
-            message: "Invalid domain format (example: @example.com)",
+          .regex(/^@(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,}$/, {
+            error: "Invalid domain format (example: @example.com)",
           }),
       })
       .optional(),
