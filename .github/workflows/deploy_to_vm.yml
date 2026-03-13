@@ -1,0 +1,3 @@
+name: Deploy React App to VM
+on:
+  workflow_dispatch:
