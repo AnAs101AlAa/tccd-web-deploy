@@ -54,9 +54,6 @@ export default function UsersAdminPage() {
             Manage all registered users, including students and volunteering
             members, manage account access and view user details and member
             profiles.
-            Manage all registered users, including students and volunteering
-            members, manage account access and view user details and member
-            profiles.
           </p>
         </div>
 

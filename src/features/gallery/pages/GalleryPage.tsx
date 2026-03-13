@@ -34,7 +34,7 @@ const GalleryPage = () => {
       return;
     }
 
-    setQueryParams(stagingParams);
+    setQueryParams({ ...stagingParams, PageNumber: 1 });
   };
 
   const {

@@ -21,8 +21,8 @@ const passwordSchema = z
   .min(1, "Password is required")
   .min(8, "Password must be at least 8 characters")
   .regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#_-])/,
-    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])/,
+    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
   );
 
 const phoneNumberSchema = z
