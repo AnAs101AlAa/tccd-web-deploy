@@ -1,25 +1,14 @@
-export interface ScannedUserInfo {
-  id: string;
-  name: string;
-  email: string;
-  university: string;
-}
-
-export interface ScannedEventInfo {
-  id: string;
-  eventName: string;
-  eventDate: string;
-  status: "not-started" | "ongoing" | "ended";
-}
-
 export interface QRScanResult {
-  user: ScannedUserInfo;
-  event: ScannedEventInfo;
+  id: string;
+  userId: string;
+  eventId: string;
   scannedAt: string;
+  scanCount: number;
+  maxScans: number;
 }
 
 export interface QRScanError {
-  type: "invalid_qr" | "event_not_started" | "event_ended" | "camera_error" | "network_error" | "unknown";
+  type: "invalid_qr" | "event_not_started" | "event_ended" | "camera_error" | "network_error" | "scan_limit_reached" | "unknown";
   message: string;
 }
 

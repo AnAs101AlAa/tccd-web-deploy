@@ -1,6 +1,6 @@
 export interface EligibilityResponse {
   isEligible: boolean;
-  reason?: string;
+  message?: string;
 }
 
 export interface RegistrationResponse {

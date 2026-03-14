@@ -8,6 +8,7 @@ import { useCurrentUser } from "@/shared/store";
 import toast from "react-hot-toast";
 import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 import { motion } from "framer-motion";
+import { useIsStudent } from "@/shared/store";
 
 interface UpcomingEventCardProps {
   event: Event;
@@ -26,6 +27,7 @@ const UpcomingEventCard: React.FC<UpcomingEventCardProps> = ({
   const [isTapped, setIsTapped] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const currentUser = useCurrentUser();
+  const isStudent = useIsStudent();
 
   useEffect(() => {
     const wholeEl = wholeInfoRef.current;
@@ -114,19 +116,21 @@ const UpcomingEventCard: React.FC<UpcomingEventCardProps> = ({
           </p>
 
           <div className="flex gap-1.5 md:gap-3 mt-4">
-            <Button
-              buttonText="Book Now"
-              type="primary"
-              width="fit"
-              className="md:py-1.5 md:px-4 text-[10px] lg:text-[11px]"
-              onClick={() => {
-                if (!currentUser?.id) {
-                  toast.error("Please log in to be able to register in events.");
-                  return;
-                }
-                onBookNow(event.id);
-              }}
-            />
+            {isStudent && (
+              <Button
+                buttonText="Book Now"
+                type="primary"
+                width="fit"
+                className="md:py-1.5 md:px-4 text-[10px] lg:text-[11px]"
+                onClick={() => {
+                  if (!currentUser?.id) {
+                    toast.error("Please log in to be able to register in events.");
+                    return;
+                  }
+                  onBookNow(event.id);
+                }}
+              />
+            )}
 
             <Button
               buttonText="Learn More"

@@ -68,6 +68,7 @@ export class EventApi {
           startTime: slot.startTime,
           endTime: slot.endTime,
           capacity: slot.capacity,
+          registrationCount: slot.registrationCount ?? 0,
         }),
       );
       return {
@@ -93,6 +94,13 @@ export class EventApi {
     }
 
     throw new Error("Event not found");
+  }
+
+  async getEventQRCode(eventId: string): Promise<{ base64Image: string }> {
+    const response = await systemApi.get(
+      `/v1/events/${eventId}/registrations/qr-code`,
+    );
+    return response.data.data;
   }
 
   async getSponsorsByEventId(eventId: string): Promise<Sponsor[]> {

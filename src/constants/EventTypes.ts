@@ -15,14 +15,4 @@ const EVENT_TYPES = [
   { value: "Orientation" as EventTypes, label: "Orientation" },
 ];
 
-export const EVENT_TYPE_MAP = {
-  Workshop: "Workshop",
-  Jobfair: "Job Fair",
-  Researchday: "Research Day",
-  Fieldtrip: "Field Trip",
-  Sessions: "Session",
-  Recruitment: "Recruitment",
-  Orientation: "Orientation",
-};
-
 export default EVENT_TYPES;

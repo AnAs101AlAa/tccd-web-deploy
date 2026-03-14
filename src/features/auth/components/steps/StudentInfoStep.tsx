@@ -56,6 +56,22 @@ export const StudentInfoStep = ({ control }: StudentInfoStepProps) => {
           options={DepartmentList.map((dept) => ({ label: dept, value: dept }))}
         />
       )}
+
+      <FormInput
+        name="graduationYear"
+        control={control}
+        label="Graduation Year"
+        type="number"
+        placeholder="Enter your graduation year"
+      />
+
+      <FormInput
+        name="gpa"
+        control={control}
+        label="GPA"
+        type="number"
+        placeholder="Enter your GPA"
+      />
     </div>
   );
 };

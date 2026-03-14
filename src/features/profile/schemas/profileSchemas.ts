@@ -148,6 +148,7 @@ const gpaSchema = z
  */
 const linkedinSchema = z
   .string()
+  .nullable()
   .optional()
   .refine(
     (val) => {
@@ -164,6 +165,7 @@ const linkedinSchema = z
  */
 const githubSchema = z
   .string()
+  .nullable()
   .optional()
   .refine(
     (val) => {

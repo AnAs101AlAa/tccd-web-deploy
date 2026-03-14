@@ -14,6 +14,35 @@ import {
   STATUS_OPTIONS,
 } from "../../constants/userConstants";
 
+const SORT_OPTIONS = [
+  {
+    value: { orderBy: "CreatedAt", descending: true },
+    label: "Created Date (Newest)",
+  },
+  {
+    value: { orderBy: "CreatedAt", descending: false },
+    label: "Created Date (Oldest)",
+  },
+  {
+    value: { orderBy: "EnglishName", descending: false },
+    label: "English Name (A-Z)",
+  },
+  {
+    value: { orderBy: "EnglishName", descending: true },
+    label: "English Name (Z-A)",
+  },
+  {
+    value: { orderBy: "ArabicName", descending: false },
+    label: "Arabic Name (A-Z)",
+  },
+  {
+    value: { orderBy: "ArabicName", descending: true },
+    label: "Arabic Name (Z-A)",
+  },
+  { value: { orderBy: "Email", descending: false }, label: "Email (A-Z)" },
+  { value: { orderBy: "Email", descending: true }, label: "Email (Z-A)" },
+];
+
 export interface UsersFilterProps {
   searchParams: UserQueryParams;
   onSearch: (params: UserQueryParams) => void;
@@ -22,7 +51,7 @@ export interface UsersFilterProps {
 const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [tempSelectedParams, setTempSelectedParams] = useState<UserQueryParams>(
-    { ...searchParams, page: 1 },
+    { ...searchParams, PageNumber: 1 },
   );
 
   useEffect(() => {
@@ -38,18 +67,20 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
 
   const handleApplyFilters = () => {
     setIsFilterModalOpen(false);
-    onSearch(tempSelectedParams);
+    onSearch({ ...tempSelectedParams, PageNumber: 1 });
   };
 
   const handleClearFilters = () => {
     const clearedParams: UserQueryParams = {
-      page: tempSelectedParams.page,
-      count: tempSelectedParams.count,
+      PageNumber: 1,
+      PageSize: tempSelectedParams.PageSize,
       Gender: undefined,
       Role: undefined,
       IsDeleted: undefined,
       EnglishName: undefined,
       ArabicName: undefined,
+      OrderBy: "CreatedAt",
+      Descending: true,
     };
     setTempSelectedParams(clearedParams);
     setIsFilterModalOpen(false);
@@ -65,6 +96,7 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
     const updatedParams = {
       ...tempSelectedParams,
       Gender: undefined,
+      PageNumber: 1,
     };
     setTempSelectedParams(updatedParams);
     onSearch(updatedParams);
@@ -74,6 +106,7 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
     const updatedParams = {
       ...tempSelectedParams,
       Role: undefined,
+      PageNumber: 1,
     };
     setTempSelectedParams(updatedParams);
     onSearch(updatedParams);
@@ -83,6 +116,7 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
     const updatedParams = {
       ...tempSelectedParams,
       IsDeleted: undefined,
+      PageNumber: 1,
     };
     setTempSelectedParams(updatedParams);
     onSearch(updatedParams);
@@ -97,7 +131,9 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
   const activeFiltersCount =
     (tempSelectedParams.Gender ? 1 : 0) +
     (tempSelectedParams.Role ? 1 : 0) +
-    (tempSelectedParams.IsDeleted !== undefined ? 1 : 0);
+    (tempSelectedParams.IsDeleted !== undefined ? 1 : 0) +
+    (tempSelectedParams.OrderBy !== "CreatedAt" ? 1 : 0) +
+    (!tempSelectedParams.Descending ? 1 : 0);
 
   return (
     <>
@@ -136,7 +172,7 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
                 buttonIcon={<IoSearch className="size-3.5" />}
                 buttonText="Search"
                 onClick={() => {
-                  onSearch(tempSelectedParams);
+                  onSearch({ ...tempSelectedParams, PageNumber: 1 });
                 }}
                 type="primary"
                 width="full"
@@ -186,6 +222,29 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
                 <span>{getStatusLabel()}</span>
                 <button
                   onClick={handleRemoveStatusFilter}
+                  className="ml-1 hover:bg-secondary/20 rounded-full p-0.5"
+                >
+                  <FiX className="text-xs" />
+                </button>
+              </div>
+            )}
+            {tempSelectedParams.OrderBy && (
+              <div className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm md:text-[15px] font-medium">
+                <span>
+                  Sort: {tempSelectedParams.OrderBy} (
+                  {tempSelectedParams.Descending ? "Desc" : "Asc"})
+                </span>
+                <button
+                  onClick={() => {
+                    const updatedParams = {
+                      ...tempSelectedParams,
+                      OrderBy: "CreatedAt",
+                      Descending: true,
+                      PageNumber: 1,
+                    };
+                    setTempSelectedParams(updatedParams);
+                    onSearch(updatedParams);
+                  }}
                   className="ml-1 hover:bg-secondary/20 rounded-full p-0.5"
                 >
                   <FiX className="text-xs" />
@@ -278,14 +337,44 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
                     options={STATUS_OPTIONS}
                     value={tempSelectedParams.Status || ""}
                     onChange={(value) => {
-                     setTempSelectedParams({
+                      setTempSelectedParams({
                         ...tempSelectedParams,
                         Status: value as UserStatus,
                       });
                     }}
                   />
                 </div>
-                
+
+                <div>
+                  <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
+                    Sort by
+                  </h4>
+                  <DropdownMenu
+                    label=""
+                    placeholder="Select sort option"
+                    options={SORT_OPTIONS.map((opt) => ({
+                      value: JSON.stringify(opt.value),
+                      label: opt.label,
+                    }))}
+                    value={JSON.stringify({
+                      orderBy: tempSelectedParams.OrderBy || "CreatedAt",
+                      descending: tempSelectedParams.Descending ?? true,
+                    })}
+                    onChange={(value) => {
+                      try {
+                        const parsed = JSON.parse(value);
+                        setTempSelectedParams({
+                          ...tempSelectedParams,
+                          OrderBy: parsed.orderBy,
+                          Descending: parsed.descending,
+                        });
+                      } catch {
+                        // fallback: do nothing
+                      }
+                    }}
+                  />
+                </div>
+
                 <div>
                   <div className="space-y-2">
                     <RadioButton

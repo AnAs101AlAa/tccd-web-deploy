@@ -50,12 +50,11 @@ export const useEventRegistration = (eventId: string) => {
   }, [event?.slots]);
 
   const isEligible = eligibility?.isEligible ?? false;
-  const eligibilityReason = eligibility?.reason;
+  const eligibilityReason = eligibility?.message;
 
   const register = async (slotId: string) => {
     try {
       const response = await registerMutation.mutateAsync({ eventId, eventSlotId: slotId });
-      toast.success("Registration successful! Check your profile for details.");
       navigate(`/tickets/${response.eventId}`);
     } catch{
       toast.error("Registration failed. Please try again.");

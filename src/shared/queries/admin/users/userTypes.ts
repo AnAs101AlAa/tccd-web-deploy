@@ -5,8 +5,10 @@ export interface UserQueryParams {
   IsDeleted?: boolean;
   Role?: UserRole;
   Status?: UserStatus;
-  page: number;
-  count: number;
+  PageNumber: number;
+  PageSize: number;
+  OrderBy?: string;
+  Descending?: boolean;
 }
 
 export interface User {
@@ -17,6 +19,8 @@ export interface User {
   profileImage?: string;
   status: UserStatus;
   role?: UserRole;
+  email?: string;
+  phoneNumber?: string;
   studentProfile?: StudentProfile;
   businessRepProfile?: BusinessRepProfile;
   facultyMemberProfile?: FacultyMemberProfile;
@@ -87,3 +91,4 @@ export type CommittePosition =
   | "Director"
   | "VicePresident"
   | "President";
+

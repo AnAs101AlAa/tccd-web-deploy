@@ -25,7 +25,7 @@
   --color-inactive-tab-text: #6b7280;
   --color-label: #b3b3b3;
   --color-informational: #f5f11b;
-  --color-success: #2ef231;
+  --color-success: #2db860;
   --color-error: #fb2c36;
   --color-background-contrast: #e5e7eb;
   --color-background-primary: #faebea;
@@ -70,4 +70,8 @@ input[type=password]::-ms-clear {
 .scrollbar-hide {
   -ms-overflow-style: none; 
   scrollbar-width: none;  
+}
+
+html {
+  overscroll-behavior: none;
 }

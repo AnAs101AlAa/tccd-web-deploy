@@ -10,11 +10,11 @@ export class UsersApi {
   }
 
   async fetchPendingAccounts(
-    page: number = 1,
-    count: number = 10,
+    PageNumber: number = 1,
+    PageSize: number = 10,
   ): Promise<UserResponse> {
     const response = await systemApi.get(`${USERS_ROUTE}/pending-accounts`, {
-      params: { page, count },
+      params: { PageNumber: PageNumber, PageSize: PageSize },
     });
     return response.data.data;
   }
@@ -22,7 +22,7 @@ export class UsersApi {
   async approveUser(userId: string): Promise<string> {
     const response = await systemApi.patch(
       `${USERS_ROUTE}/${userId}/approval`,
-      { data: { status: "Approved" } },
+      { status: "Approved" },
     );
     return response.data;
   }
@@ -30,7 +30,7 @@ export class UsersApi {
   async rejectUser(userId: string): Promise<string> {
     const response = await systemApi.patch(
       `${USERS_ROUTE}/${userId}/approval`,
-      { data: { status: "Rejected" } },
+      { status: "Rejected" },
     );
     return response.data;
   }
@@ -38,7 +38,7 @@ export class UsersApi {
   async banUser(userId: string): Promise<string> {
     const response = await systemApi.patch(
       `${USERS_ROUTE}/${userId}/ban-approve`,
-      { data: { status: "Ban" } },
+      { status: "Ban" },
     );
     return response.data;
   }
@@ -46,7 +46,7 @@ export class UsersApi {
   async unbanUser(userId: string): Promise<string> {
     const response = await systemApi.patch(
       `${USERS_ROUTE}/${userId}/ban-approve`,
-      { data: { status: "Approve" } },
+      { status: "Approve" },
     );
     return response.data;
   }

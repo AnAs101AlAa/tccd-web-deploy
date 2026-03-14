@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   accountTypeSchema,
   basicInfoSchema,
@@ -27,7 +27,6 @@ import {
 } from "../../components";
 import { Button } from "tccd-ui";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
 
 /**
  * Multi-Step SignupPage Component
@@ -71,6 +70,8 @@ export const SignupPage = () => {
       university: "",
       faculty: "",
       department: "",
+      graduationYear: new Date().getFullYear(),
+      gpa: 0,
     },
   });
 
@@ -100,9 +101,13 @@ export const SignupPage = () => {
     },
   });
 
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/", { replace: true });
+    }
+  }, []);
 
   // Get step labels
   const getStepLabels = () => {
@@ -184,10 +189,6 @@ export const SignupPage = () => {
         ? companyRepForm.getValues()
         : facultyInfoForm.getValues()
     );
-  };
-
-  const handleGoogleSignIn = () => {
-    console.log("Google Sign In clicked");
   };
 
   return (
@@ -277,25 +278,6 @@ export const SignupPage = () => {
               </div>
             )}
           </div>
-
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-3 bg-white/80 text-[#636569]">
-                Or continue with
-              </span>
-            </div>
-          </div>
-
-          <Button
-            buttonText="Sign up with Google"
-            buttonIcon={<FcGoogle className="w-5 h-5" />}
-            onClick={handleGoogleSignIn}
-            type="basic"
-            width="full"
-          />
 
           <div className="mt-6 text-center">
             <p className="text-sm text-[#636569]">

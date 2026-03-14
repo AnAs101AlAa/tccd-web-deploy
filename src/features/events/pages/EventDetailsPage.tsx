@@ -31,7 +31,7 @@ const EventDetailsPage = () => {
 
     return (
         <WithLayout>
-            <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-0 md:py-6">
+            <div className="min-h-screen bg-lniear-to-b from-gray-50 to-gray-100 py-0 md:py-6">
                 <div className="mx-auto flex w-full px-0 sm:px-4 md:w-3/4 lg:w-2/3 flex-col gap-6">
                     <EventDetailsPageComponent
                         event={event}

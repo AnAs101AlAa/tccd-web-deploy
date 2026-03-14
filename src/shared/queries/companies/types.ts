@@ -51,8 +51,8 @@ export interface UpdateCompanyPayload {
 }
 
 export interface CompaniesQueryParams {
-  page: number;
-  count: number;
+  PageNumber: number;
+  PageSize: number;
   CompanyName?: string;
   BusinessType?: string;
   IsApproved?: boolean;

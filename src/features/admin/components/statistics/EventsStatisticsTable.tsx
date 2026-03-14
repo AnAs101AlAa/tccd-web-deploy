@@ -4,6 +4,7 @@ import { Pagination } from "@/shared/components/pagination";
 import type Event from "@/shared/types/events";
 import type { EventQueryParams } from "@/shared/types/events";
 import EVENT_TYPES from "@/constants/EventTypes";
+import format from "@/shared/utils/dateFormater";
 
 interface EventsStatisticsTableProps {
   onEventSelect: (event: Event) => void;
@@ -21,14 +22,6 @@ const EventsStatisticsTable = ({
 
   const handlePageChange = (newPage: number) => {
     setQueryParams((prev) => ({ ...prev, PageNumber: newPage }));
-  };
-
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
   };
 
   if (isLoading) {
@@ -92,7 +85,7 @@ const EventsStatisticsTable = ({
                   </span>
                 </td>
                 <td className="px-4 py-3 text-secondary whitespace-nowrap">
-                  {formatDate(event.date)}
+                  {format(event.date, "stringed")}
                 </td>
                 <td className="px-4 py-3">
                   <span className="inline-flex items-center px-2.5 py-1 rounded-full text-sm shadow-sm font-medium bg-gray-500/10 text-contrast border-gray-500">
@@ -136,7 +129,7 @@ const EventsStatisticsTable = ({
                 <span className="font-medium text-inactive-tab-text block mb-0.5">
                   Date
                 </span>
-                <span className="text-secondary">{formatDate(event.date)}</span>
+                <span className="text-secondary">{format(event.date, "stringed")}</span>
               </div>
               <div>
                 <span className="font-medium text-inactive-tab-text block mb-0.5">

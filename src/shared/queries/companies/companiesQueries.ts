@@ -3,10 +3,9 @@ import { companiesApi } from "./companiesApi";
 import type { CreateCompanyPayload, UpdateCompanyPayload } from "./types";
 
 // ── Public hooks ────────────────────────────────────────────
-
 export const useGetCompanies = (
-  page: number = 1,
-  count: number = 10,
+  PageNumber: number = 1,
+  PageSize: number = 10,
   companyName?: string,
   businessType?: string,
   isApproved?: boolean,
@@ -16,8 +15,8 @@ export const useGetCompanies = (
   return useQuery({
     queryKey: [
       "companies",
-      page,
-      count,
+      PageNumber,
+      PageSize,
       companyName,
       businessType,
       isApproved,
@@ -26,8 +25,8 @@ export const useGetCompanies = (
     ],
     queryFn: () =>
       companiesApi.getCompanies(
-        page,
-        count,
+        PageNumber,
+        PageSize,
         companyName,
         businessType,
         isApproved,
