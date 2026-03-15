@@ -4,13 +4,21 @@ import { defineConfig } from "vite"
 import path from "path"
 
 export default defineConfig({
-  base: import.meta.env.VITE_API_BASE_URL,
-
-  plugins: [
-    react(),
-    tailwindcss(),
-  ],
-
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },  
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://tccd-web-backend.runasp.net/", // replace with your backend URL
+        changeOrigin: true,
+        secure: true, // because target is https
+      },
+    },
+  },
   build: {
     target: "es2015",
     assetsInlineLimit: 100000000,
@@ -21,10 +29,4 @@ export default defineConfig({
       }
     }
   },
-
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-})
+});

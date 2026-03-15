@@ -88,7 +88,7 @@ function App() {
             />
           ))}
         </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

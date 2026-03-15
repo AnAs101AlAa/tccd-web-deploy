@@ -2,7 +2,7 @@
 import axios from "axios";
 
 export const systemApi = axios.create({
-  baseURL: "/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
   withCredentials: true,
   headers: {
