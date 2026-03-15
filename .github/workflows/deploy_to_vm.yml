@@ -16,6 +16,8 @@ jobs:
 
     - run: npm install
     - run: npm run build
+    - run: ls -la
+    - run: ls -la dist
   
     - name: Copy build files to VM
       uses: appleboy/scp-action@v0.1.7
