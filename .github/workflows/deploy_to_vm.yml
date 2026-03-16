@@ -16,6 +16,8 @@ jobs:
 
     - run: npm install
     - run: npm run build
+      env:
+        VITE_API_BASE_URL: "https://api.tccd.eng.cu.edu.eg"
     - run: ls -la
     - run: ls -la dist
   
