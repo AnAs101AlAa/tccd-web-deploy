@@ -173,6 +173,20 @@ export const useVerifyStudent = () => {
   });
 };
 
+export const useResendVerification = () => {
+  return useMutation({
+    mutationFn: (email: string) =>
+      authApiInstance.resendVerification(email),
+    onSuccess: () => {
+      toast.success("Verification email resent successfully! Please check your inbox.");
+    },
+    onError: (error: unknown) => {
+      const message = getErrorMessage(error);
+      toast.error(message || "Failed to resend verification email. Please try again.");
+    },
+  });
+};
+
 export const useVerifyToken = () => {
   return useMutation({
     mutationFn: () =>

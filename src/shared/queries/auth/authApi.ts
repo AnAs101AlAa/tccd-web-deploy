@@ -241,6 +241,14 @@ export class AuthApi {
     return data;
   }
 
+  async resendVerification(email: string) {
+    const { data } = await systemApi.post(
+      AUTH_ROUTE + "resend-verification",
+      { email }
+    );
+    return data;
+  }
+
   async verifyToken() {
     await systemApi.get(AUTH_ROUTE + "validate-token");
   }
