@@ -1,3 +1,5 @@
+import type { Color } from "framer-motion";
+
 export interface BoardMember {
   ImgSrc: string;
   Name: string;
@@ -12,3 +14,8 @@ export interface WebsiteFounder {
   linkedin?: string;
   github?: string;
 }
+export type SocialLink = {
+  name: string;
+  url: string;
+  color:Color;
+};

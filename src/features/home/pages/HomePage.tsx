@@ -1,17 +1,21 @@
+import { Suspense, lazy } from "react";
 import HeroSection from "../components/HeroSection";
-import ServicesSection from "../components/ServicesSection";
-import StatsSection from "../components/StatsSection";
-import BlogSection from "../components/BlogSection";
 import { WithNavbar } from "@/shared/components/hoc";
+// Sections below the fold are deferred to cut initial bundle size
+const BlogSection = lazy(() => import("../components/BlogSection"));
+const StatsSection = lazy(() => import("../components/StatsSection"));
+const ServicesSection = lazy(() => import("../components/ServicesSection"));
 
-export default function HomePage (){
+export default function HomePage() {
   return (
     <WithNavbar>
       <div className="flex flex-col">
         <HeroSection />
-        <BlogSection />
-        <StatsSection />
-        <ServicesSection />
+        <Suspense fallback={<div className="loading-state">Loading...</div>}>
+          <BlogSection />
+          <StatsSection />
+          <ServicesSection />
+        </Suspense>
       </div>
     </WithNavbar>
   );

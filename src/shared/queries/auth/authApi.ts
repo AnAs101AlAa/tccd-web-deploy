@@ -170,7 +170,10 @@ export class AuthApi {
         credentials.newCompany.description,
       );
       formData.append("newCompany.website", credentials.newCompany.website);
-      formData.append("newCompany.brief", credentials.newCompany.brief);
+      formData.append(
+        "newCompany.emailDomain",
+        credentials.newCompany.emailDomain,
+      );
     }
 
     formData.append("proofFile", credentials.proofFile);
@@ -224,17 +227,24 @@ export class AuthApi {
   }
 
   async resetPassword(newPassword: string, passwordConfirm: string) {
-    const { data } = await systemApi.post(
-      AUTH_ROUTE + "reset-password",
-      { newPassword, passwordConfirm }
-    );
+    const { data } = await systemApi.post(AUTH_ROUTE + "reset-password", {
+      newPassword,
+      passwordConfirm,
+    });
     return data;
   }
 
   async verifyStudent(token: string) {
+    const { data } = await systemApi.post(AUTH_ROUTE + `verify-student`, {
+      token,
+    });
+    return data;
+  }
+
+  async resendVerification(email: string) {
     const { data } = await systemApi.post(
-      AUTH_ROUTE + `verify-student`,
-        { token }
+      AUTH_ROUTE + "resend-verification",
+      { email }
     );
     return data;
   }

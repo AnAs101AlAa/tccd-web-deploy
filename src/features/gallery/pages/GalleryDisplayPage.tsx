@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import FullscreenMediaViewer from "@/shared/components/MediaViewer/MediaViewer";
+import { Suspense, lazy } from "react";
 import { FaChevronLeft } from "react-icons/fa6";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
@@ -7,6 +7,8 @@ import { useGetEventById } from "@/shared/queries/events/eventQueries";
 import { mapEventMediaList } from "../utils/TypeMappingFunction";
 import type { EventMedia } from "@/shared/types";
 import { LoadingPage } from "tccd-ui";
+// FullscreenMediaViewer is a heavy gallery component — defer until the media is ready
+const FullscreenMediaViewer = lazy(() => import("@/shared/components/MediaViewer/MediaViewer"));
 
 export default function GalleryDisplayPage() {
   const { id } = useParams();
@@ -38,7 +40,9 @@ export default function GalleryDisplayPage() {
         </div>
         <img src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg" alt="TCCD Logo" className="md:block hidden h-9 md:mr-6 mr-3" />
       </div>
-      <FullscreenMediaViewer items={mapEventMediaList(galleryData?.eventMedia as EventMedia[] || [])} />
+      <Suspense fallback={<div className="loading-state">Loading media viewer...</div>}>
+        <FullscreenMediaViewer items={mapEventMediaList(galleryData?.eventMedia as EventMedia[] || [])} />
+      </Suspense>
     </div>
   );
 }

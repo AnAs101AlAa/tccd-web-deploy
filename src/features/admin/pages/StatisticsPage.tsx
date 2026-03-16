@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import { motion } from "framer-motion";
 import { WithLayout } from "@/shared/components/hoc";
-import RegistrationOverviewChart from "../components/statistics/RegistrationOverviewChart";
-import GenderDistributionChart from "../components/statistics/GenderDistributionChart";
-import UniversityDistributionChart from "../components/statistics/UniversityDistributionChart";
-import DepartmentAttendanceChart from "../components/statistics/DepartmentAttendanceChart";
 import EventsStatisticsTable from "../components/statistics/EventsStatisticsTable";
 import { IoArrowBack } from "react-icons/io5";
 import format from "@/shared/utils/dateFormater";
+
+const RegistrationOverviewChart = lazy(() => import("../components/statistics/RegistrationOverviewChart"));
+const GenderDistributionChart = lazy(() => import("../components/statistics/GenderDistributionChart"));
+const UniversityDistributionChart = lazy(() => import("../components/statistics/UniversityDistributionChart"));
+const DepartmentAttendanceChart = lazy(() => import("../components/statistics/DepartmentAttendanceChart"));
 
 import type Event from "@/shared/types/events";
 
@@ -71,42 +72,44 @@ const StatisticsPage: React.FC = () => {
               </div>
             </section>
 
-            {/* Charts Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <RegistrationOverviewChart />
-              </motion.div>
+            {/* Charts Grid — ECharts bundle is deferred until this section mounts */}
+            <Suspense fallback={<div className="loading-state">Loading charts...</div>}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <RegistrationOverviewChart />
+                </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-              >
-                <GenderDistributionChart />
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >
+                  <GenderDistributionChart />
+                </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
-                className="md:col-span-2 min-h-[400px]"
-              >
-                <UniversityDistributionChart />
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.3 }}
+                  className="md:col-span-2 min-h-[400px]"
+                >
+                  <UniversityDistributionChart />
+                </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.5 }}
-                className="md:col-span-2 min-h-[450px]"
-              >
-                <DepartmentAttendanceChart />
-              </motion.div>
-            </div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.5 }}
+                  className="md:col-span-2 min-h-[450px]"
+                >
+                  <DepartmentAttendanceChart />
+                </motion.div>
+              </div>
+            </Suspense>
           </div>
         )}
       </div>

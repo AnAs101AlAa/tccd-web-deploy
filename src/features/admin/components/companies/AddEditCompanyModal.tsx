@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { Modal, InputField, Button, TextAreaField } from "tccd-ui";
-import {
-  useCreateCompany,
-  useUpdateCompany,
-} from "@/shared/queries/companies";
+import { useCreateCompany, useUpdateCompany } from "@/shared/queries/companies";
 import type { Company } from "@/shared/queries/companies";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/shared/utils";
@@ -29,7 +26,7 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
     businessType: "",
     description: "",
     website: "",
-    brief: "",
+    emailDomain: "",
     logoId: "",
   });
 
@@ -40,7 +37,7 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
         businessType: company.businessType || "",
         description: company.description || "",
         website: company.website || "",
-        brief: company.brief || "",
+        emailDomain: company.emailDomain || "",
         logoId: extractDriveId(company.logo || ""),
       });
     } else {
@@ -49,7 +46,7 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
         businessType: "",
         description: "",
         website: "",
-        brief: "",
+        emailDomain: "",
         logoId: "",
       });
     }
@@ -76,7 +73,9 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
             ...(formData.website.trim()
               ? { website: formData.website.trim() }
               : {}),
-            ...(formData.brief.trim() ? { brief: formData.brief.trim() } : {}),
+            ...(formData.emailDomain.trim()
+              ? { emailDomain: formData.emailDomain.trim() }
+              : {}),
             ...(formData.logoId ? { logoId: formData.logoId.trim() } : {}),
           },
         });
@@ -91,7 +90,9 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
           ...(formData.website.trim()
             ? { website: formData.website.trim() }
             : {}),
-          ...(formData.brief.trim() ? { brief: formData.brief.trim() } : {}),
+          ...(formData.emailDomain.trim()
+            ? { emailDomain: formData.emailDomain.trim() }
+            : {}),
           ...(formData.logoId ? { logoId: formData.logoId.trim() } : {}),
         });
         toast.success("Company created successfully!");
@@ -121,7 +122,9 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
           label="Company Name*"
           id="company-name"
           value={formData.companyName}
-          onChange={(val) => setFormData((prev) => ({ ...prev, companyName: val.target.value }))}
+          onChange={(val) =>
+            setFormData((prev) => ({ ...prev, companyName: val.target.value }))
+          }
           placeholder="e.g., Acme Corporation"
         />
 
@@ -130,7 +133,9 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
           label="Business Type"
           id="company-business-type"
           value={formData.businessType}
-          onChange={(val) => setFormData((prev) => ({ ...prev, businessType: val.target.value }))}
+          onChange={(val) =>
+            setFormData((prev) => ({ ...prev, businessType: val.target.value }))
+          }
           placeholder="e.g., Technology, Healthcare"
         />
 
@@ -139,7 +144,9 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
           label="Description"
           id="company-description"
           value={formData.description}
-          onChange={(val) => setFormData((prev) => ({ ...prev, description: val.target.value }))}
+          onChange={(val) =>
+            setFormData((prev) => ({ ...prev, description: val.target.value }))
+          }
           placeholder="Describe the company..."
         />
 
@@ -148,16 +155,20 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
           label="Website"
           id="company-website"
           value={formData.website}
-          onChange={(val) => setFormData((prev) => ({ ...prev, website: val.target.value }))}
+          onChange={(val) =>
+            setFormData((prev) => ({ ...prev, website: val.target.value }))
+          }
           placeholder="e.g., https://example.com"
         />
 
         <InputField
           labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
-          label="Brief"
-          id="company-brief"
-          value={formData.brief}
-          onChange={(val) => setFormData((prev) => ({ ...prev, brief: val.target.value }))}
+          label="Email domain"
+          id="company-emailDomain"
+          value={formData.emailDomain}
+          onChange={(val) =>
+            setFormData((prev) => ({ ...prev, emailDomain: val.target.value }))
+          }
           placeholder="Short summary of the company"
         />
 
@@ -166,7 +177,12 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
           label="Logo ID (Google Drive)"
           id="company-logo-id"
           value={formData.logoId}
-          onChange={(val) => setFormData((prev) => ({ ...prev, logoId: extractDriveId(val.target.value) }))}
+          onChange={(val) =>
+            setFormData((prev) => ({
+              ...prev,
+              logoId: extractDriveId(val.target.value),
+            }))
+          }
           placeholder="Paste ID or full Google Drive URL"
         />
 
