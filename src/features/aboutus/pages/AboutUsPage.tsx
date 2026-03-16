@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -29,7 +29,7 @@ export const AboutUsPage = () => {
 
 
 
-  const socialIconsMap: { [key: string]: JSX.Element } = {
+  const socialIconsMap: { [key: string]: React.JSX.Element } = {
   Facebook: <FaFacebook size={20} />,
   Instagram: <FaInstagram size={20} />,
   WhatsApp: <FaWhatsapp size={20} />,
