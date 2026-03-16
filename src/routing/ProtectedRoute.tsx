@@ -26,28 +26,43 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children, roles, redirectTo = "/login" }: ProtectedRouteProps) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const userRole = useAppSelector(selectUserRole);
-  const verifyTokenMutation = useVerifyToken();
   const isAllRolesAllowed = roles && roles.includes("all");
 
   const navigate = useNavigate();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
 
+  const verifyTokenMutation = useVerifyToken();
+
+  // Handle auth errors from TanStack Query's retry mechanism
   useEffect(() => {
-    const tryToken = async () => {
-      try {
-        if (isAuthenticated) {
-          await verifyTokenMutation.mutateAsync();
-        }
-      } catch{
+    if (verifyTokenMutation.isError) {
+      const error = verifyTokenMutation.error as any;
+      const isAuthError = error?.response?.status === 401 || error?.response?.status === 403;
+      const isTransientError = !error?.response || error?.response?.status >= 500;
+
+      // Auth-related errors: clear session
+      if (isAuthError) {
         dispatch(clearUser());
         toast.error("Session expired. Please log in again to regain access to your account.");
-        if(!isAllRolesAllowed) {
+        if (!isAllRolesAllowed) {
           navigate("/login");
         }
       }
+      // Transient errors after retries exhausted
+      else if (isTransientError) {
+        toast.error(
+          `Connection issue: ${error?.message || "Unable to verify session"}. Please try again or refresh the page.`,
+          { duration: 5000 }
+        );
+      }
     }
+  }, [verifyTokenMutation.isError, verifyTokenMutation.error]);
 
-    tryToken();
+  // Verify token when authenticated
+  useEffect(() => {
+    if (isAuthenticated && !verifyTokenMutation.isPending) {
+      verifyTokenMutation.mutate();
+    }
   }, [isAuthenticated]);
 
   if (!isAuthenticated && !verifyTokenMutation.isPending && !isAllRolesAllowed) {
