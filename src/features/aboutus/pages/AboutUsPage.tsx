@@ -392,11 +392,11 @@ export const AboutUsPage = () => {
         <section className="py-12 md:py-16 px-4 md:px-5 bg-gray-50">
   <div className="max-w-3xl mx-auto">
     <div className="bg-white p-6 md:p-8 rounded-xl shadow-md">
-      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-center 
-                    bg-linear-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent">
+      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 text-center 
+                    bg-linear-to-r from-secondary to-primary bg-clip-text text-transparent">
         Follow Us
       </h2>
-      <p className="text-[#295E7E] text-sm md:text-base lg:text-lg text-center mb-8">
+      <p className="text-conrast text-sm md:text-base lg:text-lg text-center mb-8">
         Stay connected with TCCD through our social media channels.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
