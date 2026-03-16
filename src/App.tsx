@@ -1,9 +1,10 @@
 import { routes } from "@/routing/routes";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import { ProtectedRoute } from "@/shared/components/hoc";
+import { LoadingPage } from "tccd-ui";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -71,24 +72,26 @@ function App() {
             },
           },
         }}
-       />
-        <Routes>
-          {routes.map(({ path, Component, protected: isProtected, roles }) => (
-            <Route 
-              key={path} 
-              path={path} 
-              element={
-                isProtected ? (
+      />
+      <Routes>
+        {routes.map(({ path, Component, protected: isProtected, roles }) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <Suspense fallback={<LoadingPage />}>
+                {isProtected ? (
                   <ProtectedRoute roles={roles}>
                     <Component />
                   </ProtectedRoute>
                 ) : (
                   <Component />
-                )
-              } 
-            />
-          ))}
-        </Routes>
+                )}
+              </Suspense>
+            }
+          />
+        ))}
+      </Routes>
     </BrowserRouter>
   );
 }

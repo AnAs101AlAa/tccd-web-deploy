@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import type { AnyUser } from "@/shared/types";
 import InfoTab from "./InfoTab";
-import TicketTab from "./TicketTab";
+// TicketTab is only rendered when the user switches to the tickets tab
+const TicketTab = lazy(() => import("./TicketTab"));
 
 interface TabContentProps {
   activeTab: string;
@@ -21,7 +22,9 @@ const TabContent: React.FC<TabContentProps> = ({
 
       case "tickets":
         return (
+          <Suspense fallback={<div className="loading-state">Loading...</div>}>
             <TicketTab />
+          </Suspense>
         );
 
       case "offerings":

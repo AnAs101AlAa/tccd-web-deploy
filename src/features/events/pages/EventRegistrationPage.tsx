@@ -1,4 +1,4 @@
-import { useState, Activity, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   FaMapPin,
   FaUsers,
@@ -18,11 +18,13 @@ import toast from "react-hot-toast";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import type { StudentUser } from "@/shared/types";
 import { TextDisplayEdit, DropdownMenu, Button } from "tccd-ui";
-import { TicketRulesModal } from "../components";
+import { Suspense, lazy } from "react";
+// Modals are only shown at specific registration steps — defer their load
+const TicketRulesModal = lazy(() => import("../components/TicketRulesModal"));
+const RegistrationConfirmationModal = lazy(() => import("../components/RegistrationConfirmationModal"));
 import { getErrorMessage } from "@/shared/utils/errorHandler";
 import { useEventRegistration } from "../hooks";
 import EVENT_TYPES from "@/constants/EventTypes";
-import RegistrationConfirmationModal from "../components/RegistrationConfirmationModal";
 import format from "@/shared/utils/dateFormater";
 
 /**
@@ -141,13 +143,17 @@ export default function EventRegisterForm() {
 
   return (
     <WithLayout>
-      <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
-      <RegistrationConfirmationModal
-        isOpen={isConfirmationOpen}
-        onClose={() => setIsConfirmationOpen(false)}
-        onConfirm={handleSubmit(onSubmit)}
-        isSubmitting={isRegistering}
-      />
+      <Suspense fallback={<div className="loading-state">Loading...</div>}>
+        <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
+      </Suspense>
+      <Suspense fallback={<div className="loading-state">Loading...</div>}>
+        <RegistrationConfirmationModal
+          isOpen={isConfirmationOpen}
+          onClose={() => setIsConfirmationOpen(false)}
+          onConfirm={handleSubmit(onSubmit)}
+          isSubmitting={isRegistering}
+        />
+      </Suspense>
       <div className="w-full mx-auto min-h-screen bg-linear-to-br from-slate-50 to-slate-100 py-8 px-4">
         <div className="max-w-4xl mx-auto">
           {/* Registration Success State */}
@@ -282,7 +288,7 @@ export default function EventRegisterForm() {
           {/* Form Content Card */}
           <div className="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden mb-8">
             {/* Step 1: Personal Information */}
-            <Activity mode={currentStep === 1 ? "visible" : "hidden"}>
+            <div className={currentStep === 1 ? "" : "hidden"}>
               <div className="p-6 md:p-8">
                 <h2 className="text-xl md:text-2xl font-bold text-foreground">
                   Personal Information
@@ -407,10 +413,10 @@ export default function EventRegisterForm() {
                   </div>
                 </div>
               </div>
-            </Activity>
+            </div>
 
             {/* Step 2: Academic Information */}
-            <Activity mode={currentStep === 2 ? "visible" : "hidden"}>
+            <div className={currentStep === 2 ? "" : "hidden"}>
               <div className="p-6 md:p-8 border-b border-slate-200">
                 <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
                   Academic Information
@@ -460,13 +466,7 @@ export default function EventRegisterForm() {
                   </div>
 
                   {/* Conditional Department Field */}
-                  <Activity
-                    mode={
-                      storedUser.faculty === "Engineering"
-                        ? "visible"
-                        : "hidden"
-                    }
-                  >
+                  <div className={storedUser.faculty === "Engineering" ? "" : "hidden"}>
                     <div className="space-y-2">
                       <label className="text-sm font-semibold text-foreground">
                         Department
@@ -478,13 +478,13 @@ export default function EventRegisterForm() {
                         placeholder="Select your department"
                       />
                     </div>
-                  </Activity>
+                  </div>
                 </div>
               </div>
-            </Activity>
+            </div>
 
             {/* Step 3: Terms & Agreements */}
-            <Activity mode={currentStep === 3 ? "visible" : "hidden"}>
+            <div className={currentStep === 3 ? "" : "hidden"}>
               <div className="p-6 md:p-8">
                 <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
                   Terms & Agreements
@@ -539,7 +539,7 @@ export default function EventRegisterForm() {
                   </div>
                 </div>
               </div>
-            </Activity>
+            </div>
           </div>
 
           {/* Eligibility Warning */}
