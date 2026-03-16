@@ -1,6 +1,13 @@
 export type Gender = "Male" | "Female";
 
-export type EntityRole = "Student" | "TA" | "DR" | "BusinessRep" | "Admin" | "Volunteer" | "company";
+export type EntityRole =
+  | "Student"
+  | "TA"
+  | "DR"
+  | "BusinessRep"
+  | "Admin"
+  | "Volunteer"
+  | "company";
 
 export type UserStatus = "Pending" | "Approved" | "Rejected" | "Banned";
 
@@ -45,7 +52,7 @@ export interface CompanyUser extends Entity {
   businessType: string;
   description: string;
   website: string;
-  brief: string;
+  emailDomain: string;
   logo: string;
   businessReps?: string[]; // IDs of BusinessRepUser
 }

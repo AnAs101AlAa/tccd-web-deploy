@@ -1,13 +1,15 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, Suspense, lazy } from "react";
 import { ErrorScreen, Button } from "tccd-ui";
 import { useGetLocations } from "@/shared/queries/admin";
-import { LocationCard, AddLocationModal } from "../components/locations";
+import { LocationCard } from "../components/locations";
 import { Pagination } from "@/shared/components/pagination";
 import GenericGrid from "@/shared/components/GenericGrid";
 import LocationFilter from "../components/locations/LocationFilter";
 import type { Location, LocationsQueryParams } from "@/shared/queries/admin";
 import { FiPlus } from "react-icons/fi";
 import { WithLayout } from "@/shared/components/hoc";
+// AddLocationModal is only opened by user action — defer its bundle
+const AddLocationModal = lazy(() => import("../components/locations/AddLocationModal"));
 
 /**
  * LocationsManagementPage Component
@@ -123,10 +125,12 @@ const LocationsManagementPage = () => {
           }
         />
 
-        <AddLocationModal
-          isOpen={isAddModalOpen}
-          onClose={() => setIsAddModalOpen(false)}
-        />
+        <Suspense fallback={<div className="loading-state">Loading...</div>}>
+          <AddLocationModal
+            isOpen={isAddModalOpen}
+            onClose={() => setIsAddModalOpen(false)}
+          />
+        </Suspense>
       </div>
     </WithLayout>
   );

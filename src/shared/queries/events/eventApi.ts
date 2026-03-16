@@ -39,7 +39,9 @@ export class EventApi {
       const endDateTime = new Date(params.EndDate);
       const now = new Date();
       if (endDateTime > now) {
-        throw new Error("End date cannot be in the future, Please head to the upcoming events section.");
+        throw new Error(
+          "End date cannot be in the future, Please head to the upcoming events section.",
+        );
       }
     } else {
       params = { ...params, EndDate: new Date().toISOString() };
@@ -116,7 +118,7 @@ export class EventApi {
           businessType: item.businessType,
           description: item.description,
           website: item.website,
-          brief: item.brief,
+          emailDomain: item.emailDomain,
           logo: item.logo,
         }),
       );

@@ -22,7 +22,7 @@ import {
 import type { AnyUser } from "@/shared/types/users";
 
 /**
- * Custom Redux Hooks for User Domain
+ * Custom Redux Hooks for User emailDomain
  *
  * These hooks provide convenient access to user state and actions
  * without needing to use useAppSelector and useAppDispatch directly.
