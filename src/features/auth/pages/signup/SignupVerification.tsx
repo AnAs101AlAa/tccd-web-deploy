@@ -1,13 +1,16 @@
 import { useParams } from "react-router-dom";
-import { useVerifyStudent } from "@/shared/queries/auth";
+import { useVerifyStudent, useResendVerification } from "@/shared/queries/auth";
 import { useEffect, useState } from "react";
-import { ErrorScreen, SuccessScreen } from "tccd-ui";
+import { ErrorScreen, SuccessScreen, InputField, Button } from "tccd-ui";
 import { Loader2 } from "lucide-react";
 
 export default function SignupVerification() {
     const { token } = useParams();
     const [status, setStatus] = useState<"verifying" | "success" | "error">("verifying");
+    const [resendEmail, setResendEmail] = useState("");
+    
     const verifyStudentMutation = useVerifyStudent();
+    const resendMutation = useResendVerification();
 
     useEffect(() => {
         if (token) {
@@ -18,6 +21,11 @@ export default function SignupVerification() {
 
         }
     }, [token]);
+
+    const handleResend = () => {
+        if (!resendEmail) return;
+        resendMutation.mutate(resendEmail);
+    };
 
     if (status === "verifying") {
         return (
@@ -50,6 +58,31 @@ export default function SignupVerification() {
     } else if (status === "success") {
         return <SuccessScreen title="Account Verified" message="Your account has been successfully verified! You can now log in." />;
     } else {
-        return <ErrorScreen title="Verification Error" message="There was an error verifying your account. Please try again or contact support." />;
+        return (
+            <ErrorScreen 
+                title="Verification Error" 
+                message="There was an error verifying your account. The link may have expired or is invalid."
+            >
+                <div className="w-full flex flex-col gap-4 mt-2 mb-2 items-center">
+                    <div className="w-full text-left">
+                        <InputField 
+                            id="resend-email"
+                            label="Resend Activation Link" 
+                            placeholder="Enter your email address" 
+                            value={resendEmail}
+                            onChange={(e) => setResendEmail(e.target.value)}
+                        />
+                    </div>
+                    <Button 
+                        type="primary"
+                        onClick={handleResend} 
+                        disabled={!resendEmail || resendMutation.isPending}
+                        loading={resendMutation.isPending}
+                        buttonText="Resend Link"
+                        className="w-full py-2"
+                    />
+                </div>
+            </ErrorScreen>
+        );
     }
 }
