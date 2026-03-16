@@ -1,0 +1,32 @@
+[
+    {
+        "name":"Email",
+        "url": "mailto:Support@tccd-cufe.com",
+        "color": "#EA4335"
+    },
+    {
+        "name": "Facebook",
+        "url": "https://www.facebook.com/TCCD.ENG",
+        "color": "#1877F2"
+    },
+    {
+        "name": "Instagram",
+        "url": "https://www.instagram.com/tccdcommunity?igsh=MW95eDZ2ZTNqOTJuaw==",
+        "color": "#C13584"
+    },
+    {
+        "name": "WhatsApp",
+        "url": "https://www.whatsapp.com/channel/0029Vaiig1I96H4KsF2AEc1a",
+        "color": "#25D366"
+    },
+    {
+        "name": "LinkedIn",
+        "url": "https://www.linkedin.com/company/tccdeng/",
+        "color": "#0077B5"
+    },
+    {
+        "name": "TikTok",
+        "url": "https://www.tiktok.com/@tccdcommunity",
+        "color": "#010101"
+    }
+]

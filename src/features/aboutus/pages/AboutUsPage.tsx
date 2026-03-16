@@ -1,9 +1,13 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import {
   FaArrowLeft,
   FaArrowRight,
   FaLinkedin,
   FaGithub,
+  FaFacebook,
+  FaInstagram,
+  FaTiktok,
+  FaWhatsapp
 } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import toast from "react-hot-toast";
@@ -16,24 +20,23 @@ import MissionIcon from "@/assets/mission.svg";
 import GoalIcon from "@/assets/goal.svg";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import ABOUT_US_HEADER_IMAGE from "@/assets/aboutusTopHeader.jpg";
+import socialLinks from "@/assets/socials.json";
+
 
 export const AboutUsPage = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const foundersRef = useRef<HTMLDivElement>(null);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [errors, setErrors] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+
+  const socialIconsMap: { [key: string]: JSX.Element } = {
+  Facebook: <FaFacebook size={20} />,
+  Instagram: <FaInstagram size={20} />,
+  WhatsApp: <FaWhatsapp size={20} />,
+  LinkedIn: <FaLinkedin size={20} />,
+  TikTok: <FaTiktok size={20} />,
+  Email: <SiGmail size={20} />
+};
 
   const scrollBoard = (direction: number) => {
     if (carouselRef.current) {
@@ -87,64 +90,7 @@ export const AboutUsPage = () => {
         toast.error(`Failed to copy ${type}`);
       });
   };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
-    if (errors[id as keyof typeof errors]) {
-      setErrors({ ...errors, [id]: "" });
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = { name: "", email: "", subject: "", message: "" };
-    if (!formData.name.trim()) newErrors.name = "Full Name is required";
-    if (!formData.email.trim()) newErrors.email = "Email Address is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email))
-      newErrors.email = "Email is invalid";
-    if (!formData.subject.trim()) newErrors.subject = "Subject is required";
-    if (!formData.message.trim()) newErrors.message = "Message is required";
-    setErrors(newErrors);
-    return !Object.values(newErrors).some((error) => error);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success("Message sent successfully!");
-
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      toast.error("Failed to send message. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-    //   {
-    //     "Name": "Dr Samah El-Shafiey",
-    //     "ImgSrc": "https://res.cloudinary.com/dwqke70ki/image/upload/v1773168405/WhatsApp_Image_2026-03-10_at_7.17.22_PM_tivjfu.jpg",
-    //     "Role": "Associate Professor, Engineering Mathematics and Physics Department, Team Director"
-    // },
-
+  
   return (
     <WithLayout>
       <div className="relative font-sans bg-gray-50">
@@ -443,128 +389,46 @@ export const AboutUsPage = () => {
           </div>
         </div>
 
-        <section className="bg-linear-to-br from-gray-50 to-white py-8 md:py-16 px-4 md:px-5">
-          <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8 lg:p-12">
-            <div className="text-center mb-8 md:mb-12">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-linear-to-r from-[#295E7E] to-[#CD3A38] bg-clip-text text-transparent mb-3 md:mb-4">
-                Get in Touch
-              </h2>
-              <p className="text-[#295E7E] text-sm md:text-base ">
-                We'd love to hear from you! Send us a message and we'll respond
-                as soon as possible.
-              </p>
+        <section className="py-12 md:py-16 px-4 md:px-5 bg-gray-50">
+  <div className="max-w-3xl mx-auto">
+    <div className="bg-white p-6 md:p-8 rounded-xl shadow-md">
+      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 text-center 
+                    bg-linear-to-r from-secondary to-primary bg-clip-text text-transparent">
+        Follow Us
+      </h2>
+      <p className="text-conrast text-sm md:text-base lg:text-lg text-center mb-8">
+        Stay connected with TCCD through our social media channels.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {socialLinks.map((social, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-4"
+          >
+            <div
+              className="w-10 h-10 flex items-center justify-center rounded-full text-white flex-shrink-0"
+              style={{ backgroundColor: social.color }}
+            >
+              {socialIconsMap[social.name]}
             </div>
-
-            <form className="space-y-5 md:space-y-6" onSubmit={handleSubmit}>
-              <div className="grid md:grid-cols-2 gap-5 md:gap-6">
-                <div className="relative">
-                  <input
-                    id="name"
-                    type="text"
-                    className={`w-full px-4 py-3 border-2 ${
-                      errors.name ? "border-red-500" : "border-gray-200"
-                    } rounded-lg peer focus:outline-none focus:border-[#295E7E] transition-colors`}
-                    placeholder=" "
-                    value={formData.name}
-                    onChange={handleChange}
-                  />
-                  <label
-                    htmlFor="name"
-                    className={`absolute left-4 ${
-                      formData.name ? "-top-3" : "top-3"
-                    } px-1 text-gray-400 transition-all peer-placeholder-shown:top-3 peer-focus:-top-3 peer-focus:text-[#295E7E] bg-white text-sm`}
-                  >
-                    Full Name
-                  </label>
-                  {errors.name && (
-                    <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-                  )}
-                </div>
-                <div className="relative">
-                  <input
-                    id="email"
-                    type="email"
-                    className={`w-full px-4 py-3 border-2 ${
-                      errors.email ? "border-red-500" : "border-gray-200"
-                    } rounded-lg peer focus:outline-none focus:border-[#295E7E] transition-colors`}
-                    placeholder=" "
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                  <label
-                    htmlFor="email"
-                    className={`absolute left-4 ${
-                      formData.email ? "-top-3" : "top-3"
-                    } px-1 text-gray-400 transition-all peer-placeholder-shown:top-3 peer-focus:-top-3 peer-focus:text-[#295E7E] bg-white text-sm`}
-                  >
-                    Email Address
-                  </label>
-                  {errors.email && (
-                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="relative">
-                <input
-                  id="subject"
-                  type="text"
-                  className={`w-full px-4 py-3 border-2 ${
-                    errors.subject ? "border-red-500" : "border-gray-200"
-                  } rounded-lg peer focus:outline-none focus:border-[#295E7E] transition-colors`}
-                  placeholder=" "
-                  value={formData.subject}
-                  onChange={handleChange}
-                />
-                <label
-                  htmlFor="subject"
-                  className={`absolute left-4 ${
-                    formData.subject ? "-top-3" : "top-3"
-                  } px-1 text-gray-400 transition-all peer-placeholder-shown:top-3 peer-focus:-top-3 peer-focus:text-[#295E7E] bg-white text-sm`}
-                >
-                  Subject
-                </label>
-                {errors.subject && (
-                  <p className="text-red-500 text-sm mt-1">{errors.subject}</p>
-                )}
-              </div>
-
-              <div className="relative">
-                <textarea
-                  id="message"
-                  rows={6}
-                  className={`w-full px-4 py-3 border-2 ${
-                    errors.message ? "border-red-500" : "border-gray-200"
-                  } rounded-lg peer resize-none focus:outline-none focus:border-[#295E7E] transition-colors`}
-                  placeholder=" "
-                  value={formData.message}
-                  onChange={handleChange}
-                />
-                <label
-                  htmlFor="message"
-                  className={`absolute left-4 ${
-                    formData.message ? "-top-3" : "top-3"
-                  } px-1 text-gray-400 transition-all peer-placeholder-shown:top-3 peer-focus:-top-3 peer-focus:text-[#295E7E] bg-white text-sm`}
-                >
-                  Your Message
-                </label>
-                {errors.message && (
-                  <p className="text-red-500 text-sm mt-1">{errors.message}</p>
-                )}
-              </div>
-
-              <div className="flex justify-center">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-8 py-4 bg-linear-to-r transition-all duration-300 cursor-pointer from-[#295E7E] to-[#CD3A38] text-white rounded-full font-semibold hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? "Sending..." : "Send Message"}
-                </button>
-              </div>
-            </form>
+            <div className="flex flex-col">
+              <a
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline text-sm truncate max-w-xs"
+                title={social.url}
+              >
+                {social.name}
+              </a>
+            </div>
           </div>
-        </section>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
       </div>
     </WithLayout>
   );
