@@ -163,7 +163,7 @@ const AddEditCompanyModal: React.FC<AddEditCompanyModalProps> = ({
 
         <InputField
           labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
-          label="emailDomain"
+          label="Email domain"
           id="company-emailDomain"
           value={formData.emailDomain}
           onChange={(val) =>

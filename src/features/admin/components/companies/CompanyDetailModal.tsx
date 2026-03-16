@@ -81,7 +81,7 @@ const CompanyDetailModal: React.FC<CompanyDetailModalProps> = ({
               <FiInfo className="w-5 h-5 text-secondary mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs font-medium text-inactive-tab-text uppercase tracking-wider">
-                  emailDomain
+                  Email domain
                 </p>
                 <p className="text-contrast">{company.emailDomain}</p>
               </div>
