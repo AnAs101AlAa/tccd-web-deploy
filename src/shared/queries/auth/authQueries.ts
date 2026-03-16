@@ -177,5 +177,16 @@ export const useVerifyToken = () => {
   return useMutation({
     mutationFn: () =>
       authApiInstance.verifyToken(),
+    // Retry only on transient errors (not auth errors)
+    retry: (failureCount, error: any) => {
+      // Don't retry on auth errors (401, 403)
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        return false;
+      }
+      // Retry up to 3 times for transient errors
+      return failureCount < 3;
+    },
+    // Exponential backoff: 1s, 2s, 4s
+    retryDelay: (attemptIndex) => Math.pow(2, attemptIndex) * 1000,
   });
 };
