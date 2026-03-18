@@ -7,3 +7,4 @@ export * from "./qr-scanner";
 export * from './admin'
 export * from "./posts";
 export * from "./home";
+export * from "./AI";
