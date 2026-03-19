@@ -12,7 +12,7 @@ export default function HomePage() {
     <WithNavbar>
       <div className="flex flex-col">
         <HeroSection />
-        <Suspense fallback={<div className="loading-state">Loading...</div>}>
+        <Suspense fallback={null}>
           <BlogSection />
           <StatsSection />
           <ServicesSection />

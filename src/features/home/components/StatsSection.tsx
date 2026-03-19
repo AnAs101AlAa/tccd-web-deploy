@@ -18,13 +18,17 @@ const StatsSection = () => {
             isVisible ? "fade-in-down" : ""
           }`}
         >
-          {STATS_DATA.map((stat) => (
-            <StatCard
+          {STATS_DATA.map((stat, index) => (
+            <div
               key={stat.id}
-              number={stat.number}
-              title={stat.title}
-              text={stat.text}
-            />
+              className={`card-animate ${isVisible ? `delay-${index * 100}` : ""}`}
+            >
+              <StatCard
+                number={stat.number}
+                title={stat.title}
+                text={stat.text}
+              />
+            </div>
           ))}
         </div>
       </div>

@@ -1,13 +1,13 @@
 export const committeeList = [
-    {value: 'CC', label: 'ContentCreation'},
-    {value: 'VE', label: 'VideoEditing'},
-    {value: "IT", label: "IT"},
-    {value: "ER", label: "ExternalRelations"},
-    {value: "GD", label: "GraphicDesign"},
-    {value: "HR", label: "HumanResources"},
-    {value: 'Marketing', label: 'Marketing'},
-    {value: "Operations", label: "Operations"},
-    {value: 'High Board', label: 'HighBoard'},
+    {label: 'CC', value: 'ContentCreation'},
+    {label: 'VE', value: 'VideoEditing'},
+    {label: "IT", value: "IT"},
+    {label: "ER", value: "ExternalRelations"},
+    {label: "GD", value: "GraphicDesign"},
+    {label: "HR", value: "HumanResources"},
+    {label: 'Marketing', value: 'Marketing'},
+    {label: "Operations", value: "Operations"},
+    {label: 'High Board', value: 'HighBoard'},
 ]
 
 export const positionList = [
