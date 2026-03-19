@@ -18,6 +18,7 @@ export function HTMLFormattedText({ content, className }: RenderHtmlProps) {
       .replace(/\*i\*([\s\S]*?)\*i\*/g, "<i>$1</i>") // Italic (old format - backward compatibility)
       .replace(/\*u\*([\s\S]*?)\*\/u\*/g, "<u>$1</u>") // Underline (new format)
       .replace(/\*u\*([\s\S]*?)\*u\*/g, "<u>$1</u>") // Underline (old format - backward compatibility)
+      .replace(/\*a href="([^"]+)"\*([\s\S]*?)\*\/a\*/g, '<a href="$1">$2</a>') // Link
       .replace(/\*br\*/g, "<br />"); // Line break
   };
 
