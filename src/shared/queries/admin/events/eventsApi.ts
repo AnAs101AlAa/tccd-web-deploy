@@ -22,8 +22,8 @@ export class EventsApi {
       date: data.date,
       type: data.type,
       capacity: data.capacity,
-      registrationDeadline: data.registrationDeadline,
       locations: data.locations,
+      registrationDeadline: "2026-03-30T21:56:19.988Z"
     };
     
     await systemApi.put(
@@ -110,6 +110,16 @@ export class EventsApi {
 
   async removeEventSlot(eventId: string, slotId: string): Promise<void> {
     await systemApi.delete(`/v1/Event/${eventId}/slots/${slotId}`);
+  }
+
+  async getEventRegistrations(eventId: string, pageNumber: number, pageSize: number, slotId?: string) {
+    const params: any = {
+      pageNumber,
+      pageSize,
+      ...(slotId ? { slotId } : {}),
+    };
+    const response = await systemApi.get(`/v1/events/${eventId}/registrations`, { params });
+    return response.data.data;
   }
 }
 

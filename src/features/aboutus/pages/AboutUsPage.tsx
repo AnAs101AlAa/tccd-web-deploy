@@ -4,10 +4,11 @@ import {
   FaArrowRight,
   FaLinkedin,
   FaGithub,
-  FaFacebook,
   FaInstagram,
   FaTiktok,
-  FaWhatsapp
+  FaWhatsapp,
+  FaFacebookF,
+  FaLinkedinIn,
 } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import toast from "react-hot-toast";
@@ -20,23 +21,43 @@ import MissionIcon from "@/assets/mission.svg";
 import GoalIcon from "@/assets/goal.svg";
 import WithLayout from "@/shared/components/hoc/WithLayout";
 import ABOUT_US_HEADER_IMAGE from "@/assets/aboutusTopHeader.jpg";
-import socialLinks from "@/assets/socials.json";
 
+const socialIcons = [
+  {
+    icon: FaFacebookF,
+    label: "Facebook",
+    href: "https://www.facebook.com/TCCD.ENG",
+    color: "#1877F2",
+  },
+  {
+    icon: FaInstagram,
+    label: "Instagram",
+    href: "https://www.instagram.com/tccdcommunity/",
+    color: "#E4405F",
+  },
+  {
+    icon: FaLinkedinIn,
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/tccdeng/",
+    color: "#0077B5",
+  },
+  {
+    icon: FaTiktok,
+    label: "TikTok",
+    href: "https://www.tiktok.com/@tccdcommunity?_t=ZS-8vfYm3XQ50U&_r=1",
+    color: "#000000",
+  },
+  {
+    icon: FaWhatsapp,
+    label: "WhatsApp",
+    href: "https://www.whatsapp.com/channel/0029Vaiig1I96H4KsF2AEc1a",
+    color: "#25D366",
+  },
+];
 
 export const AboutUsPage = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const foundersRef = useRef<HTMLDivElement>(null);
-
-
-
-  const socialIconsMap: { [key: string]: React.JSX.Element } = {
-  Facebook: <FaFacebook size={20} />,
-  Instagram: <FaInstagram size={20} />,
-  WhatsApp: <FaWhatsapp size={20} />,
-  LinkedIn: <FaLinkedin size={20} />,
-  TikTok: <FaTiktok size={20} />,
-  Email: <SiGmail size={20} />
-};
 
   const scrollBoard = (direction: number) => {
     if (carouselRef.current) {
@@ -90,7 +111,7 @@ export const AboutUsPage = () => {
         toast.error(`Failed to copy ${type}`);
       });
   };
-  
+
   return (
     <WithLayout>
       <div className="relative font-sans bg-gray-50">
@@ -112,21 +133,26 @@ export const AboutUsPage = () => {
               loading="lazy"
               onError={(e) => {
                 const target = e.currentTarget as HTMLImageElement;
-                if (target.src !== "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif") {
-                  target.src = "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif";
+                if (
+                  target.src !==
+                  "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"
+                ) {
+                  target.src =
+                    "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif";
                 }
               }}
             />
             <div>
-            <p className="font-bold text-gray-800 text-center text-lg md:text-xl mb-3">
-              Dr Samah El-Shafiey El-Tantawy
-            </p>
-            <p className="text-gray-600 text-sm md:text-base lg:text-md mx-auto px-4 mb-4 max-w-lg">
-              Fostering student growth, bridging academia and industry, and connecting graduates to opportunities, driven by a passion to support and empower.
-            </p>
+              <p className="font-bold text-gray-800 text-center text-lg md:text-xl mb-3">
+                Dr Samah El-Shafiey El-Tantawy
+              </p>
+              <p className="text-gray-600 text-sm md:text-base lg:text-md mx-auto px-4 mb-4 max-w-lg">
+                Fostering student growth, bridging academia and industry, and
+                connecting graduates to opportunities, driven by a passion to
+                support and empower.
+              </p>
             </div>
           </div>
-
         </div>
 
         <div className="mx-auto text-center mt-8 md:mt-16">
@@ -134,8 +160,9 @@ export const AboutUsPage = () => {
             Board members
           </h1>
           <p className="text-gray-600 text-sm md:text-base lg:text-lg max-w-3xl mx-auto px-4 mb-4">
-            Meet the dedicated engineering student volunteering leaders who guide TCCD's strategic vision and
-            ensure our commitment to empowering students and graduates in their career journeys.
+            Meet the dedicated engineering student volunteering leaders who
+            guide TCCD's strategic vision and ensure our commitment to
+            empowering students and graduates in their career journeys.
           </p>
         </div>
         <div className="max-w-7xl mx-auto px-4 md:px-5 relative pb-8 md:pb-12">
@@ -161,14 +188,21 @@ export const AboutUsPage = () => {
                 className="shrink-0 w-56 md:w-64 bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center"
               >
                 <img
-                  src={member.ImgSrc || "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"}
+                  src={
+                    member.ImgSrc ||
+                    "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"
+                  }
                   alt={`${member.Name} - Board Member`}
                   className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover object-center mx-auto mb-3 md:mb-4 bg-gray-200"
                   loading="lazy"
                   onError={(e) => {
                     const target = e.currentTarget as HTMLImageElement;
-                    if (target.src !== "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif") {
-                      target.src = "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif";
+                    if (
+                      target.src !==
+                      "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"
+                    ) {
+                      target.src =
+                        "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif";
                     }
                   }}
                 />
@@ -189,8 +223,8 @@ export const AboutUsPage = () => {
           </h1>
           <p className="text-gray-600 text-sm md:text-base lg:text-lg max-w-3xl mx-auto px-4 mb-4">
             With a passion for technology and a commitment to excellence, our
-            volunteering founders have been instrumental in shaping the vision and mission of
-            TCCD's digital identity.
+            volunteering founders have been instrumental in shaping the vision
+            and mission of TCCD's digital identity.
           </p>
         </div>
         <div className="max-w-7xl mx-auto px-4 md:px-5 relative pb-8 md:pb-16">
@@ -216,14 +250,21 @@ export const AboutUsPage = () => {
                 className="shrink-0 w-56 md:w-64 bg-white p-5 md:p-6 rounded-xl shadow-md hover:-translate-y-2 transition-transform snap-center"
               >
                 <img
-                  src={founder.ImgSrc || "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"}
+                  src={
+                    founder.ImgSrc ||
+                    "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"
+                  }
                   alt={`${founder.Name} - Website Founder`}
                   className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover object-center mx-auto mb-3 md:mb-4 bg-gray-200"
                   loading="lazy"
                   onError={(e) => {
                     const target = e.currentTarget as HTMLImageElement;
-                    if (target.src !== "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif") {
-                      target.src = "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif";
+                    if (
+                      target.src !==
+                      "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif"
+                    ) {
+                      target.src =
+                        "https://res.cloudinary.com/do0yekzmf/image/upload/v1772147019/user_ednibp.avif";
                     }
                   }}
                 />
@@ -252,10 +293,7 @@ export const AboutUsPage = () => {
                       className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center bg-[#0077B5] text-white rounded-full hover:bg-[#006396] transition-all hover:scale-110 shadow-md"
                       title="Open LinkedIn profile"
                     >
-                      <FaLinkedin
-                        size={16}
-                        className="md:w-4.5 md:h-4.5"
-                      />
+                      <FaLinkedin size={16} className="md:w-4.5 md:h-4.5" />
                     </a>
                   )}
                   {founder.github && (
@@ -390,45 +428,60 @@ export const AboutUsPage = () => {
         </div>
 
         <section className="py-12 md:py-16 px-4 md:px-5 bg-gray-50">
-  <div className="max-w-3xl mx-auto">
-    <div className="bg-white p-6 md:p-8 rounded-xl shadow-md">
-      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 text-center 
-                    bg-linear-to-r from-secondary to-primary bg-clip-text text-transparent">
-        Follow Us
-      </h2>
-      <p className="text-conrast text-sm md:text-base lg:text-lg text-center mb-8">
-        Stay connected with TCCD through our social media channels.
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {socialLinks.map((social, i) => (
-          <div
-            key={i}
-            className="flex items-center gap-4"
-          >
-            <div
-              className="w-10 h-10 flex items-center justify-center rounded-full text-white flex-shrink-0"
-              style={{ backgroundColor: social.color }}
-            >
-              {socialIconsMap[social.name]}
-            </div>
-            <div className="flex flex-col">
-              <a
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline text-sm truncate max-w-xs"
-                title={social.url}
+          <div className="max-w-3xl mx-auto">
+            <div className="p-6 md:p-8 rounded-xl">
+              <h2
+                className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 text-center 
+                    bg-linear-to-r from-secondary to-primary bg-clip-text text-transparent"
               >
-                {social.name}
-              </a>
+                Follow Us
+              </h2>
+              <p className="text-conrast text-sm md:text-base lg:text-lg text-center mb-8">
+                Stay connected with TCCD through our social media channels.
+              </p>
+              <div className="max-w-6xl mx-auto px-5 text-center">
+                <div className="flex justify-center gap-8 flex-wrap mb-8">
+                  {socialIcons.map(
+                    ({ icon: Icon, label, href: Href, color: Color }) => (
+                      <div
+                        key={label}
+                        className="flex flex-col items-center gap-2"
+                      >
+                        <a
+                          target="_blank"
+                          href={Href}
+                          className="w-8 md:w-10 lg:w-12 h-8 md:h-10 lg:h-12 rounded-full bg-gray-400 flex items-center justify-center transition-colors duration-300"
+                          style={
+                            { "--tw-hover-bg": Color } as React.CSSProperties
+                          }
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.backgroundColor = Color)
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              "rgb(156, 163, 175)")
+                          }
+                          aria-label={label}
+                        >
+                          <Icon className="w-5 md:w-6 lg:w-7 h-5 md:h-6 lg:h-7 text-white" />
+                        </a>
+                        <p className="text-xs md:text-sm font-medium text-gray-700">
+                          {label}
+                        </p>
+                      </div>
+                    ),
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
+        </section>
 
+        <footer className="bg-linear-to-r from-secondary to-primary text-white text-center py-6 md:py-8">
+          <p className="text-xs md:text-sm">
+            &copy; {new Date().getFullYear()} TCCD. All rights reserved.
+          </p>
+        </footer>
       </div>
     </WithLayout>
   );

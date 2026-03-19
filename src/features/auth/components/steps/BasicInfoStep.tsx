@@ -59,9 +59,9 @@ export const BasicInfoStep = ({ control }: BasicInfoStepProps) => {
         control={control}
         label="Phone Number"
         type="tel"
-        placeholder="01234567890"
+        placeholder="+201012345678"
         autoComplete="tel"
-        helperText="A valid Egyptian phone number (11 digits, starts with 01)"
+        helperText="Enter any valid international phone number (with optional + country code)"
       />
 
       <FormInput

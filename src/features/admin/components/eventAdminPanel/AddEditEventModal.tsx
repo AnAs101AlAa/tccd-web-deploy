@@ -11,6 +11,7 @@ import {
 import EVENT_TYPES from "@/constants/EventTypes";
 import type Event from "@/shared/types/events";
 import { FaPlus, FaCheck } from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
 import { TbTrash } from "react-icons/tb";
 import useEventModalUtils from "../../utils/eventModalUtils";
 import type { Company } from "@/shared/queries/companies/types";
@@ -112,6 +113,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
               options={EVENT_TYPES}
               value={formValues.type}
               onChange={(val) => handleInputChange("type", val)}
+              error={errors.type}
               placeholder="Select event type"
               id="eventType"
             />
@@ -133,7 +135,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                 onChange={(val) => setLocationNameKey(val || undefined)}
                 className="lg:w-full"
               />
-              <div className="h-50 lg:h-72.5 overflow-y-auto border border-gray-400 rounded-2xl p-2">
+              <div className="h-50 lg:h-93 overflow-y-auto border border-gray-400 rounded-2xl p-2">
                 {locationsLoading ? (
                   <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">Loading locations...</p>
                 ) : (
@@ -154,21 +156,14 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                                 const newLocations = isSelected
                                   ? currentLocations.filter((id) => id !== loc.id)
                                   : [...currentLocations, loc.id];
-                                const newCapacity = isSelected
-                                  ? prev.capacity - loc.capacity
-                                  : prev.capacity + loc.capacity;
                                 return {
                                   ...prev,
                                   locations: newLocations,
-                                  capacity: newCapacity < 0 ? 0 : newCapacity,
                                 };
                               });
                             }}
                           />
-                          <div className="flex-1 flex gap-2 items-center">
-                            <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-contrast">{loc.name}</p>
-                            <p className="text-sm text-gray-500">Capacity: {loc.capacity}</p>
-                          </div>
+                          <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-contrast">{loc.name}</p>
                         </div>
                       ))
                     ) : (
@@ -177,14 +172,6 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                   </>
                 )}
               </div>
-                <InputField
-                  label="Total capacity"
-                  value={formValues.capacity.toString()}
-                  placeholder="Capacity of selected locations combined"
-                  onChange={() => { }}
-                  id="capacity"
-                  error={errors.locations}
-                />
             </div>
           </div>
         </div>
@@ -359,14 +346,14 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
       </div>
         <div className="w-full mt-3">
           <p className="text-md font-semibold mt-6 lg:mt-0">
-            {'Slots management (Optional)'}
+            {'Slots management'}
           </p>
           <hr className="border-gray-300 mt-1 mb-3" />
           <div className="space-y-3">
             <div className="mt-4">
-              <div className="flex items-center justify-between gap-2 mb-1">
-                <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600">
-                  Optional slots for attendees to choose from during registration (e.g., talk sessions, job fair slots)
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-gray-600">
+                  Time slots for attendees to choose from during registration (e.g., talk sessions, job fair slots). At least one slot is required.
                 </p>
                 <Button
                   buttonIcon={<FaPlus className="size-3" />}
@@ -422,6 +409,13 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                             width="fit"
                             onClick={handleAddSlot}
                           />
+                          <Button
+                            buttonIcon={<FaXmark className="size-3" />}
+                            className="px-2 md:px-3"
+                            type="danger"
+                            width="fit"
+                            onClick={() => setIsAddingSlot(false)}
+                          />
                         </div>
                       )}
                     </>
@@ -432,6 +426,11 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
               {errors.slots && <p className="px-1 text-xs text-primary mt-2">
                 {errors.slots}
               </p>}
+              <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-sm font-semibold text-secondary">
+                  Total Event Capacity: <span className="text-lg text-secondary">{formValues.slots?.reduce((sum, slot) => sum + (slot.capacity || 0), 0) || 0}</span> attendees
+                </p>
+              </div>
             </div>
           </div>
         </div>

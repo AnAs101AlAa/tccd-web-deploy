@@ -24,11 +24,12 @@ export interface User {
   studentProfile?: StudentProfile;
   businessRepProfile?: BusinessRepProfile;
   facultyMemberProfile?: FacultyMemberProfile;
+  volunteeringProfile?: VolunteeringProfile;
 }
 
 export interface VolunteeringProfile {
   committeeAffiliation: CommitteeAffiliation;
-  committePosition: CommittePosition;
+  position: CommitteePosition;
 }
 
 export interface StudentProfile {
@@ -85,7 +86,7 @@ export type CommitteeAffiliation =
   | "Marketing"
   | "VideoEditing"
   | "HighBoard";
-export type CommittePosition =
+export type CommitteePosition =
   | "Member"
   | "Head"
   | "Director"

@@ -36,25 +36,33 @@ const ServicesSection = () => {
         </div>
 
         <div className="mx-auto grid max-w-5xl items-center gap-3 md:gap-6 pt-6 md:pt-8 lg:pt-12 pb-3 md:pb-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {firstGridServices.map((service) => (
-            <ServiceCard
+          {firstGridServices.map((service, index) => (
+            <div
               key={service.id}
-              icon={service.icon}
-              title={service.title}
-              description={service.description}
-            />
+              className={`card-animate ${isVisible ? `delay-${index * 100}` : ""}`}
+            >
+              <ServiceCard
+                icon={service.icon}
+                title={service.title}
+                description={service.description}
+              />
+            </div>
           ))}
         </div>
 
         {/* Additional services row */}
         <div className="mx-auto grid max-w-5xl items-center gap-3 md:gap-6 py-1 md:py-2 grid-cols-1 md:grid-cols-2">
-          {secondGridServices.map((service) => (
-            <ServiceCard
+          {secondGridServices.map((service, index) => (
+            <div
               key={service.id}
-              icon={service.icon}
-              title={service.title}
-              description={service.description}
-            />
+              className={`card-animate ${isVisible ? `delay-${(index + firstGridServices.length) * 100}` : ""}`}
+            >
+              <ServiceCard
+                icon={service.icon}
+                title={service.title}
+                description={service.description}
+              />
+            </div>
           ))}
         </div>
       </div>
