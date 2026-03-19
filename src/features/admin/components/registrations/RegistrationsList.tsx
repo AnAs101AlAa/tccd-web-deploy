@@ -1,27 +1,25 @@
 import Table from "@/shared/components/adminTables/Table";
+import format from "@/shared/utils/dateFormater";
+import type { User } from "@/shared/queries/admin/users/userTypes";
 
 interface RegistrationsListProps {
   registrations: {
-    id: string;
-    user?: { englishFullName?: string; email?: string; phoneNumber?: string };
-    englishFullName?: string;
-    email?: string;
-    phoneNumber?: string;
-    eventSlot?: { startTime: string; endTime: string };
     status: string;
-    createdAt: string;
+    registeredAt: string;
+    user: User;
   }[];
 }
 
 export default function RegistrationsList({
   registrations,
 }: RegistrationsListProps) {
+  console.log("RegistrationsList rendered with registrations:", registrations);
   const columns = [
     {
       label: "Student Name",
       key: "studentName" as const,
       formatter: (_value: string, item: any) => {
-        return item.user?.englishFullName || item.englishFullName || "N/A";
+        return item.user?.englishName || "N/A";
       },
     },
     {
@@ -39,16 +37,6 @@ export default function RegistrationsList({
       },
     },
     {
-      label: "Time Slot",
-      key: "timeSlot" as const,
-      formatter: (_value: string, item: any) => {
-        if (item.eventSlot?.startTime && item.eventSlot?.endTime) {
-          return `${item.eventSlot.startTime} - ${item.eventSlot.endTime}`;
-        }
-        return "N/A";
-      },
-    },
-    {
       label: "Status",
       key: "status" as const,
       formatter: (value: string) => {
@@ -60,7 +48,7 @@ export default function RegistrationsList({
         };
         return (
           <span
-            className={`px-2 py-1 rounded text-sm font-medium ${
+            className={`inline-flex items-center px-2.5 py-1 shadow-sm border rounded-full text-xs font-medium ${
               statusColors[value] || "bg-gray-100 text-gray-800"
             }`}
           >
@@ -68,16 +56,20 @@ export default function RegistrationsList({
           </span>
         );
       },
-    }
+    },
+    {
+      label: "Registered At",
+      key: "registeredAt" as const,
+      formatter: (value: string) => {
+        return format(value, "stringed");
+      },
+    },
   ];
 
   const formattedData = registrations.map((reg) => ({
-    studentName: reg.user?.englishFullName || "N/A",
+    studentName: reg.user?.englishName || "N/A",
     email: reg.user?.email || "N/A",
     phone: reg.user?.phoneNumber || "N/A",
-    timeSlot: reg.eventSlot
-      ? `${reg.eventSlot.startTime} - ${reg.eventSlot.endTime}`
-      : "N/A",
     ...reg,
   }));
 
