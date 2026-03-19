@@ -66,8 +66,13 @@ const BlogSection = () => {
               className="grid md:grid-cols-2 2xl:grid-cols-3 gap-5 overflow-x-hidden pb-4"
               ref={gridRef}
             >
-              {latestPosts.map((post: CommunityPost) => (
-                <BlogPostCard key={post.id} post={post} />
+              {latestPosts.map((post: CommunityPost, index: number) => (
+                <div
+                  key={post.id}
+                  className={`card-animate ${isVisible ? `delay-${Math.min(index, 5) * 100}` : ""}`}
+                >
+                  <BlogPostCard post={post} />
+                </div>
               ))}
             </div>
 
