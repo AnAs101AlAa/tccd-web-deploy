@@ -7,7 +7,7 @@ export const committeeList = [
     {label: "HR", value: "HumanResources"},
     {label: 'Marketing', value: 'Marketing'},
     {label: "Operations", value: "Operations"},
-    {label: 'High Board', value: 'HighBoard'},
+    {label: 'High Board', value: 'HighBoard'}
 ]
 
 export const positionList = [
