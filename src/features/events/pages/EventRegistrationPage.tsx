@@ -29,13 +29,11 @@ import format from "@/shared/utils/dateFormater";
 
 /**
  * Creates a Zod schema for the registration form.
- * The `slotId` field is conditionally required based on whether the event has slots.
+ * Time slot selection is always required.
  */
-const createRegistrationSchema = (hasSlots: boolean) =>
+const createRegistrationSchema = () =>
   z.object({
-    slotId: hasSlots
-      ? z.string().min(1, "Please select a time slot")
-      : z.string().optional(),
+    slotId: z.string().min(1, "Please select a time slot"),
   });
 
 type RegistrationFormData = z.infer<
@@ -52,7 +50,6 @@ export default function EventRegisterForm() {
 
   const {
     event,
-    hasSlots,
     slotOptions,
     isLoading,
     error,
@@ -64,7 +61,7 @@ export default function EventRegisterForm() {
   } = useEventRegistration(eventId);
 
   const { control, handleSubmit, watch } = useForm<RegistrationFormData>({
-    resolver: zodResolver(createRegistrationSchema(hasSlots)),
+    resolver: zodResolver(createRegistrationSchema()),
     mode: "onChange",
     defaultValues: {
       slotId: "",
@@ -122,11 +119,10 @@ export default function EventRegisterForm() {
   };
 
   const onSubmit = (data: RegistrationFormData) => {
-    // Resolve slot: user-selected > first available slot
-    const slotId = data.slotId || event.slots?.[0]?.id;
+    const slotId = data.slotId;
     if (!slotId) {
-      toast.error("No time slot available, cannot register.");
-      return; // No slot available — cannot register
+      toast.error("Please select a time slot to register.");
+      return;
     }
     register(slotId);
   };
@@ -351,7 +347,7 @@ export default function EventRegisterForm() {
                   </div>
 
                   <div
-                    className={`grid grid-cols-1 ${hasSlots ? "md:grid-cols-2" : ""} gap-4 md:gap-6`}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
                   >
                     {/* University */}
                     <div className="space-y-2">
@@ -366,9 +362,8 @@ export default function EventRegisterForm() {
                       />
                     </div>
 
-                    {/* Time Slot — Data-driven: only shown if event has slots */}
-                    {hasSlots && (
-                      <div className="space-y-2">
+                    {/* Time Slot — Always shown */}
+                    <div className="space-y-2">
                         <label className="text-sm font-semibold text-foreground">
                           Preferred Time Slot
                         </label>
@@ -408,8 +403,7 @@ export default function EventRegisterForm() {
                             </>
                           )}
                         />
-                      </div>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -544,7 +538,7 @@ export default function EventRegisterForm() {
 
           {/* Eligibility Warning */}
           {!isEligible && (
-            <div className="mb-6 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+            <div className="mb-6 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl max-w-4xl mx-auto">
               <FaTriangleExclamation className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
               <div>
                 <p className="text-sm font-semibold text-amber-800">
@@ -577,7 +571,11 @@ export default function EventRegisterForm() {
             {currentStep === totalSteps ? (
               <Button
                 type="primary"
-                onClick={() => setIsConfirmationOpen(true)}
+                onClick={() =>
+                  event.slots && event.slots.length > 1
+                    ? setIsConfirmationOpen(true)
+                    : handleSubmit(onSubmit)()
+                }
                 buttonText={
                   isRegistering ? "Submitting..." : "Submit Registration"
                 }
@@ -598,11 +596,8 @@ export default function EventRegisterForm() {
                 buttonIcon={<FaArrowRight className="w-4 h-4" />}
                 width="auto"
                 disabled={
-                  (currentStep === 1 && hasSlots && watchedSlotId === "") ||
-                  (currentStep === 1 &&
-                    hasSlots &&
-                    selectedSlotSpotsLeft !== null &&
-                    selectedSlotSpotsLeft <= 0)
+                  watchedSlotId === "" ||
+                  (selectedSlotSpotsLeft !== null && selectedSlotSpotsLeft <= 0)
                 }
               />
             )}

@@ -1,9 +1,8 @@
-import type Event from "@/shared/types/events";
+import type { EventRequest } from "@/shared/types/events";
 import type { EventSlot } from "@/shared/types/events";
 import { eventFormSchema } from "./eventFormSchema";
 import { useGetLocations } from "@/shared/queries/admin/locations/locationsQueries";
 import { useEffect, useState } from "react";
-import EVENT_TYPES from "@/constants/EventTypes";
 import {
   useCreateEvent,
   useUpdateEvent,
@@ -38,9 +37,9 @@ const extractDriveId = (urlOrId: string): string => {
   return urlOrId;
 };
 
-const validateAllFields = (formValues: Event) => {
+const validateAllFields = (formValues: EventRequest) => {
   const result = eventFormSchema.safeParse(formValues);
-  const errors: Partial<Record<keyof Event, string>> = {};
+  const errors: Partial<Record<keyof EventRequest, string>> = {};
   if (!result.success) {
     for (const issue of result.error.issues) {
       const key = issue.path[0] as keyof typeof errors;
@@ -54,7 +53,7 @@ export default function useEventModalUtils({
   event,
   onClose,
 }: {
-  event?: Event;
+  event?: EventRequest;
   onClose: () => void;
 }) {
   const queryClient = useQueryClient();
@@ -93,13 +92,13 @@ export default function useEventModalUtils({
   const [deletedMediaIds, setDeletedMediaIds] = useState<string[]>([]);
   const [newMediaIds, setNewMediaIds] = useState<string[]>([]);
   const [, setOriginalPosterId] = useState<string>("");
-  const [formValues, setFormValues] = useState<Event>({
+  const [formValues, setFormValues] = useState<EventRequest>({
     id: "",
     name: "",
     description: "",
     isApproved: true,
     eventImage: "",
-    type: EVENT_TYPES[0].value,
+    type: undefined,
     registrationDeadline: "",
     eventMedia: [],
     date: "",
@@ -110,7 +109,7 @@ export default function useEventModalUtils({
     sponsors: [],
     slots: [],
   });
-  const [errors, setErrors] = useState<{ [key in keyof Event]?: string }>({});
+  const [errors, setErrors] = useState<{ [key in keyof EventRequest]?: string }>({});
 
   const [isAddingMedia, setIsAddingMedia] = useState<boolean>(false);
   const [currentMediaInput, setCurrentMediaInput] = useState<string>("");
@@ -156,16 +155,16 @@ export default function useEventModalUtils({
     }
   }, [event]);
 
-  const handleInputChange = (field: keyof Event, value: string | number) => {
+  const handleInputChange = (field: keyof EventRequest, value: string | number) => {
     const finalValue =
       field === "eventImage" && typeof value === "string"
         ? extractDriveId(value)
         : value;
 
-    setFormValues((prev: Event) => ({ ...prev, [field]: finalValue }));
+    setFormValues((prev: EventRequest) => ({ ...prev, [field]: finalValue }));
 
-    if (errors[field as keyof Event]) {
-      setErrors((prev: { [key in keyof Event]?: string }) => ({
+    if (errors[field as keyof EventRequest]) {
+      setErrors((prev: { [key in keyof EventRequest]?: string }) => ({
         ...prev,
         [field]: undefined,
       }));
@@ -261,17 +260,18 @@ export default function useEventModalUtils({
       eventMedia: newMediaIds,
       registrationDeadline: registrationDeadlineDate.toISOString(),
       eventImage: formValues.eventImage || "",
+      type: formValues.type || "",
     };
-
+    
     const validationErrors = validateAllFields(finalizedValue);
-
+    
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       toast.error("Please fix all errors before saving.");
       console.error("Validation errors:", validationErrors);
       return;
     }
-
+    
     try {
       if (isEditMode && event) {
         await updateEventMutation.mutateAsync({

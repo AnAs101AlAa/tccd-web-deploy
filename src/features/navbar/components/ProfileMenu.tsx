@@ -4,6 +4,7 @@ import { useAppSelector } from "@/shared/store/hooks";
 import { selectCurrentUser } from "@/shared/store/selectors/userSelectors";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "@/shared/queries/auth";
+import AIImage from "@/assets/AIImage.jpeg";
 
 interface ProfileMenuProps {
   isOpen: boolean;
@@ -109,6 +110,19 @@ const ProfileMenu = ({
 
       {isAuthenticated ? (
         <div className="flex flex-col">
+          {/* Mobile-only AI Chat link */}
+          <div className="md:hidden flex flex-row items-center px-2 md:px-4 py-2.5 gap-1.5 md:gap-2 cursor-pointer hover:bg-gray-100/80 transition-colors border-b border-gray-300"
+            onClick={() => {
+              navigate("/owra-chat");
+              onClose();
+            }}
+          >
+            <img src={AIImage} alt="AI" className="h-4.5 w-4.5 rounded-full object-cover" />
+            <p className="text-[13px] lg:text-[14px] leading-4 md:leading-3 tracking-[-0.365714px] font-semibold text-primary">
+              AI Chat
+            </p>
+          </div>
+          
           {menuItems.map((item, index) => {
             const Icon = item.icon;
             const isLast = index === menuItems.length - 1;
