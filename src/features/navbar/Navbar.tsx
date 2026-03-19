@@ -7,14 +7,14 @@ import facultyLogo from "@/assets/faculty.png";
 import universityLogo from "@/assets/university.png";
 import { useAppSelector } from "@/shared/store/hooks";
 import { selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
-import AIImage from "@/assets/AIImage.jpeg";
-import { useNavigate } from "react-router-dom";
+//import AIImage from "@/assets/AIImage.jpeg";
+//import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { pathname } = useLocation();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const handleAvatarClick = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -76,12 +76,12 @@ const Navbar = () => {
         <div className="ml-auto flex gap-4 items-center shrink-0">
           {isAuthenticated ? (
             <>
-              <div className="bg-slate-100 border border-gray-200 shadow-md rounded-full p-1 pr-4 flex items-center gap-2 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/owra-chat")}>
+              {/* <div className="bg-slate-100 border border-gray-200 shadow-md rounded-full p-1 pr-4 flex items-center gap-2 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate("/owra-chat")}>
                 <div className="rounded-full flex items-center justify-center bg-linear-to-br from-primary to-secondary p-0.5">
                   <img src={AIImage} alt="AI" className="h-6.5 xl:h-7.5 w-auto rounded-full" />
                 </div>
                 <p className="gradient-text font-semibold text-[15px]">ASK AI</p>
-              </div>
+              </div> */}
               <div className="relative">
                 <ProfileAvatar
                   onClick={handleAvatarClick}

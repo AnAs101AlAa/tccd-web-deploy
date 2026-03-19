@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { FaBold, FaItalic, FaUnderline, FaEye } from "react-icons/fa";
+import { FaBold, FaItalic, FaUnderline, FaEye, FaLink } from "react-icons/fa";
 import { VscNewline } from "react-icons/vsc";
 import { HTMLFormattedText } from "./HTMLFormattedText";
 
@@ -73,6 +73,31 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }, 0);
   };
 
+  const insertLink = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = value.substring(start, end) || "Link text";
+    
+    const url = prompt("Enter the URL:", "https://");
+    if (!url) return;
+
+    const beforeText = value.substring(0, start);
+    const afterText = value.substring(end);
+    
+    const newText = `${beforeText}*a href="${url}"*${selectedText}*/a*${afterText}`;
+    onChange(newText);
+
+    // Set cursor position after the link
+    setTimeout(() => {
+      const newPosition = start + `*a href="${url}"*${selectedText}*/a*`.length;
+      textarea.focus({ preventScroll: true });
+      textarea.setSelectionRange(newPosition, newPosition);
+    }, 0);
+  };
+
   const toolbarButtons = [
     {
       icon: <FaBold />,
@@ -93,6 +118,12 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       shortcut: "Ctrl+U",
     },
     {
+      icon: <FaLink />,
+      label: "Link",
+      action: insertLink,
+      shortcut: "Ctrl+L",
+    },
+    {
       icon: <VscNewline className="size-5"/>,
       label: "Line Break",
       action: insertLineBreak,
@@ -111,6 +142,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       } else if (e.key === "u") {
         e.preventDefault();
         insertMarkup("*u*", "*/u*");
+      } else if (e.key === "l") {
+        e.preventDefault();
+        insertLink();
       }
     } else if (e.shiftKey && e.key === "Enter") {
       e.preventDefault();
