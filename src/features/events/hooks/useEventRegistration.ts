@@ -36,11 +36,6 @@ export const useEventRegistration = (eventId: string) => {
   // Registration mutation
   const registerMutation = useRegisterForEvent();
 
-  const hasSlots = useMemo(
-    () => !!event?.slots && event.slots.length > 0,
-    [event?.slots],
-  );
-
   const slotOptions = useMemo(() => {
     if (!event?.slots) return [];
     return event.slots.map((slot) => ({
@@ -64,7 +59,6 @@ export const useEventRegistration = (eventId: string) => {
   return {
     // Event data
     event,
-    hasSlots,
     slotOptions,
 
     // Eligibility

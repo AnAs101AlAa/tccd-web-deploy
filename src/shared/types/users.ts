@@ -75,8 +75,10 @@ export interface StudentUser extends User {
 }
 
 export interface VolunteeringUser extends StudentUser {
-  committeeAffiliation: Committee;
-  position: Position;
+  volunteeringProfile : {
+    committeeAffiliation: Committee;
+    position: Position;
+  }
 }
 
 export interface FacultyMemberUser extends User {

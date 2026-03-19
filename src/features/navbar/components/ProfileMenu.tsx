@@ -132,7 +132,7 @@ const ProfileMenu = ({
                 key={item.title}
                 className={`flex flex-row items-center px-2 md:px-4 py-3 gap-1.5 md:gap-[8px] cursor-pointer hover:bg-gray-100/80 transition-colors ${
                   !isLast ? "border-b border-gray-300" : "rounded-b-lg"}
-                  ${isFirst && !isAuthenticated ? "rounded-t-lg" : ""}`}
+                  ${isFirst ? "rounded-t-lg" : ""}`}
                 onClick={() => handleMenuItemClick(item.action)}
               >
                 <Icon

@@ -7,6 +7,7 @@ import {
   FiBriefcase,
   FiLogOut,
 } from "react-icons/fi";
+import { BsListColumnsReverse } from "react-icons/bs";
 import { IoHome } from "react-icons/io5";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLogout } from "@/shared/queries/auth";
@@ -35,6 +36,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       label: "Events",
       icon: <FiCalendar className="w-5 h-5" />,
       path: "/admin/events",
+    },
+    {
+      id: "registrations",
+      label: "Registrations",
+      icon: <BsListColumnsReverse className="w-5 h-5" />,
+      path: "/admin/registrations",
     },
     {
       id: "locations",

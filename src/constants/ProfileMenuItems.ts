@@ -27,7 +27,7 @@ export const getProfileMenuItems = (
     });
   }
   
-  if (isAdmin(user) || (isVolunteer(user) && user.position !== "Member")) {
+  if (isAdmin(user) || (isVolunteer(user) && user.volunteeringProfile.position !== "Member")) {
     menuItems.push({
       icon: MdDashboard,
       title: "Admin dashboard",

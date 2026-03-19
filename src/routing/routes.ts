@@ -45,6 +45,7 @@ const StatisticsPage = lazy(() => import("@/features/admin/pages/StatisticsPage"
 const CompaniesPage = lazy(() => import("@/features/admin/pages/CompaniesPage"));
 const LocationsManagementPage = lazy(() => import("@/features/admin/pages/LocationsManagementPage"));
 const UsersAdminPage = lazy(() => import("@/features/admin/pages/UsersAdminPage"));
+const RegistrationsPage = lazy(() => import("@/features/admin/pages/RegistrationsPage"));
 const AIChatPage = lazy(() => import("@/features/AI/pages/AIChatPage"));
 
 type RouteComponent = ComponentType | LazyExoticComponent<ComponentType>;
@@ -132,5 +133,11 @@ export const routes: Route[] = [
     Component: UsersAdminPage,
     protected: true,
     roles: ["Admin"] 
+  },
+  {
+    path: "/admin/registrations",
+    Component: RegistrationsPage,
+    protected: true,
+    roles: ["Admin"],
   },
 ];

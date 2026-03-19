@@ -105,3 +105,10 @@ export const useRemoveEventSlot = () => {
       eventsApi.removeEventSlot(eventId, slotId)
   });
 }
+
+export const useGetEventRegistrations = (eventId: string, pageNumber: number, pageSize: number, slotId?: string) => {
+  return useQuery({
+    queryKey: ["events", "registrations", eventId, pageNumber, pageSize, slotId],
+    queryFn: () => eventsApi.getEventRegistrations(eventId, pageNumber, pageSize, slotId),
+  });
+};

@@ -20,13 +20,16 @@ export class EventApi {
     if (params?.StartDate) {
       const startDateTime = new Date(params.StartDate);
       const now = new Date();
+      now.setHours(0, 0, 0, 0);
       if (startDateTime < now) {
         throw new Error(
           "Start date cannot be in the past, Please head to the past events section.",
         );
       }
     } else {
-      params = { ...params, StartDate: new Date().toISOString() };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      params = { ...params, StartDate: today.toISOString() };
     }
     const response = await systemApi.get(`${EVENT_ROUTE}`, {
       params,

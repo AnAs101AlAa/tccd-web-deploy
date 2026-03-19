@@ -124,7 +124,7 @@ export const selectHasCommitteeAffiliation = createSelector(
   [selectCurrentUser],
   (user) => {
     if (user && isVolunteer(user)) {
-      return user.committeeAffiliation !== undefined;
+      return user.volunteeringProfile.committeeAffiliation !== undefined;
     }
     return false;
   }

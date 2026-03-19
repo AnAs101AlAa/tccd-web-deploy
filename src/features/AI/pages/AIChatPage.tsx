@@ -43,6 +43,7 @@ export default function AIChatPage() {
     }, [message]);
 
     const simulateAIResponse = (userMessage: string) => {
+        console.log("User message:", userMessage);
         setIsThinking(true);
         const thinkingTime = 1500 + Math.random() * 1000;
 
