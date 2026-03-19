@@ -199,3 +199,17 @@ html {
 .card-animate.delay-600 {
   animation-delay: 0.6s;
 }
+
+/* Infinite Carousel Animation */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.carousel-scroll {
+  animation: scroll 5s linear infinite;
+}
