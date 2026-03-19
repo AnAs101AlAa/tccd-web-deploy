@@ -63,9 +63,11 @@ export class AuthApi {
           cv: student.cv,
           linkedin: student.linkedIn,
           gitHub: student.gitHub,
+          volunteeringProfile: {
           committeeAffiliation:
             student.volunteeringProfile.committeeAffiliation,
-          position: student.volunteeringProfile.position,
+            position: student.volunteeringProfile.position
+          }
         } as VolunteeringUser;
       }
 

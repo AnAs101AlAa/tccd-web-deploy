@@ -5,6 +5,7 @@ import { WithNavbar } from "@/shared/components/hoc";
 const BlogSection = lazy(() => import("../components/BlogSection"));
 const StatsSection = lazy(() => import("../components/StatsSection"));
 const ServicesSection = lazy(() => import("../components/ServicesSection"));
+const PartnersSection = lazy(() => import("../components/PartnersSection"));
 
 export default function HomePage() {
   return (
@@ -15,6 +16,7 @@ export default function HomePage() {
           <BlogSection />
           <StatsSection />
           <ServicesSection />
+          <PartnersSection />
         </Suspense>
       </div>
     </WithNavbar>

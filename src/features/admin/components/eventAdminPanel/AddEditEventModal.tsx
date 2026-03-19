@@ -112,6 +112,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
               options={EVENT_TYPES}
               value={formValues.type}
               onChange={(val) => handleInputChange("type", val)}
+              error={errors.type}
               placeholder="Select event type"
               id="eventType"
             />
@@ -178,10 +179,10 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                 )}
               </div>
                 <InputField
-                  label="Total capacity"
+                  label="Total capacity (adjust if needed)"
                   value={formValues.capacity.toString()}
                   placeholder="Capacity of selected locations combined"
-                  onChange={() => { }}
+                  onChange={(e) => setFormValues((prev) => ({ ...prev, capacity: parseInt(e.target.value) || 0 }))}
                   id="capacity"
                   error={errors.locations}
                 />
@@ -359,14 +360,14 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
       </div>
         <div className="w-full mt-3">
           <p className="text-md font-semibold mt-6 lg:mt-0">
-            {'Slots management (Optional)'}
+            {'Slots management'} <span className="text-primary">*</span>
           </p>
           <hr className="border-gray-300 mt-1 mb-3" />
           <div className="space-y-3">
             <div className="mt-4">
-              <div className="flex items-center justify-between gap-2 mb-1">
-                <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600">
-                  Optional slots for attendees to choose from during registration (e.g., talk sessions, job fair slots)
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-gray-600">
+                  Time slots for attendees to choose from during registration (e.g., talk sessions, job fair slots). At least one slot is required.
                 </p>
                 <Button
                   buttonIcon={<FaPlus className="size-3" />}

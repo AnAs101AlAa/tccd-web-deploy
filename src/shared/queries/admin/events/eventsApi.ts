@@ -111,6 +111,16 @@ export class EventsApi {
   async removeEventSlot(eventId: string, slotId: string): Promise<void> {
     await systemApi.delete(`/v1/Event/${eventId}/slots/${slotId}`);
   }
+
+  async getEventRegistrations(eventId: string, pageNumber: number, pageSize: number, slotId?: string) {
+    const params: any = {
+      pageNumber,
+      pageSize,
+      ...(slotId ? { slotId } : {}),
+    };
+    const response = await systemApi.get(`/v1/events/${eventId}/registrations`, { params });
+    return response.data.data;
+  }
 }
 
 export const eventsApi = new EventsApi();

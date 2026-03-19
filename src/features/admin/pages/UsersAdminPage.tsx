@@ -1,11 +1,14 @@
 import type { UserQueryParams } from "@/shared/queries/admin/users/userTypes";
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { useUsers } from "../hooks/useUsers";
 import { WithLayout } from "@/shared/components/hoc";
 import UsersList from "../components/users/UsersList";
 import { Pagination } from "@/shared/components/pagination";
 import { ErrorScreen } from "tccd-ui";
 import UsersFilter from "../components/users/UsersFilter";
+import type { User } from "@/shared/queries/admin/users/userTypes";
+
+const VolunteerRoleManageModal = lazy(() => import("@/features/admin/components/users/VolunteerRoleManageModal"));
 
 export default function UsersAdminPage() {
   const [userQueryParams, setUserQueryParams] = useState<UserQueryParams>({
@@ -21,6 +24,10 @@ export default function UsersAdminPage() {
       OrderBy: "CreatedAt",
       Descending: true,
     });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"add" | "edit">("add");
+  const [selectedUser, setSelectedUser] = useState<User | undefined>();
+
   const {
     studentUsers,
     volunteeringMemberUsers,
@@ -31,6 +38,23 @@ export default function UsersAdminPage() {
     refetchStudent,
     refetchVolunteeringMember,
   } = useUsers({ userQueryParams, volunteerQueryParams });
+
+  const handleAddVolunteer = (user: User) => {
+    setSelectedUser(user);
+    setModalMode("add");
+    setIsModalOpen(true);
+  };
+
+  const handleEditVolunteer = (user: User) => {
+    setSelectedUser(user);
+    setModalMode("edit");
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedUser(undefined);
+  };
 
   if (volunteeringMemberError && studentError) {
     return (
@@ -103,7 +127,10 @@ export default function UsersAdminPage() {
           )}
           {studentUsers && (
             <>
-              <UsersList users={studentUsers.items} />
+              <UsersList 
+                users={studentUsers.items}
+                onAddVolunteer={handleAddVolunteer}
+              />
               <div className="mt-4 md:mt-6">
                 <Pagination
                   currentPage={userQueryParams.PageNumber}
@@ -173,7 +200,10 @@ export default function UsersAdminPage() {
           )}
           {volunteeringMemberUsers && (
             <>
-              <UsersList users={volunteeringMemberUsers.items} />
+              <UsersList 
+                users={volunteeringMemberUsers.items}
+                onEditVolunteer={handleEditVolunteer}
+              />
               <div className="mt-4 md:mt-6">
                 <Pagination
                   currentPage={volunteerQueryParams.PageNumber}
@@ -197,6 +227,14 @@ export default function UsersAdminPage() {
           )}
         </section>
       </div>
+      <Suspense>
+        <VolunteerRoleManageModal
+          mode={modalMode}
+          memberData={selectedUser}
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+        />
+      </Suspense>
     </WithLayout>
   );
 }

@@ -30,7 +30,29 @@ export default interface Event {
   date: string;
   locations: string[];
   isApproved: boolean;
-  type: EventTypes;
+  type: string;
+  attendeeCount: number;
+  registeredCount: number;
+  capacity: number;
+  eventImage: string;
+  registrationDeadline: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedOn?: string;
+  eventMedia?: EventMedia[] | string[];
+  sponsors?: Sponsor[];
+  slots?: EventSlot[];
+  rooms?: EventRoom[];
+}
+
+export interface EventRequest {
+  id: string;
+  name: string;
+  description: string;
+  date: string;
+  locations: string[];
+  isApproved: boolean;
+  type: string | undefined;
   attendeeCount: number;
   registeredCount: number;
   capacity: number;
@@ -80,5 +102,6 @@ export type EventTypes =
   | "Jobfair"
   | "Researchday"
   | "Fieldtrip"
-  | "Sessions";
+  | "Sessions"
+  
 export type EventOrderBy = "Name" | "Date" | "Location" | "Type";

@@ -15,9 +15,16 @@ import {
   MdPersonAddAlt1,
   MdCheckCircle,
   MdCancel,
+  MdEdit,
 } from "react-icons/md";
 
-const UsersView = ({ users }: { users: User[] }) => {
+interface UsersViewProps {
+  users: User[];
+  onAddVolunteer?: (user: User) => void;
+  onEditVolunteer?: (user: User) => void;
+}
+
+const UsersView = ({ users, onAddVolunteer, onEditVolunteer }: UsersViewProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [pendingAction, setPendingAction] = useState<
@@ -280,20 +287,30 @@ const UsersView = ({ users }: { users: User[] }) => {
         )}
         {/* Ban: shown for Approved only */}
         {user.status === "Approved" && (
-          <Button
-            buttonText="Ban"
-            buttonIcon={<MdPersonOff />}
-            loading={
-              isSubmitting &&
-              user.id === selectedUserId &&
-              pendingAction === "ban"
-            }
-            onClick={() => {
-              setPendingAction("ban");
-              triggerAction(user.id);
-            }}
-            type="danger"
-          />
+          <>
+            <Button
+              buttonText="Ban"
+              buttonIcon={<MdPersonOff />}
+              loading={
+                isSubmitting &&
+                user.id === selectedUserId &&
+                pendingAction === "ban"
+              }
+              onClick={() => {
+                setPendingAction("ban");
+                triggerAction(user.id);
+              }}
+              type="danger"
+            />
+            {onAddVolunteer && (
+              <Button
+                buttonText="Add as Member"
+                buttonIcon={<MdPersonAddAlt1 />}
+                onClick={() => onAddVolunteer(user)}
+                type="secondary"
+              />
+            )}
+          </>
         )}
         {/* Unban: shown for Banned only */}
         {user.status === "Banned" && (
@@ -309,6 +326,15 @@ const UsersView = ({ users }: { users: User[] }) => {
               setPendingAction("unban");
               triggerAction(user.id);
             }}
+            type="secondary"
+          />
+        )}
+        {/* Edit Role: shown for volunteering members */}
+        {onEditVolunteer && !onAddVolunteer && (
+          <Button
+            buttonText="Edit Role"
+            buttonIcon={<MdEdit />}
+            onClick={() => onEditVolunteer(user)}
             type="secondary"
           />
         )}

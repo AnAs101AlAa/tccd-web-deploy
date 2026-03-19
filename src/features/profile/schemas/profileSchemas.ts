@@ -53,10 +53,10 @@ const arabicFullNameSchema = z
 const phoneNumberSchema = z
   .string()
   .min(1, "Phone number is required")
-    .regex(
-      /^(?:01[0125][0-9]{8}|\\+201[0125][0-9]{8})$/,
-      "Please enter a valid phone number"
-    );
+  .regex(
+    /^(\+)?[1-9]\d{1,14}$/,
+    "Please enter a valid phone number",
+  );
 
 /**
  * Gender Schema
