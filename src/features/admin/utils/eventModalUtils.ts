@@ -118,7 +118,7 @@ export default function useEventModalUtils({
   const [currentSlotInput, setCurrentSlotInput] = useState<EventSlot>({id: "", startTime: "", endTime: "", capacity: 0, registrationCount: 0});
 
   useEffect(() => {
-    if (event) {
+    if (event) {      
       const posterId = extractDriveId(event.eventImage || "");
       setOriginalPosterId(posterId);
 
@@ -143,12 +143,13 @@ export default function useEventModalUtils({
         ? roomsArray.map((loc: any) => (typeof loc === "string" ? loc : loc.id))
         : [];
 
+      const totalCapacity = event.slots?.reduce((sum, slot) => sum + (slot.capacity || 0), 0) || 0;
       setFormValues({
         ...event,
         eventImage: extractDriveId(event.eventImage || ""),
         locations: locationIds,
         eventMedia: [],
-        capacity: event.capacity || 0,
+        capacity: totalCapacity,
         sponsors: eventSponsors || [],
         slots: event.slots || [],
       });
@@ -234,19 +235,29 @@ export default function useEventModalUtils({
       endTime: endDate.toISOString(),
     };
 
-    setFormValues((prev) => ({
-      ...prev,
-      slots: [...(prev.slots || []), { ...slotWithTimestamp, capacity: currentSlotInput.capacity, registrationCount: 0 }],
-    }));
+    setFormValues((prev) => {
+      const updatedSlots = [...(prev.slots || []), { ...slotWithTimestamp, capacity: currentSlotInput.capacity, registrationCount: 0 }];
+      const totalCapacity = updatedSlots.reduce((sum, slot) => sum + (slot.capacity || 0), 0);
+      return {
+        ...prev,
+        slots: updatedSlots,
+        capacity: totalCapacity,
+      };
+    });
     setCurrentSlotInput({ id: "", startTime: "", endTime: "", capacity: 0, registrationCount: 0 });
     setIsAddingSlot(false);
   };
 
   const handleRemoveSlot = (index: number) => {
-    setFormValues((prev) => ({
-      ...prev,
-      slots: prev.slots?.filter((_, i) => i !== index),
-    }));
+    setFormValues((prev) => {
+      const updatedSlots = prev.slots?.filter((_, i) => i !== index) || [];
+      const totalCapacity = updatedSlots.reduce((sum, slot) => sum + (slot.capacity || 0), 0);
+      return {
+        ...prev,
+        slots: updatedSlots,
+        capacity: totalCapacity,
+      };
+    });
   };
 
   const handleSave = async () => {
