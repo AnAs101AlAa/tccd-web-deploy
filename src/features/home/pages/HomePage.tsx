@@ -14,9 +14,9 @@ export default function HomePage() {
         <HeroSection />
         <Suspense fallback={null}>
           <BlogSection />
+          <PartnersSection />
           <StatsSection />
           <ServicesSection />
-          <PartnersSection />
         </Suspense>
       </div>
     </WithNavbar>
