@@ -119,9 +119,14 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
                     priority: 100,
                 });
 
+                const allMedia = [...originalMedia.filter((media) => !deletedMedia.includes(media)), ...newMedia];
+                
                 await addPostMediaMutation.mutateAsync({
                     postId: res.id,
-                    mediaFiles: newMedia.map((media) => media.mediaUrl),
+                    mediaFiles: allMedia.map((media, index) => ({
+                        fileId: media.mediaUrl,
+                        position: index,
+                    })),
                 });
 
                 toast.success("Post created successfully!");
@@ -141,9 +146,14 @@ export default function useManagePostUtils({initialData, onClose}: {initialData:
                 });
 
                 if (newMedia.length > 0) {
+                    const allMedia = [...originalMedia.filter((media) => !deletedMedia.includes(media)), ...newMedia];
+                    
                     await addPostMediaMutation.mutateAsync({
                         postId: postData.id,
-                        mediaFiles: newMedia.map((media) => media.mediaUrl),
+                        mediaFiles: allMedia.map((media, index) => ({
+                            fileId: media.mediaUrl,
+                            position: index,
+                        })),
                     });
                 }
 

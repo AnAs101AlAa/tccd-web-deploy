@@ -139,10 +139,10 @@ export default function EventRegisterForm() {
 
   return (
     <WithLayout>
-      <Suspense fallback={<div className="loading-state">Loading...</div>}>
+      <Suspense fallback={null}>
         <TicketRulesModal onClose={setShowRules} isOpen={showRules} />
       </Suspense>
-      <Suspense fallback={<div className="loading-state">Loading...</div>}>
+      <Suspense fallback={null}>
         <RegistrationConfirmationModal
           isOpen={isConfirmationOpen}
           onClose={() => setIsConfirmationOpen(false)}

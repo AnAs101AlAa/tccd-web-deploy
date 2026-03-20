@@ -142,8 +142,8 @@ export class PostsApi {
     await systemApi.delete(`${POSTS_ROUTE}/${id}`);
   }
 
-  async addPostMedia(postId: string, mediaFiles: string[]): Promise<void> {
-    await systemApi.post(`v2/posts/${postId}/PostMedia`, { fileIds: mediaFiles });
+  async addPostMedia(postId: string, mediaFiles: Array<{ fileId: string; position: number }>): Promise<void> {
+    await systemApi.post(`v2/posts/${postId}/PostMedia`, mediaFiles);
   }
 
   async deletePostMedia(postId: string, mediaFiles: string[]): Promise<void> {
