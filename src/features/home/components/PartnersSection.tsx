@@ -13,6 +13,7 @@ const ServicesSection = () => {
     const carousel = carouselRef.current;
     let currentOffset = 0;
     let animationId: number;
+    let oneSetWidth = 0;
 
     const getAnimationSpeed = () => {
       const width = window.innerWidth;
@@ -23,15 +24,37 @@ const ServicesSection = () => {
 
     let speed = getAnimationSpeed();
 
+    const calculateOneSetWidth = () => {
+      const items = carousel.querySelectorAll(".carousel-item");
+      if (items.length === 0) return 0;
+      
+      const firstItem = items[0] as HTMLElement;
+      const itemWidth = firstItem.offsetWidth;
+      const gap = window.innerWidth < 768 ? 16 : 32; // gap-4 or gap-8
+      return (itemWidth + gap) * COMPANIES_IMAGES.length;
+    };
+
     const animate = () => {
       currentOffset += speed;
+      
+      // Reset when we've scrolled one full set to create seamless loop
+      if (oneSetWidth > 0 && currentOffset >= oneSetWidth) {
+        currentOffset = 0;
+      }
+      
       carousel.style.transform = `translateX(-${currentOffset}px)`;
       animationId = requestAnimationFrame(animate);
     };
 
     const handleResize = () => {
       speed = getAnimationSpeed();
+      oneSetWidth = calculateOneSetWidth();
     };
+
+    // Calculate initial width after images load
+    setTimeout(() => {
+      oneSetWidth = calculateOneSetWidth();
+    }, 100);
 
     window.addEventListener("resize", handleResize);
     animationId = requestAnimationFrame(animate);
@@ -75,7 +98,7 @@ const ServicesSection = () => {
             {[...COMPANIES_IMAGES, ...COMPANIES_IMAGES, ...COMPANIES_IMAGES].map((image, index) => (
               <div
                 key={index}
-                className="h-20 md:h-32 lg:h-40  w-28 md:w-36 lg:w-44 flex items-center justify-center shrink-0 rounded-md bg-white"
+                className="carousel-item h-20 md:h-32 lg:h-40 w-28 md:w-36 lg:w-44 flex items-center justify-center shrink-0 rounded-md bg-white"
               >
                 <img
                   src={image}

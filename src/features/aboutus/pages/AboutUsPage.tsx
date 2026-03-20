@@ -313,7 +313,7 @@ export const AboutUsPage = () => {
           </div>
         </div>
 
-        <div className="relative py-12 md:py-16 px-4 md:px-5 bg-linear-to-br from-[#44697E] via-[#5a7a8f] to-[#CD3A38] overflow-hidden">
+        <div className="relative py-12 md:py-16 px-3 sm:px-4 md:px-6 lg:px-8 bg-linear-to-br from-[#44697E] via-[#5a7a8f] to-[#CD3A38] overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 mb-12 md:mb-16">
               <div className="relative order-1 md:order-2">
