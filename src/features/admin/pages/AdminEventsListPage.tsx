@@ -321,7 +321,7 @@ const AdminEventsListPage = () => {
         </section>
 
         {isEventModalOpen && (
-          <Suspense fallback={<div className="loading-state">Loading...</div>}>
+          <Suspense fallback={null}>
             <AddEditEventModal
               event={selectedEvent}
               onClose={handleCloseModal}
@@ -330,7 +330,7 @@ const AdminEventsListPage = () => {
         )}
 
         {isDeleteModalOpen && (
-          <Suspense fallback={<div className="loading-state">Loading...</div>}>
+          <Suspense fallback={null}>
             <ConfirmActionModal
               isOpen={isDeleteModalOpen}
               onClose={() => setIsDeleteModalOpen(false)}

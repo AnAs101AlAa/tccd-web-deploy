@@ -73,7 +73,7 @@ const StatisticsPage: React.FC = () => {
             </section>
 
             {/* Charts Grid — ECharts bundle is deferred until this section mounts */}
-            <Suspense fallback={<div className="loading-state">Loading charts...</div>}>
+            <Suspense fallback={null}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}

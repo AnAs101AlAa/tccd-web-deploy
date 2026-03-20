@@ -116,7 +116,7 @@ export const useAddPostMedia = () => {
       mediaFiles,
     }: {
       postId: string;
-      mediaFiles: string[];
+      mediaFiles: Array<{ fileId: string; position: number }>;
     }) => postsApi.addPostMedia(postId, mediaFiles),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: postsKeys.lists() });

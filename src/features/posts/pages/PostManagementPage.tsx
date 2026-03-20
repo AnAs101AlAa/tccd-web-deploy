@@ -106,14 +106,14 @@ export const PostManagementPage = () => {
 
   return (
     <WithLayout>
-      <Suspense fallback={<div className="loading-state">Loading...</div>}>
+      <Suspense fallback={null}>
         <PostDeleteModal
           isOpen={deletedPost != null}
           onClose={() => setDeletedPost(null)}
           postId={deletedPost}
         />
       </Suspense>
-      <Suspense fallback={<div className="loading-state">Loading...</div>}>
+      <Suspense fallback={null}>
         <PostApprovalModal
           isOpen={approvingPost !== null}
           onClose={() => setApprovingPost(null)}
@@ -122,7 +122,7 @@ export const PostManagementPage = () => {
         />
       </Suspense>
       {(createPost || selectedPost) && (
-        <Suspense fallback={<div className="loading-state">Loading...</div>}>
+        <Suspense fallback={null}>
           <ManagePostModal
             initialData={selectedPost || undefined}
             onClose={() => {

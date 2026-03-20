@@ -103,7 +103,7 @@ const CompaniesPage: React.FC = () => {
 
         {/* Add Company Modal */}
         {isAddModalOpen && (
-          <Suspense fallback={<div className="loading-state">Loading...</div>}>
+          <Suspense fallback={null}>
             <AddEditCompanyModal
               isOpen={isAddModalOpen}
               onClose={() => setIsAddModalOpen(false)}

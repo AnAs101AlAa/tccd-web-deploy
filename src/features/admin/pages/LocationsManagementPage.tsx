@@ -125,7 +125,7 @@ const LocationsManagementPage = () => {
           }
         />
 
-        <Suspense fallback={<div className="loading-state">Loading...</div>}>
+        <Suspense fallback={null}>
           <AddLocationModal
             isOpen={isAddModalOpen}
             onClose={() => setIsAddModalOpen(false)}

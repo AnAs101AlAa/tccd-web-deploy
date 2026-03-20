@@ -40,7 +40,7 @@ export default function GalleryDisplayPage() {
         </div>
         <img src="https://res.cloudinary.com/do0yekzmf/image/upload/v1772147018/TCCD_logo_ucw7ki.svg" alt="TCCD Logo" className="md:block hidden h-9 md:mr-6 mr-3" />
       </div>
-      <Suspense fallback={<div className="loading-state">Loading media viewer...</div>}>
+      <Suspense fallback={null}>
         <FullscreenMediaViewer items={mapEventMediaList(galleryData?.eventMedia as EventMedia[] || [])} />
       </Suspense>
     </div>
