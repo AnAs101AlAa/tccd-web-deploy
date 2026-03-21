@@ -26,6 +26,7 @@ import { getErrorMessage } from "@/shared/utils/errorHandler";
 import { useEventRegistration } from "../hooks";
 import EVENT_TYPES from "@/constants/EventTypes";
 import format from "@/shared/utils/dateFormater";
+import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 
 /**
  * Creates a Zod schema for the registration form.
@@ -244,9 +245,7 @@ export default function EventRegisterForm() {
 
             {/* Event Description */}
             <div className="p-6">
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {event.description}
-              </p>
+              <HTMLFormattedText content={event.description} />
             </div>
           </div>
 
