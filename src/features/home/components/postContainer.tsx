@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FiArrowLeft } from "react-icons/fi";
 import ImageModal from "./ImageModal";
 import type { CommunityPost } from "@/shared/types";
 import { MdCalendarMonth } from "react-icons/md";
@@ -17,36 +18,33 @@ const PostContainer: React.FC<PostContainerProps> = ({ post }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const navigate = useNavigate();
-  const [clickedMark, setClickedMark] = useState(false);
-  const markRef = useRef<HTMLDivElement>(null);
 
   const toggleImageModal = () => {
     setIsImageModalOpen(!isImageModalOpen);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (markRef.current && !markRef.current.contains(event.target as Node)) {
-        setClickedMark(false);
-      }
-    };
+  const handleNextImage = () => {
+    setCurrentIndex((prevIndex) => (prevIndex < media.length - 1 ? prevIndex + 1 : 0));
+  };
 
-    if (clickedMark) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [clickedMark]);
+  const handlePrevImage = () => {
+    setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : media.length - 1));
+  };
 
   return (
     <div className="w-full min-h-screen relative">
-      <div className="flex flex-col items-center w-full mx-auto px-3">
-        <div className="relative lg:w-[50%] md:w-[69%] w-[98%] mb-20">
-          <div className="flex flex-col gap-1 mt-4 rounded-2xl shadow-2xl bg-white p-4 border-gray-300 border-2 fade-in-up relative pb-8 z-10">
+      <div className="flex flex-col items-center mx-auto px-3">
+        <div className="relative mb-20 lg:w-[50%] md:w-[69%] w-[98%]">
+          <div className="flex mt-4">
+            <button
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2 py-2 text-secondary cursor-pointer hover:text-secondary/80 rounded-lg transition-colors duration-200 font-semibold"
+            >
+              <FiArrowLeft className="size-5" />
+              Back to Home
+            </button>
+          </div>
+          <div className="flex flex-col gap-1 rounded-2xl shadow-2xl bg-white p-4 border-gray-300 border-2 fade-in-up relative pb-8 z-10">
             <div className="flex gap-2 relative w-full pb-2 border-b-2 border-gray-300">
               <div className="w-1.5 bg-primary" />
               <h2 className="text-[23px] md:text-[25px] lg:text-[27px] font-semibold text-[#295E7E]">
@@ -66,12 +64,13 @@ const PostContainer: React.FC<PostContainerProps> = ({ post }) => {
             </div>
 
             {media.length > 0 && (
-              <div className="relative mt-2 md:mt-4 overflow-hidden rounded-lg shadow-lg transition-all duration-300 group" onClick={toggleImageModal}>
+              <div className="relative mt-2 md:mt-4 flex justify-center overflow-hidden rounded-lg transition-all duration-300 group" onClick={toggleImageModal}>
                 <LazyImageLoader
                   src={media[currentIndex].mediaUrl}
                   alt={name}
-                  height="60vh"
-                  objectClassName="object-top"
+                  height="auto"
+                  width="100%"
+                  objectClassName="object-contain max-h-[400px] md:max-h-[500px] lg:max-h-[600px] max-w-full"
                 />
               </div>
             )}
@@ -92,31 +91,18 @@ const PostContainer: React.FC<PostContainerProps> = ({ post }) => {
               />
             </p>
           </div>
-          <div
-            ref={markRef}
-            className={`absolute left-1/2 -translate-x-1/2 -bottom-8 w-8 h-35.75 p-1 fade-in-up bg-primary ${clickedMark ? "translate-y-[106px]" : "translate-y-12"} transition-transform duration-300 ease-in-out cursor-pointer flex items-center justify-center z-0`}
-          style={{
-            clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%)",
-          }}
-          onClick={() => {
-            if (clickedMark) navigate("/");
-            else setClickedMark(true);
-          }}
-        >
-          <p
-            className="text-white font-bold mb-10 text-[11px] md:text-[12px] lg:text-[13px] rotate-90 whitespace-nowrap"
-            style={{
-              writingMode: "vertical-rl",
-              transform: "rotate(90deg)",
-            }}
-          >
-            Back to home
-          </p>
-        </div>
         </div>
       </div>
       {isImageModalOpen && (
-        <ImageModal onClick={toggleImageModal} name={name} image={media[currentIndex].mediaUrl} />
+        <ImageModal
+          onClick={toggleImageModal}
+          name={name}
+          image={media[currentIndex].mediaUrl}
+          onNext={handleNextImage}
+          onPrev={handlePrevImage}
+          canGoNext={media.length > 1}
+          canGoPrev={media.length > 1}
+        />
       )}
     </div>
   );

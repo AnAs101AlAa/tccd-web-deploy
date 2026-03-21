@@ -14,6 +14,7 @@ import {
   selectUserLoading,
   selectUserError,
   selectIsStudent,
+  selectHasCommitteeAffiliation,
   selectIsBusinessRep,
   selectIsAdmin,
   selectIsTA,
@@ -91,6 +92,10 @@ export const useUserError = () => {
  */
 export const useIsStudent = () => {
   return useAppSelector(selectIsStudent);
+};
+
+export const useIsVolunteer = () => {
+  return useAppSelector(selectHasCommitteeAffiliation);
 };
 
 /**

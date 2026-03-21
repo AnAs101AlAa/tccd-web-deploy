@@ -48,6 +48,7 @@ export class PostsApi {
           media: item.medias || [],
           priority: item.priority,
           isApproved: item.isApproved,
+          isPosted: item.isPosted,
           createdAt: item.createdAt,
         })),
         pageIndex,
@@ -76,6 +77,7 @@ export class PostsApi {
         media: item.medias || [],
         priority: item.priority,
         isApproved: item.isApproved,
+        isPosted: item.isPosted,
         createdAt: item.createdAt,
       };
     }
@@ -99,6 +101,7 @@ export class PostsApi {
         media: item.media || [],
         priority: item.priority,
         isApproved: item.isApproved,
+        isPosted: item.isPosted,
         createdAt: item.createdAt,
       };
     }
@@ -133,11 +136,30 @@ export class PostsApi {
         priority: item.priority,
         isApproved: item.isApproved,
         createdAt: item.createdAt,
+        isPosted: item.isPosted,
       };
     }
     throw new Error("Failed to approve post");
   }
    
+  async publishPost(id: string, isPosted: boolean): Promise<CommunityPost> {
+    const response = await systemApi.patch(`${POSTS_ROUTE}/${id}/is-posted`, { isPosted });
+    if (response.data.success && response.data.data) {
+      const item = response.data.data;
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        media: item.medias || [],
+        priority: item.priority,
+        isApproved: item.isApproved,
+        createdAt: item.createdAt,
+        isPosted: item.isPosted,
+      };
+    }
+    throw new Error("Failed to publish post");
+  }
+
   async deletePost(id: string): Promise<void> {
     await systemApi.delete(`${POSTS_ROUTE}/${id}`);
   }

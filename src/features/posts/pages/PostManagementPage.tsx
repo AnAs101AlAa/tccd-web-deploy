@@ -8,15 +8,18 @@ import { useGetAllPosts } from "@/shared/queries/posts";
 import { LoadingPage, Button, ErrorScreen } from "tccd-ui";
 // Post modals are only opened on user action — defer their bundles
 const PostDeleteModal = lazy(() => import("../components/components/PostDeleteModal"));
+const PostApproveModal = lazy(() => import("../components/components/PostApproveModal"));
 const ManagePostModal = lazy(() => import("../components/components/ManagePostModal"));
-const PostApprovalModal = lazy(() => import("../components/components/PostApprovalModal"));
+const PostPublishModal = lazy(() => import("../components/components/PostPublishModal"));
 import { POST_SORT_OPTIONS } from "../constants/postConstans";
 
 export const PostManagementPage = () => {
   const [selectedPost, setSelectedPost] = useState<CommunityPost | null>(null);
   const [createPost, setCreatePost] = useState<boolean>(false);
   const [deletedPost, setDeletedPost] = useState<string | null>(null);
+  const [publishingPost, setPublishingPost] = useState<CommunityPost | null>(null);
   const [approvingPost, setApprovingPost] = useState<CommunityPost | null>(null);
+
   const [highlightedPostId, setHighlightedPostId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(() =>
@@ -57,8 +60,6 @@ export const PostManagementPage = () => {
 
   const posts = data?.posts || [];
   const totalPages = data?.totalPages || 0;
-  const publicPostsCount = posts.filter((post: CommunityPost) => post.isApproved).length;
-  const privatePostsCount = posts.length - publicPostsCount;
 
   useEffect(() => {
     if (!isLoading && (data || isError)) {
@@ -114,7 +115,15 @@ export const PostManagementPage = () => {
         />
       </Suspense>
       <Suspense fallback={null}>
-        <PostApprovalModal
+        <PostPublishModal
+          isOpen={publishingPost !== null}
+          onClose={() => setPublishingPost(null)}
+          postId={publishingPost?.id || null}
+          currentPublishStatus={publishingPost?.isPosted || false}
+        />
+      </Suspense>
+      <Suspense fallback={null}>
+        <PostApproveModal
           isOpen={approvingPost !== null}
           onClose={() => setApprovingPost(null)}
           postId={approvingPost?.id || null}
@@ -159,29 +168,6 @@ export const PostManagementPage = () => {
             ref={postsSectionRef}
             className="relative overflow-hidden rounded-xl border border-contrast/10 bg-linear-to-b from-background/85 to-background/65 p-4 sm:p-5 lg:p-6 shadow-sm"
           >
-            <div className="pointer-events-none absolute -top-20 -right-12 h-48 w-48 rounded-full bg-primary/8 blur-2xl" />
-
-            <div className="grid grid-cols-3 gap-2.5 mb-4">
-              <div className="rounded-lg border border-contrast/10 bg-white/70 px-3 py-2">
-                <p className="text-[11px] uppercase tracking-wide text-inactive-tab-text font-semibold">
-                  Total
-                </p>
-                <p className="text-[18px] md:text-[20px] font-bold text-secondary">{posts.length}</p>
-              </div>
-              <div className="rounded-lg border border-primary/25 bg-primary/10 px-3 py-2">
-                <p className="text-[11px] uppercase tracking-wide text-inactive-tab-text font-semibold">
-                  Public
-                </p>
-                <p className="text-[18px] md:text-[20px] font-bold text-secondary">{publicPostsCount}</p>
-              </div>
-              <div className="rounded-lg border border-contrast/20 bg-background/85 px-3 py-2">
-                <p className="text-[11px] uppercase tracking-wide text-inactive-tab-text font-semibold">
-                  Private
-                </p>
-                <p className="text-[18px] md:text-[20px] font-bold text-secondary">{privatePostsCount}</p>
-              </div>
-            </div>
-
             <div className="mb-4 md:mb-6">
               <PostSearchFilter
                 searchKey={activeFilters.name || ""}
@@ -211,8 +197,8 @@ export const PostManagementPage = () => {
               </div>
             ) : (
               <>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-                  <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 ">
+                  <div className="flex flex-wrap items-center gap-2 md:mb-0 mb-2">
                     <button
                       type="button"
                       onClick={() => setIsCompactView((prev) => !prev)}
@@ -232,11 +218,15 @@ export const PostManagementPage = () => {
                 </div>
                 <div className={`${isCompactView ? "gap-3 md:gap-4" : "gap-4 md:gap-5"} grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3`}>
                   {posts.map((post: CommunityPost) => (
-                    <div key={post.id} className="w-full py-4">
+                    <div key={post.id} className="w-full md:py-4">
                       <PostCard
                         post={post}
                         compact={isCompactView}
                         isSelected={highlightedPostId === post.id}
+                        setApproving={(selected) => {
+                          setApprovingPost(selected);
+                          setHighlightedPostId(selected.id);
+                        }}
                         onSelect={() => setHighlightedPostId(post.id)}
                         setEditing={(selected) => {
                           setSelectedPost(selected);
@@ -246,8 +236,8 @@ export const PostManagementPage = () => {
                           setDeletedPost(post.id);
                           setHighlightedPostId(post.id);
                         }}
-                        setApproving={(selected) => {
-                          setApprovingPost(selected);
+                        setPublishing={(selected) => {
+                          setPublishingPost(selected);
                           setHighlightedPostId(selected.id);
                         }}
                       />

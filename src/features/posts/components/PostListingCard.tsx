@@ -2,8 +2,8 @@ import type { CommunityPost } from "@/shared/types/postTypes";
 import { Button, LazyImageLoader } from "tccd-ui";
 import format from "@/shared/utils/dateFormater";
 import { FaImage } from "react-icons/fa";
-import extractDriveId from "@/shared/utils/googleDriveHelper";
 import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
+import { useIsAdmin } from "@/shared/store";
 
 export interface PostCardProps {
   post: CommunityPost;
@@ -12,6 +12,7 @@ export interface PostCardProps {
   onSelect?: () => void;
   setEditing: (post: CommunityPost) => void;
   setDeleting: (postId: string) => void;
+  setPublishing: (post: CommunityPost) => void;
   setApproving: (post: CommunityPost) => void;
 }
 
@@ -22,15 +23,16 @@ export default function PostCard({
   onSelect,
   setEditing,
   setDeleting,
+  setPublishing,
   setApproving,
 }: PostCardProps) {
-  const imageUrl = post.media && post.media.length > 0 && post.media[0]
-    ? extractDriveId(post.media[0].mediaUrl)
-    : null;
 
+  const isAdmin = useIsAdmin();
+
+  console.log("Rendering PostCard for post:", post.media[0]?.mediaUrl);
   return (
     <div
-      className="group relative w-full max-w-xl mx-auto h-full py-1"
+      className="group relative w-full mx-auto h-full py-1"
       onClick={onSelect}
     >
       <div
@@ -50,20 +52,23 @@ export default function PostCard({
       <div className="absolute top-2 right-2 z-10">
         <span
           className={`inline-flex items-center px-2 py-1 text-[10px] font-semibold uppercase tracking-normal rounded-md transition-all ${
-            post.isApproved
+            post.isApproved ?
+            post.isPosted
               ? "bg-green-100 text-green-600 border border-green-500"
               : "bg-red-100 text-red-600 border border-red-500"
+              : "bg-blue-100 text-blue-600 border border-blue-400"
           }`}
         >
-          {post.isApproved ? "Public" : "Private"}
+          {post.isApproved ? post.isPosted ? "Public" : "Private" : "Pending"}
         </span>
       </div>
-      {imageUrl ? (
+      {post.media && post.media.length > 0 && post.media[0] ? (
         <LazyImageLoader
-          src={imageUrl}
+          src={post.media[0].mediaUrl}
           alt={post.name}
           className="rounded-t-lg"
-          height={compact ? "185px" : "225px"}
+          objectClassName="object-top"
+          height={compact ? "185px" : "300px"}
         />
       ) : (
         <div className={`${compact ? "h-48 sm:h-52" : "h-60 sm:h-62.5"} flex flex-col items-center justify-center bg-linear-to-br from-background to-background/70 rounded-t-lg border-b border-dashed border-contrast/20`}>
@@ -71,7 +76,7 @@ export default function PostCard({
           <p className="text-inactive-tab-text text-xs sm:text-sm font-medium">No Image</p>
         </div>
       )}
-      <div className={`${compact ? "p-3 gap-3" : "p-3 sm:p-4 gap-3.5"} flex flex-col grow justify-between`}>
+      <div className={`${compact ? "p-3 gap-3" : "p-3 sm:p-4 gap-3.5"} flex flex-col grow justify-between h-fit`}>
         <div className={compact ? "space-y-2" : "space-y-2.5"}>
           <h3 className={`${compact ? "text-[15px] md:text-[16px] lg:text-[17px]" : "text-[16px] md:text-[18px] lg:text-[19px]"} font-semibold leading-snug text-primary line-clamp-2`}>
             {post.name}
@@ -86,15 +91,29 @@ export default function PostCard({
           </p>
         </div>
         <div className={`border-t border-contrast/10 ${compact ? "pt-2.5" : "pt-3"}`}>
-        <div className={`grid grid-cols-2 sm:grid-cols-3 ${compact ? "gap-1.5" : "gap-2"} pt-1`}>
-          <div className={compact ? "col-span-2 sm:col-span-1" : ""}>
-            <Button
-              type={post.isApproved ? "basic" : "primary"}
-              onClick={() => setApproving(post)}
-              buttonText={post.isApproved ? "Private" : "Publish"}
-              width="full"
-            />
-          </div>
+        <div className={`grid grid-cols-2 sm:grid-cols-4 ${compact ? "gap-1.5" : "gap-2"} pt-1`}>
+          {isAdmin && (
+            <>
+              <div className={compact ? "col-span-2 sm:col-span-1" : ""}>
+                <Button
+                  type={post.isPosted ? "basic" : "primary"}
+                  onClick={() => setPublishing(post)}
+                  buttonText={post.isPosted ? "Private" : "Publish"}
+                  width="full"
+                />
+              </div>
+              <div className={compact ? "col-span-2 sm:col-span-1" : ""}>
+                <Button
+                  type={post.isApproved ? "basic" : "primary"}
+                  onClick={() => setApproving(post)}
+                  buttonText={post.isApproved ? "Unapprove" : "Approve"}
+                  width="full"
+                  className="mt-1"
+                />
+              </div>
+            </>
+            )
+          }
           <div className={compact ? "col-span-1" : ""}>
             <Button
               type="secondary"
@@ -103,7 +122,7 @@ export default function PostCard({
               width="full"
             />
           </div>
-          <div className={compact ? "col-span-1" : "col-span-2 sm:col-span-1"}>
+          <div className={compact ? "col-span-1" : ""}>
             <Button
               type="danger"
               onClick={() => setDeleting(post.id)}

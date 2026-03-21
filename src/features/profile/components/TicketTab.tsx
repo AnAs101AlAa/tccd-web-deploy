@@ -84,7 +84,7 @@ export default function TicketTab() {
     }));
   }
   return (
-    <div className="mb-7 sm:mb-0 p-1 sm:p-6">
+    <div className="mb-7 sm:mb-0 p-1 sm:p-6 h-full">
       <h2 className="text-lg sm:text-xl font-semibold text-contrast">
         Tickets
       </h2>
@@ -124,24 +124,26 @@ export default function TicketTab() {
           </div>
         </div>
       )}
-      {tickets && (
-        <>
-          <GenericGrid
-            items={tickets.items}
-            emptyMessage="You haven't registered for any events yet. Explore our events and book your spot!"
-            renderCard={(ticket: Ticket) => <TicketCard ticket={ticket} />}
-            gridCols="grid-cols-1 md:grid-cols-2"
-            getKey={(ticket: Ticket) => ticket.eventSlotId}
-            gap="gap-4"
-          />
+      <div className="max-w-[96%] mx-auto">
+        {tickets && (
+          <>
+            <GenericGrid
+              items={tickets.items}
+              emptyMessage="You haven't registered for any events yet. Explore our events and book your spot!"
+              renderCard={(ticket: Ticket) => <TicketCard ticket={ticket} />}
+              gridCols="grid-cols-1 md:grid-cols-2"
+              getKey={(ticket: Ticket) => ticket.eventSlotId}
+              gap="gap-4"
+            />
 
-          <Pagination
-            currentPage={apiParams.page ?? 1}
-            totalPages={tickets.totalPages}
-            onPageChange={changePage}
-          />
-        </>
-      )}
+            <Pagination
+              currentPage={apiParams.page ?? 1}
+              totalPages={tickets.totalPages}
+              onPageChange={changePage}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 }

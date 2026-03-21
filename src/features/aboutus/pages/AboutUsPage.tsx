@@ -117,7 +117,7 @@ export const AboutUsPage = () => {
       <div className="relative font-sans bg-gray-50">
         <UpperHeader
           image={ABOUT_US_HEADER_IMAGE}
-          title="About Us"
+          title="About us"
           subtitle="Catch a brief hint of TCCD, Our vision, mission, and goals, why we do what we do and our teams."
         />
 

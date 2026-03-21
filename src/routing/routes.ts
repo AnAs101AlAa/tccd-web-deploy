@@ -76,14 +76,14 @@ export const routes: Route[] = [
     path: "/profile",
     Component: ProfilePage,
     protected: true,
-    roles: ["student"],
+    roles: ["student", "Volunteeringmember"],
   },
   { path: "/gallery/view/:id", Component: GalleryDisplayPage, protected: true, roles: ["all"] },
   {
     path: "/tickets/:id",
     Component: EventTicketPage,
     protected: true,
-    roles: ["student"],
+    roles: ["student", "Volunteeringmember"],
   },
   {
     path: "/scan-qr",
@@ -103,7 +103,7 @@ export const routes: Route[] = [
     path: "/admin/locations",
     Component: LocationsManagementPage,
     protected: true,
-    roles: ["Admin"],
+    roles: ["Admin", "board"],
   },
   {
     path: "/events/register/:id",
@@ -115,29 +115,29 @@ export const routes: Route[] = [
     path: "/admin/events",
     Component: AdminEventsListPage,
     protected: true,
-    roles: ["Admin"],
+    roles: ["Admin", "board"],
   },
   {
     path: "/admin/statistics",
     Component: StatisticsPage,
     protected: true,
-    roles: ["Admin"],
+    roles: ["Admin", "board"],
   },
   {
     path: "/admin/companies",
     Component: CompaniesPage,
     protected: true,
-    roles: ["Admin"],
+    roles: ["Admin", "board"],
   },
   { path: "/admin/users",
     Component: UsersAdminPage,
     protected: true,
-    roles: ["Admin"] 
+    roles: ["Admin", "board"] 
   },
   {
     path: "/admin/registrations",
     Component: RegistrationsPage,
     protected: true,
-    roles: ["Admin"],
+    roles: ["Admin", "board"],
   },
 ];

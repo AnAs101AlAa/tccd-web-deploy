@@ -20,7 +20,7 @@ const BlogSection = () => {
   const totalPages = data?.totalPages || 0;
 
   return (
-    <section className="py-10 md:py-16 transition-transform duration-700 ease-out">
+    <section className="py-10 pb-8 md:py-16 transition-transform duration-700 ease-out">
       <div
         ref={sectionRef}
         className={`container px-4 md:px-6 mx-auto ${
@@ -62,10 +62,14 @@ const BlogSection = () => {
           </div>
         ) : latestPosts.length > 0 ? (
           <>
-            <div
-              className="grid md:grid-cols-2 2xl:grid-cols-3 gap-5 overflow-x-hidden pb-4"
-              ref={gridRef}
-            >
+            <div className="flex justify-center w-full">
+              <div
+                className="inline-grid grid-cols-1 gap-5 pb-4"
+                style={{
+                  gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))"
+                }}
+                ref={gridRef}
+              >
               {latestPosts.map((post: CommunityPost, index: number) => (
                 <div
                   key={post.id}
@@ -75,8 +79,9 @@ const BlogSection = () => {
                 </div>
               ))}
             </div>
+            </div>
 
-            <div className="flex justify-center mt-5 md:mt-8">
+            <div className="flex justify-center mt-0 md:mt-6">
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

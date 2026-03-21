@@ -16,7 +16,9 @@ export default function RegistrationConfirmationModal({
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Important Notice">
-            <p className="text-contrast mb-4 mt-2 text-center">Are you sure you want to register for this time slot? you will <strong>NOT be permitted</strong> entry on any different slots during the event.</p>
+            <p className="text-contrast mb-4 mt-2 text-center text-[14px] md:text-[15px] lg:text-[16px]">
+                Are you sure you want to register for this time slot? you will <strong>NOT be permitted</strong> entry on any different slots during the event.
+            </p>
             <InputField
                 labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
                 id="confirm-registration"
