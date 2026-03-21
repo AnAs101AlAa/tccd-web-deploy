@@ -1,18 +1,36 @@
 import { useEffect } from "react";
-import { FiX } from "react-icons/fi";
+import { FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { LazyImageLoader } from "tccd-ui";
 
 interface ImageModalProps {
   onClick: () => void;
   name: string;
   image: string;
+  onNext?: () => void;
+  onPrev?: () => void;
+  canGoNext?: boolean;
+  canGoPrev?: boolean;
 }
 
-const ImageModal: React.FC<ImageModalProps> = ({ onClick, name, image }) => {
+const ImageModal: React.FC<ImageModalProps> = ({
+  onClick,
+  name,
+  image,
+  onNext,
+  onPrev,
+  canGoNext = false,
+  canGoPrev = false,
+}) => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClick();
+      }
+      if (e.key === "ArrowRight" && onNext && canGoNext) {
+        onNext();
+      }
+      if (e.key === "ArrowLeft" && onPrev && canGoPrev) {
+        onPrev();
       }
     };
     
@@ -23,7 +41,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ onClick, name, image }) => {
       window.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "unset";
     };
-  }, [onClick]);
+  }, [onClick, onNext, onPrev, canGoNext, canGoPrev]);
 
   return (
     <div>
@@ -33,7 +51,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ onClick, name, image }) => {
       >
         {/* Modal Container */}
         <div
-          className="relative w-full max-w-7xl max-h-[95vh] sm:max-h-[90vh] flex flex-col bg-gradient-to-br from-white/10 to-white/5 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden transform scale-100 animate-zoom-in backdrop-blur-md border border-white/10"
+          className="relative w-fit max-w-7xl max-h-[95vh] sm:max-h-[90vh] flex flex-col bg-linear-to-br from-white/10 to-white/5 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden transform scale-100 animate-zoom-in backdrop-blur-md border border-white/10"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close Button */}
@@ -48,6 +66,21 @@ const ImageModal: React.FC<ImageModalProps> = ({ onClick, name, image }) => {
           {/* Image Container */}
           <div className="flex items-center justify-center w-full h-full p-1 sm:p-2">
             <div className="relative w-full h-full max-h-[85vh] flex items-center justify-center">
+              {/* Previous Button */}
+              {(onPrev || canGoPrev) && (
+                <button
+                  className="absolute left-2 sm:left-4 z-20 bg-black/50 hover:bg-black/70 disabled:bg-black/20 disabled:cursor-not-allowed text-white rounded-full p-2 flex items-center justify-center transition-all backdrop-blur-md shadow-lg hover:scale-110 active:scale-95 disabled:opacity-50"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPrev?.();
+                  }}
+                  disabled={!canGoPrev}
+                  aria-label="Previous image"
+                >
+                  <FiChevronLeft className="size-5 md:size-6" />
+                </button>
+              )}
+
               <LazyImageLoader
                 src={image}
                 alt={name}
@@ -56,6 +89,21 @@ const ImageModal: React.FC<ImageModalProps> = ({ onClick, name, image }) => {
                 width="100%"
                 className="rounded-lg"
               />
+
+              {/* Next Button */}
+              {(onNext || canGoNext) && (
+                <button
+                  className="absolute right-2 sm:right-4 z-20 bg-black/50 hover:bg-black/70 disabled:bg-black/20 disabled:cursor-not-allowed text-white rounded-full p-2 flex items-center justify-center transition-all backdrop-blur-md shadow-lg hover:scale-110 active:scale-95 disabled:opacity-50"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onNext?.();
+                  }}
+                  disabled={!canGoNext}
+                  aria-label="Next image"
+                >
+                  <FiChevronRight className="size-5 md:size-6" />
+                </button>
+              )}
             </div>
           </div>
 

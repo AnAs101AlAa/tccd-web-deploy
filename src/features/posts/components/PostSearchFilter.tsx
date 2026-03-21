@@ -42,7 +42,7 @@ export const PostSearchFilter = ({
 
     return (
         <div className="w-full bg-white p-3.5 sm:p-4 rounded-lg border border-contrast/10 shadow-sm" role="search">
-            <div className="flex items-center justify-between gap-2 mb-2">
+            <div className={`flex items-center justify-between ${hasSearch ? 'gap-2 mb-2' : 'gap-0'}`}>
                 {hasSearch && (
                     <span className="inline-flex items-center rounded-md border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-secondary">
                         Active filter

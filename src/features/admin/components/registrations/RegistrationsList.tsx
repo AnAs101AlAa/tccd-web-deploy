@@ -13,7 +13,6 @@ interface RegistrationsListProps {
 export default function RegistrationsList({
   registrations,
 }: RegistrationsListProps) {
-  console.log("RegistrationsList rendered with registrations:", registrations);
   const columns = [
     {
       label: "Student Name",

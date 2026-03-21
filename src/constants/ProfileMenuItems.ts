@@ -18,7 +18,7 @@ export const getProfileMenuItems = (
 ): ProfileMenuItem[] => {
   if (!user) return [];
   const menuItems: ProfileMenuItem[] = [];
-  if(isStudent(user)) {
+  if(isStudent(user) || isVolunteer(user)) {
     menuItems.push({
       icon: FaRegUser,
       title: "Profile",

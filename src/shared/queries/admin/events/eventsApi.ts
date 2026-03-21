@@ -23,7 +23,6 @@ export class EventsApi {
       type: data.type,
       capacity: data.capacity,
       locations: data.locations,
-      registrationDeadline: "2026-03-30T21:56:19.988Z"
     };
     
     await systemApi.put(

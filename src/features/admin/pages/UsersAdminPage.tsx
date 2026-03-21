@@ -58,12 +58,10 @@ export default function UsersAdminPage() {
 
   if (volunteeringMemberError && studentError) {
     return (
-      <WithLayout>
-        <ErrorScreen
-          title="Failed to load Users"
-          message={volunteeringMemberError?.message || studentError?.message}
-        />
-      </WithLayout>
+      <ErrorScreen
+        title="Failed to load Users"
+        message={volunteeringMemberError?.message || studentError?.message}
+      />
     );
   }
 
