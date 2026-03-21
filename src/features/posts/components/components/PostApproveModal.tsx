@@ -9,7 +9,7 @@ interface PostApprovalModalProps {
   currentApprovalStatus: boolean;
 }
 
-export default function PostApprovalModal({
+export default function PostPublishModal({
   isOpen,
   onClose,
   postId,
@@ -17,15 +17,15 @@ export default function PostApprovalModal({
 }: PostApprovalModalProps) {
   const { mutate: approvePost, isPending } = useApprovePost();
 
-  const newApprovalStatus = !currentApprovalStatus;
-  const action = newApprovalStatus ? 'publish' : 'private';
-  const actionCapitalized = newApprovalStatus ? 'Publish' : 'Private';
+  const newPublishStatus = !currentApprovalStatus;
+  const action = newPublishStatus ? 'approve' : 'unapprove';
+  const actionCapitalized = newPublishStatus ? 'Approve' : 'Unapprove';
 
   const handleApprove = () => {
     if (!postId) return;
 
     approvePost(
-      { postId, isApproved: newApprovalStatus },
+      { postId, isApproved: newPublishStatus },
       {
         onSuccess: () => {
           toast.success(`Post ${action}d successfully!`);
@@ -44,7 +44,7 @@ export default function PostApprovalModal({
       onClose={onClose}
       title={`${actionCapitalized} Post`}
       message={`Are you sure you want to ${action} this post?${
-        newApprovalStatus
+        newPublishStatus
           ? ' This will make the post visible to all users.'
           : ' This will hide the post from public view.'
       }`}

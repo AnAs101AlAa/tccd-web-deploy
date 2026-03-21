@@ -14,6 +14,7 @@ export default function ManagePostModal({
     media: [],
     priority: 0,
     isApproved: false,
+    isPosted: false,
     createdAt: new Date().toISOString(),
   },
   isOpen,

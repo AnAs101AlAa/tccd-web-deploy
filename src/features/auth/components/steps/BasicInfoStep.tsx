@@ -61,7 +61,7 @@ export const BasicInfoStep = ({ control }: BasicInfoStepProps) => {
         type="tel"
         placeholder="+201012345678"
         autoComplete="tel"
-        helperText="Enter any valid international phone number (with optional + country code)"
+        helperText="Enter any valid international phone number with country code"
       />
 
       <FormInput

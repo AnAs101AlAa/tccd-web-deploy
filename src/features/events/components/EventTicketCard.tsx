@@ -17,6 +17,7 @@ import {
   FaClipboardList,
 } from "react-icons/fa";
 import format from "@/shared/utils/dateFormater";
+import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 
 interface EventTicketCardProps {
   registration: Registration;
@@ -96,7 +97,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
           {/* Description */}
           {event.description && (
             <p className="text-sm sm:text-base text-contrast mb-6 leading-relaxed">
-              {event.description}
+              <HTMLFormattedText content={event.description} />
             </p>
           )}
 

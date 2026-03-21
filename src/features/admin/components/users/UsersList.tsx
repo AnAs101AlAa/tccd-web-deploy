@@ -7,6 +7,7 @@ import {
   useBanUser,
   useUnbanUser,
 } from "@/shared/queries/admin/users/userQueries";
+import { useDeleteVolunteer } from "@/shared/queries/admin/volunteers/volunteerQueries";
 import Table from "@/shared/components/adminTables/Table";
 import toast from "react-hot-toast";
 import { Button } from "tccd-ui";
@@ -16,6 +17,7 @@ import {
   MdCheckCircle,
   MdCancel,
   MdEdit,
+  MdDeleteOutline,
 } from "react-icons/md";
 
 interface UsersViewProps {
@@ -28,7 +30,7 @@ const UsersView = ({ users, onAddVolunteer, onEditVolunteer }: UsersViewProps) =
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [pendingAction, setPendingAction] = useState<
-    "ban" | "unban" | "approve" | "reject"
+    "ban" | "unban" | "approve" | "reject" | "kickoff"
   >("ban");
 
   // Hooks called at top level — use .mutateAsync(userId) in handlers
@@ -36,6 +38,7 @@ const UsersView = ({ users, onAddVolunteer, onEditVolunteer }: UsersViewProps) =
   const rejectUser = useRejectUser();
   const banUser = useBanUser();
   const unbanUser = useUnbanUser();
+  const deleteVolunteer = useDeleteVolunteer();
 
   const handleApproveUser = async (user: User) => {
     setIsSubmitting(true);
@@ -81,6 +84,18 @@ const UsersView = ({ users, onAddVolunteer, onEditVolunteer }: UsersViewProps) =
         loading: `Unbanning ${user.englishName || user.arabicName || "user"}...`,
         success: "User unbanned successfully",
         error: (error) => `Failed to unban user: ${error.message}`,
+      })
+      .finally(() => setIsSubmitting(false));
+  };
+
+  const handleKickOffVolunteer = async (user: User) => {
+    setIsSubmitting(true);
+    setSelectedUserId(user.id);
+    await toast
+      .promise(deleteVolunteer.mutateAsync(user.id), {
+        loading: `Removing ${user.englishName || user.arabicName || "user"} from volunteer...`,
+        success: "Volunteer access removed successfully",
+        error: (error) => `Failed to remove volunteer access: ${error.message}`,
       })
       .finally(() => setIsSubmitting(false));
   };
@@ -331,12 +346,28 @@ const UsersView = ({ users, onAddVolunteer, onEditVolunteer }: UsersViewProps) =
         )}
         {/* Edit Role: shown for volunteering members */}
         {onEditVolunteer && !onAddVolunteer && (
-          <Button
-            buttonText="Edit Role"
-            buttonIcon={<MdEdit />}
-            onClick={() => onEditVolunteer(user)}
-            type="secondary"
-          />
+          <>
+            <Button
+              buttonText="Edit Role"
+              buttonIcon={<MdEdit />}
+              onClick={() => onEditVolunteer(user)}
+              type="secondary"
+            />
+            <Button
+              buttonText="Kick Off"
+              buttonIcon={<MdDeleteOutline />}
+              loading={
+                isSubmitting &&
+                user.id === selectedUserId &&
+                pendingAction === "kickoff"
+              }
+              onClick={() => {
+                setPendingAction("kickoff");
+                triggerAction(user.id);
+              }}
+              type="danger"
+            />
+          </>
         )}
       </>
     );
@@ -370,6 +401,12 @@ const UsersView = ({ users, onAddVolunteer, onEditVolunteer }: UsersViewProps) =
           subtitle: "Are you sure you want to unban this user?",
           confirmText: "Unban",
         };
+      case "kickoff":
+        return {
+          title: "Confirm Kick Off",
+          subtitle: "Are you sure you want to remove this user's volunteer access?",
+          confirmText: "Kick Off",
+        };
     }
   };
 
@@ -386,6 +423,9 @@ const UsersView = ({ users, onAddVolunteer, onEditVolunteer }: UsersViewProps) =
         break;
       case "unban":
         await handleUnbanUser(user);
+        break;
+      case "kickoff":
+        await handleKickOffVolunteer(user);
         break;
     }
   };

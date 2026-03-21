@@ -6,7 +6,7 @@ export type EntityRole =
   | "DR"
   | "BusinessRep"
   | "Admin"
-  | "Volunteer"
+  | "VolunteeringMember"
   | "company";
 
 export type UserStatus = "Pending" | "Approved" | "Rejected" | "Banned";
@@ -108,6 +108,6 @@ export const isTA = (u: AnyUser): u is FacultyMemberUser => u.role === "TA";
 export const isDR = (u: AnyUser): u is FacultyMemberUser => u.role === "DR";
 export const isAdmin = (u: AnyUser): u is AdminUser => u.role === "Admin";
 export const isVolunteer = (u: AnyUser): u is VolunteeringUser =>
-  u.role === "Volunteer";
+  u.role === "VolunteeringMember";
 export const isCompany = (u: AnyUser | CompanyUser): u is CompanyUser =>
   u.role === "company";

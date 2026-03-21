@@ -10,5 +10,6 @@ export interface CommunityPost {
     media: PostMedia[];
     priority: number;
     isApproved: boolean;
+    isPosted: boolean;
     createdAt: string;
 }

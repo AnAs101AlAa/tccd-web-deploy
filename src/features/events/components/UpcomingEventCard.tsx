@@ -8,7 +8,7 @@ import { useCurrentUser } from "@/shared/store";
 import toast from "react-hot-toast";
 import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 import { motion } from "framer-motion";
-import { useIsStudent } from "@/shared/store";
+import { useIsStudent, useIsVolunteer } from "@/shared/store";
 
 interface UpcomingEventCardProps {
   event: Event;
@@ -28,6 +28,7 @@ const UpcomingEventCard: React.FC<UpcomingEventCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const currentUser = useCurrentUser();
   const isStudent = useIsStudent();
+  const isVolunteer = useIsVolunteer();
 
   useEffect(() => {
     const wholeEl = wholeInfoRef.current;
@@ -116,7 +117,7 @@ const UpcomingEventCard: React.FC<UpcomingEventCardProps> = ({
           </p>
 
           <div className="flex gap-1.5 md:gap-3 mt-4">
-            {isStudent && (
+            {(isStudent || isVolunteer) && (
               <Button
                 buttonText="Book Now"
                 type="primary"

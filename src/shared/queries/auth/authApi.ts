@@ -9,7 +9,6 @@ import type {
 import type {
   AnyUser,
   StudentUser,
-  VolunteeringUser,
   BusinessRepUser,
   FacultyMemberUser,
   AdminUser,
@@ -35,10 +34,10 @@ export class AuthApi {
       isDeleted: false,
     };
 
-    const roles = response.roles || [];
+    const role = response.role || [];
 
     // Map based on role and available profile data
-    if (roles.includes("Admin")) {
+    if (role === "Admin") {
       return {
         ...baseUser,
         role: "Admin" as const,
@@ -47,29 +46,8 @@ export class AuthApi {
     }
 
     // Handle Student role (even if profile is incomplete/null)
-    if (response.role === "Student" || roles.includes("Student")) {
+    if (role === "Student") {
       const student = response.studentProfile;
-
-      // If they have a volunteering profile
-      if (student?.volunteeringProfile) {
-        return {
-          ...baseUser,
-          role: "Volunteer" as const,
-          gpa: student.gpa || 0,
-          graduationYear: student.graduationYear || new Date().getFullYear(),
-          department: student.department || "",
-          faculty: student.faculty || "",
-          university: student.university || "",
-          cv: student.cv,
-          linkedin: student.linkedIn,
-          gitHub: student.gitHub,
-          volunteeringProfile: {
-          committeeAffiliation:
-            student.volunteeringProfile.committeeAffiliation,
-            position: student.volunteeringProfile.position
-          }
-        } as VolunteeringUser;
-      }
 
       // Regular student (with or without profile data)
       return {
@@ -77,7 +55,6 @@ export class AuthApi {
         role: "Student" as const,
         gpa: student?.gpa || 0,
         graduationYear: student?.graduationYear || new Date().getFullYear() + 4,
-        // graduationYear: student?.graduationYear || null,
         department: student?.department || "",
         faculty: student?.faculty || "",
         university: student?.university || "",
@@ -87,8 +64,26 @@ export class AuthApi {
       } as StudentUser;
     }
 
+    if(role === "VolunteeringMember") {
+      const student = response.studentProfile;
+      // If they have a volunteering profile
+      return {
+        ...baseUser,
+        role: "VolunteeringMember" as const,
+        gpa: student.gpa || 0,
+        graduationYear: student.graduationYear || new Date().getFullYear(),
+        department: student.department || "",
+        faculty: student.faculty || "",
+        university: student.university || "",
+        cv: student.cv,
+        linkedin: student.linkedIn,
+        gitHub: student.gitHub,
+        volunteeringProfile: response.volunteeringProfile
+      }
+    }
+
     // Handle BusinessRep role (even if profile is incomplete/null)
-    if (response.role === "BusinessRep" || roles.includes("BusinessRep")) {
+    if (role === "BusinessRep") {
       return {
         ...baseUser,
         role: "BusinessRep" as const,
@@ -99,14 +94,11 @@ export class AuthApi {
 
     // Handle Faculty roles (TA/DR) (even if profile is incomplete/null)
     if (
-      response.role === "TA" ||
-      response.role === "DR" ||
-      roles.includes("TA") ||
-      roles.includes("DR")
+      role === "TA" ||
+      role === "DR"
     ) {
       const faculty = response.facultyMemberProfile;
-      const facultyRole =
-        roles.includes("TA") || response.role === "TA" ? "TA" : "DR";
+      const facultyRole = response.role === "TA" ? "TA" : "DR";
 
       return {
         ...baseUser,
@@ -117,12 +109,7 @@ export class AuthApi {
       } as FacultyMemberUser;
     }
 
-    // Default to admin if no role matches
-    return {
-      ...baseUser,
-      role: "Admin" as const,
-      adminLevel: 1,
-    } as AdminUser;
+    throw new Error("Unknown user role or missing profile data");
   }
 
   async logout() {

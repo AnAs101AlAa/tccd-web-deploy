@@ -1,11 +1,12 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/shared/store/hooks";
-import { selectUserRole, selectIsAuthenticated } from "@/shared/store/selectors/userSelectors";
+import { selectUserRole, selectIsAuthenticated, selectCurrentUser } from "@/shared/store/selectors/userSelectors";
 import { useVerifyToken } from "@/shared/queries/auth";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { clearUser } from "@/shared/store";
+import { isVolunteer } from "@/shared/types/users";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -26,6 +27,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children, roles, redirectTo = "/login" }: ProtectedRouteProps) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const userRole = useAppSelector(selectUserRole);
+  const currentUser = useAppSelector(selectCurrentUser);
   const isAllRolesAllowed = roles && roles.includes("all");
 
   const navigate = useNavigate();
@@ -69,13 +71,22 @@ const ProtectedRoute = ({ children, roles, redirectTo = "/login" }: ProtectedRou
     return <Navigate to={redirectTo} replace />;
   }
 
-  if (roles && roles.length > 0 && userRole && !verifyTokenMutation.isPending) {
+  // Special logic for "board" role: check volunteer membership
+  if (roles?.includes("board") && userRole === "VolunteeringMember") {
+    // Check if user is a volunteer with committee affiliation (member)
+    if (currentUser && isVolunteer(currentUser) && currentUser.volunteeringProfile.position === "Member") {
+      toast.error("Members cannot access the board section");
+      return <Navigate to="/" replace />;
+    }
+    // Non-member volunteers are allowed, as well as non-volunteers
+  } else if (roles && roles.length > 0 && userRole && !verifyTokenMutation.isPending) {
     const hasRequiredRole = isAllRolesAllowed || roles.some(
       (role) => role.toLowerCase() === userRole.toLowerCase()
     );
     if (!hasRequiredRole) {
       return <Navigate to="/" replace />;
     }
+
   }
 
   return <>{children}</>;
