@@ -261,15 +261,11 @@ export default function useEventModalUtils({
   };
 
   const handleSave = async () => {
-    const registrationDeadlineDate = formValues.date ? new Date(formValues.date) : new Date();
-    registrationDeadlineDate.setDate(registrationDeadlineDate.getDate() - 2);
-
     const finalizedValue = {
       ...formValues,
       date: formValues.date ? new Date(formValues.date).toISOString() : "",
       media: newMediaIds,
       eventMedia: newMediaIds,
-      registrationDeadline: registrationDeadlineDate.toISOString(),
       eventImage: formValues.eventImage || "",
       type: formValues.type || "",
     };
