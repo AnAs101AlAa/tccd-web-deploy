@@ -1,12 +1,36 @@
 import React from "react";
 import ReactECharts from "echarts-for-react";
 import { useThemeColors } from "@/shared/hooks/useThemeColors";
+import { useGetEventOverviewStats } from "@/shared/queries/admin/stats/statsQueries";
 
-const RegistrationOverviewChart: React.FC = () => {
+interface RegistrationOverviewChartProps {
+  eventId: string;
+}
+
+const RegistrationOverviewChart: React.FC<RegistrationOverviewChartProps> = ({ eventId }) => {
   const colors = useThemeColors();
+  const { data, isLoading, error } = useGetEventOverviewStats(eventId);
 
-  const totalRegistered = 1348;
-  const attendanceRate = Math.round((1048 / 1348) * 100);
+  if (isLoading) {
+    return (
+      <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm flex flex-col items-center justify-center h-full min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-contrast"></div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm flex flex-col items-center justify-center h-full min-h-[400px]">
+        <p className="text-muted-foreground">Failed to load registration overview.</p>
+      </div>
+    );
+  }
+
+  const attendanceRate = data.attendanceRate || 0;
+  const totalRegistered = data.totalRegistered || 0;
+  const attendedCount = data.totalAttended || 0;
+  const noShowCount = data.totalNoShow || 0;
 
   const option = {
     tooltip: {
@@ -49,14 +73,14 @@ const RegistrationOverviewChart: React.FC = () => {
         },
         data: [
           {
-            value: 1048,
+            value: attendedCount,
             name: "Attended",
             itemStyle: { color: colors.secondary },
             label: { show: false },
             emphasis: { label: { show: false } },
           },
           {
-            value: 300,
+            value: noShowCount,
             name: "No Show",
             itemStyle: { color: colors.primary },
             label: { show: false },
@@ -80,7 +104,7 @@ const RegistrationOverviewChart: React.FC = () => {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center">
             <span className="block text-3xl font-bold text-contrast">
-              {attendanceRate}%
+              {attendanceRate.toFixed(1)}%
             </span>
             <span className="text-xs text-muted-foreground uppercase tracking-wider">
               Attendance
@@ -94,11 +118,11 @@ const RegistrationOverviewChart: React.FC = () => {
           <p className="text-xs text-muted-foreground">Total Registered</p>
         </div>
         <div className="text-center">
-          <p className="text-2xl font-bold text-secondary">{1048}</p>
+          <p className="text-2xl font-bold text-secondary">{attendedCount}</p>
           <p className="text-xs text-secondary">Attended</p>
         </div>
         <div className="text-center">
-          <p className="text-2xl font-bold text-primary">{300}</p>
+          <p className="text-2xl font-bold text-primary">{noShowCount}</p>
           <p className="text-xs text-primary">No Show</p>
         </div>
       </div>

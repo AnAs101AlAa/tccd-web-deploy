@@ -1,31 +1,39 @@
 import React, { useState, useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 import { useThemeColors } from "@/shared/hooks/useThemeColors";
-import DepartmentList from "@/constants/departmentList";
-import UniversityList from "@/constants/universityList";
 import { FiChevronDown } from "react-icons/fi";
+import { useGetEventDepartmentAttendanceStats } from "@/shared/queries/admin/stats/statsQueries";
+import UniversityList from "@/constants/universityList";
 
-const DepartmentAttendanceChart: React.FC = () => {
+interface DepartmentAttendanceChartProps {
+  eventId: string;
+}
+
+const DepartmentAttendanceChart: React.FC<DepartmentAttendanceChartProps> = ({ eventId }) => {
   const colors = useThemeColors();
   const [selectedUniversity, setSelectedUniversity] = useState<string>("All");
 
-  // Consistent Mock Generator
-  const getMockValues = (deptIndex: number, univFilter: string) => {
-    // Pseudo-random based on index and filter to stay consistent on re-renders unless filter changes
-    const seed =
-      deptIndex + (univFilter === "All" ? 100 : univFilter.length * 10);
-    return {
-      attended: ((seed * 13) % 100) + 20,
-      noShow: ((seed * 7) % 30) + 5,
-    };
-  };
+  // Fetch only with specific university if not "All"
+  const fetchUniversity = selectedUniversity === "All" ? undefined : selectedUniversity;
+  
+  const { data, isLoading, error } = useGetEventDepartmentAttendanceStats(
+    eventId,
+    fetchUniversity
+  );
 
   const chartData = useMemo(() => {
-    return DepartmentList.map((dept, idx) => {
-      const { attended, noShow } = getMockValues(idx, selectedUniversity);
-      return { name: dept, attended, noShow };
-    });
-  }, [selectedUniversity]);
+    if (!data || !data.departments) return [];
+    
+    return [...data.departments]
+      .map(dept => ({
+        name: dept.department,
+        attended: dept.attended,
+        noShow: dept.noShow,
+        total: dept.attended + dept.noShow
+      }))
+      .sort((a, b) => b.total - a.total); // Sort by total attendance
+  }, [data]);
+
 
   const option = {
     tooltip: {
@@ -76,13 +84,15 @@ const DepartmentAttendanceChart: React.FC = () => {
         emphasis: { focus: "series" },
         itemStyle: {
           color: colors.primary,
-          borderRadius: [0, 4, 4, 0], // Rounded right side
+          borderRadius: [0, 4, 4, 0] as number[], // Rounded right side
         },
         data: chartData.map((d) => d.noShow).reverse(),
         barWidth: 15,
       },
     ],
   };
+
+  const chartHeight = Math.max(600, chartData.length * 40);
 
   return (
     <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm h-full flex flex-col">
@@ -99,9 +109,9 @@ const DepartmentAttendanceChart: React.FC = () => {
             className="appearance-none bg-background-primary/50 text-contrast text-sm font-medium py-2 pl-4 pr-10 rounded-lg border border-muted-primary/30 focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer min-w-[200px]"
           >
             <option value="All">All Universities</option>
-            {UniversityList.map((uni) => (
-              <option key={uni} value={uni}>
-                {uni}
+            {UniversityList.map((university) => (
+              <option key={university} value={university}>
+                {university}
               </option>
             ))}
           </select>
@@ -112,11 +122,24 @@ const DepartmentAttendanceChart: React.FC = () => {
       </div>
 
       <div className="flex-1 h-[600px] overflow-y-auto custom-scrollbar">
-        {/* Fixed large height for scrollable chart */}
-        <ReactECharts
-          option={option}
-          style={{ height: "1000px", width: "100%" }}
-        />
+        {isLoading ? (
+          <div className="flex justify-center items-center h-full">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-contrast"></div>
+          </div>
+        ) : error || !data ? (
+          <div className="flex justify-center items-center h-full text-muted-foreground">
+            Failed to load department attendance.
+          </div>
+        ) : chartData.length === 0 ? (
+          <div className="flex justify-center items-center h-full text-muted-foreground">
+            No data available.
+          </div>
+        ) : (
+          <ReactECharts
+            option={option}
+            style={{ height: `${chartHeight}px`, width: "100%" }}
+          />
+        )}
       </div>
     </div>
   );

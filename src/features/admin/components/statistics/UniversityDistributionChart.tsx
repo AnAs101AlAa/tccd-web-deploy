@@ -1,18 +1,41 @@
 import React, { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 import { useThemeColors } from "@/shared/hooks/useThemeColors";
-import UniversityList from "@/constants/universityList";
+import { useGetEventUniversityDistributionStats } from "@/shared/queries/admin/stats/statsQueries";
 
-const UniversityDistributionChart: React.FC = () => {
+interface UniversityDistributionChartProps {
+  eventId: string;
+}
+
+const UniversityDistributionChart: React.FC<UniversityDistributionChartProps> = ({ eventId }) => {
   const colors = useThemeColors();
+  const { data, isLoading, error } = useGetEventUniversityDistributionStats(eventId);
 
-  const data = useMemo(() => {
-    return UniversityList.map((uni) => ({
-      name: uni,
-      // Mock random consistent value for demo
-      value: Math.floor(Math.random() * 400) + 50,
-    })).sort((a, b) => b.value - a.value);
-  }, []);
+  const chartData = useMemo(() => {
+    if (!data || !data.distribution) return [];
+    return [...data.distribution]
+      .map(item => ({
+        name: item.university,
+        value: item.count
+      }))
+      .sort((a, b) => b.value - a.value);
+  }, [data]);
+
+  if (isLoading) {
+    return (
+      <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm flex flex-col items-center justify-center h-full min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-contrast"></div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm flex flex-col items-center justify-center h-full min-h-[400px]">
+        <p className="text-muted-foreground">Failed to load university distribution.</p>
+      </div>
+    );
+  }
 
   const option = {
     grid: {
@@ -34,7 +57,7 @@ const UniversityDistributionChart: React.FC = () => {
     },
     yAxis: {
       type: "category",
-      data: data.map((item) => item.name).reverse(),
+      data: chartData.map((item) => item.name).reverse(),
       axisTick: { show: false },
       axisLine: { show: false },
       axisLabel: {
@@ -49,7 +72,7 @@ const UniversityDistributionChart: React.FC = () => {
       {
         name: "Attendees",
         type: "bar",
-        data: data.map((item) => item.value).reverse(),
+        data: chartData.map((item) => item.value).reverse(),
         itemStyle: {
           color: {
             type: "linear",
@@ -62,22 +85,25 @@ const UniversityDistributionChart: React.FC = () => {
               { offset: 1, color: colors.primary },
             ],
           },
-          borderRadius: [0, 4, 4, 0],
+          borderRadius: [0, 4, 4, 0] as number[],
         },
         barWidth: 20,
       },
     ],
   };
+  
+  // Dynamic height based on number of items to ensure bars don't get squished
+  const chartHeight = Math.max(600, chartData.length * 40);
 
   return (
     <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm h-full flex flex-col">
       <h3 className="text-lg font-semibold text-contrast mb-4">
         University Distribution
       </h3>
-      <div className="flex-1 h-[600px] overflow-y-auto">
+      <div className="flex-1 h-[600px] overflow-y-auto custom-scrollbar">
         <ReactECharts
           option={option}
-          style={{ height: "800px", width: "100%" }}
+          style={{ height: `${chartHeight}px`, width: "100%" }}
         />
       </div>
     </div>
