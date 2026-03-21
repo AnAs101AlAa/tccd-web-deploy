@@ -99,7 +99,6 @@ export default function useEventModalUtils({
     isApproved: true,
     eventImage: "",
     type: undefined,
-    registrationDeadline: "",
     eventMedia: [],
     date: "",
     locations: [],
