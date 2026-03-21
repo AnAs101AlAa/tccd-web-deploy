@@ -6,13 +6,22 @@ import type { CommunityPost } from "@/shared/types";
 import { useGetAllPosts } from "@/shared/queries/posts";
 import { useIntersectionObserver } from "@/shared/hooks/useIntersectionObserver";
 
+const SkeletonCard = () => (
+  <div className="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse">
+    <div className="h-48 bg-gray-200" />
+    <div className="p-5 space-y-3">
+      <div className="h-6 bg-gray-200 rounded w-3/4" />
+      <div className="h-4 bg-gray-200 rounded" />
+      <div className="h-4 bg-gray-200 rounded w-5/6" />
+    </div>
+  </div>
+);
+
 const BlogSection = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isVisible = useIntersectionObserver(sectionRef, { threshold: 0.1 });
   const postsPerPage = usePostsPerPage();
-
-  const gridRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading } = useGetAllPosts(currentPage, postsPerPage);
 
@@ -23,11 +32,9 @@ const BlogSection = () => {
     <section className="py-10 pb-8 md:py-16 transition-transform duration-700 ease-out">
       <div
         ref={sectionRef}
-        className={`container px-4 md:px-6 mx-auto ${
-          isVisible ? "fade-in-right" : ""
-        }`}
+        className={`container px-4 md:px-6 mx-auto ${isVisible ? "fade-in-right" : ""}`}
       >
-        {/* Latest Blog Posts */}
+        {/* Header */}
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-5 md:mb-8 lg:mb-12">
           <div className="space-y-2">
             <div className="inline-block rounded-lg bg-blue-100 px-3 py-1 text-sm text-[#295E7E]">
@@ -43,42 +50,32 @@ const BlogSection = () => {
           </div>
         </div>
 
-        {/* Loading state */}
+        {/* Loading */}
         {isLoading ? (
-          <div className="grid md:grid-cols-2 2xl:grid-cols-3 gap-8">
-            {[...Array(postsPerPage)].map((_, index) => (
+          <div className="flex flex-wrap justify-center gap-5">
+            {[...Array(postsPerPage)].map((_, i) => (
               <div
-                key={index}
-                className="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse"
+                key={i}
+                className="w-full sm:w-[calc(50%-10px)] 2xl:w-[calc(33.333%-14px)]"
               >
-                <div className="h-48 bg-gray-200"></div>
-                <div className="p-5 space-y-3">
-                  <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                  <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                </div>
+                <SkeletonCard />
               </div>
             ))}
           </div>
         ) : latestPosts.length > 0 ? (
           <>
-            <div className="flex justify-center w-full">
-              <div
-                className="inline-grid grid-cols-1 gap-5 pb-4"
-                style={{
-                  gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))"
-                }}
-                ref={gridRef}
-              >
+            {/* Grid — flex-wrap + justify-center centers remainder cards */}
+            <div className="flex flex-wrap justify-center gap-5 pb-4 mx-auto max-w-8xl">
               {latestPosts.map((post: CommunityPost, index: number) => (
                 <div
                   key={post.id}
-                  className={`card-animate ${isVisible ? `delay-${Math.min(index, 5) * 100}` : ""}`}
+                  className={`card-animate w-full sm:w-[calc(50%-10px)] 2xl:w-[calc(33.333%-14px)] ${
+                    isVisible ? `delay-${Math.min(index, 5) * 100}` : ""
+                  }`}
                 >
                   <BlogPostCard post={post} />
                 </div>
               ))}
-            </div>
             </div>
 
             <div className="flex justify-center mt-0 md:mt-6">
