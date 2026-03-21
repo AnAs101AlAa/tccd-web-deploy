@@ -18,7 +18,6 @@ export const eventFormSchema = z.object({
   }),
   capacity: z.number({message: "Capacity is required."}).min(1, {message: "Capacity must be at least 1."}),
   eventImage: z.string({message: "Event image URL is required."}).min(1, {message: "Event image URL is required."}).optional(),
-  registrationDeadline: z.string().optional(),
   slots: z.array(z.object({
     startTime: z.string().min(1, {message: "Start time is required."}),
     endTime: z.string().min(1, {message: "End time is required."}),

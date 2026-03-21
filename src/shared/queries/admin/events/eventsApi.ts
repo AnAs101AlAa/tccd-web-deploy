@@ -9,7 +9,7 @@ export class EventsApi {
   async createEvent(data: Event) {
     const res = await systemApi.post(
       `/v2/Event`,
-      {...data, eventImageId: data.eventImage, registrationDeadline: null}
+      {...data, eventImageId: data.eventImage}
     );
 
     return res.data.data;
@@ -23,7 +23,6 @@ export class EventsApi {
       type: data.type,
       capacity: data.capacity,
       locations: data.locations,
-      registrationDeadline: null
     };
     
     await systemApi.put(
