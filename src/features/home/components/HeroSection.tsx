@@ -87,7 +87,7 @@ const HeroSection = () => {
                 type={ButtonTypes.SECONDARY}
                 buttonText={
                   userData && isAdmin(userData)
-                    ? "Admin dashboard"
+                    ? "Admin Dashboard"
                     : userData && userData.id != ""
                       ? "Profile"
                       : "Login"
@@ -118,7 +118,7 @@ const HeroSection = () => {
                 iconBgClass="bg-[#1d4259]"
                 Icon={FaGraduationCap}
                 labelCount={companyCount}
-                labelText="Companies affliated"
+                labelText="Companies affiliated"
                 labelColorClass="text-blue-100"
               />
               <StatItem
