@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import type { QRScanResult, QRScanError } from "@/shared/types";
-import { useScanQRCode, type QRScanPayload } from "@/shared/queries/tickets";
+import { useScanQRCode } from "@/shared/queries/tickets";
 import toast from "react-hot-toast";
 
 export function useQRScanner() {
@@ -21,15 +21,15 @@ export function useQRScanner() {
 
     try {
       // Parse QR code data
-      const qrData: QRScanPayload = JSON.parse(detectedCodes[0].rawValue);
+      const qrData = detectedCodes[0].rawValue;
       
-      if (!qrData.token) {
-        throw new Error("Invalid QR code format");
-      }
+      // if (!qrData.token) {
+      //   throw new Error("Invalid QR code format");
+      // }
 
       // Validate with backend
       const result = await scanQRCode.mutateAsync({
-        token: qrData.token,
+        token: qrData,
       });
 
       setScanResult(result);
@@ -70,9 +70,11 @@ export function useQRScanner() {
     reset,
   };
 }
+
 function handleError(err: unknown): QRScanError {
   // Handle JSON parse errors
   if (err instanceof SyntaxError) {
+    console.error("QR code parsing error:", err);
     return {
       type: "invalid_qr",
       message: "Invalid QR code format. Please scan a valid event QR code.",

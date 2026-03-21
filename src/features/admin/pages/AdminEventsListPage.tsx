@@ -232,6 +232,7 @@ const AdminEventsListPage = () => {
                     gridCols="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"
                     getKey={(event: Event) => event.id}
                   />
+                  <div className="my-4"/>
                   <Pagination
                     currentPage={upcomingData.pageIndex}
                     totalPages={upcomingData.totalPages}

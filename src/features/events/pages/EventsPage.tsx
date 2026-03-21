@@ -17,7 +17,7 @@ import { useEffect } from "react";
 const getResponsivePageSize = () => {
   const width = window.innerWidth;
   if (width < 768) return 1;
-  if (width < 1024) return 2;
+  if (width < 1536 ) return 2;
   return 3;
 };
 
