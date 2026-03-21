@@ -35,7 +35,7 @@ export default interface Event {
   registeredCount: number;
   capacity: number;
   eventImage: string;
-  registrationDeadline: string;
+  registrationDeadline?: string;
   createdBy?: string;
   createdAt?: string;
   updatedOn?: string;
@@ -57,7 +57,7 @@ export interface EventRequest {
   registeredCount: number;
   capacity: number;
   eventImage: string;
-  registrationDeadline: string;
+  registrationDeadline?: string;
   createdBy?: string;
   createdAt?: string;
   updatedOn?: string;
