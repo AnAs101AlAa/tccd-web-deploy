@@ -3,7 +3,8 @@ import ReactECharts from "echarts-for-react";
 import { useThemeColors } from "@/shared/hooks/useThemeColors";
 import { FiChevronDown } from "react-icons/fi";
 import { useGetEventDepartmentAttendanceStats } from "@/shared/queries/admin/stats/statsQueries";
-import UniversityList from "@/constants/universityList";
+import DepartmentList from "@/constants/departmentList";
+
 
 interface DepartmentAttendanceChartProps {
   eventId: string;
@@ -11,29 +12,32 @@ interface DepartmentAttendanceChartProps {
 
 const DepartmentAttendanceChart: React.FC<DepartmentAttendanceChartProps> = ({ eventId }) => {
   const colors = useThemeColors();
-  const [selectedUniversity, setSelectedUniversity] = useState<string>("All");
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("All");
 
-  // Fetch only with specific university if not "All"
-  const fetchUniversity = selectedUniversity === "All" ? undefined : selectedUniversity;
-  
-  const { data, isLoading, error } = useGetEventDepartmentAttendanceStats(
-    eventId,
-    fetchUniversity
-  );
+  const { data, isLoading, error } = useGetEventDepartmentAttendanceStats(eventId);
 
   const chartData = useMemo(() => {
     if (!data || !data.departments) return [];
     
-    return [...data.departments]
+    const query = selectedDepartment.trim().toLowerCase();
+    
+    const filteredDepts = selectedDepartment === "All" 
+      ? data.departments 
+      : data.departments.filter(dept => 
+          dept.department.trim().toLowerCase() === query ||
+          dept.department.trim().toLowerCase().includes(query) ||
+          query.includes(dept.department.trim().toLowerCase())
+        );
+
+    return [...filteredDepts]
       .map(dept => ({
         name: dept.department,
         attended: dept.attended,
         noShow: dept.noShow,
         total: dept.attended + dept.noShow
       }))
-      .sort((a, b) => b.total - a.total); // Sort by total attendance
-  }, [data]);
-
+      .sort((a, b) => b.total - a.total); // Sort by total attendance descending
+  }, [data, selectedDepartment]);
 
   const option = {
     tooltip: {
@@ -41,58 +45,93 @@ const DepartmentAttendanceChart: React.FC<DepartmentAttendanceChartProps> = ({ e
       axisPointer: { type: "shadow" },
     },
     legend: {
-      top: "bottom",
+      top: 0,
+      right: 0,
       textStyle: { color: "#6b7280" },
     },
     grid: {
       left: "3%",
       right: "4%",
-      bottom: "10%",
-      top: "5%",
+      bottom: "15%", // Space for dataZoom and rotated labels
+      top: "12%",
       containLabel: true,
     },
+    dataZoom: [
+      {
+        type: "slider",
+        show: true,
+        xAxisIndex: [0],
+        start: 0,
+        end: chartData.length > 8 ? 40 : 100, // Show 40% if many items, else 100%
+        bottom: 0,
+        height: 20,
+        borderColor: "transparent",
+        fillerColor: "rgba(107, 114, 128, 0.2)", // gray-500 with opacity
+      },
+      {
+        type: "inside",
+        xAxisIndex: [0],
+      }
+    ],
     xAxis: {
-      type: "value",
-      splitLine: { lineStyle: { type: "dashed", color: "#f3f4f6" } },
-    },
-    yAxis: {
       type: "category",
-      data: chartData.map((d) => d.name).reverse(),
-      axisLine: { show: false },
+      data: chartData.map((d) => d.name),
+      axisLine: { lineStyle: { color: "#e5e7eb" } },
       axisTick: { show: false },
       axisLabel: {
         color: colors.contrast,
-        width: 160,
-        overflow: "truncate",
         interval: 0,
+        rotate: 30, // Rotate labels to fit more
+        width: 100,
+        overflow: "truncate",
+      },
+    },
+    yAxis: {
+      type: "value",
+      splitLine: { lineStyle: { type: "dashed", color: "#f3f4f6" } },
+      axisLabel: {
+        color: colors.contrast,
       },
     },
     series: [
       {
         name: "Attended",
         type: "bar",
-        stack: "total",
         emphasis: { focus: "series" },
-        itemStyle: { color: colors.secondary },
-        data: chartData.map((d) => d.attended).reverse(),
-        barWidth: 15,
+        itemStyle: { 
+          color: {
+            type: "linear",
+            x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [
+              { offset: 0, color: colors.secondary },
+              { offset: 1, color: "rgba(156, 163, 175, 0.2)" }, // Fade out to bottom
+            ],
+          },
+          borderRadius: [4, 4, 0, 0] as number[] 
+        },
+        data: chartData.map((d) => d.attended),
+        barMaxWidth: 30,
       },
       {
         name: "No Show",
         type: "bar",
-        stack: "total",
         emphasis: { focus: "series" },
         itemStyle: {
-          color: colors.primary,
-          borderRadius: [0, 4, 4, 0] as number[], // Rounded right side
+          color: {
+            type: "linear",
+            x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [
+              { offset: 0, color: colors.primary },
+              { offset: 1, color: "rgba(156, 163, 175, 0.2)" },
+            ],
+          },
+          borderRadius: [4, 4, 0, 0] as number[],
         },
-        data: chartData.map((d) => d.noShow).reverse(),
-        barWidth: 15,
+        data: chartData.map((d) => d.noShow),
+        barMaxWidth: 30,
       },
     ],
   };
-
-  const chartHeight = Math.max(600, chartData.length * 40);
 
   return (
     <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm h-full flex flex-col">
@@ -104,14 +143,14 @@ const DepartmentAttendanceChart: React.FC<DepartmentAttendanceChartProps> = ({ e
         {/* Filter Dropdown */}
         <div className="relative">
           <select
-            value={selectedUniversity}
-            onChange={(e) => setSelectedUniversity(e.target.value)}
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
             className="appearance-none bg-background-primary/50 text-contrast text-sm font-medium py-2 pl-4 pr-10 rounded-lg border border-muted-primary/30 focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer min-w-[200px]"
           >
-            <option value="All">All Universities</option>
-            {UniversityList.map((university) => (
-              <option key={university} value={university}>
-                {university}
+            <option value="All">All Departments</option>
+            {DepartmentList.map((department) => (
+              <option key={department} value={department}>
+                {department}
               </option>
             ))}
           </select>
@@ -121,7 +160,7 @@ const DepartmentAttendanceChart: React.FC<DepartmentAttendanceChartProps> = ({ e
         </div>
       </div>
 
-      <div className="flex-1 h-[600px] overflow-y-auto custom-scrollbar">
+      <div className="flex-1 min-h-[400px]">
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-contrast"></div>
@@ -137,7 +176,7 @@ const DepartmentAttendanceChart: React.FC<DepartmentAttendanceChartProps> = ({ e
         ) : (
           <ReactECharts
             option={option}
-            style={{ height: `${chartHeight}px`, width: "100%" }}
+            style={{ height: "100%", width: "100%" }}
           />
         )}
       </div>

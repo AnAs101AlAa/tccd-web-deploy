@@ -65,11 +65,11 @@ export const useGetEventUniversityDistributionStats = (eventId: string) => {
 
 export const useGetEventDepartmentAttendanceStats = (
   eventId: string,
-  university?: string,
+  department?: string,
 ) => {
   return useQuery({
-    queryKey: statsKeys.eventDepartment(eventId, university),
-    queryFn: () => statsApi.getEventDepartmentAttendanceStats(eventId, university),
+    queryKey: statsKeys.eventDepartment(eventId, department),
+    queryFn: () => statsApi.getEventDepartmentAttendanceStats(eventId, department),
     enabled: !!eventId,
     staleTime: 5 * 60 * 1000,
   });

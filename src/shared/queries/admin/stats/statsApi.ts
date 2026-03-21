@@ -74,13 +74,13 @@ export class StatsApi {
 
   async getEventDepartmentAttendanceStats(
     eventId: string,
-    university?: string,
+    department?: string,
   ): Promise<EventDepartmentAttendanceStats> {
     const response =
       await systemApi.get<StatsApiResponse<EventDepartmentAttendanceStats>>(
         `${STATS_ROUTE}/events/${eventId}/department`,
         {
-          params: university ? { university } : undefined,
+          params: department ? { department } : undefined,
         },
       );
     return response.data.data;
