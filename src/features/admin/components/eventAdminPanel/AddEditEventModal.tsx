@@ -386,7 +386,6 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                                   placeholder="Capacity"
                                   onChange={(e) => setEditingSlotCapacity(parseInt(e.target.value) || 0)}
                                   id={`slotCapacityEdit-${index}`}
-                                  className="flex-1 max-w-24"
                                 />
                                 <span className="text-xs text-gray-500 whitespace-nowrap">attendees</span>
                                 <Button
