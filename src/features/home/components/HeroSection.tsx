@@ -118,7 +118,7 @@ const HeroSection = () => {
                 iconBgClass="bg-[#1d4259]"
                 Icon={FaGraduationCap}
                 labelCount={companyCount}
-                labelText="Companies affiliated"
+                labelText="Companies Affiliated"
                 labelColorClass="text-blue-100"
               />
               <StatItem
