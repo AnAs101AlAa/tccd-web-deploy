@@ -108,7 +108,6 @@ export default function PostCard({
                   onClick={() => setApproving(post)}
                   buttonText={post.isApproved ? "Unapprove" : "Approve"}
                   width="full"
-                  className="mt-1"
                 />
               </div>
             </>
