@@ -13,11 +13,13 @@ import type Event from "@/shared/types/events";
 import { FaPlus, FaCheck } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import { TbTrash } from "react-icons/tb";
+import { MdEdit } from "react-icons/md";
 import useEventModalUtils from "../../utils/eventModalUtils";
 import type { Company } from "@/shared/queries/companies/types";
 import type { EventSlot } from "@/shared/types/events";
 import format from "@/shared/utils/dateFormater";
 import { RichTextEditor } from "@/shared/components/RichTextEditor";
+import { useState } from "react";
 
 interface AddEditEventModalProps {
   event?: Event;
@@ -62,6 +64,9 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     newMediaIds,
     deletedMediaIds,
   } = useEventModalUtils({ event, onClose });
+
+  const [editingSlotIndex, setEditingSlotIndex] = useState<number | null>(null);
+  const [editingSlotCapacity, setEditingSlotCapacity] = useState<number>(0);
 
   return (
     <Modal
@@ -366,20 +371,75 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
               <div className="h-59 overflow-y-auto border border-gray-400 rounded-2xl p-2 space-y-2">
                 {(formValues.slots && formValues.slots.length > 0 || isAddingSlot) ? (
                     <>
-                      {/* Existing media from API (read-only, can delete) */}
+                      {/* Existing slots - can edit capacity or delete */}
                       {formValues.slots?.map((slot: EventSlot, index: number) => {
+                        const isEditing = editingSlotIndex === index;
                         return (
                           <div key={index} className="p-2 border border-gray-300 rounded-2xl bg-gray-50">
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="text-sm text-gray-700 truncate">{`${format(slot.startTime, "hourFull")} - ${format(slot.endTime, "hourFull")} - ${slot.capacity} attendees`}</span>
-                              <button
-                                onClick={() => handleRemoveSlot(index)}
-                                className="text-contrast hover:text-primary cursor-pointer shrink-0"
-                                title="Mark for deletion"
-                              >
-                                <TbTrash className="size-4" />
-                              </button>
-                            </div>
+                            {isEditing ? (
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm text-gray-700 whitespace-nowrap">{`${format(slot.startTime, "hourFull")} - ${format(slot.endTime, "hourFull")}`}</span>
+                                <InputField
+                                  label=""
+                                  labelClassName="hidden"
+                                  value={editingSlotCapacity?.toString() || ""}
+                                  placeholder="Capacity"
+                                  onChange={(e) => setEditingSlotCapacity(parseInt(e.target.value) || 0)}
+                                  id={`slotCapacityEdit-${index}`}
+                                />
+                                <span className="text-xs text-gray-500 whitespace-nowrap">attendees</span>
+                                <Button
+                                  buttonIcon={<FaCheck className="size-3" />}
+                                  className="px-2 md:px-3"
+                                  type="primary"
+                                  width="fit"
+                                  onClick={() => {
+                                    setFormValues((prev) => {
+                                      const updatedSlots = prev.slots?.map((s, i) =>
+                                        i === index ? { ...s, capacity: editingSlotCapacity } : s
+                                      ) || [];
+                                      const totalCapacity = updatedSlots.reduce((sum, s) => sum + (s.capacity || 0), 0);
+                                      return {
+                                        ...prev,
+                                        slots: updatedSlots,
+                                        capacity: totalCapacity,
+                                      };
+                                    });
+                                    setEditingSlotIndex(null);
+                                  }}
+                                />
+                                <Button
+                                  buttonIcon={<FaXmark className="size-3" />}
+                                  className="px-2 md:px-3"
+                                  type="danger"
+                                  width="fit"
+                                  onClick={() => setEditingSlotIndex(null)}
+                                />
+                              </div>
+                            ) : (
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-sm text-gray-700 truncate">{`${format(slot.startTime, "hourFull")} - ${format(slot.endTime, "hourFull")} - ${slot.capacity} attendees`}</span>
+                                <div className="flex items-center gap-1 shrink-0">
+                                  <button
+                                    onClick={() => {
+                                      setEditingSlotIndex(index);
+                                      setEditingSlotCapacity(slot.capacity || 0);
+                                    }}
+                                    className="text-secondary hover:text-secondary/80 cursor-pointer"
+                                    title="Edit capacity"
+                                  >
+                                    <MdEdit className="size-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleRemoveSlot(index)}
+                                    className="text-contrast hover:text-primary cursor-pointer"
+                                    title="Mark for deletion"
+                                  >
+                                    <TbTrash className="size-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
