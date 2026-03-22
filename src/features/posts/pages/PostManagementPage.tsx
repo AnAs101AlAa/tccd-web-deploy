@@ -198,7 +198,7 @@ export const PostManagementPage = () => {
             ) : (
               <>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 ">
-                  <div className="flex flex-wrap items-center gap-2 md:mb-0 mb-2">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
                     <button
                       type="button"
                       onClick={() => setIsCompactView((prev) => !prev)}
