@@ -73,10 +73,76 @@ export default function RegistrationsList({
   }));
 
   return (
-    <Table
-      items={formattedData}
-      columns={columns}
-      emptyMessage="No registrations found"
-    />
+    <>
+      {/* Desktop View - Using Table Component */}
+      <Table
+        items={formattedData}
+        columns={columns}
+        emptyMessage="No registrations found"
+      />
+
+      {/* Mobile View - Compact Table */}
+      <div className="lg:hidden overflow-x-auto">
+        {registrations && registrations.length > 0 ? (
+          <table className="w-full border border-gray-200 text-xs">
+            <thead className="bg-contrast/5">
+              <tr>
+                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                  Name
+                </th>
+                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                  Email
+                </th>
+                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {formattedData.map((item, index) => {
+                const statusColors: Record<string, string> = {
+                  Pending: "bg-yellow-100 text-yellow-800",
+                  Approved: "bg-green-100 text-green-800",
+                  Rejected: "bg-red-100 text-red-800",
+                  Cancelled: "bg-gray-100 text-gray-800",
+                };
+                return (
+                  <tr
+                    key={item.id || index}
+                    className="hover:bg-muted-primary/5 transition-colors"
+                  >
+                    <td className="px-2 py-2">
+                      <div className="text-xs font-medium text-contrast truncate">
+                        {item.studentName}
+                      </div>
+                    </td>
+                    <td className="px-2 py-2">
+                      <div className="text-xs font-medium text-contrast truncate">
+                        {item.email}
+                      </div>
+                    </td>
+                    <td className="px-2 py-2">
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full ${
+                          statusColors[item.status] || "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        ) : (
+          <div className="text-center py-4">
+            <p className="text-xs font-medium text-dashboard-description">
+              No registrations found
+            </p>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
