@@ -11,6 +11,7 @@ import { BsListColumnsReverse } from "react-icons/bs";
 import { IoHome } from "react-icons/io5";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLogout } from "@/shared/queries/auth";
+import { useIsAdmin } from "@/shared/queries/user/userHooks";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -29,8 +30,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { mutateAsync: logoutAsync } = useLogout();
+  const isAdmin = useIsAdmin();
 
-  const navItems: NavItem[] = [
+  const allNavItems: NavItem[] = [
     {
       id: "events",
       label: "Events",
@@ -68,6 +70,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       path: "/admin/companies",
     },
   ];
+
+  const navItems = allNavItems.filter(
+    (item) => item.id !== "users" || isAdmin
+  );
 
   const handleNavClick = (item: NavItem) => {
     navigate(item.path);
