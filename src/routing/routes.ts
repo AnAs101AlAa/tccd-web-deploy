@@ -132,7 +132,7 @@ export const routes: Route[] = [
   { path: "/admin/users",
     Component: UsersAdminPage,
     protected: true,
-    roles: ["Admin", "board"] 
+    roles: ["Admin"] 
   },
   {
     path: "/admin/registrations",

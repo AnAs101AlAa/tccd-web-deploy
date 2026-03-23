@@ -78,6 +78,7 @@ export const BasicInfoStep = ({ control }: BasicInfoStepProps) => {
 
       {/* LinkedIn URL */}
       <FormInput
+        id="linkedinUrl"
         name="linkedinUrl"
         control={control}
         label="LinkedIn Profile (Optional)"

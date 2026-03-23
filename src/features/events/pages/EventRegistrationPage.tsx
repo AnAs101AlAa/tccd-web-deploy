@@ -128,7 +128,7 @@ export default function EventRegisterForm() {
     register(slotId);
   };
 
-  const capacityUsage = (event.registeredCount / event.capacity) * 100;
+  const capacityUsage = ((event.registeredCount || 0) / (event.capacity || 1)) * 100;
   const progressPercentage = (currentStep / totalSteps) * 100;
 
   const selectedSlot = event.slots?.find((s) => s.id === watchedSlotId);
@@ -207,7 +207,7 @@ export default function EventRegisterForm() {
                       Location
                     </p>
                     <p className="text-sm font-semibold text-foreground">
-                      {event.locations[0]}
+                      {event.locations?.[0]}
                     </p>
                   </div>
                 </div>
