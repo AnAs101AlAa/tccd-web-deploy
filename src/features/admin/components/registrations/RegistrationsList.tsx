@@ -108,7 +108,7 @@ export default function RegistrationsList({
                 };
                 return (
                   <tr
-                    key={item.id || index}
+                    key={`table-row-registration-${item.studentName}-${index}`}
                     className="hover:bg-muted-primary/5 transition-colors"
                   >
                     <td className="px-2 py-2">
