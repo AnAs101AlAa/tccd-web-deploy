@@ -51,12 +51,12 @@ export interface EventRequest {
   name: string;
   description: string;
   date: string;
-  locations: string[];
+  locations?: string[];
   isApproved: boolean;
   type: string | undefined;
   attendeeCount: number;
-  registeredCount: number;
-  capacity: number;
+  registeredCount?: number;
+  capacity?: number;
   eventImage: string;
   registrationDeadline?: string;
   createdBy?: string;

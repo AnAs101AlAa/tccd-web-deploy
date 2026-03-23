@@ -68,6 +68,10 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
   const [editingSlotIndex, setEditingSlotIndex] = useState<number | null>(null);
   const [editingSlotCapacity, setEditingSlotCapacity] = useState<number>(0);
 
+  if(!event) {
+    return null;
+  }
+
   return (
     <Modal
       title={isEditMode ? "Edit Event" : "Add New Event"}

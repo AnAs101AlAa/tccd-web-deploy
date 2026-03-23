@@ -91,6 +91,7 @@ export const useAuth = () => {
           arabicName: basicData.arabicFullName,
           gender: basicData.gender,
           phoneNumber: basicData.phoneNumber,
+          linkedin: basicData.linkedinUrl,
           university: studentData.university,
           faculty: studentData.faculty,
           department: studentData.department || "",
