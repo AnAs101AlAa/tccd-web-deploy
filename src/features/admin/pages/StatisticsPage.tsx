@@ -9,6 +9,7 @@ const RegistrationOverviewChart = lazy(() => import("../components/statistics/Re
 const GenderDistributionChart = lazy(() => import("../components/statistics/GenderDistributionChart"));
 const UniversityDistributionChart = lazy(() => import("../components/statistics/UniversityDistributionChart"));
 const DepartmentAttendanceChart = lazy(() => import("../components/statistics/DepartmentAttendanceChart"));
+const GlobalStatsOverview = lazy(() => import("../components/statistics/GlobalStatsOverview"));
 
 import type Event from "@/shared/types/events";
 
@@ -33,21 +34,27 @@ const StatisticsPage: React.FC = () => {
 
         {/* Content: Table or Charts */}
         {!selectedEvent ? (
-          <section className="rounded-xl border border-contrast/10 bg-background/60 p-4 sm:p-5 lg:p-6 shadow-sm">
-            <div className="flex flex-col gap-3 mb-4">
-              <div>
-                <h2 className="text-[22px] md:text-[23px] lg:text-[24px] font-bold text-secondary">
-                  All Events
-                </h2>
-                <p className="text-[14px] md:text-[15px] lg:text-[16px] text-inactive-tab-text">
-                  Select an event to view its detailed statistics
-                </p>
-              </div>
-              <hr className="border-t border-gray-400/60 -mt-1 mb-1 shadow-lg" />
-            </div>
+          <div className="space-y-8">
+            <Suspense fallback={<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-contrast mx-auto mt-8"></div>}>
+              <GlobalStatsOverview />
+            </Suspense>
 
-            <EventsStatisticsTable onEventSelect={setSelectedEvent} />
-          </section>
+            <section className="rounded-xl border border-contrast/10 bg-background/60 p-4 sm:p-5 lg:p-6 shadow-sm">
+              <div className="flex flex-col gap-3 mb-4">
+                <div>
+                  <h2 className="text-[22px] md:text-[23px] lg:text-[24px] font-bold text-secondary">
+                    All Events
+                  </h2>
+                  <p className="text-[14px] md:text-[15px] lg:text-[16px] text-inactive-tab-text">
+                    Select an event to view its detailed statistics
+                  </p>
+                </div>
+                <hr className="border-t border-gray-400/60 -mt-1 mb-1 shadow-lg" />
+              </div>
+
+              <EventsStatisticsTable onEventSelect={setSelectedEvent} />
+            </section>
+          </div>
         ) : (
           <div className="flex flex-col gap-6">
             {/* Back Button + Event Info */}
@@ -80,7 +87,7 @@ const StatisticsPage: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <RegistrationOverviewChart />
+                  <RegistrationOverviewChart eventId={selectedEvent.id} />
                 </motion.div>
 
                 <motion.div
@@ -88,7 +95,7 @@ const StatisticsPage: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 0.1 }}
                 >
-                  <GenderDistributionChart />
+                  <GenderDistributionChart eventId={selectedEvent.id} />
                 </motion.div>
 
                 <motion.div
@@ -97,7 +104,7 @@ const StatisticsPage: React.FC = () => {
                   transition={{ duration: 0.3, delay: 0.3 }}
                   className="md:col-span-2 min-h-[400px]"
                 >
-                  <UniversityDistributionChart />
+                  <UniversityDistributionChart eventId={selectedEvent.id} />
                 </motion.div>
 
                 <motion.div
@@ -106,7 +113,7 @@ const StatisticsPage: React.FC = () => {
                   transition={{ duration: 0.3, delay: 0.5 }}
                   className="md:col-span-2 min-h-[450px]"
                 >
-                  <DepartmentAttendanceChart />
+                  <DepartmentAttendanceChart eventId={selectedEvent.id} />
                 </motion.div>
               </div>
             </Suspense>

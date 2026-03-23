@@ -10,6 +10,17 @@ interface EventsStatisticsTableProps {
   onEventSelect: (event: Event) => void;
 }
 
+const getCapacity = (event: Event) => {
+  if (event.slots?.length) {
+    return event.slots.reduce((total, slot) => total + (slot.capacity || 0), 0);
+  }
+  return 0;
+};
+
+const getEventTypeLabel = (type: string) => {
+  return EVENT_TYPES.find((eventType) => eventType.value === type)?.label || type;
+};
+
 const EventsStatisticsTable = ({
   onEventSelect,
 }: EventsStatisticsTableProps) => {
@@ -19,7 +30,7 @@ const EventsStatisticsTable = ({
   });
 
   const { data, isLoading } = useGetAllEvents(queryParams);
-
+  
   const handlePageChange = (newPage: number) => {
     setQueryParams((prev) => ({ ...prev, PageNumber: newPage }));
   };
@@ -73,7 +84,10 @@ const EventsStatisticsTable = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-contrast/10">
-            {events.map((event) => (
+            {events.map((event) => {
+              const registeredCount = event.registrationCount ?? 0;
+
+              return (
               <tr
                 key={event.id}
                 onClick={() => onEventSelect(event)}
@@ -89,69 +103,74 @@ const EventsStatisticsTable = ({
                 </td>
                 <td className="px-4 py-3">
                   <span className="inline-flex items-center px-2.5 py-1 rounded-full text-sm shadow-sm font-medium bg-gray-500/10 text-contrast border-gray-500">
-                    {EVENT_TYPES.find((type) => type.value === event.type)?.label || event.type}
+                    {getEventTypeLabel(event.type)}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-secondary font-medium">
-                  {event.registeredCount}
+                  {registeredCount}
                 </td>
                 <td className="px-4 py-3 text-secondary font-medium">
                   {event.attendeeCount}
                 </td>
                 <td className="px-4 py-3 text-secondary font-medium">
-                  {event.capacity}
+                  {getCapacity(event)}
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
 
       {/* Mobile Card View */}
       <div className="lg:hidden divide-y divide-contrast/10">
-        {events.map((event) => (
-          <div
-            key={event.id}
-            onClick={() => onEventSelect(event)}
-            className="p-4 space-y-3 hover:bg-contrast/5 transition-colors cursor-pointer active:bg-contrast/10"
-          >
-            <div className="flex justify-between items-start">
-              <p className="font-semibold text-contrast text-[18px]">
-                {event.name}
-              </p>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-contrast/10 text-contrast shrink-0 ml-2">
-                {event.type}
-              </span>
-            </div>
+        {events.map((event) => {
+          const registeredCount = event.registrationCount ?? 0;
 
-            <div className="flex flex-wrap gap-4 text-sm">
-              <div>
-                <span className="font-medium text-inactive-tab-text block mb-0.5">
-                  Date
+          return (
+            <div
+              key={event.id}
+              onClick={() => onEventSelect(event)}
+              className="p-4 space-y-3 hover:bg-contrast/5 transition-colors cursor-pointer active:bg-contrast/10"
+            >
+              <div className="flex justify-between items-start">
+                <p className="font-semibold text-contrast text-[18px]">
+                  {event.name}
+                </p>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-contrast/10 text-contrast shrink-0 ml-2">
+                  {getEventTypeLabel(event.type)}
                 </span>
-                <span className="text-secondary">{format(event.date, "stringed")}</span>
               </div>
-              <div>
-                <span className="font-medium text-inactive-tab-text block mb-0.5">
-                  Registered
-                </span>
-                <span className="text-secondary">{event.registeredCount}</span>
-              </div>
-              <div>
-                <span className="font-medium text-inactive-tab-text block mb-0.5">
-                  Attended
-                </span>
-                <span className="text-secondary">{event.attendeeCount}</span>
-              </div>
-              <div>
-                <span className="font-medium text-inactive-tab-text block mb-0.5">
-                  Capacity
-                </span>
-                <span className="text-secondary">{event.capacity}</span>
+
+              <div className="flex flex-wrap gap-4 text-sm">
+                <div>
+                  <span className="font-medium text-inactive-tab-text block mb-0.5">
+                    Date
+                  </span>
+                  <span className="text-secondary">{format(event.date, "stringed")}</span>
+                </div>
+                <div>
+                  <span className="font-medium text-inactive-tab-text block mb-0.5">
+                    Registered
+                  </span>
+                  <span className="text-secondary">{registeredCount}</span>
+                </div>
+                <div>
+                  <span className="font-medium text-inactive-tab-text block mb-0.5">
+                    Attended
+                  </span>
+                  <span className="text-secondary">{event.attendeeCount}</span>
+                </div>
+                <div>
+                  <span className="font-medium text-inactive-tab-text block mb-0.5">
+                    Capacity
+                  </span>
+                  <span className="text-secondary">{getCapacity(event)}</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Pagination */}

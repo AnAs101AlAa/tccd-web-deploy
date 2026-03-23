@@ -28,12 +28,13 @@ export default interface Event {
   name: string;
   description: string;
   date: string;
-  locations: string[];
+  locations?: string[];
   isApproved: boolean;
   type: string;
   attendeeCount: number;
-  registeredCount: number;
-  capacity: number;
+  registeredCount?: number;
+  registrationCount?: number;
+  capacity?: number;
   eventImage: string;
   registrationDeadline?: string;
   createdBy?: string;

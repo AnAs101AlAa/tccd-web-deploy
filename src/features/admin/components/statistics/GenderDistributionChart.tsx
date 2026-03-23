@@ -1,14 +1,43 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 import { useThemeColors } from "@/shared/hooks/useThemeColors";
+import { useGetEventGenderDistributionStats } from "@/shared/queries/admin/stats/statsQueries";
 
-const GenderDistributionChart: React.FC = () => {
+interface GenderDistributionChartProps {
+  eventId: string;
+}
+
+const GenderDistributionChart: React.FC<GenderDistributionChartProps> = ({ eventId }) => {
   const colors = useThemeColors();
+  const { data, isLoading, error } = useGetEventGenderDistributionStats(eventId);
 
-  const data = [
-    { value: 735, name: "Male" },
-    { value: 580, name: "Female" },
-  ];
+  const chartData = useMemo(() => {
+    if (!data || !data.distribution) return [];
+    
+    const males = data.distribution.find(d => String(d.gender).toLowerCase() === 'male' || String(d.gender) === '0')?.count || 0;
+    const females = data.distribution.find(d => String(d.gender).toLowerCase() === 'female' || String(d.gender) === '1')?.count || 0;
+
+    return [
+      { value: males, name: "Male" },
+      { value: females, name: "Female" },
+    ];
+  }, [data]);
+
+  if (isLoading) {
+    return (
+      <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm flex flex-col items-center justify-center h-full min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-contrast"></div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="bg-background/60 p-6 rounded-2xl border border-contrast/10 shadow-sm flex flex-col items-center justify-center h-full min-h-[400px]">
+        <p className="text-muted-foreground">Failed to load gender distribution.</p>
+      </div>
+    );
+  }
 
   const option = {
     color: [colors.secondary, colors.primary],
@@ -25,7 +54,7 @@ const GenderDistributionChart: React.FC = () => {
         type: "pie",
         radius: "70%",
         center: ["50%", "55%"],
-        data: data,
+        data: chartData,
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
@@ -66,7 +95,7 @@ const GenderDistributionChart: React.FC = () => {
             className="text-3xl font-bold"
             style={{ color: colors.secondary }}
           >
-            {data[0].value}
+            {chartData[0]?.value || 0}
           </span>
           <div className="flex items-center gap-2">
             <span
@@ -81,7 +110,7 @@ const GenderDistributionChart: React.FC = () => {
             className="text-3xl font-bold"
             style={{ color: colors.primary }}
           >
-            {data[1].value}
+            {chartData[1]?.value || 0}
           </span>
           <div className="flex items-center gap-2">
             <span
