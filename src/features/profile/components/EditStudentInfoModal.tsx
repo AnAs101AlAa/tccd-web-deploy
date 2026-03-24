@@ -67,8 +67,6 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
         },
     });
 
-    console.log("Validation errors:", errors);
-
     const facultyValue = watch("faculty");
     const nationality = watch("nationality");
 
