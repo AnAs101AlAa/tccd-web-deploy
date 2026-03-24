@@ -9,8 +9,8 @@ export interface UpdateUserProfilePayload {
   arabicName: string;
   phoneNumber: string;
   gender: Gender;
-  nationalId: string;
-  passportNumber: string;
+  nationalId?: string;
+  passportNumber?: string;
 }
 
 export interface UpdateUserProfileResponse {

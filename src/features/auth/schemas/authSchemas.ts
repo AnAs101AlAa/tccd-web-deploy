@@ -106,8 +106,8 @@ export const basicInfoSchema = z
     nationality: z.enum(["egyptian", "non-egyptian"], {
       message: "Please select your nationality",
     }),
-    nationalId: z.string().optional().default(""),
-    passportNumber: z.string().optional().default(""),
+    nationalId: z.string().transform((val) => val || ""),
+    passportNumber: z.string().transform((val) => val || ""),
     linkedinUrl: z
       .string()
       .url("Please enter a valid URL")
