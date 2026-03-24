@@ -192,12 +192,12 @@ const nationalitySchema = z.enum(["egyptian", "non-egyptian"], {
 /**
  * National ID Schema
  */
-const nationalIdSchema = z.string().or(z.undefined()).or(z.null()).transform((val) => val || "");
+const nationalIdSchema = z.string().optional();
 
 /**
  * Passport Number Schema
  */
-const passportNumberSchema = z.string().or(z.undefined()).or(z.null()).transform((val) => val || "");
+const passportNumberSchema = z.string().optional();
 
 /**
  * Edit Student Profile Schema
@@ -236,7 +236,7 @@ export const editStudentProfileSchema = z
   .refine(
     (data) => {
       if (data.nationality === "egyptian") {
-        return /^[0-9]{14}$/.test(data.nationalId);
+        return data.nationalId ? /^[0-9]{14}$/.test(data.nationalId) : false;
       }
       return true;
     },
@@ -260,12 +260,12 @@ export const editStudentProfileSchema = z
   .refine(
     (data) => {
       if (data.nationality === "non-egyptian") {
-        return /^[A-Z]{1}[0-9]{8}$/.test(data.passportNumber);
+        return data.passportNumber ? /^[A-Z]{1}[0-9]{7,8}$/.test(data.passportNumber) : false;
       }
       return true;
     },
     {
-      message: "Passport number must be in format: 1 letter followed by 8 digits (e.g., A12345678)",
+      message: "Passport number must be in format: 1 letter followed by 7 or 8 digits (e.g., A1234567 or A12345678)",
       path: ["passportNumber"],
     },
   );
