@@ -192,12 +192,12 @@ const nationalitySchema = z.enum(["egyptian", "non-egyptian"], {
 /**
  * National ID Schema
  */
-const nationalIdSchema = z.string().transform((val) => val || "");
+const nationalIdSchema = z.string().or(z.undefined()).or(z.null()).transform((val) => val || "");
 
 /**
  * Passport Number Schema
  */
-const passportNumberSchema = z.string().transform((val) => val || "");
+const passportNumberSchema = z.string().or(z.undefined()).or(z.null()).transform((val) => val || "");
 
 /**
  * Edit Student Profile Schema
