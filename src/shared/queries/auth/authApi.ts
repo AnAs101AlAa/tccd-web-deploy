@@ -29,6 +29,8 @@ export class AuthApi {
       email: credentials.email,
       gender: response.gender,
       status: response.status,
+      nationalId: response.nationalId || "",
+      passportNumber: response.passportNumber || "",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isDeleted: false,

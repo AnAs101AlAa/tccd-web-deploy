@@ -10,6 +10,8 @@ export interface StudentSignupCredentials {
   arabicName: string;
   gender: "Male" | "Female";
   phoneNumber: string;
+  nationalId?: string;
+  passportNumber?: string;
   university: string;
   faculty: string;
   department: string;
@@ -25,6 +27,9 @@ export interface BusinessRepSignupCredentials {
   phoneNumber: string;
   password: string;
   gender: "Male" | "Female";
+  nationalId?: string;
+  passportNumber?: string;
+  linkedin?: string;
   role?: string;
   companyId?: string;
   newCompany?: {
@@ -46,6 +51,9 @@ export interface FacultySignupCredentials {
   password: string;
   role: string;
   gender: "Male" | "Female";
+  nationalId?: string;
+  passportNumber?: string;
+  linkedin?: string;
   universityName: string;
   facultyName: string;
   department: string;

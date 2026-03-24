@@ -178,22 +178,96 @@ const githubSchema = z
   );
 
 /**
+ * CV URL Schema (optional)
+ */
+const cvSchema = z.string().optional().nullable();
+
+/**
+ * Nationality Schema
+ */
+const nationalitySchema = z.enum(["egyptian", "non-egyptian"], {
+  message: "Please select your nationality",
+});
+
+/**
+ * National ID Schema
+ */
+const nationalIdSchema = z.string().transform((val) => val || "");
+
+/**
+ * Passport Number Schema
+ */
+const passportNumberSchema = z.string().transform((val) => val || "");
+
+/**
  * Edit Student Profile Schema
  * Used for validating student profile edit form
  */
-export const editStudentProfileSchema = z.object({
-  englishFullName: englishFullNameSchema,
-  arabicFullName: arabicFullNameSchema,
-  phoneNumber: phoneNumberSchema,
-  gender: genderSchema,
-  university: universitySchema,
-  faculty: facultySchema,
-  department: departmentSchema,
-  graduationYear: graduationYearSchema,
-  gpa: gpaSchema,
-  linkedin: linkedinSchema,
-  gitHub: githubSchema,
-  cv: z.string().optional().nullable(),
-});
+export const editStudentProfileSchema = z
+  .object({
+    englishFullName: englishFullNameSchema,
+    arabicFullName: arabicFullNameSchema,
+    phoneNumber: phoneNumberSchema,
+    gender: genderSchema,
+    nationality: nationalitySchema,
+    nationalId: nationalIdSchema,
+    passportNumber: passportNumberSchema,
+    university: universitySchema,
+    faculty: facultySchema,
+    department: departmentSchema,
+    graduationYear: graduationYearSchema,
+    gpa: gpaSchema,
+    linkedin: linkedinSchema,
+    gitHub: githubSchema,
+    cv: cvSchema,
+  })
+  .refine(
+    (data) => {
+      if (data.nationality === "egyptian") {
+        return data.nationalId && data.nationalId.trim().length > 0;
+      }
+      return true;
+    },
+    {
+      message: "National ID is required for Egyptian citizens",
+      path: ["nationalId"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.nationality === "egyptian") {
+        return /^[0-9]{14}$/.test(data.nationalId);
+      }
+      return true;
+    },
+    {
+      message: "Egyptian National ID must be exactly 14 digits",
+      path: ["nationalId"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.nationality === "non-egyptian") {
+        return data.passportNumber && data.passportNumber.trim().length > 0;
+      }
+      return true;
+    },
+    {
+      message: "Passport number is required for non-Egyptian citizens",
+      path: ["passportNumber"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.nationality === "non-egyptian") {
+        return /^[A-Z]{1}[0-9]{8}$/.test(data.passportNumber);
+      }
+      return true;
+    },
+    {
+      message: "Passport number must be in format: 1 letter followed by 8 digits (e.g., A12345678)",
+      path: ["passportNumber"],
+    },
+  );
 
 export type EditStudentProfileFormData = z.infer<typeof editStudentProfileSchema>;
