@@ -99,12 +99,16 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                 gender: formValues.gender,
             };
 
-            // Only add non-empty ID fields to the payload
-            const profilePayload = {
+            // Build payload with proper handling of ID fields based on nationality - only include non-empty values
+            const profilePayload: any = {
                 ...baseProfile,
-                ...(formValues.nationalId?.trim() && { nationalId: formValues.nationalId.trim() }),
-                ...(formValues.passportNumber?.trim() && { passportNumber: formValues.passportNumber.trim() }),
             };
+            if (formValues.nationality === "egyptian" && formValues.nationalId?.trim()) {
+                profilePayload.nationalId = formValues.nationalId?.trim() || "";
+            }
+            if (formValues.nationality === "non-egyptian" && formValues.passportNumber?.trim()) {
+                profilePayload.passportNumber = formValues.passportNumber?.trim() || "";
+            }
 
             const apiCalls: Promise<any>[] = [
                 updateUserProfileMutation.mutateAsync(profilePayload),
@@ -137,11 +141,11 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                 cv: formValues.cv?.trim() || undefined,
             };
 
-            // Only add non-empty ID fields to the updated user
+            // Properly handle ID fields based on nationality - clear the unused one
             const updatedUser: StudentLikeUser = {
                 ...baseUpdatedUser,
-                ...(formValues.nationalId?.trim() && { nationalId: formValues.nationalId.trim() }),
-                ...(formValues.passportNumber?.trim() && { passportNumber: formValues.passportNumber.trim() }),
+                nationalId: formValues.nationality === "egyptian" ? (formValues.nationalId?.trim() || "") : "",
+                passportNumber: formValues.nationality === "non-egyptian" ? (formValues.passportNumber?.trim() || "") : "",
             };
 
             dispatch(setUser(updatedUser));

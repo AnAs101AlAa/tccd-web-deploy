@@ -192,18 +192,12 @@ const nationalitySchema = z.enum(["egyptian", "non-egyptian"], {
 /**
  * National ID Schema
  */
-const nationalIdSchema = z
-  .union([z.string(), z.undefined(), z.null()])
-  .transform((val) => val || "")
-  .pipe(z.string());
+const nationalIdSchema = z.string().optional();
 
 /**
  * Passport Number Schema
  */
-const passportNumberSchema = z
-  .union([z.string(), z.undefined(), z.null()])
-  .transform((val) => val || "")
-  .pipe(z.string());
+const passportNumberSchema = z.string().optional();
 
 /**
  * Edit Student Profile Schema
@@ -242,7 +236,7 @@ export const editStudentProfileSchema = z
   .refine(
     (data) => {
       if (data.nationality === "egyptian") {
-        return /^[0-9]{14}$/.test(data.nationalId);
+        return data.nationalId ? /^[0-9]{14}$/.test(data.nationalId) : false;
       }
       return true;
     },
@@ -266,7 +260,7 @@ export const editStudentProfileSchema = z
   .refine(
     (data) => {
       if (data.nationality === "non-egyptian") {
-        return /^[A-Z]{1}[0-9]{7,8}$/.test(data.passportNumber);
+        return data.passportNumber ? /^[A-Z]{1}[0-9]{7,8}$/.test(data.passportNumber) : false;
       }
       return true;
     },

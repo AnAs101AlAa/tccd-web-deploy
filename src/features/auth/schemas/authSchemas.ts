@@ -106,8 +106,8 @@ export const basicInfoSchema = z
     nationality: z.enum(["egyptian", "non-egyptian"], {
       message: "Please select your nationality",
     }),
-    nationalId: z.string().transform((val) => val || ""),
-    passportNumber: z.string().transform((val) => val || ""),
+    nationalId: z.string().optional(),
+    passportNumber: z.string().optional(),
     linkedinUrl: z
       .string()
       .url("Please enter a valid URL")
@@ -138,7 +138,7 @@ export const basicInfoSchema = z
   .refine(
     (data) => {
       if (data.nationality === "egyptian") {
-        return /^[0-9]{14}$/.test(data.nationalId);
+        return data.nationalId ? /^[0-9]{14}$/.test(data.nationalId) : false;
       }
       return true;
     },
@@ -162,7 +162,7 @@ export const basicInfoSchema = z
   .refine(
     (data) => {
       if (data.nationality === "non-egyptian") {
-        return /^[A-Z]{1}[0-9]{7,8}$/.test(data.passportNumber);
+        return data.passportNumber ? /^[A-Z]{1}[0-9]{7,8}$/.test(data.passportNumber) : false;
       }
       return true;
     },
