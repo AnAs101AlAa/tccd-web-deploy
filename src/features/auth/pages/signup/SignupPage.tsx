@@ -56,9 +56,12 @@ export const SignupPage = () => {
       phoneNumber: "",
       email: "",
       gender: undefined,
+      nationality: "egyptian",
       linkedinUrl: "",
       password: "",
       confirmPassword: "",
+      nationalId: "", 
+      passportNumber: "",
     },
   });
 
@@ -107,7 +110,7 @@ export const SignupPage = () => {
     if (isAuthenticated) {
       navigate("/", { replace: true });
     }
-  }, []);
+  }, [isAuthenticated, navigate]);
 
   // Get step labels
   const getStepLabels = () => {

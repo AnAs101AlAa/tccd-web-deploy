@@ -103,6 +103,11 @@ export const basicInfoSchema = z
     phoneNumber: phoneNumberSchema,
     email: emailSchema,
     gender: genderSchema,
+    nationality: z.enum(["egyptian", "non-egyptian"], {
+      message: "Please select your nationality",
+    }),
+    nationalId: z.string().optional().default(""),
+    passportNumber: z.string().optional().default(""),
     linkedinUrl: z
       .string()
       .url("Please enter a valid URL")
@@ -117,7 +122,55 @@ export const basicInfoSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  });
+  })
+  .refine(
+    (data) => {
+      if (data.nationality === "egyptian") {
+        return data.nationalId && data.nationalId.trim().length > 0;
+      }
+      return true;
+    },
+    {
+      message: "National ID is required for Egyptian citizens",
+      path: ["nationalId"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.nationality === "egyptian") {
+        return /^[0-9]{14}$/.test(data.nationalId);
+      }
+      return true;
+    },
+    {
+      message: "Egyptian National ID must be exactly 14 digits",
+      path: ["nationalId"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.nationality === "non-egyptian") {
+        return data.passportNumber && data.passportNumber.trim().length > 0;
+      }
+      return true;
+    },
+    {
+      message: "Passport number is required for non-Egyptian citizens",
+      path: ["passportNumber"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.nationality === "non-egyptian") {
+        return /^[A-Z]{1}[0-9]{8}$/.test(data.passportNumber);
+      }
+      return true;
+    },
+    {
+      message: "Passport number must be in format: 1 letter followed by 8 digits (e.g., A12345678)",
+      path: ["passportNumber"],
+    },
+  );
 
 export type BasicInfoFormData = z.infer<typeof basicInfoSchema>;
 
@@ -224,6 +277,9 @@ export const signupSchema = z.object({
   phoneNumber: phoneNumberSchema,
   email: emailSchema,
   gender: genderSchema,
+  nationality: z.enum(["egyptian", "non-egyptian"]).optional(),
+  nationalId: z.string().optional(),
+  passportNumber: z.string().optional(),
   linkedinUrl: z.string().optional(),
   password: passwordSchema,
   confirmPassword: z.string(),

@@ -11,6 +11,7 @@ import {
   IoCalendarOutline,
   IoStatsChartOutline,
   IoMaleFemaleOutline,
+  IoDocumentOutline,
 } from "react-icons/io5";
 
 type StudentLikeUser = StudentUser | VolunteeringUser;
@@ -30,35 +31,58 @@ interface StudentInfoDisplayProps {
 
 const StudentInfoDisplay: React.FC<StudentInfoDisplayProps> = ({ user }) => {
   const primaryDetailsWithIcons = useMemo(
-    () => [
-      {
-        label: "English Name",
-        value: user.englishFullName,
-        icon: IoPersonOutline,
-      },
-      {
-        label: "Arabic Name",
-        value: user.arabicFullName,
-        icon: IoPersonOutline,
-      },
-      {
-        label: "Email",
-        value: user.email,
-        icon: IoMailOutline,
-        truncate: true,
-      },
-      { label: "Phone Number", value: user.phoneNumber, icon: IoCallOutline },
-      { label: "Gender", value: user.gender, icon: IoMaleFemaleOutline },
-      { label: "University", value: user.university, icon: IoSchoolOutline },
-      { label: "Faculty", value: user.faculty, icon: IoSchoolOutline },
-      { label: "Department", value: user.department, icon: IoBusinessOutline },
-      {
-        label: "Graduation Year",
-        value: user.graduationYear,
-        icon: IoCalendarOutline,
-      },
-      { label: "GPA", value: user.gpa, icon: IoStatsChartOutline },
-    ],
+    () => {
+      const details = [
+        {
+          label: "English Name",
+          value: user.englishFullName,
+          icon: IoPersonOutline,
+        },
+        {
+          label: "Arabic Name",
+          value: user.arabicFullName,
+          icon: IoPersonOutline,
+        },
+        {
+          label: "Email",
+          value: user.email,
+          icon: IoMailOutline,
+          truncate: true,
+        },
+        { label: "Phone Number", value: user.phoneNumber, icon: IoCallOutline },
+        { label: "Gender", value: user.gender, icon: IoMaleFemaleOutline },
+        // Show either National ID or Passport Number, but not both
+        ...(user.nationalId
+          ? [
+              {
+                label: "National ID",
+                value: user.nationalId,
+                icon: IoDocumentOutline,
+              },
+            ]
+          : user.passportNumber
+            ? [
+                {
+                  label: "Passport Number",
+                  value: user.passportNumber,
+                  icon: IoDocumentOutline,
+                },
+              ]
+            : []),
+        { label: "University", value: user.university, icon: IoSchoolOutline },
+        { label: "Faculty", value: user.faculty, icon: IoSchoolOutline },
+        ...(user.department && user.department.trim()
+          ? [{ label: "Department", value: user.department, icon: IoBusinessOutline }]
+          : []),
+        {
+          label: "Graduation Year",
+          value: user.graduationYear,
+          icon: IoCalendarOutline,
+        },
+        { label: "GPA", value: user.gpa, icon: IoStatsChartOutline },
+      ];
+      return details;
+    },
     [user]
   );
 
@@ -114,6 +138,7 @@ const StudentInfoDisplay: React.FC<StudentInfoDisplayProps> = ({ user }) => {
     <>
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {primaryDetailsWithIcons
+          .filter((detail) => detail.value !== null && detail.value !== undefined && String(detail.value).trim() !== "")
           .map((detail) => (
             <InfoField
               key={detail.label}

@@ -47,23 +47,30 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
         formState: { errors },
     } = useForm<EditStudentProfileFormData>({
         resolver: zodResolver(editStudentProfileSchema),
+        mode: "onChange",
         defaultValues: {
             englishFullName: user.englishFullName,
             arabicFullName: user.arabicFullName,
             phoneNumber: user.phoneNumber,
             gender: user.gender,
+            nationality: user.nationalId ? "egyptian" : "non-egyptian",
+            nationalId: user.nationalId ? user.nationalId : "",
+            passportNumber: user.passportNumber ? user.passportNumber : "",
             university: user.university,
             faculty: user.faculty,
             department: user.department,
             graduationYear: user.graduationYear.toString(),
             gpa: user.gpa.toString(),
-            linkedin: user.linkedin,
-            gitHub: user.gitHub,
-            cv: user.cv,
+            linkedin: user.linkedin || "",
+            gitHub: user.gitHub || "",
+            cv: user.cv || "",
         },
     });
 
+    console.log("Validation errors:", errors);
+
     const facultyValue = watch("faculty");
+    const nationality = watch("nationality");
 
     useEffect(() => {
         reset({
@@ -71,26 +78,38 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
             arabicFullName: user.arabicFullName,
             phoneNumber: user.phoneNumber,
             gender: user.gender,
+            nationality: user.nationalId ? "egyptian" : "non-egyptian",
+            nationalId: user.nationalId ? user.nationalId : "",
+            passportNumber: user.passportNumber ? user.passportNumber : "",
             university: user.university,
             faculty: user.faculty,
             department: user.department,
             graduationYear: user.graduationYear.toString(),
             gpa: user.gpa.toString(),
-            linkedin: user.linkedin,
-            gitHub: user.gitHub,
-            cv: user.cv,
+            linkedin: user.linkedin || "",
+            gitHub: user.gitHub || "",
+            cv: user.cv || "",
         });
     }, [user, reset]);
 
     const onSubmit = async (formValues: EditStudentProfileFormData) => {
         try {
+            const baseProfile = {
+                englishName: formValues.englishFullName.trim(),
+                arabicName: formValues.arabicFullName.trim(),
+                phoneNumber: formValues.phoneNumber.trim(),
+                gender: formValues.gender,
+            };
+
+            // Only add non-empty ID fields to the payload
+            const profilePayload = {
+                ...baseProfile,
+                ...(formValues.nationalId?.trim() && { nationalId: formValues.nationalId.trim() }),
+                ...(formValues.passportNumber?.trim() && { passportNumber: formValues.passportNumber.trim() }),
+            };
+
             const apiCalls: Promise<any>[] = [
-                updateUserProfileMutation.mutateAsync({
-                    englishName: formValues.englishFullName.trim(),
-                    arabicName: formValues.arabicFullName.trim(),
-                    phoneNumber: formValues.phoneNumber.trim(),
-                    gender: formValues.gender,
-                }),
+                updateUserProfileMutation.mutateAsync(profilePayload),
                 updateStudentProfileMutation.mutateAsync({
                     gpa: parseFloat(formValues.gpa.trim()),
                     graduationYear: parseInt(formValues.graduationYear.trim(), 10),
@@ -104,11 +123,12 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
 
             await Promise.all(apiCalls);
 
-            const updatedUser: StudentLikeUser = {
+            const baseUpdatedUser = {
                 ...user,
                 englishFullName: formValues.englishFullName.trim(),
                 arabicFullName: formValues.arabicFullName.trim(),
                 gender: formValues.gender,
+                phoneNumber: formValues.phoneNumber.trim(),
                 university: formValues.university.trim(),
                 faculty: formValues.faculty.trim(),
                 department: formValues.department.trim(),
@@ -117,6 +137,13 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                 linkedin: formValues.linkedin?.trim() || undefined,
                 gitHub: formValues.gitHub?.trim() || undefined,
                 cv: formValues.cv?.trim() || undefined,
+            };
+
+            // Only add non-empty ID fields to the updated user
+            const updatedUser: StudentLikeUser = {
+                ...baseUpdatedUser,
+                ...(formValues.nationalId?.trim() && { nationalId: formValues.nationalId.trim() }),
+                ...(formValues.passportNumber?.trim() && { passportNumber: formValues.passportNumber.trim() }),
             };
 
             dispatch(setUser(updatedUser));
@@ -194,6 +221,58 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                             />
                         )}
                     />
+                    <Controller
+                        name="nationality"
+                        control={control}
+                        render={({ field }) => (
+                            <DropdownMenu
+                                labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                label="Nationality *"
+                                options={[
+                                    { label: "Egyptian", value: "egyptian" },
+                                    { label: "Non-Egyptian", value: "non-egyptian" },
+                                ]}
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder="Select nationality"
+                                id="nationality"
+                                error={errors.nationality?.message}
+                            />
+                        )}
+                    />
+                    {nationality === "egyptian" ? (
+                        <Controller
+                            name="nationalId"
+                            control={control}
+                            render={({ field }) => (
+                                <InputField
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="National ID *"
+                                    value={field.value || ""}
+                                    placeholder="Enter your national ID number"
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    id="nationalId"
+                                    error={errors.nationalId?.message}
+                                />
+                            )}
+                        />
+                    ) : nationality === "non-egyptian" ? (
+                        <Controller
+                            name="passportNumber"
+                            control={control}
+                            render={({ field }) => (
+                                <InputField
+                                    labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
+                                    label="Passport Number *"
+                                    value={field.value || ""}
+                                    placeholder="Enter your passport number"
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    id="passportNumber"
+                                    error={errors.passportNumber?.message}
+                                />
+                            )}
+                        />
+                    ) : null}
                     <Controller
                         name="university"
                         control={control}
