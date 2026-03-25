@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useVerifyStudent, useResendVerification } from "@/shared/queries/auth";
 import { useEffect, useState } from "react";
 import { ErrorScreen, SuccessScreen, InputField, Button } from "tccd-ui";
@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 
 export default function SignupVerification() {
     const { token } = useParams();
+    const navigate = useNavigate();
     const [status, setStatus] = useState<"verifying" | "success" | "error">("verifying");
     const [resendEmail, setResendEmail] = useState("");
     
@@ -21,6 +22,15 @@ export default function SignupVerification() {
 
         }
     }, [token]);
+
+    useEffect(() => {
+        if (status === "success") {
+            const timer = setTimeout(() => {
+                navigate("/login");
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [status, navigate]);
 
     const handleResend = () => {
         if (!resendEmail) return;
@@ -56,7 +66,7 @@ export default function SignupVerification() {
             </div>
         );
     } else if (status === "success") {
-        return <SuccessScreen title="Account Verified" message="Your account has been successfully verified! You can now log in." />;
+        return <SuccessScreen title="Account Verified" message="Your account has been successfully verified! You will be redirected to the login page." />;
     } else {
         return (
             <ErrorScreen 
