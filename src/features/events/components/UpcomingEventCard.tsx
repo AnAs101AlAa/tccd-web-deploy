@@ -4,11 +4,10 @@ import { useRef, useEffect, useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
 import EVENT_TYPES from "@/constants/EventTypes";
 import format from "@/shared/utils/dateFormater";
-import { useCurrentUser } from "@/shared/store";
+import { useCurrentUser, useIsAdmin } from "@/shared/store";
 import toast from "react-hot-toast";
 import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 import { motion } from "framer-motion";
-import { useIsStudent, useIsVolunteer } from "@/shared/store";
 
 interface UpcomingEventCardProps {
   event: Event;
@@ -27,8 +26,7 @@ const UpcomingEventCard: React.FC<UpcomingEventCardProps> = ({
   const [isTapped, setIsTapped] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const currentUser = useCurrentUser();
-  const isStudent = useIsStudent();
-  const isVolunteer = useIsVolunteer();
+  const isAdmin = useIsAdmin();
 
   useEffect(() => {
     const wholeEl = wholeInfoRef.current;
@@ -117,7 +115,7 @@ const UpcomingEventCard: React.FC<UpcomingEventCardProps> = ({
           </p>
 
           <div className="flex gap-1.5 md:gap-3 mt-4">
-            {(isStudent || isVolunteer) && (
+            {(!isAdmin) && (
               <Button
                 buttonText="Book Now"
                 type="primary"
