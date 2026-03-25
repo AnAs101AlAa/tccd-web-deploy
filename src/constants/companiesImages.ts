@@ -1,54 +1,40 @@
 // Company images for the carousel
-import company1 from "@/assets/companies/American Council Egypt (ACE).png";
-import company2 from "@/assets/companies/Atomica AI.png";
-// import company3 from "@/assets/companies/CASIO.png";
-import company4 from "@/assets/companies/Cheiron.jpeg";
-import company5 from "@/assets/companies/DAR.png";
-// import company6 from "@/assets/companies/EDECS.png";
-import company7 from "@/assets/companies/Ejada.png";
-import company8 from "@/assets/companies/ELhazek.png";
-import company9 from "@/assets/companies/ElSewedy Electric.png";
-import company10 from "@/assets/companies/Envnt Logo.png";
-import company11 from "@/assets/companies/EzzSteel.png";
-// import company12 from "@/assets/companies/Kahraba.png";
-// import company13 from "@/assets/companies/Madkour.jpeg";
-// import company14 from "@/assets/companies/MCS group-all-logos-CMYK.jpg";
-import company15 from "@/assets/companies/Miraco.png";
-// import company16 from "@/assets/companies/MIRO logo.jpg";
-import company17 from "@/assets/companies/Noon.png";
-import company18 from "@/assets/companies/Oakland.jpeg";
-// import company19 from "@/assets/companies/Rowad.png";
-import company20 from "@/assets/companies/SETs.png";
-// import company21 from "@/assets/companies/Simplex.jpg";
-import company22 from "@/assets/companies/SLB.png";
-// import company23 from "@/assets/companies/SODIC_Logo_Teal_RGB.jpg";
-import company24 from "@/assets/companies/SUMITOMO.png";
-import company25 from "@/assets/companies/V7-Benefit Company.png";
-
 export const COMPANIES_IMAGES = [
-  company1,
-  company2,
-  // company3,
-  company4,
-  company5,
-  // company6,
-  company7,
-  company8,
-  company9,
-  company10,
-  company11,
-  // company12,
-  // company13,
-  // company14,
-  company15,
-  // company16,
-  company17,
-  company18,
-  // company19,
-  company20,
-  // company21,
-  company22,
-  // company23,
-  company24,
-  company25,
+  "https://lh3.googleusercontent.com/d/1jeDMXWk-ttPXHRCcUhoIT81qlaB3prpO",
+  "https://lh3.googleusercontent.com/d/15XePzC08pDnQ7xsjNc4tJqZ7SL7V4loO",
+  "https://lh3.googleusercontent.com/d/1EjbMJ1YVVSV2fM7W7Aj82IfTnm9Nd-fd",
+  "https://lh3.googleusercontent.com/d/1FDXijW_9RFYv8eri19g5G2N5Zh5xpPUc",
+  "https://lh3.googleusercontent.com/d/1eoHBcHx1dgKqMxVc6yKASyNL8O-SEKRY",
+  "https://lh3.googleusercontent.com/d/12X_8KVqXOydYCU9FnrF7HKJeix5a3MvG",
+  "https://lh3.googleusercontent.com/d/15OzQ0EtC3l51f9TOhgAHiuyjb7y2mcdT",
+  "https://lh3.googleusercontent.com/d/1LYGT9-ndHcLFU1zRf203Xw2saCPu2ylU",
+  "https://lh3.googleusercontent.com/d/1DvoswHoCoxVBQb2eqC5TpeHAev86Jioo",
+  "https://lh3.googleusercontent.com/d/1wZb56X7l6y8wOckdR2sBkLiiNBdsk1L8",
+  "https://lh3.googleusercontent.com/d/1xSZ5nMmbpySlRhy7s4arz2x1nTXPfRln",
+  "https://lh3.googleusercontent.com/d/149i6ohOmy0tm4Wo80_dgY0e74niGCc3O",
+  "https://lh3.googleusercontent.com/d/14cjWSU5owMi2JeX4aLs0aAgyoEUmIdDF",
+  "https://lh3.googleusercontent.com/d/110AxUe0T2NCmZvJr16dsgOMvUz8F9GY5",
+  "https://lh3.googleusercontent.com/d/1OpUM_orgKm8SpLhtkv5lPdSZFgz4Af9w",
+  "https://lh3.googleusercontent.com/d/1bOnyx-wYnNmslj5bmYW7av7yYzpOn8jz",
+  "https://lh3.googleusercontent.com/d/1TLFHONPFkfINlTrmtCfDFbj2mA5vJbQ2",
+  "https://lh3.googleusercontent.com/d/10q8LnhZnZQJ5M7aExVRZi4zd2fPTHB0N",
+  "https://lh3.googleusercontent.com/d/1nQc0l1TsMXyt0dExoIeB2df_KcALGQ8C",
+  "https://lh3.googleusercontent.com/d/1Z_hI2FvNbAnmpWI2xGbEgw2_o94CPKt-",
+  "https://lh3.googleusercontent.com/d/1CPOrN4MZs2Kqya9M8IacvM01q7AdrV3m",
+  "https://lh3.googleusercontent.com/d/1ugZu47DCOkQ60WpiIEYBNb2ZNMOvds41",
+  "https://lh3.googleusercontent.com/d/1TrgyYfa1X94vFiB9Vb2CTgwp9-5y3TOs",
+  "https://lh3.googleusercontent.com/d/1oyqjNs1gC1MThTemmTDM3BOW4dOFDx-F",
+  "https://lh3.googleusercontent.com/d/1u3e7qDao71FVFHSB22L7q_C01f0NYYtP",
+  "https://lh3.googleusercontent.com/d/1t-nBbCDOjPGae3uUCoXZea6pNO3H8gsb",
+  "https://lh3.googleusercontent.com/d/18VWE5ViSZQkatWwz0zHOUmOsTG_T6m2q",
+  "https://lh3.googleusercontent.com/d/1agkaX6cIUwPREId8EyKK9U3x8AA-NJvJ",
+  "https://lh3.googleusercontent.com/d/19b1YVPCFkL6dGdOkl_F9iqP3b6CIOp9z",
+  "https://lh3.googleusercontent.com/d/14SMhkjimo7HeOv0oTfKARP_O-5cPTFM_",
+  "https://lh3.googleusercontent.com/d/16tmYKOM0XirAKfXr0BkHklk8rwRrAJ0N",
+  "https://lh3.googleusercontent.com/d/15OF2-2QAW15AYjGaGnJxiXVnCQXX7qI7",
+  "https://lh3.googleusercontent.com/d/1Co4L9Kg-W445l8oKBQrP01JAhDWQv-D-",
+  "https://lh3.googleusercontent.com/d/17PtFWzUmt2b5Q9bvH7gPQ9u0dgCQloAd",
+  "https://lh3.googleusercontent.com/d/1AkX4a0FT8uNox2Lir2-KmaZSXxioOXi0",
+  "https://lh3.googleusercontent.com/d/1mrMFqULSXCPGToSS49ARhiiyPmy_TmSJ",
+  "https://lh3.googleusercontent.com/d/1EcDEAdmfZXQYEXk-Q3uja-awV-VQtqdm",
 ];
