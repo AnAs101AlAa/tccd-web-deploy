@@ -39,6 +39,9 @@ export const useLogin = () => {
       if(error.response?.status === 401) {
         toast.error("Invalid email or password. Please try again.");
         return;
+      } else if (error.response?.status === 400) {
+        toast.error("Your email is not verified yet. Please check your inbox for the verification email.");
+        return;
       }
       toast.error("Login failed. Please try again.");
     },
