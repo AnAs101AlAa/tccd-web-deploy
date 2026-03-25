@@ -104,7 +104,7 @@ const UsersView = ({ users, onAddVolunteer, onEditVolunteer }: UsersViewProps) =
     if (user.studentProfile) {
       return {
         type: "Student",
-        details: `${user.studentProfile.university || "N/A"} - ${user.studentProfile.department || "N/A"}`,
+        details: `${user.studentProfile.university || "N/A"} - ${user.studentProfile.department ? user.studentProfile.department : user.studentProfile.faculty ? user.studentProfile.faculty : "N/A"}`,
         extra: `GPA: ${user.studentProfile.gpa || "N/A"} | Grad: ${user.studentProfile.graduationYear || "N/A"}`,
       };
     }
