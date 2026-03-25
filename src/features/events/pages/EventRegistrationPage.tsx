@@ -478,7 +478,7 @@ export default function EventRegisterForm() {
                       </label>
                       <TextDisplayEdit
                         label=""
-                        value={storedUser.department}
+                        value={storedUser.department || ""}
                         disabled={true}
                         placeholder="Select your department"
                       />

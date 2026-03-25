@@ -68,7 +68,7 @@ export interface BusinessRepUser extends User {
 export interface StudentUser extends User {
   gpa: number;
   graduationYear: number;
-  department: string;
+  department?: string;
   faculty: string;
   university: string;
   cv?: string; // URL

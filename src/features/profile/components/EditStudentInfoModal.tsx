@@ -127,7 +127,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
 
             // Only include department if faculty is Engineering
             if (formValues.faculty.trim() === "Engineering") {
-                studentProfilePayload.department = formValues.department.trim();
+                studentProfilePayload.department = formValues.department?.trim();
             }
 
             // Only include LinkedIn if it's not empty
@@ -155,7 +155,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                 phoneNumber: formValues.phoneNumber.trim(),
                 university: formValues.university.trim(),
                 faculty: formValues.faculty.trim(),
-                department: formValues.faculty.trim() === "Engineering" ? formValues.department.trim() : "",
+                department: formValues.faculty.trim() === "Engineering" ? formValues.department?.trim() : "",
                 graduationYear: parseInt(formValues.graduationYear.trim(), 10),
                 gpa: parseFloat(formValues.gpa.trim()),
                 linkedin: formValues.linkedin?.trim() || undefined,
