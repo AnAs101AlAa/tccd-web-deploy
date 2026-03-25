@@ -44,6 +44,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
         handleSubmit,
         watch,
         reset,
+        setValue,
         formState: { errors },
     } = useForm<EditStudentProfileFormData>({
         resolver: zodResolver(editStudentProfileSchema),
@@ -92,6 +93,13 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
         });
     }, [user, reset]);
 
+    // Clear department when faculty is not Engineering
+    useEffect(() => {
+        if (facultyValue !== "Engineering") {
+            setValue("department", "");
+        }
+    }, [facultyValue, setValue]);
+
     const onSubmit = async (formValues: EditStudentProfileFormData) => {
         try {
             const baseProfile = {
@@ -115,10 +123,14 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
             const studentProfilePayload: any = {
                 gpa: parseFloat(formValues.gpa.trim()),
                 graduationYear: parseInt(formValues.graduationYear.trim(), 10),
-                department: formValues.department.trim(),
                 faculty: formValues.faculty.trim(),
                 university: formValues.university.trim(),
             };
+
+            // Only include department if faculty is Engineering
+            if (formValues.faculty.trim() === "Engineering") {
+                studentProfilePayload.department = formValues.department.trim();
+            }
 
             // Only include LinkedIn if it's not empty
             if (formValues.linkedin?.trim()) {
@@ -145,7 +157,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                 phoneNumber: formValues.phoneNumber.trim(),
                 university: formValues.university.trim(),
                 faculty: formValues.faculty.trim(),
-                department: formValues.department.trim(),
+                department: formValues.faculty.trim() === "Engineering" ? formValues.department.trim() : "",
                 graduationYear: parseInt(formValues.graduationYear.trim(), 10),
                 gpa: parseFloat(formValues.gpa.trim()),
                 linkedin: formValues.linkedin?.trim() || undefined,
