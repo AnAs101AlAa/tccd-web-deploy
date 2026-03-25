@@ -148,8 +148,8 @@ const gpaSchema = z
  */
 const linkedinSchema = z
   .string()
-  .nullable()
   .optional()
+  .nullable()
   .refine(
     (val) => {
       if (!val || val.trim() === "") return true;
@@ -165,8 +165,8 @@ const linkedinSchema = z
  */
 const githubSchema = z
   .string()
-  .nullable()
   .optional()
+  .nullable()
   .refine(
     (val) => {
       if (!val || val.trim() === "") return true;
