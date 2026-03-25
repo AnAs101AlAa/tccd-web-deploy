@@ -18,6 +18,7 @@ export interface StudentSignupCredentials {
   graduationYear: number;
   gpa: number;
   linkedin?: string;
+  cv?: string;
 }
 
 export interface BusinessRepSignupCredentials {

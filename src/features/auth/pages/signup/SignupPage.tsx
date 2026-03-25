@@ -75,6 +75,7 @@ export const SignupPage = () => {
       department: "",
       graduationYear: new Date().getFullYear(),
       gpa: 0,
+      cv: "",
     },
   });
 

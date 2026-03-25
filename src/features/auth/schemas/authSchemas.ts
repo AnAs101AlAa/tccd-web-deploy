@@ -193,6 +193,7 @@ export const studentInfoSchema = z
       .number()
       .min(0, "GPA cannot be less than 0")
       .max(4, "GPA cannot be greater than 4"),
+    cv: z.string().optional().nullable(),
   })
   .refine(
     (data) => {

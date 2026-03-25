@@ -99,6 +99,7 @@ export const useAuth = () => {
           ...(basicData.linkedinUrl?.trim() && { linkedin: basicData.linkedinUrl.trim() }),
           ...(basicData.nationalId?.trim() && { nationalId: basicData.nationalId.trim() }),
           ...(basicData.passportNumber?.trim() && { passportNumber: basicData.passportNumber.trim() }),
+          ...(studentData.cv?.trim() && { cv: studentData.cv.trim() }),
         };
         const userData = await signupStudentMutation.mutateAsync(studentPayload);
         dispatch(setUser({...userData, role: "Student"}));

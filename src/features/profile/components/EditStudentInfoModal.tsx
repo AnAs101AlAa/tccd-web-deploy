@@ -110,17 +110,27 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                 profilePayload.passportNumber = formValues.passportNumber?.trim() || "";
             }
 
+            const studentProfilePayload: any = {
+                gpa: parseFloat(formValues.gpa.trim()),
+                graduationYear: parseInt(formValues.graduationYear.trim(), 10),
+                department: formValues.department.trim(),
+                faculty: formValues.faculty.trim(),
+                university: formValues.university.trim(),
+            };
+
+            // Only include LinkedIn if it's not empty
+            if (formValues.linkedin?.trim()) {
+                studentProfilePayload.linkedIn = formValues.linkedin.trim();
+            }
+
+            // Only include GitHub if it's not empty
+            if (formValues.gitHub?.trim()) {
+                studentProfilePayload.gitHub = formValues.gitHub.trim();
+            }
+
             const apiCalls: Promise<any>[] = [
                 updateUserProfileMutation.mutateAsync(profilePayload),
-                updateStudentProfileMutation.mutateAsync({
-                    gpa: parseFloat(formValues.gpa.trim()),
-                    graduationYear: parseInt(formValues.graduationYear.trim(), 10),
-                    department: formValues.department.trim(),
-                    faculty: formValues.faculty.trim(),
-                    university: formValues.university.trim(),
-                    linkedIn: formValues.linkedin?.trim() || undefined,
-                    gitHub: formValues.gitHub?.trim() || undefined,
-                }),
+                updateStudentProfileMutation.mutateAsync(studentProfilePayload),
             ];
 
             await Promise.all(apiCalls);
