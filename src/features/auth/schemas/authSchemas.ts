@@ -29,8 +29,8 @@ const phoneNumberSchema = z
   .string()
   .min(1, "Phone number is required")
   .regex(
-    /^(\+)?[1-9]\d{1,14}$/,
-    "Please enter a valid phone number (at least 10 digits)",
+    /^\+[1-9]\d{9,14}$/,
+    "Please enter a valid phone number with country code (e.g., +201234567890)",
   );
 
 const fullNameSchema = z
@@ -103,6 +103,11 @@ export const basicInfoSchema = z
     phoneNumber: phoneNumberSchema,
     email: emailSchema,
     gender: genderSchema,
+    nationality: z.enum(["egyptian", "non-egyptian"], {
+      message: "Please select your nationality",
+    }),
+    nationalId: z.string().optional(),
+    passportNumber: z.string().optional(),
     linkedinUrl: z
       .string()
       .url("Please enter a valid URL")
@@ -117,7 +122,55 @@ export const basicInfoSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  });
+  })
+  .refine(
+    (data) => {
+      if (data.nationality === "egyptian") {
+        return data.nationalId && data.nationalId.trim().length > 0;
+      }
+      return true;
+    },
+    {
+      message: "National ID is required for Egyptian citizens",
+      path: ["nationalId"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.nationality === "egyptian") {
+        return data.nationalId ? /^[0-9]{14}$/.test(data.nationalId) : false;
+      }
+      return true;
+    },
+    {
+      message: "Egyptian National ID must be exactly 14 digits",
+      path: ["nationalId"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.nationality === "non-egyptian") {
+        return data.passportNumber && data.passportNumber.trim().length > 0;
+      }
+      return true;
+    },
+    {
+      message: "Passport number is required for non-Egyptian citizens",
+      path: ["passportNumber"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.nationality === "non-egyptian") {
+        return data.passportNumber ? /^[A-Z]{1}[0-9]{7,8}$/.test(data.passportNumber) : false;
+      }
+      return true;
+    },
+    {
+      message: "Passport number must be in format: 1 letter followed by 7 or 8 digits (e.g., A1234567 or A12345678)",
+      path: ["passportNumber"],
+    },
+  );
 
 export type BasicInfoFormData = z.infer<typeof basicInfoSchema>;
 
@@ -140,6 +193,7 @@ export const studentInfoSchema = z
       .number()
       .min(0, "GPA cannot be less than 0")
       .max(4, "GPA cannot be greater than 4"),
+    cv: z.string().optional().nullable(),
   })
   .refine(
     (data) => {
@@ -224,6 +278,9 @@ export const signupSchema = z.object({
   phoneNumber: phoneNumberSchema,
   email: emailSchema,
   gender: genderSchema,
+  nationality: z.enum(["egyptian", "non-egyptian"]).optional(),
+  nationalId: z.string().optional(),
+  passportNumber: z.string().optional(),
   linkedinUrl: z.string().optional(),
   password: passwordSchema,
   confirmPassword: z.string(),

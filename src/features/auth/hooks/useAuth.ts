@@ -84,25 +84,29 @@ export const useAuth = () => {
     try {
       if (userType === "student") {
         const studentData = additionalData as StudentInfoFormData;
-        const userData = await signupStudentMutation.mutateAsync({
+        const studentPayload = {
           email: basicData.email,
           password: basicData.password,
           englishName: basicData.englishFullName,
           arabicName: basicData.arabicFullName,
           gender: basicData.gender,
           phoneNumber: basicData.phoneNumber,
-          linkedin: basicData.linkedinUrl,
           university: studentData.university,
           faculty: studentData.faculty,
           department: studentData.department || "",
           gpa: studentData.gpa,
           graduationYear: studentData.graduationYear,
-        });
+          ...(basicData.linkedinUrl?.trim() && { linkedin: basicData.linkedinUrl.trim() }),
+          ...(basicData.nationalId?.trim() && { nationalId: basicData.nationalId.trim() }),
+          ...(basicData.passportNumber?.trim() && { passportNumber: basicData.passportNumber.trim() }),
+          ...(studentData.cv?.trim() && { cv: studentData.cv.trim() }),
+        };
+        const userData = await signupStudentMutation.mutateAsync(studentPayload);
         dispatch(setUser({...userData, role: "Student"}));
 
       } else if (userType === "company_representative") {
         const companyData = additionalData as CompanyRepInfoFormData;
-        await signupBusinessRepMutation.mutateAsync({
+        const companyPayload = {
           englishName: basicData.englishFullName,
           arabicName: basicData.arabicFullName,
           email: basicData.email,
@@ -113,10 +117,14 @@ export const useAuth = () => {
           newCompany: companyData.isNewCompany ? companyData.newCompany : undefined,
           position: companyData.position,
           proofFile: companyData.proofFile,
-        });
+          ...(basicData.linkedinUrl?.trim() && { linkedin: basicData.linkedinUrl.trim() }),
+          ...(basicData.nationalId?.trim() && { nationalId: basicData.nationalId.trim() }),
+          ...(basicData.passportNumber?.trim() && { passportNumber: basicData.passportNumber.trim() }),
+        };
+        await signupBusinessRepMutation.mutateAsync(companyPayload);
       } else if (userType === "academic") {
         const facultyData = additionalData as FacultyInfoFormData;
-        await signupFacultyMutation.mutateAsync({
+        const facultyPayload = {
           englishName: basicData.englishFullName,
           arabicName: basicData.arabicFullName,
           email: basicData.email,
@@ -128,7 +136,11 @@ export const useAuth = () => {
           facultyName: facultyData.facultyName,
           department: facultyData.department,
           proofFile: facultyData.proofFile,
-        });
+          ...(basicData.linkedinUrl?.trim() && { linkedin: basicData.linkedinUrl.trim() }),
+          ...(basicData.nationalId?.trim() && { nationalId: basicData.nationalId.trim() }),
+          ...(basicData.passportNumber?.trim() && { passportNumber: basicData.passportNumber.trim() }),
+        };
+        await signupFacultyMutation.mutateAsync(facultyPayload);
       }
       navigate("/sign-up/confirmation");
     } catch (error) {

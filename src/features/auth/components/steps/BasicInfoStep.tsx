@@ -1,4 +1,5 @@
 import type { Control } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import type { BasicInfoFormData } from "../../schemas";
 import { FormInput } from "../FormInput";
 
@@ -10,6 +11,11 @@ interface BasicInfoStepProps {
  * Step 2: Basic Information Collection
  */
 export const BasicInfoStep = ({ control }: BasicInfoStepProps) => {
+  const nationality = useWatch({
+    control,
+    name: "nationality",
+  });
+
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -75,6 +81,36 @@ export const BasicInfoStep = ({ control }: BasicInfoStepProps) => {
         ]}
       />
 
+      {/* Nationality */}
+      <FormInput
+        name="nationality"
+        control={control}
+        label="Nationality"
+        type="dropdown"
+        options={[
+          { label: "Egyptian", value: "egyptian" },
+          { label: "Non-Egyptian", value: "non-egyptian" },
+        ]}
+      />
+
+      {/* Conditional ID Fields */}
+      {nationality === "egyptian" ? (
+        <FormInput
+          name="nationalId"
+          control={control}
+          label="National ID"
+          type="text"
+          placeholder="Enter your national ID number"
+        />
+      ) : nationality === "non-egyptian" ? (
+        <FormInput
+          name="passportNumber"
+          control={control}
+          label="Passport Number"
+          type="text"
+          placeholder="Enter your passport number"
+        />
+      ) : null}
 
       {/* LinkedIn URL */}
       <FormInput

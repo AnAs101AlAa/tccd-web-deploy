@@ -9,6 +9,8 @@ export interface UpdateUserProfilePayload {
   arabicName: string;
   phoneNumber: string;
   gender: Gender;
+  nationalId?: string;
+  passportNumber?: string;
 }
 
 export interface UpdateUserProfileResponse {
@@ -16,6 +18,8 @@ export interface UpdateUserProfileResponse {
   arabicFullName: string;
   gender: Gender;
   phoneNumber: string;
+  nationalId: string;
+  passportNumber: string;
 }
 
 export interface UpdateStudentProfilePayload {
@@ -62,6 +66,8 @@ export class UserApi {
       arabicFullName: response.arabicName,
       gender: response.gender,
       phoneNumber: response.phoneNumber,
+      nationalId: response.nationalId,
+      passportNumber: response.passportNumber,
     };
   }
 

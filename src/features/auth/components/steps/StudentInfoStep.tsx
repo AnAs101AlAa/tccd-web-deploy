@@ -72,6 +72,13 @@ export const StudentInfoStep = ({ control }: StudentInfoStepProps) => {
         type="number"
         placeholder="Enter your GPA"
       />
+
+      <FormInput
+        name="cv"
+        control={control}
+        label="Google Drive CV Link (Optional)"
+        placeholder="https://drive.google.com/file/d/..."
+      />
     </div>
   );
 };
