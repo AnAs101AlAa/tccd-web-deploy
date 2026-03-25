@@ -121,7 +121,7 @@ const StudentInfoDisplay: React.FC<StudentInfoDisplayProps> = ({ user }) => {
         value: user.cv,
         render: (value?: string) => (
           <a
-            href={value}
+            href={`https://drive.google.com/file/d/${value}/view`}
             target="_blank"
             rel="noreferrer"
             className="text-sm font-medium text-primary hover:underline"

@@ -29,8 +29,8 @@ const phoneNumberSchema = z
   .string()
   .min(1, "Phone number is required")
   .regex(
-    /^(\+)?[1-9]\d{1,14}$/,
-    "Please enter a valid phone number (at least 10 digits)",
+    /^\+[1-9]\d{9,14}$/,
+    "Please enter a valid phone number with country code (e.g., +201234567890)",
   );
 
 const fullNameSchema = z
