@@ -8,6 +8,7 @@ import { useCurrentUser, useIsAdmin } from "@/shared/store";
 import toast from "react-hot-toast";
 import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 interface UpcomingEventCardProps {
   event: Event;
@@ -27,7 +28,8 @@ const UpcomingEventCard: React.FC<UpcomingEventCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const currentUser = useCurrentUser();
   const isAdmin = useIsAdmin();
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const wholeEl = wholeInfoRef.current;
     const mainEl = mainInfoRef.current;
@@ -124,6 +126,7 @@ const UpcomingEventCard: React.FC<UpcomingEventCardProps> = ({
                 onClick={() => {
                   if (!currentUser?.id) {
                     toast.error("Please log in to be able to register in events.");
+                    navigate("/login");
                     return;
                   }
                   onBookNow(event.id);

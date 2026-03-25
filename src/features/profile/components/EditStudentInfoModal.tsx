@@ -221,7 +221,7 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
                         render={({ field }) => (
                             <InputField
                                 labelClassName="text-contrast  text-[13px] md:text-[14px] lg:text-[15px] mb-1"
-                                label="Phone Number *"
+                                label="Phone Number (with country code)*"
                                 value={field.value}
                                 placeholder="Enter your phone number"
                                 onChange={(e) => field.onChange(e.target.value)}
