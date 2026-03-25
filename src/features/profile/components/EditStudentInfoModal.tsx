@@ -71,8 +71,6 @@ const EditStudentInfoModal: React.FC<EditStudentInfoModalProps> = ({ user, onClo
     const facultyValue = watch("faculty");
     const nationality = watch("nationality");
 
-    console.log("EditStudentInfoModal rendered with user:", errors);
-
     useEffect(() => {
         reset({
             englishFullName: user.englishFullName,
