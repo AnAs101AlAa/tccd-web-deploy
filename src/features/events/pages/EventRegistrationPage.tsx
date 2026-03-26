@@ -84,9 +84,9 @@ export default function EventRegisterForm() {
 
       if (isAlreadyRegistered) {
         toast.error("You are already registered for this event.");
-        setChecked(true);
         navigate(`/events`);
       }
+      setChecked(true);
     }
   }, [isLoading, isEligible, eligibilityReason, navigate, checked, eventId]);
 
