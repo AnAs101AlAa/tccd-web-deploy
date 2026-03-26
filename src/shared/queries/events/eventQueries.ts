@@ -118,9 +118,6 @@ export const useRegisterForEvent = () => {
       queryClient.invalidateQueries({
         queryKey: eventKeys.detail(variables.eventId),
       });
-      queryClient.invalidateQueries({
-        queryKey: eventKeys.eligibility(variables.eventId),
-      });
       toast.success("Registration successful! 🎉");
     },
     onError: (error) => {
