@@ -82,11 +82,11 @@ export default function EventRegisterForm() {
         reasonLower.includes("already") ||
         reasonLower.includes("registered");
 
+      setChecked(true);
       if (isAlreadyRegistered) {
         toast.error("You are already registered for this event.");
         navigate(`/events`);
       }
-      setChecked(true);
     }
   }, [isLoading, isEligible, eligibilityReason, navigate, checked, eventId]);
 
