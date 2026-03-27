@@ -321,36 +321,6 @@ export default function useEventModalUtils({
           }
         }
 
-        for (const slot of formValues.slots || []) {
-          if (
-            !event.slots?.find(
-              (s) =>
-                s.startTime === slot.startTime && s.endTime === slot.endTime,
-            )
-          ) {
-            await addEventSlotMutation.mutateAsync({
-              eventId: event.id,
-              startTime: slot.startTime,
-              endTime: slot.endTime,
-              capacity: slot.capacity || 0,
-            });
-          }
-        }
-
-        for (const slot of event.slots || []) {
-          if (
-            !formValues.slots?.find(
-              (s) =>
-                s.startTime === slot.startTime && s.endTime === slot.endTime,
-            )
-          ) {
-            await removeEventSlotMutation.mutateAsync({
-              eventId: event.id,
-              slotId: slot.id || "",
-            });
-          }
-        }
-
         queryClient.invalidateQueries({ queryKey: ["events"] });
         toast.success("Event updated successfully!");
         onClose();
@@ -398,7 +368,9 @@ export default function useEventModalUtils({
       updateEventMutation.isPending ||
       updateEventPosterMutation.isPending ||
       addEventMediaMutation.isPending ||
-      deleteEventMediaMutation.isPending,
+      deleteEventMediaMutation.isPending ||
+      addEventSlotMutation.isPending ||
+      removeEventSlotMutation.isPending,
     errors,
     locations: locations?.items || [],
     locationsLoading,

@@ -410,6 +410,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                                       };
                                     });
                                     setEditingSlotIndex(null);
+                                    setEditingSlotCapacity(0);
                                   }}
                                 />
                                 <Button
@@ -417,7 +418,10 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                                   className="px-2 md:px-3"
                                   type="danger"
                                   width="fit"
-                                  onClick={() => setEditingSlotIndex(null)}
+                                  onClick={() => {
+                                    setEditingSlotIndex(null);
+                                    setEditingSlotCapacity(0);
+                                  }}
                                 />
                               </div>
                             ) : (
