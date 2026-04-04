@@ -68,10 +68,6 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
   const [editingSlotIndex, setEditingSlotIndex] = useState<number | null>(null);
   const [editingSlotCapacity, setEditingSlotCapacity] = useState<number>(0);
 
-  if(!event) {
-    return null;
-  }
-
   return (
     <Modal
       title={isEditMode ? "Edit Event" : "Add New Event"}
@@ -410,6 +406,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                                       };
                                     });
                                     setEditingSlotIndex(null);
+                                    setEditingSlotCapacity(0);
                                   }}
                                 />
                                 <Button
@@ -417,7 +414,10 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                                   className="px-2 md:px-3"
                                   type="danger"
                                   width="fit"
-                                  onClick={() => setEditingSlotIndex(null)}
+                                  onClick={() => {
+                                    setEditingSlotIndex(null);
+                                    setEditingSlotCapacity(0);
+                                  }}
                                 />
                               </div>
                             ) : (

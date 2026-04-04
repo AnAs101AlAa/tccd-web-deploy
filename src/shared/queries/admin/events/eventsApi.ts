@@ -23,6 +23,7 @@ export class EventsApi {
       type: data.type,
       capacity: data.capacity,
       locations: data.locations,
+      slots: data.slots,
     };
     
     await systemApi.put(

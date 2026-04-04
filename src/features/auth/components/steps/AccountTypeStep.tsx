@@ -15,8 +15,8 @@ export const AccountTypeStep = ({ selectedType, onSelect }: AccountTypeStepProps
   const accountTypes = [
     {
       id: "student" as const,
-      title: "Student",
-      description: "For university students looking to connect and grow",
+      title: "Student/Graduate",
+      description: "For university students and graduates looking to connect and grow",
       icon: FiUsers,
     },
     // {
