@@ -54,3 +54,6 @@ coverage/
 
 # Output of 'npm pack'
 *.tgz
+
+# Local config overrides
+public/config.local.js

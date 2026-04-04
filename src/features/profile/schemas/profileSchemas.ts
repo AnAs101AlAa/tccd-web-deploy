@@ -89,8 +89,16 @@ const facultySchema = z
 const departmentSchema = z
   .string()
   .trim()
-  .min(1, "Department is required")
-  .min(3, "Department name must be at least 3 characters");
+  .optional()
+  .refine(
+    (val) => {
+      if (!val || val.trim() === "") return true;
+      return val.trim().length >= 3;
+    },
+    {
+      message: "Department name must be at least 3 characters",
+    }
+  )
 
 /**
  * Graduation Year Schema
@@ -148,8 +156,8 @@ const gpaSchema = z
  */
 const linkedinSchema = z
   .string()
-  .nullable()
   .optional()
+  .nullable()
   .refine(
     (val) => {
       if (!val || val.trim() === "") return true;
@@ -165,8 +173,8 @@ const linkedinSchema = z
  */
 const githubSchema = z
   .string()
-  .nullable()
   .optional()
+  .nullable()
   .refine(
     (val) => {
       if (!val || val.trim() === "") return true;
@@ -260,13 +268,26 @@ export const editStudentProfileSchema = z
   .refine(
     (data) => {
       if (data.nationality === "non-egyptian") {
-        return data.passportNumber ? /^[A-Z]{1}[0-9]{7,8}$/.test(data.passportNumber) : false;
+        // Allow passport numbers with or without a leading letter, followed by 7 or 8 digits
+        return data.passportNumber ? /^([A-Z]{1})?[0-9]{7,8}$/.test(data.passportNumber) : false;
       }
       return true;
     },
     {
-      message: "Passport number must be in format: 1 letter followed by 7 or 8 digits (e.g., A1234567 or A12345678)",
+      message: "Passport number must be 7 or 8 digits, optionally preceded by 1 letter (e.g., 12345678 or A1234567)",
       path: ["passportNumber"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.faculty === "Engineering") {
+        return data.department && data.department.trim().length > 0;
+      }
+      return true;
+    },
+    {
+      message: "Department is required for Engineering faculty",
+      path: ["department"],
     },
   );
 

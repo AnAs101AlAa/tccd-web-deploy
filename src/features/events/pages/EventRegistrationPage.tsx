@@ -82,9 +82,9 @@ export default function EventRegisterForm() {
         reasonLower.includes("already") ||
         reasonLower.includes("registered");
 
+      setChecked(true);
       if (isAlreadyRegistered) {
         toast.error("You are already registered for this event.");
-        setChecked(true);
         navigate(`/events`);
       }
     }
@@ -361,6 +361,19 @@ export default function EventRegisterForm() {
                       />
                     </div>
 
+                    {/* national ID/ passport number */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-foreground">
+                        {storedUser.nationalId ? "National ID" : "Passport Number"}
+                      </label>
+                      <TextDisplayEdit
+                        label=""
+                        value={storedUser.nationalId || storedUser.passportNumber || ""}
+                        disabled={true}
+                        placeholder="Enter your national ID or passport number"
+                      />
+                    </div>
+                  </div>
                     {/* Time Slot — Always shown */}
                     <div className="space-y-2">
                         <label className="text-sm font-semibold text-foreground">
@@ -403,7 +416,6 @@ export default function EventRegisterForm() {
                           )}
                         />
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -466,7 +478,7 @@ export default function EventRegisterForm() {
                       </label>
                       <TextDisplayEdit
                         label=""
-                        value={storedUser.department}
+                        value={storedUser.department || ""}
                         disabled={true}
                         placeholder="Select your department"
                       />

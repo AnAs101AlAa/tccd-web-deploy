@@ -31,8 +31,8 @@ const HeroSection = () => {
   }, [userData, navigate]);
 
   useEffect(() => {
-    animateCounter(setEventsCounter, 40, 5, 80, 200);
-    animateCounter(setCompanyCount, 30, 5, 80, 300);
+    animateCounter(setEventsCounter, 67, 5, 80, 200);
+    animateCounter(setCompanyCount, 46, 5, 80, 300);
   }, []);
 
   return (
