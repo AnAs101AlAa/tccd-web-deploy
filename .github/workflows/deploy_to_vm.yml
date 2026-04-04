@@ -1,0 +1,49 @@
+name: Deploy React App to VM
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - publish
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - run: npm install
+    - run: npm run build
+      env:
+        VITE_API_BASE_URL: "https://api.tccd.eng.cu.edu.eg"
+    - run: ls -la
+    - run: ls -la dist
+  
+    - name: Copy build files to VM
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USER }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        source: "dist/*"
+        target: "/tmp/react-build"
+        
+    - name: Move files to web directory and clean up temp
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USER }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          sudo rm -rf /var/www/frontend/*
+
+          sudo cp -r /tmp/react-build/dist/* /var/www/frontend/
+
+          sudo chown -R www-data:www-data /var/www/frontend
+          sudo chmod -R 755 /var/www/frontend
+
+          sudo systemctl reload nginx
+
+          sudo rm -rf /tmp/react-build

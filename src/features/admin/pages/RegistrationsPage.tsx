@@ -121,7 +121,7 @@ export default function RegistrationsPage() {
                   {selectedEvent.name} - Registrations
                 </h2>
                 <p className="text-xs sm:text-sm md:text-[15px] lg:text-[16px] text-inactive-tab-text">
-                  Manage registered participants for this event.
+                  {registrationsData?.totalCount || 0} participants registered for this event.
                 </p>
               </div>
 

@@ -1,5 +1,5 @@
 import { routes } from "@/routing/routes";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useEffect, Suspense } from "react";
 import { useLocation } from "react-router-dom";
@@ -16,7 +16,6 @@ function ScrollToTop() {
   return null;
 }
 
-
 function App() {
   return (
     <BrowserRouter>
@@ -28,47 +27,47 @@ function App() {
         toastOptions={{
           duration: 4000,
           style: {
-            background: '#363636',
-            color: '#fff',
-            padding: '8px',
-            borderRadius: '16px',
-            fontSize: '14px',
+            background: "#363636",
+            color: "#fff",
+            padding: "8px",
+            borderRadius: "16px",
+            fontSize: "14px",
           },
           success: {
             duration: 3000,
             style: {
-              background: '#22c55e1a',
-              border: '1px solid #22c55e',
-              color: '#16a34a',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
+              background: "#22c55e1a",
+              border: "1px solid #22c55e",
+              color: "#16a34a",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
             },
             iconTheme: {
-              primary: '#16a34a',
-              secondary: '#fff',
+              primary: "#16a34a",
+              secondary: "#fff",
             },
           },
           error: {
             duration: 4000,
             style: {
-              background: '#ef44441a',
-              border: '1px solid #ef4444',
-              color: '#ef4444',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
+              background: "#ef44441a",
+              border: "1px solid #ef4444",
+              color: "#ef4444",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
             },
             iconTheme: {
-              primary: '#ef4444',
-              secondary: '#fff',
+              primary: "#ef4444",
+              secondary: "#fff",
             },
           },
           loading: {
             style: {
-              background: '#2563eb1a',
-              border: '1px solid #2563eb',
-              color: '#2563eb',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
+              background: "#2563eb1a",
+              border: "1px solid #2563eb",
+              color: "#2563eb",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
             },
           },
         }}
