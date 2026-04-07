@@ -113,9 +113,6 @@ export default function useEventModalUtils({
   const [isAddingMedia, setIsAddingMedia] = useState<boolean>(false);
   const [currentMediaInput, setCurrentMediaInput] = useState<string>("");
 
-  const [isAddingSlot, setIsAddingSlot] = useState<boolean>(false);
-  const [currentSlotInput, setCurrentSlotInput] = useState<EventSlot>({id: "", startTime: "", endTime: "", capacity: 0, registrationCount: 0});
-
   useEffect(() => {
     if (event) {      
       const posterId = extractDriveId(event.eventImage || "");
@@ -184,67 +181,29 @@ export default function useEventModalUtils({
     setNewMediaIds((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleAddSlot = () => {
-    if (!formValues.date) {
-      toast.error("Please select event date first.");
-      return;
-    }
-
-    if (!currentSlotInput.startTime || !currentSlotInput.endTime || !currentSlotInput.capacity) {
-      toast.error("Please select both start and end times and capacity.");
-      return;
-    }
-
-    const parseTime = (timeStr: string) => {
-      if (timeStr.includes('T')) {
-        const date = new Date(timeStr);
-        return [date.getHours(), date.getMinutes()];
-      }
-      const [h, m] = timeStr.split(':').map(Number);
-      return [h, m];
-    };
-    const [startHour, startMin] = parseTime(currentSlotInput.startTime);
-    const [endHour, endMin] = parseTime(currentSlotInput.endTime);
-    const startMinutes = startHour * 60 + startMin;
-    let endMinutes = endHour * 60 + endMin;
-
-    let crossesMidnight = false;
-    if (endMinutes < startMinutes) {
-      endMinutes += 24 * 60;
-      crossesMidnight = true;
-    }
-    if (startMinutes === endMinutes) {
-      toast.error("Start and end time cannot be the same.");
-      return;
-    }
-
-    const eventDate = new Date(formValues.date);
-    const startDate = new Date(eventDate);
-    startDate.setHours(startHour, startMin, 0, 0);
-
-    const endDate = new Date(eventDate);
-    endDate.setHours(endHour, endMin, 0, 0);
-    if (crossesMidnight) {
-      endDate.setDate(endDate.getDate() + 1);
-    }
-
-    const slotWithTimestamp = {
-      id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15),
-      startTime: startDate.toISOString(),
-      endTime: endDate.toISOString(),
-    };
-
+  const handleAddSlot = (slot: EventSlot) => {
     setFormValues((prev) => {
-      const updatedSlots = [...(prev.slots || []), { ...slotWithTimestamp, capacity: currentSlotInput.capacity, registrationCount: 0 }];
-      const totalCapacity = updatedSlots.reduce((sum, slot) => sum + (slot.capacity || 0), 0);
+      const updatedSlots = [...(prev.slots || []), slot];
+      const totalCapacity = updatedSlots.reduce((sum, s) => sum + (s.capacity || 0), 0);
       return {
         ...prev,
         slots: updatedSlots,
         capacity: totalCapacity,
       };
     });
-    setCurrentSlotInput({ id: "", startTime: "", endTime: "", capacity: 0, registrationCount: 0 });
-    setIsAddingSlot(false);
+  };
+
+  const handleUpdateSlot = (index: number, slot: EventSlot) => {
+    setFormValues((prev) => {
+      const updatedSlots = [...(prev.slots || [])];
+      updatedSlots[index] = slot;
+      const totalCapacity = updatedSlots.reduce((sum, s) => sum + (s.capacity || 0), 0);
+      return {
+        ...prev,
+        slots: updatedSlots,
+        capacity: totalCapacity,
+      };
+    });
   };
 
   const handleRemoveSlot = (index: number) => {
@@ -383,16 +342,13 @@ export default function useEventModalUtils({
     isEditMode,
     isAddingMedia,
     setIsAddingMedia,
-    isAddingSlot,
-    setIsAddingSlot,
-    currentSlotInput,
-    setCurrentSlotInput,
     currentMediaInput,
     setCurrentMediaInput,
     handleAddMedia,
     handleRemoveNewMedia,
     handleRemoveOriginalMedia,
     handleAddSlot,
+    handleUpdateSlot,
     handleRemoveSlot,
     handleSave,
     originalMedia,
