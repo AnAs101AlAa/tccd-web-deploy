@@ -21,9 +21,7 @@ export class EventsApi {
       description: data.description,
       date: data.date,
       type: data.type,
-      capacity: data.capacity,
       locations: data.locations,
-      slots: data.slots,
     };
     
     await systemApi.put(
@@ -100,12 +98,31 @@ export class EventsApi {
     await systemApi.delete(`${SPONSOR_ROUTE}/${eventId}/${companyId}`);
   }
 
-  async addEventSlot(eventId: string, startTime: string, endTime: string, capacity: number): Promise<void> {
-    await systemApi.post(`/v1/Event/${eventId}/slots`, {
-      startTime,
-      endTime,
-      capacity,
-    });
+  async addEventSlot(
+    eventId: string,
+    payload: {
+      title?: string;
+      description?: string;
+      startTime: string;
+      endTime: string;
+      capacity: number;
+    },
+  ): Promise<void> {
+    await systemApi.post(`/v1/Event/${eventId}/slots`, payload);
+  }
+
+  async updateEventSlot(
+    eventId: string,
+    slotId: string,
+    payload: {
+      title?: string;
+      description?: string;
+      startTime: string;
+      endTime: string;
+      capacity: number;
+    },
+  ): Promise<void> {
+    await systemApi.patch(`/v1/Event/${eventId}/slots/${slotId}`, payload);
   }
 
   async removeEventSlot(eventId: string, slotId: string): Promise<void> {

@@ -21,6 +21,15 @@ const AddEditSlotModal: React.FC<AddEditSlotModalProps> = ({
 }) => {
   const isEditMode = !!initialSlot;
 
+  const toTimeValue = (value?: string) => {
+    if (!value) return "";
+    if (!value.includes("T")) return value;
+    const date = new Date(value);
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
   const [formValues, setFormValues] = useState<{
     title: string;
     description: string;
@@ -43,8 +52,8 @@ const AddEditSlotModal: React.FC<AddEditSlotModalProps> = ({
         setFormValues({
           title: initialSlot.title || "",
           description: initialSlot.description || "",
-          startTime: initialSlot.startTime || "",
-          endTime: initialSlot.endTime || "",
+          startTime: toTimeValue(initialSlot.startTime),
+          endTime: toTimeValue(initialSlot.endTime),
           capacity: initialSlot.capacity || 0,
           registrationCount: initialSlot.registrationCount || 0,
         });

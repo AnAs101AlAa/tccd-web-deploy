@@ -67,6 +67,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
 
   const [isSlotModalOpen, setIsSlotModalOpen] = useState(false);
   const [editingSlotIndex, setEditingSlotIndex] = useState<number | null>(null);
+  const [editingSlot, setEditingSlot] = useState<EventSlot | undefined>(undefined);
 
   return (
     <Modal
@@ -368,6 +369,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                   width="fit"
                   onClick={() => {
                     setEditingSlotIndex(null);
+                    setEditingSlot(undefined);
                     setIsSlotModalOpen(true);
                   }}
                 />
@@ -403,6 +405,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                         buttonIcon={<MdEdit className="size-4" />}
                         onClick={() => {
                           setEditingSlotIndex(index);
+                          setEditingSlot(formValues.slots?.[index]);
                           setIsSlotModalOpen(true);
                         }}
                         type="secondary"
@@ -416,43 +419,46 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                   )}
                 />
 
-                <CardView
-                  items={formValues.slots || []}
-                  emptyMessage="No slots added yet."
-                  titleKey="title"
-                  renderedFields={[
-                    {
-                      label: "Time",
-                      key: "startTime" as keyof EventSlot,
-                      formatter: (_, slot?: EventSlot) => slot ? `${format(slot.startTime, "time")} - ${format(slot.endTime, "time")}` : "N/A"
-                    },
-                    {
-                      label: "Capacity",
-                      key: "capacity" as keyof EventSlot,
-                    },
-                    {
-                      label: "Registrations",
-                      key: "registrationCount" as keyof EventSlot,
-                    },
-                  ]}
-                  renderButtons={(slot: EventSlot, triggerDelete: (id: string) => void, index: number) => (
-                    <>
-                      <Button
-                        buttonIcon={<MdEdit className="size-4" />}
-                        onClick={() => {
-                          setEditingSlotIndex(index);
-                          setIsSlotModalOpen(true);
-                        }}
-                        type="secondary"
-                      />
-                      <Button
-                        buttonIcon={<TbTrash className="size-4" />}
-                        onClick={() => handleRemoveSlot(index)}
-                        type="danger"
-                      />
-                    </>
-                  )}
-                />
+                <div className="lg:hidden border border-gray-300 rounded-2xl bg-gray-50/60 p-2 max-h-72 overflow-y-auto">
+                  <CardView
+                    items={formValues.slots || []}
+                    emptyMessage="No slots added yet."
+                    titleKey="title"
+                    renderedFields={[
+                      {
+                        label: "Time",
+                        key: "startTime" as keyof EventSlot,
+                        formatter: (_, slot?: EventSlot) => slot ? `${format(slot.startTime, "hourFull")} - ${format(slot.endTime, "hourFull")}` : "N/A"
+                      },
+                      {
+                        label: "Capacity",
+                        key: "capacity" as keyof EventSlot,
+                      },
+                      {
+                        label: "Registrations",
+                        key: "registrationCount" as keyof EventSlot,
+                      },
+                    ]}
+                    renderButtons={(slot: EventSlot, triggerDelete: (id: string) => void, index: number) => (
+                      <>
+                        <Button
+                          buttonIcon={<MdEdit className="size-4" />}
+                          onClick={() => {
+                            setEditingSlotIndex(index);
+                            setEditingSlot(formValues.slots?.[index]);
+                            setIsSlotModalOpen(true);
+                          }}
+                          type="secondary"
+                        />
+                        <Button
+                          buttonIcon={<TbTrash className="size-4" />}
+                          onClick={() => handleRemoveSlot(index)}
+                          type="danger"
+                        />
+                      </>
+                    )}
+                  />
+                </div>
               </div>
 
               {errors.slots && <p className="px-1 text-xs text-primary mt-2">
@@ -472,9 +478,10 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
           onClose={() => {
             setIsSlotModalOpen(false);
             setEditingSlotIndex(null);
+            setEditingSlot(undefined);
           }}
           eventDate={formValues.date}
-          initialSlot={editingSlotIndex !== null && formValues.slots ? formValues.slots[editingSlotIndex] : undefined}
+          initialSlot={editingSlot}
           onSave={(slot: EventSlot) => {
             if (editingSlotIndex !== null) {
               handleUpdateSlot(editingSlotIndex, slot);

@@ -12,6 +12,7 @@ import {
   useAddSponsorToEvent,
   useRemoveSponsorFromEvent,
   useAddEventSlot,
+  useUpdateEventSlot,
   useRemoveEventSlot,
 } from "@/shared/queries/admin/events/eventsQueries";
 import toast from "react-hot-toast";
@@ -85,6 +86,7 @@ export default function useEventModalUtils({
   const addSponsorToEventMutation = useAddSponsorToEvent();
   const removeSponsorFromEventMutation = useRemoveSponsorFromEvent();
   const addEventSlotMutation = useAddEventSlot();
+  const updateEventSlotMutation = useUpdateEventSlot();
   const removeEventSlotMutation = useRemoveEventSlot();
 
   const isEditMode = !!event;
@@ -92,6 +94,7 @@ export default function useEventModalUtils({
   const [deletedMediaIds, setDeletedMediaIds] = useState<string[]>([]);
   const [newMediaIds, setNewMediaIds] = useState<string[]>([]);
   const [, setOriginalPosterId] = useState<string>("");
+  const [originalSlots, setOriginalSlots] = useState<EventSlot[]>([]);
   const [formValues, setFormValues] = useState<EventRequest>({
     id: "",
     name: "",
@@ -149,8 +152,9 @@ export default function useEventModalUtils({
         sponsors: eventSponsors || [],
         slots: event.slots || [],
       });
+      setOriginalSlots(event.slots || []);
     }
-  }, [event]);
+  }, [event, eventSponsors]);
 
   const handleInputChange = (field: keyof EventRequest, value: string | number) => {
     const finalValue =
@@ -280,6 +284,59 @@ export default function useEventModalUtils({
           }
         }
 
+        const currentSlots = formValues.slots || [];
+        const originalSlotIds = new Set(originalSlots.map((slot) => slot.id));
+        const currentSlotIds = new Set(currentSlots.map((slot) => slot.id));
+
+        const removedSlots = originalSlots.filter((slot) => !currentSlotIds.has(slot.id));
+        for (const slot of removedSlots) {
+          await removeEventSlotMutation.mutateAsync({
+            eventId: event.id,
+            slotId: slot.id,
+          });
+        }
+
+        const addedSlots = currentSlots.filter((slot) => !originalSlotIds.has(slot.id));
+        for (const slot of addedSlots) {
+          await addEventSlotMutation.mutateAsync({
+            eventId: event.id,
+            payload: {
+              title: slot.title,
+              description: slot.description,
+              startTime: slot.startTime,
+              endTime: slot.endTime,
+              capacity: slot.capacity,
+            },
+          });
+        }
+
+        const updatedSlots = currentSlots.filter((slot) => originalSlotIds.has(slot.id));
+        for (const slot of updatedSlots) {
+          const originalSlot = originalSlots.find((s) => s.id === slot.id);
+          if (!originalSlot) continue;
+
+          const changed =
+            originalSlot.title !== slot.title ||
+            originalSlot.description !== slot.description ||
+            originalSlot.startTime !== slot.startTime ||
+            originalSlot.endTime !== slot.endTime ||
+            originalSlot.capacity !== slot.capacity;
+
+          if (changed) {
+            await updateEventSlotMutation.mutateAsync({
+              eventId: event.id,
+              slotId: slot.id,
+              payload: {
+                title: slot.title,
+                description: slot.description,
+                startTime: slot.startTime,
+                endTime: slot.endTime,
+                capacity: slot.capacity,
+              },
+            });
+          }
+        }
+
         queryClient.invalidateQueries({ queryKey: ["events"] });
         toast.success("Event updated successfully!");
         onClose();
@@ -302,6 +359,7 @@ export default function useEventModalUtils({
               mediaFileIds: newMediaIds,
             });
           }
+
         }
 
         queryClient.invalidateQueries({ queryKey: ["events"] });
@@ -329,6 +387,7 @@ export default function useEventModalUtils({
       addEventMediaMutation.isPending ||
       deleteEventMediaMutation.isPending ||
       addEventSlotMutation.isPending ||
+      updateEventSlotMutation.isPending ||
       removeEventSlotMutation.isPending,
     errors,
     locations: locations?.items || [],

@@ -78,8 +78,8 @@ importers:
         specifier: ^4.1.12
         version: 4.2.2
       tccd-ui:
-        specifier: ^0.2.1
-        version: 0.2.1(react-dom@19.2.4(react@19.2.4))(react-icons@5.6.0(react@19.2.4))(react@19.2.4)
+        specifier: ^0.2.2
+        version: 0.2.2(react-dom@19.2.4(react@19.2.4))(react-icons@5.6.0(react@19.2.4))(react@19.2.4)
       zod:
         specifier: ^4.1.12
         version: 4.3.6
@@ -1700,8 +1700,8 @@ packages:
     resolution: {integrity: sha512-1MOpMXuhGzGL5TTCZFItxCc0AARf1EZFQkGqMm7ERKj8+Hgr5oLvJOVFcC+lRmR8hCe2S3jC4T5D7Vg/d7/fhA==}
     engines: {node: '>=6'}
 
-  tccd-ui@0.2.1:
-    resolution: {integrity: sha512-lT//D7lnIa9RHl1/VttEVRyUxz6p6JMAuY6+WILlwOtACrsc4Y66TKFtjhqW1ElMCYsPXRsY+tu8G3d1aTT1rA==}
+  tccd-ui@0.2.2:
+    resolution: {integrity: sha512-NBZLfuIFtKPuR60vGcUJPXZxl6nHxL/cg1EXhjxLUV8PTBaLVJ+8dz5+yGIQBbnTKKYzmtV65AnWryN2+K55SA==}
     peerDependencies:
       react-icons: '>=5.5.0'
 
@@ -3264,7 +3264,7 @@ snapshots:
 
   tapable@2.3.2: {}
 
-  tccd-ui@0.2.1(react-dom@19.2.4(react@19.2.4))(react-icons@5.6.0(react@19.2.4))(react@19.2.4):
+  tccd-ui@0.2.2(react-dom@19.2.4(react@19.2.4))(react-icons@5.6.0(react@19.2.4))(react@19.2.4):
     dependencies:
       react-datepicker: 9.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react-icons: 5.6.0(react@19.2.4)
