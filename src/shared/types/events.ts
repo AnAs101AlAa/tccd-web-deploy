@@ -17,6 +17,8 @@ export interface EventRoom {
 
 export interface EventSlot {
   id: string;
+  title?: string;
+  description?: string;
   startTime: string;
   endTime: string;
   capacity: number;
