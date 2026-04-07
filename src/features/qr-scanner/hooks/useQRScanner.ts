@@ -4,7 +4,7 @@ import type { QRScanResult, QRScanError } from "@/shared/types";
 import { useScanQRCode } from "@/shared/queries/tickets";
 import toast from "react-hot-toast";
 
-export function useQRScanner() {
+export function useQRScanner(slotId: string) {
   const [isScanning, setIsScanning] = useState(true);
   const [isVerifying, setIsVerifying] = useState(false);
   const [scanResult, setScanResult] = useState<QRScanResult | null>(null);
@@ -22,7 +22,7 @@ export function useQRScanner() {
     try {
       // Parse QR code data
       const qrData = detectedCodes[0].rawValue;
-      
+
       // if (!qrData.token) {
       //   throw new Error("Invalid QR code format");
       // }
@@ -30,6 +30,7 @@ export function useQRScanner() {
       // Validate with backend
       const result = await scanQRCode.mutateAsync({
         token: qrData,
+        slotId,
       });
 
       setScanResult(result);
