@@ -70,6 +70,8 @@ export class EventApi {
       const slots: EventSlot[] = (item.slots || []).map(
         (slot: any): EventSlot => ({
           id: slot.id,
+          title: slot.title || undefined,
+          description: slot.description || undefined,
           startTime: slot.startTime,
           endTime: slot.endTime,
           capacity: slot.capacity,
