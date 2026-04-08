@@ -6,12 +6,10 @@ import {
   SearchField,
   Checkbox,
   DateTimePicker,
-  Timepicker
 } from "tccd-ui";
 import EVENT_TYPES from "@/constants/EventTypes";
 import type Event from "@/shared/types/events";
 import { FaPlus, FaCheck } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
 import { TbTrash } from "react-icons/tb";
 import { MdEdit } from "react-icons/md";
 import useEventModalUtils from "../../utils/eventModalUtils";
@@ -399,7 +397,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                       key: "registrationCount" as keyof EventSlot,
                     },
                   ]}
-                  renderActions={(slot: EventSlot, triggerDelete: (id: string) => void, index: number) => (
+                  renderActions={(_slot: EventSlot, _triggerDelete: (id: string) => void, index: number) => (
                     <>
                       <Button
                         buttonIcon={<MdEdit className="size-4" />}
@@ -439,7 +437,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                         key: "registrationCount" as keyof EventSlot,
                       },
                     ]}
-                    renderButtons={(slot: EventSlot, triggerDelete: (id: string) => void, index: number) => (
+                    renderButtons={(_slot: EventSlot, _triggerDelete: (id: string) => void, index: number) => (
                       <>
                         <Button
                           buttonIcon={<MdEdit className="size-4" />}
