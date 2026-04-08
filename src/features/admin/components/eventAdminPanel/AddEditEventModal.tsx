@@ -6,12 +6,10 @@ import {
   SearchField,
   Checkbox,
   DateTimePicker,
-  Timepicker
 } from "tccd-ui";
 import EVENT_TYPES from "@/constants/EventTypes";
 import type Event from "@/shared/types/events";
 import { FaPlus, FaCheck } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
 import { TbTrash } from "react-icons/tb";
 import { MdEdit } from "react-icons/md";
 import useEventModalUtils from "../../utils/eventModalUtils";
@@ -20,6 +18,9 @@ import type { EventSlot } from "@/shared/types/events";
 import format from "@/shared/utils/dateFormater";
 import { RichTextEditor } from "@/shared/components/RichTextEditor";
 import { useState } from "react";
+import Table from "@/shared/components/adminTables/Table";
+import CardView from "@/shared/components/adminTables/CardView";
+import AddEditSlotModal from "./AddEditSlotModal";
 
 interface AddEditEventModalProps {
   event?: Event;
@@ -47,10 +48,6 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     companies,
     isEditMode,
     isAddingMedia,
-    isAddingSlot,
-    setIsAddingSlot,
-    currentSlotInput,
-    setCurrentSlotInput,
     setIsAddingMedia,
     currentMediaInput,
     setCurrentMediaInput,
@@ -58,6 +55,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     handleRemoveNewMedia,
     handleRemoveOriginalMedia,
     handleAddSlot,
+    handleUpdateSlot,
     handleRemoveSlot,
     handleSave,
     originalMedia,
@@ -65,8 +63,9 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     deletedMediaIds,
   } = useEventModalUtils({ event, onClose });
 
+  const [isSlotModalOpen, setIsSlotModalOpen] = useState(false);
   const [editingSlotIndex, setEditingSlotIndex] = useState<number | null>(null);
-  const [editingSlotCapacity, setEditingSlotCapacity] = useState<number>(0);
+  const [editingSlot, setEditingSlot] = useState<EventSlot | undefined>(undefined);
 
   return (
     <Modal
@@ -350,6 +349,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
         </div>
       </div>
         <div className="w-full mt-3">
+          
           <p className="text-md font-semibold mt-6 lg:mt-0">
             {'Slots management'}
           </p>
@@ -365,139 +365,130 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                   className="py-1 md:py-2 px-3 md:px-4"
                   type="primary"
                   width="fit"
-                  onClick={() => setIsAddingSlot(true)}
+                  onClick={() => {
+                    setEditingSlotIndex(null);
+                    setEditingSlot(undefined);
+                    setIsSlotModalOpen(true);
+                  }}
                 />
               </div>
-              <div className="h-59 overflow-y-auto border border-gray-400 rounded-2xl p-2 space-y-2">
-                {(formValues.slots && formValues.slots.length > 0 || isAddingSlot) ? (
+              
+              <div className="mt-3">
+                <Table
+                  items={formValues.slots || []}
+                  emptyMessage="No slots added yet."
+                  columns={[
+                    {
+                      label: "Title",
+                      key: "title" as keyof EventSlot,
+                      formatter: (value?: string) => value || "N/A"
+                    },
+                    {
+                      label: "Time",
+                      key: "startTime" as keyof EventSlot,
+                      formatter: (_, slot?: EventSlot) => slot ? `${format(slot.startTime, "hourFull")} - ${format(slot.endTime, "hourFull")}` : "N/A"
+                    },
+                    {
+                      label: "Capacity",
+                      key: "capacity" as keyof EventSlot,
+                    },
+                    {
+                      label: "Registrations",
+                      key: "registrationCount" as keyof EventSlot,
+                    },
+                  ]}
+                  renderActions={(_slot: EventSlot, _triggerDelete: (id: string) => void, index: number) => (
                     <>
-                      {/* Existing slots - can edit capacity or delete */}
-                      {formValues.slots?.map((slot: EventSlot, index: number) => {
-                        const isEditing = editingSlotIndex === index;
-                        return (
-                          <div key={index} className="p-2 border border-gray-300 rounded-2xl bg-gray-50">
-                            {isEditing ? (
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-700 whitespace-nowrap">{`${format(slot.startTime, "hourFull")} - ${format(slot.endTime, "hourFull")}`}</span>
-                                <InputField
-                                  label=""
-                                  labelClassName="hidden"
-                                  value={editingSlotCapacity?.toString() || ""}
-                                  placeholder="Capacity"
-                                  onChange={(e) => setEditingSlotCapacity(parseInt(e.target.value) || 0)}
-                                  id={`slotCapacityEdit-${index}`}
-                                />
-                                <span className="text-xs text-gray-500 whitespace-nowrap">attendees</span>
-                                <Button
-                                  buttonIcon={<FaCheck className="size-3" />}
-                                  className="px-2 md:px-3"
-                                  type="primary"
-                                  width="fit"
-                                  onClick={() => {
-                                    setFormValues((prev) => {
-                                      const updatedSlots = prev.slots?.map((s, i) =>
-                                        i === index ? { ...s, capacity: editingSlotCapacity } : s
-                                      ) || [];
-                                      const totalCapacity = updatedSlots.reduce((sum, s) => sum + (s.capacity || 0), 0);
-                                      return {
-                                        ...prev,
-                                        slots: updatedSlots,
-                                        capacity: totalCapacity,
-                                      };
-                                    });
-                                    setEditingSlotIndex(null);
-                                    setEditingSlotCapacity(0);
-                                  }}
-                                />
-                                <Button
-                                  buttonIcon={<FaXmark className="size-3" />}
-                                  className="px-2 md:px-3"
-                                  type="danger"
-                                  width="fit"
-                                  onClick={() => {
-                                    setEditingSlotIndex(null);
-                                    setEditingSlotCapacity(0);
-                                  }}
-                                />
-                              </div>
-                            ) : (
-                              <div className="flex items-center justify-between gap-2">
-                                <span className="text-sm text-gray-700 truncate">{`${format(slot.startTime, "hourFull")} - ${format(slot.endTime, "hourFull")} - ${slot.capacity} attendees`}</span>
-                                <div className="flex items-center gap-1 shrink-0">
-                                  <button
-                                    onClick={() => {
-                                      setEditingSlotIndex(index);
-                                      setEditingSlotCapacity(slot.capacity || 0);
-                                    }}
-                                    className="text-secondary hover:text-secondary/80 cursor-pointer"
-                                    title="Edit capacity"
-                                  >
-                                    <MdEdit className="size-4" />
-                                  </button>
-                                  <button
-                                    onClick={() => handleRemoveSlot(index)}
-                                    className="text-contrast hover:text-primary cursor-pointer"
-                                    title="Mark for deletion"
-                                  >
-                                    <TbTrash className="size-4" />
-                                  </button>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-
-                      {isAddingSlot && (
-                        <div className="flex items-center gap-2">
-                          <Timepicker
-                            value={currentSlotInput.startTime}
-                            onChange={(val) => setCurrentSlotInput((prev) => ({ ...prev, startTime: val }))}
-                          />
-                          <Timepicker
-                            value={currentSlotInput.endTime}
-                            onChange={(val) => setCurrentSlotInput((prev) => ({ ...prev, endTime: val }))}
-                          />
-                          <InputField
-                            label=""
-                            labelClassName="hidden"
-                            value={currentSlotInput.capacity?.toString() || ""}
-                            placeholder="Capacity"
-                            onChange={(e) => setCurrentSlotInput((prev) => ({ ...prev, capacity: parseInt(e.target.value) || 0 }))}
-                            id="slotCapacity"
-                          />
-                          <Button
-                            buttonIcon={<FaCheck className="size-3" />}
-                            className="px-2 md:px-3"
-                            type="primary"
-                            width="fit"
-                            onClick={handleAddSlot}
-                          />
-                          <Button
-                            buttonIcon={<FaXmark className="size-3" />}
-                            className="px-2 md:px-3"
-                            type="danger"
-                            width="fit"
-                            onClick={() => setIsAddingSlot(false)}
-                          />
-                        </div>
-                      )}
+                      <Button
+                        buttonIcon={<MdEdit className="size-4" />}
+                        onClick={() => {
+                          setEditingSlotIndex(index);
+                          setEditingSlot(formValues.slots?.[index]);
+                          setIsSlotModalOpen(true);
+                        }}
+                        type="secondary"
+                      />
+                      <Button
+                        buttonIcon={<TbTrash className="size-4" />}
+                        onClick={() => handleRemoveSlot(index)}
+                        type="danger"
+                      />
                     </>
-                  ) : (
-                    <p className="px-1 h-full text-gray-500 text-[13px] md:text-[14px] flex justify-center lg:text-[15px] items-center">no slots added.</p>
                   )}
+                />
+
+                <div className="lg:hidden border border-gray-300 rounded-2xl bg-gray-50/60 p-2 max-h-72 overflow-y-auto">
+                  <CardView
+                    items={formValues.slots || []}
+                    emptyMessage="No slots added yet."
+                    titleKey="title"
+                    renderedFields={[
+                      {
+                        label: "Time",
+                        key: "startTime" as keyof EventSlot,
+                        formatter: (_, slot?: EventSlot) => slot ? `${format(slot.startTime, "hourFull")} - ${format(slot.endTime, "hourFull")}` : "N/A"
+                      },
+                      {
+                        label: "Capacity",
+                        key: "capacity" as keyof EventSlot,
+                      },
+                      {
+                        label: "Registrations",
+                        key: "registrationCount" as keyof EventSlot,
+                      },
+                    ]}
+                    renderButtons={(_slot: EventSlot, _triggerDelete: (id: string) => void, index: number) => (
+                      <>
+                        <Button
+                          buttonIcon={<MdEdit className="size-4" />}
+                          onClick={() => {
+                            setEditingSlotIndex(index);
+                            setEditingSlot(formValues.slots?.[index]);
+                            setIsSlotModalOpen(true);
+                          }}
+                          type="secondary"
+                        />
+                        <Button
+                          buttonIcon={<TbTrash className="size-4" />}
+                          onClick={() => handleRemoveSlot(index)}
+                          type="danger"
+                        />
+                      </>
+                    )}
+                  />
+                </div>
               </div>
+
               {errors.slots && <p className="px-1 text-xs text-primary mt-2">
                 {errors.slots}
               </p>}
               <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm font-semibold text-secondary">
-                  Total Event Capacity: <span className="text-lg text-secondary">{formValues.slots?.reduce((sum, slot) => sum + (slot.capacity || 0), 0) || 0}</span> attendees
+                  Total Event Capacity: <span className="text-lg text-secondary">{formValues.capacity || 0}</span> attendees
                 </p>
               </div>
             </div>
           </div>
         </div>
+        
+        <AddEditSlotModal
+          isOpen={isSlotModalOpen}
+          onClose={() => {
+            setIsSlotModalOpen(false);
+            setEditingSlotIndex(null);
+            setEditingSlot(undefined);
+          }}
+          eventDate={formValues.date}
+          initialSlot={editingSlot}
+          onSave={(slot: EventSlot) => {
+            if (editingSlotIndex !== null) {
+              handleUpdateSlot(editingSlotIndex, slot);
+            } else {
+              handleAddSlot(slot);
+            }
+          }}
+        />
+
         <div className="flex items-center justify-center gap-3 pt-3 border-t border-gray-300 mt-6">
           <Button
             disabled={isSubmitting}
