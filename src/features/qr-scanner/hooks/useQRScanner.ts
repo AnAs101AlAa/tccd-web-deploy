@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import type { QRScanResult, QRScanError } from "@/shared/types";
 import { useScanQRCode } from "@/shared/queries/tickets";
@@ -11,6 +11,19 @@ export function useQRScanner(slotId: string) {
   const [error, setError] = useState<QRScanError | null>(null);
 
   const scanQRCode = useScanQRCode();
+
+  // Auto-reset scanner after success or error (3 seconds delay)
+  useEffect(() => {
+    if (!scanResult && !error) return;
+
+    const timer = setTimeout(() => {
+      setIsScanning(true);
+      setScanResult(null);
+      setError(null);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [scanResult, error]);
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
     if (detectedCodes.length === 0) return;
