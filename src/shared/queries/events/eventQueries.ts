@@ -89,12 +89,17 @@ export const useDeleteRegistration = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (eventId: string) =>
-      eventRegisterApi.deleteRegistration(eventId),
-    onSuccess: (_data, eventId) => {
-      queryClient.invalidateQueries({ queryKey: eventKeys.eligibility(eventId) });
+    mutationFn: ({
+      eventId,
+      slotId,
+    }: {
+      eventId: string;
+      slotId: string;
+    }) => eventRegisterApi.deleteRegistration(eventId, slotId),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: eventKeys.eligibility(variables.eventId) });
       queryClient.invalidateQueries({ queryKey: ["user", "profile", "registrations"] });
-      queryClient.removeQueries({ queryKey: eventKeys.qrCode(eventId, "") });
+      queryClient.removeQueries({ queryKey: eventKeys.qrCode(variables.eventId, variables.slotId) });
       toast.success("Registration cancelled successfully.");
     },
     onError: (error) => {

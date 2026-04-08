@@ -53,7 +53,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
     useDeleteRegistration();
 
   const handleDeleteConfirm = () => {
-    deleteRegistration(event.id, {
+    deleteRegistration({eventId: event.id, slotId: eventSlot?.id}, {
       onSuccess: () => {
         setIsConfirmOpen(false);
         navigate("/profile");
