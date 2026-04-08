@@ -41,7 +41,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
   const {
     data: qrData,
     isLoading: isQRLoading,
-  } = useGetEventQRCode(event.id, registration.status === "Approved");
+  } = useGetEventQRCode(event.id, eventSlot?.id, registration.status === "Approved");
 
   // Map backend event type value to human-readable label
   const eventTypeLabel =
