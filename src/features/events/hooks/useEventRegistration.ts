@@ -39,7 +39,9 @@ export const useEventRegistration = (eventId: string) => {
   const slotOptions = useMemo(() => {
     if (!event?.slots) return [];
     return event.slots.map((slot) => ({
-      label: `${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")}`,
+      label: slot.title?.trim()
+        ? `${slot.title} (${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")})`
+        : `${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")}`,
       value: slot.id,
     }));
   }, [event?.slots]);
