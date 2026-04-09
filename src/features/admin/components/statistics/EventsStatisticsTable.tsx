@@ -5,6 +5,7 @@ import type Event from "@/shared/types/events";
 import type { EventQueryParams } from "@/shared/types/events";
 import EVENT_TYPES from "@/constants/EventTypes";
 import format from "@/shared/utils/dateFormater";
+import { FiChevronRight } from "react-icons/fi";
 
 interface EventsStatisticsTableProps {
   onEventSelect: (event: Event) => void;
@@ -18,8 +19,64 @@ const getCapacity = (event: Event) => {
 };
 
 const getEventTypeLabel = (type: string) => {
-  return EVENT_TYPES.find((eventType) => eventType.value === type)?.label || type;
+  return (
+    EVENT_TYPES.find((eventType) => eventType.value === type)?.label || type
+  );
 };
+
+/*Skeleton Loaders */
+
+const TableSkeleton = () => (
+  <div>
+    {/* Desktop Table Skeleton */}
+    <div className="hidden lg:block">
+      <div className="bg-contrast/5 rounded-lg px-4 py-3 flex gap-4 mb-1">
+        {["w-48", "w-28", "w-24", "w-20", "w-20", "w-20"].map((w, i) => (
+          <div
+            key={i}
+            className={`h-4 ${w} bg-contrast/10 rounded animate-pulse`}
+          />
+        ))}
+      </div>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div
+          key={i}
+          className="flex gap-4 px-4 py-4 border-b border-contrast/5"
+          style={{ animationDelay: `${i * 75}ms` }}
+        >
+          <div className="h-4 w-48 bg-contrast/8 rounded animate-pulse" />
+          <div className="h-4 w-28 bg-contrast/6 rounded animate-pulse" />
+          <div className="h-6 w-24 bg-contrast/8 rounded-full animate-pulse" />
+          <div className="h-4 w-20 bg-contrast/6 rounded animate-pulse" />
+          <div className="h-4 w-20 bg-contrast/6 rounded animate-pulse" />
+          <div className="h-4 w-20 bg-contrast/6 rounded animate-pulse" />
+        </div>
+      ))}
+    </div>
+
+    {/* Mobile Card Skeleton */}
+    <div className="lg:hidden divide-y divide-contrast/5">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="p-5 space-y-3 animate-pulse">
+          <div className="flex justify-between items-start">
+            <div className="h-5 w-40 bg-contrast/10 rounded" />
+            <div className="h-6 w-20 bg-contrast/8 rounded-full" />
+          </div>
+          <div className="flex flex-wrap gap-6">
+            {Array.from({ length: 4 }).map((_, j) => (
+              <div key={j} className="flex flex-col gap-1.5">
+                <div className="h-3 w-16 bg-contrast/6 rounded" />
+                <div className="h-4 w-12 bg-contrast/8 rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+/*Main Component*/
 
 const EventsStatisticsTable = ({
   onEventSelect,
@@ -30,20 +87,13 @@ const EventsStatisticsTable = ({
   });
 
   const { data, isLoading } = useGetAllEvents(queryParams);
-  
+
   const handlePageChange = (newPage: number) => {
     setQueryParams((prev) => ({ ...prev, PageNumber: newPage }));
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-contrast mx-auto mb-3" />
-          <p className="text-secondary font-medium">Loading events...</p>
-        </div>
-      </div>
-    );
+    return <TableSkeleton />;
   }
 
   const events = data?.items || [];
@@ -61,24 +111,24 @@ const EventsStatisticsTable = ({
       {/* Desktop Table View */}
       <div className="hidden lg:block overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-contrast/5">
+          <thead className="bg-contrast/5 rounded-lg">
             <tr>
-              <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
+              <th className="whitespace-nowrap px-4 py-3.5 text-left text-sm font-semibold text-inactive-tab-text tracking-wide uppercase">
                 Event Name
               </th>
-              <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
+              <th className="whitespace-nowrap px-4 py-3.5 text-left text-sm font-semibold text-inactive-tab-text tracking-wide uppercase">
                 Date
               </th>
-              <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
+              <th className="whitespace-nowrap px-4 py-3.5 text-left text-sm font-semibold text-inactive-tab-text tracking-wide uppercase">
                 Type
               </th>
-              <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
+              <th className="whitespace-nowrap px-4 py-3.5 text-left text-sm font-semibold text-inactive-tab-text tracking-wide uppercase">
                 Registered
               </th>
-              <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
+              <th className="whitespace-nowrap px-4 py-3.5 text-left text-sm font-semibold text-inactive-tab-text tracking-wide uppercase">
                 Attended
               </th>
-              <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-inactive-tab-text">
+              <th className="whitespace-nowrap px-4 py-3.5 text-left text-sm font-semibold text-inactive-tab-text tracking-wide uppercase">
                 Capacity
               </th>
             </tr>
@@ -88,34 +138,34 @@ const EventsStatisticsTable = ({
               const registeredCount = event.registrationCount ?? 0;
 
               return (
-              <tr
-                key={event.id}
-                onClick={() => onEventSelect(event)}
-                className="hover:bg-contrast/5 transition-colors cursor-pointer"
-              >
-                <td className="px-4 py-3">
-                  <span className="font-medium text-contrast">
-                    {event.name}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-secondary whitespace-nowrap">
-                  {format(event.date, "stringed")}
-                </td>
-                <td className="px-4 py-3">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-sm shadow-sm font-medium bg-gray-500/10 text-contrast border-gray-500">
-                    {getEventTypeLabel(event.type)}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-secondary font-medium">
-                  {registeredCount}
-                </td>
-                <td className="px-4 py-3 text-secondary font-medium">
-                  {event.attendeeCount}
-                </td>
-                <td className="px-4 py-3 text-secondary font-medium">
-                  {getCapacity(event)}
-                </td>
-              </tr>
+                <tr
+                  key={event.id}
+                  onClick={() => onEventSelect(event)}
+                  className="hover:bg-contrast/5 transition-all duration-200 cursor-pointer group"
+                >
+                  <td className="px-4 py-3.5">
+                    <span className="font-semibold text-contrast group-hover:text-primary transition-colors">
+                      {event.name}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3.5 text-secondary whitespace-nowrap">
+                    {format(event.date, "stringed")}
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-contrast/5 text-contrast border border-contrast/10">
+                      {getEventTypeLabel(event.type)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3.5 text-secondary font-semibold tabular-nums">
+                    {registeredCount}
+                  </td>
+                  <td className="px-4 py-3.5 text-secondary font-semibold tabular-nums">
+                    {event.attendeeCount}
+                  </td>
+                  <td className="px-4 py-3.5 text-secondary font-semibold tabular-nums">
+                    {getCapacity(event)}
+                  </td>
+                </tr>
               );
             })}
           </tbody>
@@ -131,41 +181,52 @@ const EventsStatisticsTable = ({
             <div
               key={event.id}
               onClick={() => onEventSelect(event)}
-              className="p-4 space-y-3 hover:bg-contrast/5 transition-colors cursor-pointer active:bg-contrast/10"
+              className="p-5 space-y-3 hover:bg-contrast/5 transition-all duration-200 cursor-pointer active:bg-contrast/10 active:scale-[0.99] group"
             >
-              <div className="flex justify-between items-start">
-                <p className="font-semibold text-contrast text-[18px]">
+              <div className="flex justify-between items-start gap-3">
+                <p className="font-semibold text-contrast text-[17px] group-hover:text-primary transition-colors flex-1">
                   {event.name}
                 </p>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-contrast/10 text-contrast shrink-0 ml-2">
-                  {getEventTypeLabel(event.type)}
-                </span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-contrast/5 text-contrast border border-contrast/10">
+                    {getEventTypeLabel(event.type)}
+                  </span>
+                  <FiChevronRight className="text-inactive-tab-text w-4 h-4" />
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-4 text-sm">
-                <div>
-                  <span className="font-medium text-inactive-tab-text block mb-0.5">
+              <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <div className="min-w-[80px]">
+                  <span className="font-medium text-inactive-tab-text block mb-0.5 text-xs uppercase tracking-wider">
                     Date
                   </span>
-                  <span className="text-secondary">{format(event.date, "stringed")}</span>
+                  <span className="text-secondary font-medium">
+                    {format(event.date, "stringed")}
+                  </span>
                 </div>
-                <div>
-                  <span className="font-medium text-inactive-tab-text block mb-0.5">
+                <div className="min-w-[70px]">
+                  <span className="font-medium text-inactive-tab-text block mb-0.5 text-xs uppercase tracking-wider">
                     Registered
                   </span>
-                  <span className="text-secondary">{registeredCount}</span>
+                  <span className="text-secondary font-semibold tabular-nums">
+                    {registeredCount}
+                  </span>
                 </div>
-                <div>
-                  <span className="font-medium text-inactive-tab-text block mb-0.5">
+                <div className="min-w-[70px]">
+                  <span className="font-medium text-inactive-tab-text block mb-0.5 text-xs uppercase tracking-wider">
                     Attended
                   </span>
-                  <span className="text-secondary">{event.attendeeCount}</span>
+                  <span className="text-secondary font-semibold tabular-nums">
+                    {event.attendeeCount}
+                  </span>
                 </div>
-                <div>
-                  <span className="font-medium text-inactive-tab-text block mb-0.5">
+                <div className="min-w-[70px]">
+                  <span className="font-medium text-inactive-tab-text block mb-0.5 text-xs uppercase tracking-wider">
                     Capacity
                   </span>
-                  <span className="text-secondary">{getCapacity(event)}</span>
+                  <span className="text-secondary font-semibold tabular-nums">
+                    {getCapacity(event)}
+                  </span>
                 </div>
               </div>
             </div>
