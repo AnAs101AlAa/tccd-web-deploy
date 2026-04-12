@@ -79,26 +79,8 @@ const UniversityDistributionChart: React.FC<
       .sort((a, b) => b.value - a.value);
   }, [data, selectedUniversity]);
 
-  if (isLoading) {
-    return <BarChartSkeleton />;
-  }
-
-  if (error || !data) {
-    return (
-      <div className="bg-background/60 p-7 sm:p-8 rounded-2xl border border-contrast/10 shadow-sm flex flex-col items-center justify-center h-full min-h-[400px]">
-        <p className="text-inactive-tab-text">
-          Failed to load university distribution.
-        </p>
-      </div>
-    );
-  }
-
   const option = {
-    tooltip: {
-      trigger: "axis",
-      axisPointer: { type: "shadow" },
-      ...tooltipStyle,
-    },
+    tooltip: { trigger: "axis", ...tooltipStyle },
     legend: {
       top: 0,
       right: 0,
@@ -111,28 +93,6 @@ const UniversityDistributionChart: React.FC<
       top: "12%",
       containLabel: true,
     },
-    dataZoom: [
-      {
-        type: "slider",
-        show: true,
-        xAxisIndex: [0],
-        start: 0,
-        end: chartData.length > 8 ? 40 : 100,
-        bottom: 0,
-        height: 22,
-        borderColor: "transparent",
-        fillerColor: "rgba(107, 114, 128, 0.15)",
-        handleStyle: { color: colors.secondary, borderColor: colors.secondary },
-        dataBackground: {
-          lineStyle: { color: "rgba(0,0,0,0.05)" },
-          areaStyle: { color: "rgba(0,0,0,0.02)" },
-        },
-      },
-      {
-        type: "inside",
-        xAxisIndex: [0],
-      },
-    ],
     xAxis: {
       type: "category",
       data: chartData.map((d) => d.name),
@@ -204,10 +164,22 @@ const UniversityDistributionChart: React.FC<
       </div>
 
       <div className="flex-1 min-h-[400px]">
-        <ReactECharts
-          option={option}
-          style={{ height: "100%", width: "100%" }}
-        />
+        {isLoading ? (
+          <BarChartSkeleton />
+        ) : error || !data ? (
+          <div className="flex justify-center items-center h-full text-inactive-tab-text">
+            Failed to load university distribution.
+          </div>
+        ) : chartData.length === 0 ? (
+          <div className="flex justify-center items-center h-full text-inactive-tab-text">
+            No data available.
+          </div>
+        ) : (
+          <ReactECharts
+            option={option}
+            style={{ height: "100%", width: "100%" }}
+          />
+        )}
       </div>
     </div>
   );

@@ -68,7 +68,9 @@ const GlobalGenderChart = ({ colors }: { colors: any }) => {
             ]
           : [],
         label: { show: false },
+        avoidLabelOverlap: false,
         itemStyle: {
+          borderRadius: 10,
           borderWidth: 3,
           borderColor: colors.background,
         },

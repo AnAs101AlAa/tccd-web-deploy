@@ -82,11 +82,7 @@ const DepartmentAttendanceChart: React.FC<DepartmentAttendanceChartProps> = ({
   }, [data, selectedDepartment]);
 
   const option = {
-    tooltip: {
-      trigger: "axis",
-      axisPointer: { type: "shadow" },
-      ...tooltipStyle,
-    },
+    tooltip: { trigger: "axis", ...tooltipStyle },
     legend: {
       top: 0,
       right: 0,
@@ -100,28 +96,6 @@ const DepartmentAttendanceChart: React.FC<DepartmentAttendanceChartProps> = ({
       top: "12%",
       containLabel: true,
     },
-    dataZoom: [
-      {
-        type: "slider",
-        show: true,
-        xAxisIndex: [0],
-        start: 0,
-        end: chartData.length > 8 ? 40 : 100,
-        bottom: 0,
-        height: 22,
-        borderColor: "transparent",
-        fillerColor: "rgba(107, 114, 128, 0.15)",
-        handleStyle: { color: colors.secondary, borderColor: colors.secondary },
-        dataBackground: {
-          lineStyle: { color: "rgba(0,0,0,0.05)" },
-          areaStyle: { color: "rgba(0,0,0,0.02)" },
-        },
-      },
-      {
-        type: "inside",
-        xAxisIndex: [0],
-      },
-    ],
     xAxis: {
       type: "category",
       data: chartData.map((d) => d.name),
