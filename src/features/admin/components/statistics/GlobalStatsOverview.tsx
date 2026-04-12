@@ -250,6 +250,7 @@ const GlobalGraduationYearChart = ({ colors }: { colors: any }) => {
       axisLine: { lineStyle: { color: "rgba(0,0,0,0.08)" } },
       axisTick: { show: false },
       axisLabel: { color: colors.contrast, fontSize: 12 },
+      max: chartData.length >= 6 ? undefined : 5,
     },
     yAxis: {
       type: "value",

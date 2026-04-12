@@ -98,6 +98,7 @@ const UniversityDistributionChart: React.FC<
       data: chartData.map((d) => d.name),
       axisLine: { lineStyle: { color: "rgba(0,0,0,0.08)" } },
       axisTick: { show: false },
+      max: chartData.length >= 6 ? undefined : 5,
       axisLabel: {
         color: colors.contrast,
         interval: 0,
