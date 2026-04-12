@@ -92,7 +92,7 @@ const DepartmentAttendanceChart: React.FC<DepartmentAttendanceChartProps> = ({
     grid: {
       left: "3%",
       right: "4%",
-      bottom: "15%",
+      bottom: "0%",
       top: "12%",
       containLabel: true,
     },
