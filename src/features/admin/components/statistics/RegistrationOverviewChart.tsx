@@ -64,6 +64,10 @@ const RegistrationOverviewChart: React.FC<RegistrationOverviewChartProps> = ({
   const totalRegistered = data.totalRegistered || 0;
   const attendedCount = data.totalAttended || 0;
   const noShowCount = data.totalNoShow || 0;
+  const cancelledCount = data.totalCancelled || 0;
+  const capacity = data.capacity || 0;
+
+  const cancelledColor = "#f59e0b";
 
   const option = {
     tooltip: {
@@ -126,6 +130,13 @@ const RegistrationOverviewChart: React.FC<RegistrationOverviewChartProps> = ({
             label: { show: false },
             emphasis: { label: { show: false } },
           },
+          {
+            value: cancelledCount,
+            name: "Cancelled",
+            itemStyle: { color: cancelledColor },
+            label: { show: false },
+            emphasis: { label: { show: false } },
+          },
         ],
       },
     ],
@@ -152,26 +163,48 @@ const RegistrationOverviewChart: React.FC<RegistrationOverviewChartProps> = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap justify-between w-full mt-5 px-4 gap-y-3 border-t border-contrast/5 pt-5">
-        <div className="text-center min-w-[80px]">
+      <div className="flex flex-wrap justify-around w-full mt-5 px-2 gap-y-3 border-t border-contrast/5 pt-5">
+        <div className="text-center min-w-[60px]">
+          <p className="text-2xl font-extrabold text-contrast tracking-tight tabular-nums">
+            {capacity}
+          </p>
+          <p className="text-xs text-inactive-tab-text font-medium mt-1">
+            Capacity
+          </p>
+        </div>
+        <div className="text-center min-w-[60px]">
           <p className="text-2xl font-extrabold text-contrast tracking-tight tabular-nums">
             {totalRegistered}
           </p>
           <p className="text-xs text-inactive-tab-text font-medium mt-1">
-            Total Registered
+            Registered
           </p>
         </div>
-        <div className="text-center min-w-[80px]">
+        <div className="text-center min-w-[60px]">
           <p className="text-2xl font-extrabold text-secondary tracking-tight tabular-nums">
             {attendedCount}
           </p>
           <p className="text-xs text-secondary font-medium mt-1">Attended</p>
         </div>
-        <div className="text-center min-w-[80px]">
+        <div className="text-center min-w-[60px]">
           <p className="text-2xl font-extrabold text-primary tracking-tight tabular-nums">
             {noShowCount}
           </p>
           <p className="text-xs text-primary font-medium mt-1">No Show</p>
+        </div>
+        <div className="text-center min-w-[60px]">
+          <p
+            className="text-2xl font-extrabold tracking-tight tabular-nums"
+            style={{ color: cancelledColor }}
+          >
+            {cancelledCount}
+          </p>
+          <p
+            className="text-xs font-medium mt-1"
+            style={{ color: cancelledColor }}
+          >
+            Cancelled
+          </p>
         </div>
       </div>
     </div>
