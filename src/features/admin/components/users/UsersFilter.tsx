@@ -4,15 +4,14 @@ import { Button, SearchField, DropdownMenu, RadioButton } from "tccd-ui";
 import { IoSearch } from "react-icons/io5";
 import type {
   UserQueryParams,
-  Gender,
   UserRole,
   UserStatus,
 } from "@/shared/queries/admin/users/userTypes";
 import {
   ROLE_OPTIONS,
-  GENDER_OPTIONS,
   STATUS_OPTIONS,
 } from "../../constants/userConstants";
+//import type { University } from "lucide-react";
 
 const SORT_OPTIONS = [
   {
@@ -74,11 +73,14 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
     const clearedParams: UserQueryParams = {
       PageNumber: 1,
       PageSize: tempSelectedParams.PageSize,
-      Gender: undefined,
       Role: undefined,
       IsDeleted: undefined,
       EnglishName: undefined,
       ArabicName: undefined,
+      Email: undefined,
+      University: undefined,
+      Department: undefined,
+      GraduationYear: undefined,
       OrderBy: "CreatedAt",
       Descending: true,
     };
@@ -92,14 +94,43 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
     setIsFilterModalOpen(false);
   };
 
-  const handleRemoveGenderFilter = () => {
-    const updatedParams = {
-      ...tempSelectedParams,
-      Gender: undefined,
-      PageNumber: 1,
-    };
-    setTempSelectedParams(updatedParams);
-    onSearch(updatedParams);
+  const handleRemoveEmailFilter = () => {
+  const updatedParams = {
+    ...tempSelectedParams,
+    Email: undefined,
+    PageNumber: 1,
+  };
+  setTempSelectedParams(updatedParams);
+  onSearch(updatedParams);
+  };
+
+  const handleRemoveUniversityFilter = () => {
+  const updatedParams = {
+    ...tempSelectedParams,
+    University: undefined,
+    PageNumber: 1,
+  };
+  setTempSelectedParams(updatedParams);
+  onSearch(updatedParams);
+  };
+
+  const handleRemoveDepartmentFilter = () => {
+  const updatedParams = {
+    ...tempSelectedParams,
+    Department: undefined,
+    PageNumber: 1,
+  };
+  setTempSelectedParams(updatedParams);
+  onSearch(updatedParams);
+  };
+  const handleRemoveGraduationYearFilter = () => {
+  const updatedParams = {
+    ...tempSelectedParams,
+    GraduationYear: undefined,
+    PageNumber: 1,
+  };
+  setTempSelectedParams(updatedParams);
+  onSearch(updatedParams);
   };
 
   const handleRemoveRoleFilter = () => {
@@ -129,7 +160,10 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
   };
 
   const activeFiltersCount =
-    (tempSelectedParams.Gender ? 1 : 0) +
+    (tempSelectedParams.Email ? 1 : 0) +
+    (tempSelectedParams.University ? 1 : 0) +
+    (tempSelectedParams.Department ? 1 : 0) +
+    (tempSelectedParams.GraduationYear ? 1 : 0) +
     (tempSelectedParams.Role ? 1 : 0) +
     (tempSelectedParams.IsDeleted !== undefined ? 1 : 0) +
     (tempSelectedParams.OrderBy !== "CreatedAt" ? 1 : 0) +
@@ -186,14 +220,64 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
             <span className="text-sm md:text-[15px] font-medium text-inactive-tab-text">
               Filters:
             </span>
-            {tempSelectedParams.Gender && (
+            {tempSelectedParams.Email && (
               <div
-                key={`gender-${tempSelectedParams.Gender}`}
+                key={`email-${tempSelectedParams.Email}`}
                 className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm md:text-[15px] font-medium"
               >
-                <span>{tempSelectedParams.Gender}</span>
+                <span>
+                  {tempSelectedParams.Email}
+                </span>
                 <button
-                  onClick={handleRemoveGenderFilter}
+                  onClick={handleRemoveEmailFilter}
+                  className="ml-1 hover:bg-secondary/20 rounded-full p-0.5"
+                >
+                  <FiX className="text-xs" />
+                </button>
+              </div>
+            )}
+            {tempSelectedParams.University && (
+              <div
+                key={`email-${tempSelectedParams.University}`}
+                className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm md:text-[15px] font-medium"
+              >
+                <span>
+                  {tempSelectedParams.University}
+                </span>
+                <button
+                  onClick={handleRemoveUniversityFilter}
+                  className="ml-1 hover:bg-secondary/20 rounded-full p-0.5"
+                >
+                  <FiX className="text-xs" />
+                </button>
+              </div>
+            )}
+            {tempSelectedParams.Department && (
+              <div
+                key={`email-${tempSelectedParams.Department}`}
+                className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm md:text-[15px] font-medium"
+              >
+                <span>
+                  {tempSelectedParams.Department}
+                </span>
+                <button
+                  onClick={handleRemoveDepartmentFilter}
+                  className="ml-1 hover:bg-secondary/20 rounded-full p-0.5"
+                >
+                  <FiX className="text-xs" />
+                </button>
+              </div>
+            )}
+            {tempSelectedParams.GraduationYear && (
+              <div
+                key={`email-${tempSelectedParams.GraduationYear}`}
+                className="flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm md:text-[15px] font-medium"
+              >
+                <span>
+                  {tempSelectedParams.GraduationYear}
+                </span>
+                <button
+                  onClick={handleRemoveGraduationYearFilter}
                   className="ml-1 hover:bg-secondary/20 rounded-full p-0.5"
                 >
                   <FiX className="text-xs" />
@@ -273,33 +357,73 @@ const UsersFilter = ({ searchParams, onSearch }: UsersFilterProps) => {
 
             <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-4 md:space-y-6">
               <div className="space-y-4">
+
                 <div>
                   <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
-                    Gender
+                    Email
                   </h4>
-                  <DropdownMenu
-                    label=""
-                    placeholder="All"
-                    options={GENDER_OPTIONS}
-                    value={tempSelectedParams.Gender || ""}
-                    onChange={(value) => {
-                      if (
-                        value &&
-                        GENDER_OPTIONS.some((g) => g.value === value)
-                      ) {
-                        setTempSelectedParams({
-                          ...tempSelectedParams,
-                          Gender: value as Gender,
-                        });
-                      } else {
-                        setTempSelectedParams({
-                          ...tempSelectedParams,
-                          Gender: undefined,
-                        });
-                      }
-                    }}
+                  <SearchField 
+                  value={tempSelectedParams.Email || ""}
+                  onChange={(val)=>
+                    setTempSelectedParams({
+                      ...tempSelectedParams,
+                      Email: val || undefined,
+                    })
+                  }
+                  placeholder="Enter Email "
                   />
                 </div>
+                
+                <div>
+                  <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
+                    University
+                  </h4>
+                  <SearchField 
+                  value={tempSelectedParams.University || ""}
+                  onChange={(val)=>
+                    setTempSelectedParams({
+                      ...tempSelectedParams,
+                      University: val || undefined,
+                    })
+                  }
+                  placeholder="Enter University "
+                  />
+                </div>
+
+                <div>
+                  <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
+                    Department
+                  </h4>
+                  <SearchField 
+                  value={tempSelectedParams.Department || ""}
+                  onChange={(val)=>
+                    setTempSelectedParams({
+                      ...tempSelectedParams,
+                      Department: val || undefined,
+                    })
+                  }
+                  placeholder="Enter Department "
+                  />
+                </div>
+
+                <div>
+                  <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
+                    Graduation Year
+                  </h4>
+                  <SearchField 
+                  value={tempSelectedParams.GraduationYear?.toString()|| ""}
+                  onChange={(val)=>{
+                    if (/^\d*$/.test(val)){
+                      setTempSelectedParams({
+                      ...tempSelectedParams,
+                      GraduationYear: val ? Number(val) : undefined,
+                    })
+                    }
+                  }}
+                  placeholder="Enter Graduation Year "
+                  />
+                </div>
+
                 <div>
                   <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
                     Role

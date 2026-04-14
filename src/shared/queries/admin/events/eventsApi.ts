@@ -129,11 +129,17 @@ export class EventsApi {
     await systemApi.delete(`/v1/Event/${eventId}/slots/${slotId}`);
   }
 
-  async getEventRegistrations(eventId: string, pageNumber: number, pageSize: number, slotId?: string) {
+  async getEventRegistrations(eventId: string, pageNumber: number, pageSize: number, slotId?: string, englishName?:string, arabicName?:string, email?:string, university?:string, department?:string, graduationYear?:number ) {
     const params: any = {
       pageNumber,
       pageSize,
       ...(slotId ? { slotId } : {}),
+      ...(englishName ? { englishName } : {}),
+      ...(arabicName ? { arabicName } : {}),
+      ...(email ? { email } :{}),
+      ...(university ? { university } :{}),
+      ...(department ? { department } :{}),
+      ...(graduationYear ? { graduationYear } :{}),
     };
     const response = await systemApi.get(`/v1/events/${eventId}/registrations`, { params });
     return response.data.data;

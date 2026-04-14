@@ -1,5 +1,5 @@
 import type { UserQueryParams } from "@/shared/queries/admin/users/userTypes";
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense  } from "react";
 import { useUsers } from "../hooks/useUsers";
 import { WithLayout } from "@/shared/components/hoc";
 import UsersList from "../components/users/UsersList";
@@ -56,6 +56,7 @@ export default function UsersAdminPage() {
     setSelectedUser(undefined);
   };
 
+  
   if (volunteeringMemberError && studentError) {
     return (
       <ErrorScreen

@@ -29,6 +29,27 @@ export default function RegistrationsList({
       },
     },
     {
+      label: "University",
+      key: "university" as const,
+      formatter: (_value: string, item: any) => {
+        return item.user?.studentProfile?.university || "N/A";
+      },
+    },
+    {
+      label: "Department",
+      key: "department" as const,
+      formatter: (_value: string, item: any) => {
+        return item.user?.studentProfile?.department || "N/A";
+      },
+    },
+    {
+      label: "GraduationYear",
+      key: "graduationYear" as const,
+      formatter: (_value: string, item: any) => {
+        return item.user?.studentProfile?.graduationYear || "N/A";
+      },
+    },
+    {
       label: "Phone",
       key: "phone" as const,
       formatter: (_value: string, item: any) => {
@@ -68,6 +89,9 @@ export default function RegistrationsList({
   const formattedData = registrations.map((reg) => ({
     studentName: reg.user?.englishName || "N/A",
     email: reg.user?.email || "N/A",
+    university: reg.user?.studentProfile?.university || "N/A",
+    department: reg.user?.studentProfile?.department || "N/A",
+    graduationYear: reg.user?.studentProfile?.graduationYear || "N/A",
     phone: reg.user?.phoneNumber || "N/A",
     ...reg,
   }));
@@ -92,6 +116,15 @@ export default function RegistrationsList({
                 </th>
                 <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
                   Email
+                </th>
+                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                  University
+                </th>
+                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                  Department
+                </th>
+                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                  GraduationYear
                 </th>
                 <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
                   Status
@@ -119,6 +152,21 @@ export default function RegistrationsList({
                     <td className="px-2 py-2">
                       <div className="text-xs font-medium text-contrast truncate">
                         {item.email}
+                      </div>
+                    </td>
+                    <td className="px-2 py-2">
+                      <div className="text-xs font-medium text-contrast truncate">
+                        {item.university}
+                      </div>
+                    </td>
+                    <td className="px-2 py-2">
+                      <div className="text-xs font-medium text-contrast truncate">
+                        {item.department}
+                      </div>
+                    </td>
+                    <td className="px-2 py-2">
+                      <div className="text-xs font-medium text-contrast truncate">
+                        {item.graduationYear}
                       </div>
                     </td>
                     <td className="px-2 py-2">

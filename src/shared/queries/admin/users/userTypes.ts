@@ -1,7 +1,6 @@
 export interface UserQueryParams {
   EnglishName?: string;
   ArabicName?: string;
-  Gender?: Gender;
   IsDeleted?: boolean;
   Role?: UserRole;
   Status?: UserStatus;
@@ -9,6 +8,10 @@ export interface UserQueryParams {
   PageSize: number;
   OrderBy?: string;
   Descending?: boolean;
+  Email?: string;
+  University?: string;
+  Department?: string;
+  GraduationYear?: number;
 }
 
 export interface User {

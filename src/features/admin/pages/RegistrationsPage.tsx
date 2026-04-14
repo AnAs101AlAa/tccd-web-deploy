@@ -4,6 +4,7 @@ import { Pagination } from "@/shared/components/pagination";
 import { useGetEventRegistrations, useFetchEvents } from "@/shared/queries/admin/events/eventsQueries";
 import RegistrationsList from "../components/registrations/RegistrationsList";
 import RegistrationsFilter from "../components/registrations/RegistrationsFilter";
+import RegistrationsTableFilter from "../components/registrations/RegistrarionsTableFilter";
 import type Event from "@/shared/types/events";
 import format from "@/shared/utils/dateFormater";
 import { DropdownMenu } from "tccd-ui";
@@ -14,7 +15,7 @@ export default function RegistrationsPage() {
   const [selectedSlotId, setSelectedSlotId] = useState<string>("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
-
+  const [filterParams, setFilterParams] = useState<any>({})
   // Fetch events by search query using nameKey parameter
   const { data: eventsData } = useFetchEvents(1, 100, searchQuery || undefined);
 
@@ -26,13 +27,20 @@ export default function RegistrationsPage() {
       selectedEvent?.id || "",
       pageNumber,
       pageSize,
-      selectedSlotId || undefined
+      selectedSlotId || undefined,
+      filterParams.englishName,
+      filterParams.arabicName,
+      filterParams.email,
+      filterParams.university,
+      filterParams.department,
+      filterParams.graduationYear
     );
 
   const handleEventSelect = (event: Event) => {
     setSelectedEvent(event);
     setSelectedSlotId("");
     setPageNumber(1);
+    setFilterParams({});
   };
 
   const handleSlotChange = (slotId: string) => {
@@ -135,6 +143,12 @@ export default function RegistrationsPage() {
                     labelClassName="text-xs sm:text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
                 />
               )}
+
+              {/* Registrations Table Filter */}
+              <RegistrationsTableFilter
+              searchParams={filterParams}
+              onSearch={setFilterParams}
+              />
 
               {isLoadingRegistrations ? (
                 <div className="flex items-center justify-center py-6 sm:py-8">
