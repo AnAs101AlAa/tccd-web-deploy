@@ -95,6 +95,8 @@ export class EventApi {
         updatedOn: item.updatedOn,
         rooms,
         slots: slots.length > 0 ? slots : undefined,
+        autoApproval: item.autoApproval,
+        parentEventId: item.parentEventId,
       };
     }
 

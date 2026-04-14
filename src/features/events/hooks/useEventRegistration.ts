@@ -5,7 +5,6 @@ import {
 } from "@/shared/queries/events";
 import { useMemo } from "react";
 import format from "@/shared/utils/dateFormater";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -48,12 +47,8 @@ export const useEventRegistration = (eventId: string) => {
   const eligibilityReason = eligibility?.message;
 
   const register = async (slotId: string) => {
-    try {
-      const response = await registerMutation.mutateAsync({ eventId, eventSlotId: slotId });
-      navigate(`/tickets/${response.eventId}`);
-    } catch{
-      toast.error("Registration failed. Please try again.");
-    }
+    const response = await registerMutation.mutateAsync({ eventId, eventSlotId: slotId });
+    navigate(`/tickets/${response.eventId}`);
   };
 
   return {

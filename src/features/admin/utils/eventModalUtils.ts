@@ -14,6 +14,7 @@ import {
   useAddEventSlot,
   useUpdateEventSlot,
   useRemoveEventSlot,
+  useFetchEvents
 } from "@/shared/queries/admin/events/eventsQueries";
 import toast from "react-hot-toast";
 import { useGetCompanies } from "@/shared/queries/companies";
@@ -66,6 +67,8 @@ export default function useEventModalUtils({
     undefined,
   );
 
+  const [parentEventNameKey, setParentEventNameKey] = useState<string | undefined>(undefined);
+
   const { data: locations, isLoading: locationsLoading } = useGetLocations({
     PageNumber: 1,
     PageSize: 100,
@@ -77,6 +80,9 @@ export default function useEventModalUtils({
     companyNameKey,
   );
   const { data: eventSponsors } = useGetEventSponsors(event?.id || "");
+
+  const [currentEventsPage, setCurrentEventsPage] = useState<number>(1);
+  const { data: eventsData, isLoading: isParentEventsLoading } = useFetchEvents(currentEventsPage, 20, parentEventNameKey);
 
   const createEventMutation = useCreateEvent();
   const updateEventMutation = useUpdateEvent();
@@ -100,6 +106,7 @@ export default function useEventModalUtils({
     name: "",
     description: "",
     isApproved: true,
+    autoApproval: false,
     eventImage: "",
     type: undefined,
     eventMedia: [],
@@ -110,7 +117,9 @@ export default function useEventModalUtils({
     attendeeCount: 0,
     sponsors: [],
     slots: [],
+    parentEventId: undefined,
   });
+  
   const [errors, setErrors] = useState<{ [key in keyof EventRequest]?: string }>({});
 
   const [isAddingMedia, setIsAddingMedia] = useState<boolean>(false);
@@ -398,6 +407,12 @@ export default function useEventModalUtils({
     companyNameKey,
     setCompanyNameKey,
     companies: companies?.data.items || [],
+    parentEventNameKey,
+    setParentEventNameKey,
+    parentEvents: eventsData,
+    isParentEventsLoading,
+    currentEventsPage,
+    setCurrentEventsPage,
     isEditMode,
     isAddingMedia,
     setIsAddingMedia,
