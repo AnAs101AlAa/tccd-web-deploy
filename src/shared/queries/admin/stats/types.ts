@@ -24,6 +24,7 @@ export interface EventOverviewStats {
   totalRegistered: number;
   totalAttended: number;
   totalNoShow: number;
+  totalCancelled: number;
   capacity: number;
   attendanceRate: number;
 }

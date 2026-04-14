@@ -135,6 +135,11 @@ export default function EventRegisterForm() {
   const selectedSlotSpotsLeft = selectedSlot
     ? selectedSlot.capacity - selectedSlot.registrationCount
     : null;
+  const selectedSlotTitle = selectedSlot?.title?.trim() || "";
+  const selectedSlotDescription = selectedSlot?.description?.trim() || "";
+  const eventTitleWithSlot = selectedSlotTitle
+    ? `${event.name} (${selectedSlotTitle})`
+    : event.name;
 
   const formattedDate = format(event.date, "stringed");
 
@@ -162,7 +167,7 @@ export default function EventRegisterForm() {
               </h2>
               <p className="text-sm text-muted-foreground">
                 You have been successfully registered for{" "}
-                <span className="font-semibold">{event.name}</span>.
+                <span className="font-semibold">{eventTitleWithSlot}</span>.
               </p>
             </div>
           )}
@@ -178,7 +183,7 @@ export default function EventRegisterForm() {
               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4">
                 <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                  {event.name}
+                  {eventTitleWithSlot}
                 </h1>
                 <div className="inline-block bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold">
                   {EVENT_TYPES.find((type) => type.value === event.type)?.label || "Other"}
@@ -241,6 +246,17 @@ export default function EventRegisterForm() {
                   />
                 </div>
               </div>
+
+              {selectedSlotDescription && (
+                <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-4">
+                  <p className="text-xs font-medium uppercase tracking-wide text-primary">
+                    Selected Slot Details
+                  </p>
+                  <p className="mt-1 text-sm text-foreground whitespace-pre-line">
+                    {selectedSlotDescription}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Event Description */}
@@ -415,6 +431,12 @@ export default function EventRegisterForm() {
                             </>
                           )}
                         />
+                        {selectedSlotSpotsLeft !== null && selectedSlotSpotsLeft === 0 && (
+                          <p className="mt-4 flex items-center gap-1.5 text-sm font-medium bg-yellow-100/50 border border-yellow-500 p-2 rounded-xl text-yellow-600">
+                            <FaTriangleExclamation className="w-3 h-3 shrink-0" />
+                            This time slot is fully booked. Registering in it will place you on a waitlist.
+                          </p>
+                        )}
                     </div>
                 </div>
               </div>
@@ -608,7 +630,7 @@ export default function EventRegisterForm() {
                 width="auto"
                 disabled={
                   watchedSlotId === "" ||
-                  (selectedSlotSpotsLeft !== null && selectedSlotSpotsLeft <= 0)
+                  (selectedSlotSpotsLeft === null)
                 }
               />
             )}

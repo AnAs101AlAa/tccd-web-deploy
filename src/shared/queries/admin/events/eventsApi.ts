@@ -22,6 +22,8 @@ export class EventsApi {
       date: data.date,
       type: data.type,
       locations: data.locations,
+      autoApproval: data.autoApproval,
+      parentEventId: data.parentEventId,
     };
     
     await systemApi.put(
@@ -78,7 +80,12 @@ export class EventsApi {
       `${EVENTS_ROUTE}`,
       { params: queryParams }
     );
-    return data.data.items.map((item: any) => ({...item, locations: item.rooms, eventMedia: item.medias, capacity: item.slots?.reduce((sum: number, slot: EventSlot) => sum + (slot.capacity || 0), 0) || 0} as Event)) as Event[];
+    
+    return {
+      items: data.data.items.map((item: any) => ({...item, locations: item.rooms, eventMedia: item.medias, capacity: item.slots?.reduce((sum: number, slot: EventSlot) => sum + (slot.capacity || 0), 0) || 0} as Event)) as Event[],
+      totalPages: data.data.totalPages,
+      totalCount: data.data.totalCount,
+    };
   }
 
   async deleteEvent(id: string) {

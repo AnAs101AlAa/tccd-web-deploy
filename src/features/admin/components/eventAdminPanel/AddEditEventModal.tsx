@@ -9,7 +9,7 @@ import {
 } from "tccd-ui";
 import EVENT_TYPES from "@/constants/EventTypes";
 import type Event from "@/shared/types/events";
-import { FaPlus, FaCheck } from "react-icons/fa";
+import { FaPlus, FaCheck, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { TbTrash } from "react-icons/tb";
 import { MdEdit } from "react-icons/md";
 import useEventModalUtils from "../../utils/eventModalUtils";
@@ -45,6 +45,12 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
     companiesLoading,
     companyNameKey,
     setCompanyNameKey,
+    parentEventNameKey,
+    setParentEventNameKey,
+    parentEvents,
+    currentEventsPage,
+    setCurrentEventsPage,
+    isParentEventsLoading,
     companies,
     isEditMode,
     isAddingMedia,
@@ -489,6 +495,76 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
           }}
         />
 
+        <div className="w-full mt-3">
+          
+          <p className="text-md font-semibold mt-6 lg:mt-0">
+            {'Event connection configuration'}
+          </p>
+          <hr className="border-gray-300 mt-1 mb-3" />
+          <div className="space-y-3">
+            <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600">
+              Event parent (for sub-events where registration if tight to a parent event)
+            </p>
+            <div className="space-y-3">
+              <SearchField
+                placeholder="Search events..."
+                value={parentEventNameKey || ""}
+                onChange={(val) => setParentEventNameKey(val || undefined)}
+                className="lg:w-full"
+              />
+              <div className="h-61 overflow-y-auto border border-gray-400 rounded-2xl p-2">
+                {isParentEventsLoading ? (
+                  <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">Loading events...</p>
+                ) : (
+                  <>
+                    {parentEvents && parentEvents.items.length > 0 ? (
+                      parentEvents.items.map((event: Event) => (
+                        <div
+                          key={event.id}
+                          className="p-3 border-b border-gray-300 last:border-b-0 cursor-pointer hover:bg-gray-50 flex items-center"
+                        >
+                          <Checkbox
+                            label=""
+                            checked={formValues.parentEventId === event.id}
+                            onChange={() => {
+                              setFormValues((prev) => ({
+                                ...prev,
+                                parentEventId: prev.parentEventId === event.id ? undefined : event.id,
+                              }));
+                            }}
+                          />
+                          <div className="flex-1">
+                            <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold text-contrast line-clamp-1">{event.name}</p>
+                            <p className="text-sm text-gray-500 line-clamp-1">{event.description}</p>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="px-1 text-gray-500 text-[13px] md:text-[14px] lg:text-[15px]">No events found.</p>
+                    )}
+                  </>
+                )}
+              </div>
+              <div className="w-full flex justify-center gap-2 items-center">
+                <FaChevronLeft className={`size-3 cursor-pointer ${currentEventsPage === 1 ? "text-gray-300 cursor-not-allowed" : "text-contrast hover:text-primary"}`} onClick={() => { if (currentEventsPage > 1) setCurrentEventsPage((prev) => prev - 1) }} />
+                <span className="text-sm text-gray-500">
+                  Page {currentEventsPage} of {parentEvents?.totalPages || 1}
+                </span>
+                <FaChevronRight className={`size-3 cursor-pointer ${parentEvents && currentEventsPage >= parentEvents.totalPages ? "text-gray-300 cursor-not-allowed" : "text-contrast hover:text-primary"}`} onClick={() => { if (parentEvents && currentEventsPage < parentEvents.totalPages) setCurrentEventsPage((prev) => prev + 1) }} />
+              </div>
+            </div>
+            <Checkbox
+                label="Auto-approve registrations for this event (if unchecked, admin approval is required to approve pending registrations)"
+                checked={formValues.autoApproval}
+                onChange={() => {
+                  setFormValues((prev) => ({
+                    ...prev,
+                    autoApproval: !prev.autoApproval,
+                  }));
+                }}
+              />
+          </div>
+        </div>
         <div className="flex items-center justify-center gap-3 pt-3 border-t border-gray-300 mt-6">
           <Button
             disabled={isSubmitting}

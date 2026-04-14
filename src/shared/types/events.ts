@@ -32,6 +32,7 @@ export default interface Event {
   date: string;
   locations?: string[];
   isApproved: boolean;
+  autoApproval: boolean;
   type: string;
   attendeeCount: number;
   registeredCount?: number;
@@ -46,6 +47,7 @@ export default interface Event {
   sponsors?: Sponsor[];
   slots?: EventSlot[];
   rooms?: EventRoom[];
+  parentEventId?: string;
 }
 
 export interface EventRequest {
@@ -55,6 +57,7 @@ export interface EventRequest {
   date: string;
   locations?: string[];
   isApproved: boolean;
+  autoApproval: boolean;
   type: string | undefined;
   attendeeCount: number;
   registeredCount?: number;
@@ -68,6 +71,7 @@ export interface EventRequest {
   sponsors?: Sponsor[];
   slots?: EventSlot[];
   rooms?: EventRoom[];
+  parentEventId?: string;
 }
 
 export interface EventResponse {
