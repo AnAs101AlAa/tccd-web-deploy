@@ -21,6 +21,7 @@ import { useState } from "react";
 import Table from "@/shared/components/adminTables/Table";
 import CardView from "@/shared/components/adminTables/CardView";
 import AddEditSlotModal from "./AddEditSlotModal";
+import AdjustEventRegistrationModal from "./AdjustEventRegistrationModal";
 
 interface AddEditEventModalProps {
   event?: Event;
@@ -72,6 +73,8 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
   const [isSlotModalOpen, setIsSlotModalOpen] = useState(false);
   const [editingSlotIndex, setEditingSlotIndex] = useState<number | null>(null);
   const [editingSlot, setEditingSlot] = useState<EventSlot | undefined>(undefined);
+
+  const [modalStep, setModalStep] = useState(1);
 
   return (
     <Modal
@@ -503,7 +506,7 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
           <hr className="border-gray-300 mt-1 mb-3" />
           <div className="space-y-3">
             <p className="text-[13px] md:text-[14px] lg:text-[15px] font-semibold mb-1 text-gray-600">
-              Event parent (for sub-events where registration if tight to a parent event)
+              Event parent (for sub-events where registration if tight to a parent <span onClick={() => setModalStep((prev) => prev + 1)}>event</span>)
             </p>
             <div className="space-y-3">
               <SearchField
@@ -563,6 +566,16 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
                   }));
                 }}
               />
+            <Checkbox
+              label="Enable waiting list when event capacity is reached (if unchecked, attendees will not be able to register once capacity is full)"
+              checked={formValues.hasWaitingList}
+              onChange={() => {
+                setFormValues((prev) => ({
+                  ...prev,
+                  hasWaitingList: !prev.hasWaitingList,
+                }));
+              }}
+            />
           </div>
         </div>
         <div className="flex items-center justify-center gap-3 pt-3 border-t border-gray-300 mt-6">
@@ -582,6 +595,12 @@ const AddEditEventModal: React.FC<AddEditEventModalProps> = ({
             width="fit"
           />
         </div>
+        <AdjustEventRegistrationModal
+          isOpen={modalStep === 6}
+          onClose={() => setModalStep(1)}
+          eventId={event?.id || ""}
+          slots={formValues.slots || []}
+        />
     </Modal>
   );
 };

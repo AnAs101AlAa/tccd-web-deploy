@@ -1,6 +1,13 @@
-import { SearchField } from "tccd-ui";
+import {  SearchField } from "tccd-ui";
 
-interface RegistrationsFilterProps {
+export interface RegistrationsFilterParams {
+  name?: string;
+  email?: string;
+  university?: string;
+  department?: string;
+  graduationYear?: number;
+}
+export interface RegistrationsFilterProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
 }

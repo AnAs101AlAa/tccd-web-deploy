@@ -98,6 +98,7 @@ export class EventApi {
         rooms,
         slots: slots.length > 0 ? slots : undefined,
         autoApproval: item.autoApproval,
+        hasWaitingList: item.hasWaitingList,
         parentEventId: item.parentEventId,
       };
     }

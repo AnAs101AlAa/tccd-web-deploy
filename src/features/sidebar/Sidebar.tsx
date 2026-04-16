@@ -72,7 +72,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   ];
 
   const navItems = allNavItems.filter(
-    (item) => item.id !== "users" || isAdmin
+    (item) => (item.id !== "users" && item.id !== "registrations") || isAdmin
   );
 
   const handleNavClick = (item: NavItem) => {
