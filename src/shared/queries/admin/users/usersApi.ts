@@ -6,7 +6,10 @@ const USERS_ROUTE = "/v1/Admin/users";
 export class UsersApi {
   async fetchUsers(params?: UserQueryParams): Promise<UserResponse> {
     const response = await systemApi.get(`${USERS_ROUTE}`, { params });
-    return response.data.data;
+    return response.data?.data ?? {
+    items: [],
+    totalCount: 0,
+  };
   }
 
   async fetchPendingAccounts(

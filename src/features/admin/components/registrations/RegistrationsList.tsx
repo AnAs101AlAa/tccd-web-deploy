@@ -1,6 +1,11 @@
 import Table from "@/shared/components/adminTables/Table";
 import format from "@/shared/utils/dateFormater";
 import type { User } from "@/shared/queries/admin/users/userTypes";
+import { useChangeRegistrationStatus } from "@/shared/queries/admin/events/eventsQueries";
+import toast from "react-hot-toast";
+import { Button } from "tccd-ui";
+import { FaCheck } from "react-icons/fa";
+import { FaX } from "react-icons/fa6";
 
 interface RegistrationsListProps {
   registrations: {
@@ -8,11 +13,26 @@ interface RegistrationsListProps {
     registeredAt: string;
     user: User;
   }[];
+  slotId?: string;
+  eventId: string;
 }
 
 export default function RegistrationsList({
   registrations,
+  eventId,
+  slotId,
 }: RegistrationsListProps) {
+  const changeStatusMutation = useChangeRegistrationStatus();
+
+  const handleChangeStatus = async (userId: string, newStatus: string) => {
+    try {
+      await changeStatusMutation.mutateAsync({ eventId, slotId: slotId || "", userId, newStatus });
+      toast.success("Registration status updated successfully");
+    } catch {
+      toast.error("Failed to update registration status");
+    }
+  };
+
   const columns = [
     {
       label: "Student Name",
@@ -26,6 +46,27 @@ export default function RegistrationsList({
       key: "email" as const,
       formatter: (_value: string, item: any) => {
         return item.user?.email || item.email || "N/A";
+      },
+    },
+    {
+      label: "University",
+      key: "university" as const,
+      formatter: (_value: string, item: any) => {
+        return item.user?.studentProfile?.university || "N/A";
+      },
+    },
+    {
+      label: "Department",
+      key: "department" as const,
+      formatter: (_value: string, item: any) => {
+        return item.user?.studentProfile?.department || "N/A";
+      },
+    },
+    {
+      label: "GraduationYear",
+      key: "graduationYear" as const,
+      formatter: (_value: string, item: any) => {
+        return item.user?.studentProfile?.graduationYear || "N/A";
       },
     },
     {
@@ -68,6 +109,9 @@ export default function RegistrationsList({
   const formattedData = registrations.map((reg) => ({
     studentName: reg.user?.englishName || "N/A",
     email: reg.user?.email || "N/A",
+    university: reg.user?.studentProfile?.university || "N/A",
+    department: reg.user?.studentProfile?.department || "N/A",
+    graduationYear: reg.user?.studentProfile?.graduationYear || "N/A",
     phone: reg.user?.phoneNumber || "N/A",
     ...reg,
   }));
@@ -78,6 +122,24 @@ export default function RegistrationsList({
       <Table
         items={formattedData}
         columns={columns}
+        renderActions={!slotId ? undefined : (item) => {
+          return (
+            <>
+              <Button
+                type="primary"
+                buttonIcon={<FaCheck className="size-3" />}
+                buttonText="Approve"
+                onClick={() => handleChangeStatus(item.user.id, "Approved")}
+              />
+              <Button
+                type="danger"
+                buttonIcon={<FaX className="size-3" />}
+                buttonText="Reject"
+                onClick={() => handleChangeStatus(item.user.id, "Rejected")}
+              />
+            </>
+          );
+        }}
         emptyMessage="No registrations found"
       />
 
@@ -94,7 +156,19 @@ export default function RegistrationsList({
                   Email
                 </th>
                 <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                  University
+                </th>
+                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                  Department
+                </th>
+                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                  GraduationYear
+                </th>
+                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
                   Status
+                </th>
+                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -122,13 +196,46 @@ export default function RegistrationsList({
                       </div>
                     </td>
                     <td className="px-2 py-2">
+                      <div className="text-xs font-medium text-contrast truncate">
+                        {item.university}
+                      </div>
+                    </td>
+                    <td className="px-2 py-2">
+                      <div className="text-xs font-medium text-contrast truncate">
+                        {item.department}
+                      </div>
+                    </td>
+                    <td className="px-2 py-2">
+                      <div className="text-xs font-medium text-contrast truncate">
+                        {item.graduationYear}
+                      </div>
+                    </td>
+                    <td className="px-2 py-2">
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full ${
+                        className={`inline-flex items-center px-2.5 py-1 shadow-sm border rounded-full text-xs font-medium ${
                           statusColors[item.status] || "bg-gray-100 text-gray-800"
                         }`}
                       >
                         {item.status}
                       </span>
+                    </td>
+                    <td className="px-2 py-2">
+                      {slotId && (
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="primary"
+                            buttonIcon={<FaCheck className="size-3" />}
+                            buttonText="Approve"
+                            onClick={() => handleChangeStatus(item.user.id, "Approved")}
+                          />
+                          <Button
+                            type="danger"
+                            buttonIcon={<FaX className="size-3" />}
+                            buttonText="Reject"
+                            onClick={() => handleChangeStatus(item.user.id, "Rejected")}
+                          />
+                        </div>
+                      )}
                     </td>
                   </tr>
                 );

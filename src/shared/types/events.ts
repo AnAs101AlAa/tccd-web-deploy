@@ -33,6 +33,7 @@ export default interface Event {
   locations?: string[];
   isApproved: boolean;
   autoApproval: boolean;
+  hasWaitingList: boolean;
   type: string;
   attendeeCount: number;
   registeredCount?: number;
@@ -58,6 +59,7 @@ export interface EventRequest {
   locations?: string[];
   isApproved: boolean;
   autoApproval: boolean;
+  hasWaitingList: boolean;
   type: string | undefined;
   attendeeCount: number;
   registeredCount?: number;
