@@ -58,14 +58,16 @@ export default function AdjustEventRegistrationModal({isOpen, onClose, eventId, 
                         }
                     ]}
                     renderActions={(item) => {
-                        <Button
-                            type="primary"
-                            buttonText="Select"
-                            onClick={() => {
-                                setSelectedUserId(item.id);
-                            }}
-                            disabled={adjustRegistrationMutation.isPending}
-                        />
+                        return (
+                            <Button
+                                type="primary"
+                                buttonText="Select"
+                                onClick={() => {
+                                    setSelectedUserId(item.id);
+                                }}
+                                disabled={adjustRegistrationMutation.isPending}
+                            />
+                        )
                     }}
                 />
                 <div className="mt-6 flex justify-center gap-3">
