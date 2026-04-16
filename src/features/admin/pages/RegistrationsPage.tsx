@@ -19,7 +19,7 @@ export default function RegistrationsPage() {
   // Fetch events by search query using nameKey parameter
   const { data: eventsData } = useFetchEvents(1, 100, searchQuery || undefined);
 
-  const filteredEvents = eventsData || [];
+  const filteredEvents = eventsData?.items || [];
 
   // Fetch registrations for selected event
   const { data: registrationsData, isLoading: isLoadingRegistrations } =

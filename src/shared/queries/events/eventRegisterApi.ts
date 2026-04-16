@@ -21,8 +21,8 @@ export class EventRegisterApi {
     return data.data ?? data;
   }
 
-  async deleteRegistration(eventId: string): Promise<void> {
-    await systemApi.delete(`${EVENT_ROUTE}/${eventId}/registrations`);
+  async deleteRegistration(eventId: string, slotId: string): Promise<void> {
+    await systemApi.delete(`${EVENT_ROUTE}/${eventId}/slots/${slotId}/registrations`);
   }
 }
 

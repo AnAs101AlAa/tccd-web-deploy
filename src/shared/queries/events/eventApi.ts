@@ -70,6 +70,8 @@ export class EventApi {
       const slots: EventSlot[] = (item.slots || []).map(
         (slot: any): EventSlot => ({
           id: slot.id,
+          title: slot.title || undefined,
+          description: slot.description || undefined,
           startTime: slot.startTime,
           endTime: slot.endTime,
           capacity: slot.capacity,
@@ -95,15 +97,17 @@ export class EventApi {
         updatedOn: item.updatedOn,
         rooms,
         slots: slots.length > 0 ? slots : undefined,
+        autoApproval: item.autoApproval,
+        parentEventId: item.parentEventId,
       };
     }
 
     throw new Error("Event not found");
   }
 
-  async getEventQRCode(eventId: string): Promise<{ base64Image: string }> {
+  async getEventQRCode(eventId: string, slotId: string): Promise<{ base64Image: string }> {
     const response = await systemApi.get(
-      `/v1/events/${eventId}/registrations/qr-code`,
+      `/v1/events/${eventId}/slots/${slotId}/registrations/qr-code`,
     );
     return response.data.data;
   }

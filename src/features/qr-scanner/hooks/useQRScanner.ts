@@ -1,16 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import type { QRScanResult, QRScanError } from "@/shared/types";
 import { useScanQRCode } from "@/shared/queries/tickets";
 import toast from "react-hot-toast";
 
-export function useQRScanner() {
+export function useQRScanner(slotId: string) {
   const [isScanning, setIsScanning] = useState(true);
   const [isVerifying, setIsVerifying] = useState(false);
   const [scanResult, setScanResult] = useState<QRScanResult | null>(null);
   const [error, setError] = useState<QRScanError | null>(null);
 
   const scanQRCode = useScanQRCode();
+
+  // Auto-reset scanner after success or error (3 seconds delay)
+  useEffect(() => {
+    if (!scanResult && !error) return;
+
+    const timer = setTimeout(() => {
+      setIsScanning(true);
+      setScanResult(null);
+      setError(null);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [scanResult, error]);
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
     if (detectedCodes.length === 0) return;
@@ -22,7 +35,7 @@ export function useQRScanner() {
     try {
       // Parse QR code data
       const qrData = detectedCodes[0].rawValue;
-      
+
       // if (!qrData.token) {
       //   throw new Error("Invalid QR code format");
       // }
@@ -30,6 +43,7 @@ export function useQRScanner() {
       // Validate with backend
       const result = await scanQRCode.mutateAsync({
         token: qrData,
+        slotId,
       });
 
       setScanResult(result);

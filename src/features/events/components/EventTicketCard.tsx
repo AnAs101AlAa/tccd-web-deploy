@@ -41,11 +41,20 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
   const {
     data: qrData,
     isLoading: isQRLoading,
-  } = useGetEventQRCode(event.id, registration.status === "Approved");
+  } = useGetEventQRCode(event.id, eventSlot?.id, registration.status === "Approved");
 
   // Map backend event type value to human-readable label
   const eventTypeLabel =
     EVENT_TYPES.find((t) => t.value === event.type)?.label ?? event.type;
+  const fallbackSlotTitle =
+    event.slots
+      ?.find((slot) => slot.id === eventSlot?.id || slot.id === registration.slotId)
+      ?.title
+      ?.trim() || "";
+  const slotTitle = eventSlot?.title?.trim() || fallbackSlotTitle;
+  const eventTitleWithSlot = slotTitle
+    ? `${event.name} (${slotTitle})`
+    : event.name;
 
   const navigate = useNavigate();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -53,7 +62,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
     useDeleteRegistration();
 
   const handleDeleteConfirm = () => {
-    deleteRegistration(event.id, {
+    deleteRegistration({eventId: event.id, slotId: eventSlot?.id}, {
       onSuccess: () => {
         setIsConfirmOpen(false);
         navigate("/profile");
@@ -74,7 +83,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
         <div className="p-4 pt-6 sm:p-6 md:p-8">
           {/* Event Name — centered */}
           <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-contrast text-center mb-2 leading-tight">
-            {event.name}
+            {eventTitleWithSlot}
           </p>
 
           {/* Event Type + Status Badges */}
@@ -122,6 +131,14 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
                 icon={<FaClock className="w-4 h-4 text-primary" />}
                 label="Time Slot"
                 value={`${format(eventSlot.startTime, "hourFull")} – ${format(eventSlot.endTime, "hourFull")}`}
+              />
+            )}
+
+            {slotTitle && (
+              <InfoItem
+                icon={<FaTag className="w-4 h-4 text-primary" />}
+                label="Slot Title"
+                value={slotTitle}
               />
             )}
 
@@ -177,7 +194,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
               ) : qrData?.base64Image ? (
                 <TicketQRCode
                   qrCodeSrc={`data:image/png;base64,${qrData.base64Image}`}
-                  eventTitle={event.name}
+                  eventTitle={eventTitleWithSlot}
                 />
               ) : (
                 <p className="text-sm text-label text-center">QR code unavailable</p>
@@ -211,7 +228,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
       isOpen={isConfirmOpen}
       onClose={() => setIsConfirmOpen(false)}
       title="Cancel Registration"
-      subtitle={`Are you sure you want to cancel your registration for "${event.name}"? This action cannot be undone.`}
+      subtitle={`Are you sure you want to cancel your registration for "${eventTitleWithSlot}"? This action cannot be undone.`}
       onSubmit={handleDeleteConfirm}
       isSubmitting={isDeleting}
       actionButtonText="Proceed"
