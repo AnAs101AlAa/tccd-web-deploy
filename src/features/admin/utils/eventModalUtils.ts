@@ -107,6 +107,7 @@ export default function useEventModalUtils({
     description: "",
     isApproved: true,
     autoApproval: false,
+    hasWaitingList: false,
     eventImage: "",
     type: undefined,
     eventMedia: [],

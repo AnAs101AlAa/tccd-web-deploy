@@ -159,7 +159,7 @@ export default function RegistrationsPage() {
                 </div>
               ) : registrationsData?.items && registrationsData.items.length > 0 ? (
                 <>
-                  <RegistrationsList registrations={registrationsData.items} />
+                  <RegistrationsList registrations={registrationsData.items} eventId={selectedEvent.id} slotId={selectedSlotId} />
                   <Pagination
                     currentPage={registrationsData.pageIndex}
                     totalPages={registrationsData.totalPages}

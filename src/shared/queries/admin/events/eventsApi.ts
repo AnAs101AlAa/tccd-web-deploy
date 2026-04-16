@@ -23,6 +23,7 @@ export class EventsApi {
       type: data.type,
       locations: data.locations,
       autoApproval: data.autoApproval,
+      hasWaitingList: data.hasWaitingList,
       parentEventId: data.parentEventId,
     };
     
@@ -151,6 +152,13 @@ export class EventsApi {
     const response = await systemApi.get(`/v1/events/${eventId}/registrations`, { params });
     return response.data.data;
   }
-}
 
+  async changeRegistrationStatus(eventId: string, slotId: string, userId: string, newStatus: string) {
+    await systemApi.patch(`/v1/events/${eventId}/slots/${slotId}/registrations/${userId}`, { status: newStatus });
+  }
+
+  async AdjustEventRegistration(eventId: string, userId: string, slotId: string) {
+    await systemApi.post(`/v1/events/${eventId}/slots/${slotId}/registrations/add-by-admin/${userId}`);
+  }
+}
 export const eventsApi = new EventsApi();

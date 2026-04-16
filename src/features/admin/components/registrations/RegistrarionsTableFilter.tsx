@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
-import { Button, SearchField } from "tccd-ui";
+import { Button, InputField, DropdownMenu, SearchField } from "tccd-ui";
 import { IoSearch } from "react-icons/io5";
+import DepartmentList from "@/constants/departmentList";
+import UniversityList from "@/constants/universityList";
 
 export interface RegistrationsTableFilterParams {
   englishName?: string;
@@ -213,15 +215,15 @@ const RegistrationsTableFilter = ({ searchParams, onSearch }: RegistrationsTable
               <div className="space-y-4">
                 {/* Email */}
                 <div>
-                  <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
-                    Email
-                  </h4>
-                  <SearchField 
+                  <InputField 
+                    id="email-filter-registrations"
+                    label="Email"
+                    labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
                     value={tempSelectedParams.email || ""}
-                    onChange={(val) =>
+                    onChange={(e) =>
                       setTempSelectedParams({
                         ...tempSelectedParams,
-                        email: val || undefined,
+                        email: e.target.value || undefined,
                       })
                     }
                     placeholder="Enter Email"
@@ -230,52 +232,51 @@ const RegistrationsTableFilter = ({ searchParams, onSearch }: RegistrationsTable
                 
                 {/* University */}
                 <div>
-                  <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
-                    University
-                  </h4>
-                  <SearchField 
-                    value={tempSelectedParams.university || ""}
-                    onChange={(val) =>
+                  <DropdownMenu
+                    label="University"
+                    labelClassName="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2"
+                    options={UniversityList.map((uni) => ({ label: uni, value: uni }))}
+                    value={tempSelectedParams.university}
+                    onChange={(value) =>
                       setTempSelectedParams({
                         ...tempSelectedParams,
-                        university: val || undefined,
+                        university: value || undefined,
                       })
                     }
-                    placeholder="Enter University"
+                    placeholder="Select University"
                   />
                 </div>
 
                 {/* Department */}
                 <div>
-                  <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
-                    Department
-                  </h4>
-                  <SearchField 
-                    value={tempSelectedParams.department || ""}
-                    onChange={(val) =>
+                  <DropdownMenu
+                    label="Department"
+                    labelClassName="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2"
+                    options={DepartmentList.map((dept) => ({ label: dept, value: dept }))}
+                    value={tempSelectedParams.department}
+                    onChange={(value) =>
                       setTempSelectedParams({
                         ...tempSelectedParams,
-                        department: val || undefined,
+                        department: value || undefined,
                       })
                     }
-                    placeholder="Enter Department"
+                    placeholder="Select Department"
                   />
                 </div>
 
                 {/* Graduation Year */}
                 <div>
-                  <h4 className="text-[14px] md:text-[16px] font-semibold text-gray-800 mb-2">
-                    Graduation Year
-                  </h4>
-                  <SearchField 
-                    value={tempSelectedParams.graduationYear?.toString() || ""}
-                    onChange={(val) => {
-                      if (/^\d*$/.test(val)) {
-                        setTempSelectedParams({
-                          ...tempSelectedParams,
-                          graduationYear: val ? Number(val) : undefined,
-                        });
-                      }
+                  <InputField
+                    id="graduation-year-filter-registrations"
+                    label="Graduation Year"
+                    labelClassName="text-[13px] md:text-[14px] lg:text-[15px] text-gray-600 mb-1"
+                    value={String(tempSelectedParams.graduationYear || "")}
+                    onChange={(e) => {
+                      const year = parseInt(e.target.value);
+                      setTempSelectedParams({
+                        ...tempSelectedParams,
+                        graduationYear: !isNaN(year) ? year : undefined,
+                      });
                     }}
                     placeholder="Enter Graduation Year"
                   />

@@ -121,3 +121,20 @@ export const useGetEventRegistrations = (eventId: string, pageNumber: number, pa
     enabled: !!eventId,
   });
 };
+
+export const useChangeRegistrationStatus = () => {
+  return useMutation({
+    mutationKey: ["events", "changeRegistrationStatus"],
+    mutationFn: ({ eventId, slotId, userId, newStatus }: { eventId: string; slotId: string; userId: string; newStatus: string }) =>
+      eventsApi.changeRegistrationStatus(eventId, slotId, userId, newStatus)
+  });
+}
+
+export const useAdjustEventRegistration = () => {
+  return useMutation({
+    mutationKey: ["events", "adjustEventRegistration"],
+    mutationFn: ({ eventId, userId, slotId }: { eventId: string; userId: string; slotId: string }) =>
+      eventsApi.AdjustEventRegistration(eventId, userId, slotId)
+  });
+}
+
