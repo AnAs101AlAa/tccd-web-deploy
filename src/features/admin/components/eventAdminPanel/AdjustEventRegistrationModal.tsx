@@ -61,7 +61,7 @@ export default function AdjustEventRegistrationModal({isOpen, onClose, eventId, 
                         return (
                             <Button
                                 type="primary"
-                                buttonText="Select"
+                                buttonText={selectedUserId === item.id ? "Selected" : "Select"}
                                 onClick={() => {
                                     setSelectedUserId(item.id);
                                 }}
@@ -72,7 +72,7 @@ export default function AdjustEventRegistrationModal({isOpen, onClose, eventId, 
                 />
                 <div className="mt-6 flex justify-center gap-3">
                     <Button type="basic" onClick={() => { if (!adjustRegistrationMutation.isPending) onClose() }} disabled={adjustRegistrationMutation.isPending} buttonText="Cancel" />
-                    <Button type="primary" onClick={handleUpdateRegistration} loading={adjustRegistrationMutation.isPending} disabled={!selectedSlotId || !userNameKey} buttonText="Submit" />
+                    <Button type="primary" onClick={handleUpdateRegistration} loading={adjustRegistrationMutation.isPending} disabled={!selectedSlotId || !selectedUserId} buttonText="Submit" />
                 </div>
             </div>
         </Modal>
