@@ -42,7 +42,11 @@ export const useLogin = () => {
       } else if (error.response?.status === 400) {
         toast.error("Your email is not verified yet. Please check your inbox for the verification email.");
         return;
+      } else if (error.response?.status === 403) {
+        window.location.href = "/banned";
+        return;
       }
+      
       toast.error("Login failed. Please try again.");
     },
   });
