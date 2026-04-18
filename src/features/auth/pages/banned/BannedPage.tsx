@@ -25,13 +25,13 @@ export const BannedPage = () => {
                 Action Required
               </h1>
               <p className="text-gray-500 font-medium">
-                Your account access has been temporarily restricted.
+                Your account access has been temporarily banned.
               </p>
             </div>
           </header>
 
           <div className="space-y-6 mt-8">
-            <div className="rounded-2xl bg-white p-5 shadow-sm border border-gray-100 text-left relative overflow-hidden group hover:border-red-100 transition-colors duration-300">
+            {/* <div className="rounded-2xl bg-white p-5 shadow-sm border border-gray-100 text-left relative overflow-hidden group hover:border-red-100 transition-colors duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-red-500 rounded-l-2xl opacity-80" />
               <div className="pl-2">
                 <h3 className="text-[15px] font-semibold text-gray-900 flex items-center gap-2 mb-2">
@@ -48,7 +48,7 @@ export const BannedPage = () => {
                   Email Support
                 </a>
               </div>
-            </div>
+            </div> */}
 
             <div className="pt-2">
               <Link

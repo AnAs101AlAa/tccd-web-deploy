@@ -5,6 +5,8 @@ import { MdCalendarMonth, MdGroups } from "react-icons/md";
 import EVENT_TYPES from "@/constants/EventTypes";
 import format from "@/shared/utils/dateFormater";
 import { HTMLFormattedText } from "@/shared/components/HTMLFormattedText";
+import { useApproveEvent } from "@/shared/queries/admin/events/eventsQueries";
+import Toggle from "@/shared/components/customComponents/Toggle";
 
 export default function PastEventCard({
   event,
@@ -16,6 +18,12 @@ export default function PastEventCard({
   onDelete?: () => void;
 }) {
   const navigate = useNavigate();
+  const approveMutation = useApproveEvent();
+
+  const handleToggleApproval = (newState: boolean) => {
+    approveMutation.mutate({ eventId: event.id, isApproved: newState });
+  };
+
   return (
     <div
       onClick={() => navigate(`/events/${event.id}`)}
@@ -54,7 +62,7 @@ export default function PastEventCard({
       </p>
       {onEdit && (
         <div
-          className="flex flex-1 items-end gap-3 mt-4"
+          className="flex flex-1 flex-wrap items-end gap-3 mt-4 w-full"
           onClick={(e) => e.stopPropagation()}
         >
           <Button
@@ -70,6 +78,13 @@ export default function PastEventCard({
             width="small"
             onClick={() => onDelete?.()}
           />
+            <div className="ml-auto flex items-center pr-2">
+              <Toggle 
+                initial={event.isApproved} 
+                label={event.isApproved ? "Approved" : "Disapproved"} 
+                onToggle={handleToggleApproval} 
+              />
+            </div>
         </div>
       )}
     </div>
