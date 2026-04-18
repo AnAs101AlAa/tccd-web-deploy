@@ -42,7 +42,7 @@ export const BannedPage = () => {
                 </p>
                 
                 <a
-                  href="mailto:support@tccd.com"
+                  href="mailto:support@tccd-cufe.com"
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-red-600 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Email Support
