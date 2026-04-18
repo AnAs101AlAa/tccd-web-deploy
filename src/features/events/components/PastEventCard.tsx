@@ -82,6 +82,7 @@ export default function PastEventCard({
               <Toggle 
                 initial={event.isApproved} 
                 label={event.isApproved ? "Approved" : "Disapproved"} 
+                disabled={approveMutation.isPending}
                 onToggle={handleToggleApproval} 
               />
             </div>
