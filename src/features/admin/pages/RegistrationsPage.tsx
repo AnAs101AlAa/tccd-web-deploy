@@ -58,7 +58,9 @@ export default function RegistrationsPage() {
     return [
       { label: "All Time Slots", value: "" },
       ...selectedEvent.slots.map((slot) => ({
-        label: `${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")}`,
+        label: slot.title 
+          ? `${slot.title} (${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")})`
+          : `${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")}`,
         value: slot.id,
       })),
     ];

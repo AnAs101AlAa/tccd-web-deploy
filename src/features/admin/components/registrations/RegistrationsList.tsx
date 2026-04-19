@@ -24,6 +24,9 @@ export default function RegistrationsList({
 }: RegistrationsListProps) {
   const changeStatusMutation = useChangeRegistrationStatus();
 
+  const hasPending = registrations.some((reg) => reg.status === "Pending");
+  const showActions = !!slotId && hasPending;
+
   const handleChangeStatus = async (userId: string, newStatus: string) => {
     try {
       await changeStatusMutation.mutateAsync({ eventId, slotId: slotId || "", userId, newStatus });
@@ -84,7 +87,8 @@ export default function RegistrationsList({
           Pending: "bg-yellow-100 text-yellow-800",
           Approved: "bg-green-100 text-green-800",
           Rejected: "bg-red-100 text-red-800",
-          Cancelled: "bg-gray-100 text-gray-800",
+          Scanned: "bg-blue-100 text-blue-800",
+          Cancelled: "bg-gray-10q0 text-gray-800",
         };
         return (
           <span
@@ -122,7 +126,8 @@ export default function RegistrationsList({
       <Table
         items={formattedData}
         columns={columns}
-        renderActions={!slotId ? undefined : (item) => {
+        renderActions={!showActions ? undefined : (item) => {
+          if (item.status !== "Pending") return null;
           return (
             <>
               <Button
@@ -167,9 +172,11 @@ export default function RegistrationsList({
                 <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
                   Status
                 </th>
-                <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
-                  Actions
-                </th>
+                {showActions && (
+                  <th className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-inactive-tab-text">
+                    Actions
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -219,24 +226,26 @@ export default function RegistrationsList({
                         {item.status}
                       </span>
                     </td>
-                    <td className="px-2 py-2">
-                      {slotId && (
-                        <div className="flex items-center gap-2">
-                          <Button
-                            type="primary"
-                            buttonIcon={<FaCheck className="size-3" />}
-                            buttonText="Approve"
-                            onClick={() => handleChangeStatus(item.user.id, "Approved")}
-                          />
-                          <Button
-                            type="danger"
-                            buttonIcon={<FaX className="size-3" />}
-                            buttonText="Reject"
-                            onClick={() => handleChangeStatus(item.user.id, "Rejected")}
-                          />
-                        </div>
-                      )}
-                    </td>
+                    {showActions && (
+                      <td className="px-2 py-2">
+                        {item.status === "Pending" && (
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="primary"
+                              buttonIcon={<FaCheck className="size-3" />}
+                              buttonText="Approve"
+                              onClick={() => handleChangeStatus(item.user.id, "Approved")}
+                            />
+                            <Button
+                              type="danger"
+                              buttonIcon={<FaX className="size-3" />}
+                              buttonText="Reject"
+                              onClick={() => handleChangeStatus(item.user.id, "Rejected")}
+                            />
+                          </div>
+                        )}
+                      </td>
+                    )}
                   </tr>
                 );
               })}
