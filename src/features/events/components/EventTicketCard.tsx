@@ -70,7 +70,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
     });
   };
 
-  const statusStyles = {
+  const statusStyles: Record<string, string> = {
     Approved: "bg-green-500/10 text-green-600 border-green-500",
     Pending: "bg-yellow-500/10 text-yellow-600 border-yellow-500",
     Rejected: "bg-red-500/10 text-red-600 border-red-500",
@@ -93,7 +93,7 @@ const EventTicketCard: React.FC<EventTicketCardProps> = ({
               {eventTypeLabel}
             </span>
             <span
-              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border-2 ${statusStyles[registration.status] ?? ""
+              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border-2 ${statusStyles[registration.status] || "bg-gray-200 text-gray-600 border-gray-300"
                 }`}
             >
               {registration.status}

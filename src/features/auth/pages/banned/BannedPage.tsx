@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShieldAlert, Mail, ArrowLeft } from "lucide-react";
+import { ShieldAlert, ArrowLeft } from "lucide-react";
 
 export const BannedPage = () => {
   return (
