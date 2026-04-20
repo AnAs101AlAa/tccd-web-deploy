@@ -27,13 +27,26 @@ export const useUpdateEvent = () => {
   });
 };
 
+export const useApproveEvent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["events", "approve"],
+    mutationFn: ({ eventId, isApproved }: { eventId: string; isApproved: boolean }) =>
+      eventsApi.approveEvent(eventId, isApproved),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    },
+  });
+};
+
 export const useUpdateEventPoster = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
     mutationKey: ["events", "updatePoster"],
-    mutationFn: ({ id, fileId }: { id: string; fileId: string }) =>
-      eventsApi.updateEventPoster(id, fileId),
+    mutationFn: ({ eventId, fileId }: { eventId: string; fileId: string }) =>
+      eventsApi.updateEventPoster(eventId, fileId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
     },
@@ -67,7 +80,7 @@ export const useDeleteEvent = () => {
 
   return useMutation({
     mutationKey: ["events", "delete"],
-    mutationFn: (id: string) => eventsApi.deleteEvent(id),
+    mutationFn: (eventId: string) => eventsApi.deleteEvent(eventId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
     }

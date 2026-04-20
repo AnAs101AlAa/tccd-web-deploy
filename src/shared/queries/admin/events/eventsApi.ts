@@ -119,6 +119,10 @@ export class EventsApi {
     await systemApi.post(`/v1/Event/${eventId}/slots`, payload);
   }
 
+  async approveEvent(eventId: string, isApproved: boolean): Promise<void> {
+    await systemApi.patch(`/v1/Event/${eventId}/approve`, { isApproved });
+  }
+
   async updateEventSlot(
     eventId: string,
     slotId: string,
