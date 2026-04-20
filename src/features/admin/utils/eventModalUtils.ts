@@ -105,7 +105,7 @@ export default function useEventModalUtils({
     id: "",
     name: "",
     description: "",
-    isApproved: true,
+    isApproved: false,
     autoApproval: false,
     hasWaitingList: false,
     eventImage: "",
@@ -260,7 +260,7 @@ export default function useEventModalUtils({
 
         if (formValues.eventImage) {
           await updateEventPosterMutation.mutateAsync({
-            id: event.id,
+            eventId: event.id,
             fileId: formValues.eventImage,
           });
         }
@@ -350,15 +350,16 @@ export default function useEventModalUtils({
         queryClient.invalidateQueries({ queryKey: ["events"] });
         toast.success("Event updated successfully!");
         onClose();
+
       } else {
         const createdEvent =
           await createEventMutation.mutateAsync(finalizedValue);
-        const eventId = createdEvent?.id || createdEvent?.data?.id;
+        const eventId = createdEvent?.id;
 
         if (eventId) {
           if (formValues.eventImage) {
             await updateEventPosterMutation.mutateAsync({
-              id: eventId,
+              eventId: eventId,
               fileId: formValues.eventImage,
             });
           }

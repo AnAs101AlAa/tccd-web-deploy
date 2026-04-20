@@ -21,6 +21,10 @@ export default function TicketCard({ ticket }: { ticket: Ticket }) {
         return "bg-yellow-500/10 text-yellow-600 border-yellow-500";
       case "Cancelled":
         return "bg-red-500/30 text-red-700 border-red-500";
+      case "Rejected":
+        return "bg-red-500/30 text-red-700 border-red-500";
+      case "Scanned":
+        return "bg-lime-500/10 text-lime-600 border-lime-500";
         default:
         return "bg-gray-400/10 text-gray-500 border-gray-400";
     }

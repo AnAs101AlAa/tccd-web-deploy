@@ -21,6 +21,9 @@ const OTPPage = lazy(() =>
 const ResetPasswordPage = lazy(() =>
   import("@/features/auth/pages/reset-password/ResetPasswordPage").then(m => ({ default: m.ResetPasswordPage }))
 );
+const BannedPage = lazy(() =>
+  import("@/features/auth/pages/banned/BannedPage").then(m => ({ default: m.BannedPage }))
+);
 const HomePage = lazy(() => import("@/features/home/pages/HomePage"));
 const AboutUsPage = lazy(() =>
   import("@/features/aboutus/pages/AboutUsPage").then(m => ({ default: m.AboutUsPage }))
@@ -66,6 +69,7 @@ export const routes: Route[] = [
   { path: "/forgot-password", Component: ForgotPasswordPage },
   { path: "/otp", Component: OTPPage },
   { path: "/reset-password", Component: ResetPasswordPage },
+  { path: "/banned", Component: BannedPage },
   { path: "/aboutus", Component: AboutUsPage, protected: true, roles: ["all"] },
   { path: "/events/:id", Component: EventDetailsPage, protected: true, roles: ["all"] },
   { path: "/events", Component: EventsPage, protected: true, roles: ["all"] },

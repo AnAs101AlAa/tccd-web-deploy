@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { WithLayout } from "@/shared/components/hoc";
 import { Pagination } from "@/shared/components/pagination";
 import { useGetEventRegistrations, useFetchEvents } from "@/shared/queries/admin/events/eventsQueries";
+import { useGetAllUpcomingEvents } from "@/shared/queries/events/eventQueries";
 import RegistrationsList from "../components/registrations/RegistrationsList";
 import RegistrationsFilter from "../components/registrations/RegistrationsFilter";
 import RegistrationsTableFilter from "../components/registrations/RegistrarionsTableFilter";
@@ -16,10 +17,14 @@ export default function RegistrationsPage() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
   const [filterParams, setFilterParams] = useState<any>({})
+  
   // Fetch events by search query using nameKey parameter
-  const { data: eventsData } = useFetchEvents(1, 100, searchQuery || undefined);
+  const { data: searchEventsData } = useFetchEvents(1, 100, searchQuery || undefined);
+  
+  // Fetch upcoming events for default display
+  const { data: upcomingEventsData } = useGetAllUpcomingEvents({ PageNumber: 1, PageSize: 100 });
 
-  const filteredEvents = eventsData?.items || [];
+  const filteredEvents = searchQuery ? (searchEventsData?.items || []) : (upcomingEventsData?.items || []);
 
   // Fetch registrations for selected event
   const { data: registrationsData, isLoading: isLoadingRegistrations } =
@@ -53,7 +58,9 @@ export default function RegistrationsPage() {
     return [
       { label: "All Time Slots", value: "" },
       ...selectedEvent.slots.map((slot) => ({
-        label: `${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")}`,
+        label: slot.title 
+          ? `${slot.title} (${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")})`
+          : `${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")}`,
         value: slot.id,
       })),
     ];
@@ -89,34 +96,34 @@ export default function RegistrationsPage() {
             />
 
             {/* Events List */}
-            {searchQuery && (
-              <div className="mt-2 sm:mt-3 md:mt-4">
-                {filteredEvents.length > 0 ? (
-                  <div className="grid gap-1 sm:gap-2 max-h-52 sm:max-h-64 overflow-y-auto">
-                    {filteredEvents.map((event) => (
-                      <button
-                        key={event.id}
-                        onClick={() => handleEventSelect(event)}
-                        className={`p-2 sm:p-3 flex flex-col sm:flex-row gap-1 sm:gap-3 items-start sm:items-center rounded-md sm:rounded-lg text-left transition-colors text-xs sm:text-sm ${
-                          selectedEvent?.id === event.id
-                            ? "bg-primary text-white"
-                            : "bg-slate-50 hover:bg-slate-100"
-                        }`}
-                      >
-                        <p className="font-semibold">{event.name}</p>
-                        <p className="opacity-75">
-                          {format(event.date, "stringed")}
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-xs sm:text-sm text-inactive-tab-text text-center py-3 sm:py-4">
-                    No events found matching "{searchQuery}"
-                  </p>
-                )}
-              </div>
-            )}
+            <div className="mt-2 sm:mt-3 md:mt-4">
+              {filteredEvents.length > 0 ? (
+                <div className="grid gap-1 sm:gap-2 max-h-52 sm:max-h-64 overflow-y-auto">
+                  {filteredEvents.map((event) => (
+                    <button
+                      key={event.id}
+                      onClick={() => handleEventSelect(event)}
+                      className={`p-2 sm:p-3 flex flex-col sm:flex-row gap-1 sm:gap-3 items-start sm:items-center rounded-md sm:rounded-lg text-left transition-colors text-xs sm:text-sm ${
+                        selectedEvent?.id === event.id
+                          ? "bg-primary text-white"
+                          : "bg-slate-50 hover:bg-slate-100"
+                      }`}
+                    >
+                      <p className="font-semibold">{event.name}</p>
+                      <p className="opacity-75">
+                        {format(event.date, "stringed")}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs sm:text-sm text-inactive-tab-text text-center py-3 sm:py-4">
+                  {searchQuery 
+                    ? `No events found matching "${searchQuery}"`
+                    : "No upcoming events found"}
+                </p>
+              )}
+            </div>
           </div>
         </section>
 
