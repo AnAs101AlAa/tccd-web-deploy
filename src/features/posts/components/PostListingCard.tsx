@@ -29,7 +29,6 @@ export default function PostCard({
 
   const isAdmin = useIsAdmin();
 
-  console.log("Rendering PostCard for post:", post.media[0]?.mediaUrl);
   return (
     <div
       className="group relative w-full mx-auto h-full py-1"
