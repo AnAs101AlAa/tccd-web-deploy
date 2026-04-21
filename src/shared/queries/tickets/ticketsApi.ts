@@ -19,7 +19,7 @@ export class TicketsApi {
       `${TICKET_ROUTE}/slots/${payload.slotId}/scan`,
       { token: payload.token }
     );
-    return response.data;
+    return response.data.data;
   }
 }
 
