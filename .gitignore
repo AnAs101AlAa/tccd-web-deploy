@@ -57,3 +57,5 @@ coverage/
 
 # Local config overrides
 public/config.local.js
+
+pnpm-lock.yaml
