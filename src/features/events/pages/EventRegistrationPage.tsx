@@ -22,6 +22,7 @@ import { Suspense, lazy } from "react";
 // Modals are only shown at specific registration steps — defer their load
 const TicketRulesModal = lazy(() => import("../components/TicketRulesModal"));
 const RegistrationConfirmationModal = lazy(() => import("../components/RegistrationConfirmationModal"));
+const SlotModal = lazy(() => import("../components/SlotModal"));
 import { getErrorMessage } from "@/shared/utils/errorHandler";
 import { useEventRegistration } from "../hooks";
 import EVENT_TYPES from "@/constants/EventTypes";
@@ -91,6 +92,7 @@ export default function EventRegisterForm() {
   }, [isLoading, isEligible, eligibilityReason, navigate, checked, eventId]);
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [isWorkshopModalOpen, setIsWorkshopModalOpen] = useState(false);
 
   const watchedSlotId = watch("slotId");
 
@@ -393,7 +395,7 @@ export default function EventRegisterForm() {
                     {/* Time Slot — Always shown */}
                     <div className="space-y-2">
                         <label className="text-sm font-semibold text-foreground">
-                          Preferred Time Slot
+                           Preferred Time Slot
                         </label>
                         <Controller
                           name="slotId"
@@ -403,31 +405,61 @@ export default function EventRegisterForm() {
                             fieldState: { error: fieldError },
                           }) => (
                             <>
-                              <DropdownMenu
-                                label=""
-                                value={field.value || ""}
-                                options={slotOptions}
-                                onChange={(val) => field.onChange(val)}
-                                error={fieldError?.message}
-                              />
-                              {field.value && (() => {
-                                const selectedSlot = event.slots?.find(
-                                  (s) => s.id === field.value,
-                                );
-                                if (!selectedSlot) return null;
-                                const spotsLeft = selectedSlot.capacity - selectedSlot.registrationCount;
-                                const isLow = spotsLeft <= 10;
-                                return (
-                                  <p
-                                    className={`flex items-center gap-1.5 text-xs font-medium mt-1 ${isLow ? "text-red-500" : "text-green-600"
-                                      }`}
-                                  >
-                                    <FaUsers className="w-3 h-3 shrink-0" />
-                                    {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""}{" "}
-                                    remaining for this slot
-                                  </p>
-                                );
-                              })()}
+                              {event?.type?.toLowerCase() === "workshop" ? (
+                                <>
+                                  <Button
+                                    type="secondary"
+                                    onClick={() => setIsWorkshopModalOpen(true)}
+                                    buttonText={
+                                      field.value
+                                        ? event.slots?.find((s) => s.id === field.value)?.title || "Selected Time Slot"
+                                        : "Click to select a time slot"
+                                    }
+                                    width="full"
+                                  />
+                                  {fieldError && (
+                                    <p className="text-xs text-red-500 mt-1">{fieldError.message}</p>
+                                  )}
+
+                                  <Suspense fallback={null}>
+                                    <SlotModal
+                                      isOpen={isWorkshopModalOpen}
+                                      onClose={() => setIsWorkshopModalOpen(false)}
+                                      slots={event.slots || []}
+                                      selectedSlotId={field.value || ""}
+                                      onSelectSlot={(slotId) => field.onChange(slotId)}
+                                    />
+                                  </Suspense>
+                                </>
+                              ) : (
+                                <>
+                                  <DropdownMenu
+                                    label=""
+                                    value={field.value || ""}
+                                    options={slotOptions}
+                                    onChange={(val) => field.onChange(val)}
+                                    error={fieldError?.message}
+                                  />
+                                  {field.value && (() => {
+                                    const selectedSlot = event.slots?.find(
+                                      (s) => s.id === field.value,
+                                    );
+                                    if (!selectedSlot) return null;
+                                    const spotsLeft = selectedSlot.capacity - selectedSlot.registrationCount;
+                                    const isLow = spotsLeft <= 10;
+                                    return (
+                                      <p
+                                        className={`flex items-center gap-1.5 text-xs font-medium mt-1 ${isLow ? "text-red-500" : "text-green-600"
+                                          }`}
+                                      >
+                                        <FaUsers className="w-3 h-3 shrink-0" />
+                                        {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""}{" "}
+                                        remaining for this slot
+                                      </p>
+                                    );
+                                  })()}
+                                </>
+                              )}
                             </>
                           )}
                         />
