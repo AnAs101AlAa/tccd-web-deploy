@@ -395,7 +395,7 @@ export default function EventRegisterForm() {
                     {/* Time Slot — Always shown */}
                     <div className="space-y-2">
                         <label className="text-sm font-semibold text-foreground">
-                           "Preferred Time Slot"
+                           Preferred Time Slot
                         </label>
                         <Controller
                           name="slotId"
