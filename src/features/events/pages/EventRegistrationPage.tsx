@@ -431,7 +431,7 @@ export default function EventRegisterForm() {
                             </>
                           )}
                         />
-                        {selectedSlotSpotsLeft !== null && selectedSlotSpotsLeft === 0 && (
+                        {selectedSlotSpotsLeft !== null && selectedSlotSpotsLeft === 0 && event.hasWaitingList && (
                           <p className="mt-4 flex items-center gap-1.5 text-sm font-medium bg-yellow-100/50 border border-yellow-500 p-2 rounded-xl text-yellow-600">
                             <FaTriangleExclamation className="w-3 h-3 shrink-0" />
                             This time slot is fully booked. Registering in it will place you on a waitlist.
