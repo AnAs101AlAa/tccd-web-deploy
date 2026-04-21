@@ -57,7 +57,11 @@ export default function RegistrationsPage() {
     if (!selectedEvent?.slots) return [];
     return [
       { label: "All Time Slots", value: "" },
-      ...selectedEvent.slots.map((slot) => ({
+      ...selectedEvent.slots.sort((a, b) => {
+        const timeA =  new Date(a.startTime).getTime();
+        const timeB = new Date(b.startTime).getTime();
+        return timeA - timeB;
+      }).map((slot) => ({
         label: slot.title 
           ? `${slot.title} (${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")})`
           : `${format(slot.startTime, "hourFull")} – ${format(slot.endTime, "hourFull")}`,
