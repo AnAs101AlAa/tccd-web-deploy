@@ -405,7 +405,7 @@ export default function EventRegisterForm() {
                             fieldState: { error: fieldError },
                           }) => (
                             <>
-                              {event?.type?.toLowerCase() === "workshop" ? (
+                              {event?.type?.toLowerCase() === "extraactivity" ? (
                                 <>
                                   <Button
                                     type="secondary"
