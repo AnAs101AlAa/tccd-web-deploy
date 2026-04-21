@@ -144,6 +144,7 @@ export const useForgotPassword = () => {
       const message = getErrorMessage(error);
       toast.error(message || "Failed to send reset email. Please try again.");
     },
+    
   });
 };
 

@@ -122,7 +122,7 @@ export class AuthApi {
   async signupStudent(credentials: StudentSignupCredentials) {
     const { data } = await systemApi.post(
       AUTH_ROUTE + "register-student",
-      credentials,
+      credentials, {timeout: 1200000},
     );
     return data.data;
   }
@@ -212,7 +212,7 @@ export class AuthApi {
   async forgotPassword(credentials: ForgotPasswordCredentials) {
     const { data } = await systemApi.post(
       AUTH_ROUTE + "forgot-password",
-      credentials,
+      credentials, {timeout: 1200000},
     );
     return data;
   }
