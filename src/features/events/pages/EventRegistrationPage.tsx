@@ -164,7 +164,7 @@ export default function EventRegisterForm() {
           {isRegistered && (
             <div className="mb-8 bg-white rounded-xl p-8 shadow-md border border-green-200 text-center">
               <FaCircleCheck className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-foreground mb-2">
+              <h2 className="teslotxt-2xl font-bold text-foreground mb-2">
                 Registration Successful!
               </h2>
               <p className="text-sm text-muted-foreground">

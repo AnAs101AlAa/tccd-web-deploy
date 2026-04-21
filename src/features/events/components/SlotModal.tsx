@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Modal } from "tccd-ui";
 import { MdCalendarMonth } from "react-icons/md";
 import type { EventSlot } from "@/shared/types/events";
 import format from "@/shared/utils/dateFormater";
+import SlotDetailsModal from "./SlotDetailsModal";
 
 interface SlotModalProps {
   isOpen: boolean;
@@ -18,8 +20,16 @@ export default function SlotModal({
   selectedSlotId,
   onSelectSlot,
 }: SlotModalProps) {
+  const [detailedSlot, setDetailedSlot] = useState<EventSlot | null>(null);
+
+  const openDetails = (e: React.MouseEvent, slot: EventSlot) => {
+    e.stopPropagation();
+    setDetailedSlot(slot);
+  };
+
   return (
-    <Modal
+    <>
+      <Modal
       isOpen={isOpen}
       onClose={onClose}
       title="Select Time Slot"
@@ -70,9 +80,19 @@ export default function SlotModal({
                   </div>
                 </div>
                 {slot.description && (
-                  <p className="text-sm text-muted-foreground whitespace-pre-line mt-2">
-                    {slot.description}
-                  </p>
+                  <div className="mt-2 text-sm text-muted-foreground">
+                    <p className="whitespace-pre-line line-clamp-2">
+                      {slot.description}
+                    </p>
+                    {slot.description.length > 80 && (
+                      <button
+                        onClick={(e) => openDetails(e, slot)}
+                        className="text-primary font-medium mt-1 hover:underline text-xs"
+                      >
+                        View more details
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             </div>
@@ -80,5 +100,17 @@ export default function SlotModal({
         })}
       </div>
     </Modal>
+
+    {/* Detailed Slot Modal */}
+    <SlotDetailsModal 
+      detailedSlot={detailedSlot} 
+      onClose={() => setDetailedSlot(null)} 
+      onSelectSlot={(slotId) => {
+        onSelectSlot(slotId);
+        onClose();
+        setDetailedSlot(null);
+      }}
+    />
+  </>
   );
 }
