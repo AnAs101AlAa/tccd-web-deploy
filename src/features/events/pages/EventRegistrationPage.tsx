@@ -92,7 +92,7 @@ export default function EventRegisterForm() {
   }, [isLoading, isEligible, eligibilityReason, navigate, checked, eventId]);
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [isWorkshopModalOpen, setIsWorkshopModalOpen] = useState(false);
+  const [isSlotModalOpen, setIsSlotModalOpen] = useState(false);
 
   const watchedSlotId = watch("slotId");
 
@@ -409,7 +409,7 @@ export default function EventRegisterForm() {
                                 <>
                                   <Button
                                     type="secondary"
-                                    onClick={() => setIsWorkshopModalOpen(true)}
+                                    onClick={() => setIsSlotModalOpen(true)}
                                     buttonText={
                                       field.value
                                         ? event.slots?.find((s) => s.id === field.value)?.title || "Selected Time Slot"
@@ -423,8 +423,8 @@ export default function EventRegisterForm() {
 
                                   <Suspense fallback={null}>
                                     <SlotModal
-                                      isOpen={isWorkshopModalOpen}
-                                      onClose={() => setIsWorkshopModalOpen(false)}
+                                      isOpen={isSlotModalOpen}
+                                      onClose={() => setIsSlotModalOpen(false)}
                                       slots={event.slots || []}
                                       selectedSlotId={field.value || ""}
                                       onSelectSlot={(slotId) => field.onChange(slotId)}
