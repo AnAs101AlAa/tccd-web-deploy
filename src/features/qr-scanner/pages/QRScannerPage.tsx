@@ -247,7 +247,13 @@ export const QRScannerPage = () => {
                   )}
 
                   {/* Success State */}
-                  {scanResult && !error && !isVerifying && <ScannerSuccess />}
+                  {scanResult && !error && !isVerifying && (
+                    <ScannerSuccess 
+                      scanResult={scanResult} 
+                      selectedSlot={selectedEvent.slots?.find(slot => slot.id === selectedSlotId)} 
+                      onNextScan={reset}
+                    />
+                  )}
                 </>
               ) : (
                 selectedEvent.slots &&

@@ -1,3 +1,21 @@
+export interface QRScanResultUser {
+  id: string;
+  englishName: string;
+  arabicName: string;
+  gender: string;
+  status: string;
+  nationalId: string | null;
+  passportNumber: string | null;
+  email: string;
+  role: string;
+  token: string | null;
+  phoneNumber: string;
+  studentProfile: any;
+  volunteeringProfile: any;
+  businessRepProfile: any;
+  facultyMemberProfile: any;
+}
+
 export interface QRScanResult {
   id: string;
   userId: string;
@@ -5,6 +23,7 @@ export interface QRScanResult {
   scannedAt: string;
   scanCount: number;
   maxScans: number;
+  user?: QRScanResultUser;
 }
 
 export interface QRScanError {

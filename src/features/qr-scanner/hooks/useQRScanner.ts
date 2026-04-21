@@ -12,18 +12,18 @@ export function useQRScanner(slotId: string) {
 
   const scanQRCode = useScanQRCode();
 
-  // Auto-reset scanner after success or error (3 seconds delay)
+  // Auto-reset scanner after error (3 seconds delay)
+  // Success states must be explicitly reset by the user
   useEffect(() => {
-    if (!scanResult && !error) return;
+    if (!error) return;
 
     const timer = setTimeout(() => {
       setIsScanning(true);
-      setScanResult(null);
       setError(null);
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [scanResult, error]);
+  }, [error]);
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
     if (detectedCodes.length === 0) return;
