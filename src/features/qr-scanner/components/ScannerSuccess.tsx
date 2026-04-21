@@ -12,7 +12,6 @@ import {
 import InfoField from "@/shared/components/InfoField";
 
 const ScannerSuccess = ({ scanResult, selectedSlot, onNextScan }: { scanResult: QRScanResult; selectedSlot?: EventSlot; onNextScan: () => void }) => {
-  console.log("Scan Result:", scanResult); // For debugging purposes
   return (
     <div className="w-full flex flex-col items-center bg-linear-to-br from-emerald-50 to-teal-100 p-8 rounded-xl overflow-hidden shadow-inner">
       <div className="w-20 h-20 mb-6 bg-white rounded-full flex items-center justify-center shadow-lg shrink-0">
@@ -33,21 +32,21 @@ const ScannerSuccess = ({ scanResult, selectedSlot, onNextScan }: { scanResult: 
           onClick={onNextScan}
         />
       </div>
-
+    
       <div className="w-full bg-white p-4 rounded-lg shadow-sm border border-emerald-100 mb-6 text-left">
         <h4 className="font-semibold text-emerald-800 border-b border-emerald-50 pb-2 mb-3">Scan Details</h4>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="bg-emerald-50/50 p-3 rounded-md">
-            <p className="text-xs text-emerald-600 uppercase tracking-wide font-semibold mb-1">Scanned At</p>
-            <p className="text-sm font-bold text-emerald-800">{format(scanResult.scannedAt, "hourFull")}</p>
+          <div className="bg-gray-200/50 p-3 rounded-md">
+            <p className="text-xs text-label tracking-wide font-semibold mb-1">Scanned At</p>
+            <p className="text-sm font-bold text-contrast">{format(scanResult.scannedAt, "hourFull")}</p>
           </div>
-          <div className="bg-emerald-50/50 p-3 rounded-md">
-            <p className="text-xs text-emerald-600 uppercase tracking-wide font-semibold mb-1">Scan Count</p>
-            <p className="text-sm font-bold text-emerald-800">{scanResult.scanCount}</p>
+          <div className="bg-gray-200/50 p-3 rounded-md">
+            <p className="text-xs text-label tracking-wide font-semibold mb-1">Scan Count</p>
+            <p className="text-sm font-bold text-contrast">{scanResult.scanCount}</p>
           </div>
-          <div className="bg-emerald-50/50 p-3 rounded-md">
-            <p className="text-xs text-emerald-600 uppercase tracking-wide font-semibold mb-1">Max Scans</p>
-            <p className="text-sm font-bold text-emerald-800">{scanResult.maxScans}</p>
+          <div className="bg-gray-200/50 p-3 rounded-md">
+            <p className="text-xs text-label tracking-wide font-semibold mb-1">Max Scans</p>
+            <p className="text-sm font-bold text-contrast">{scanResult.maxScans}</p>
           </div>
         </div>
       </div>
@@ -55,9 +54,9 @@ const ScannerSuccess = ({ scanResult, selectedSlot, onNextScan }: { scanResult: 
       {selectedSlot && (
         <div className="w-full bg-white p-4 rounded-lg shadow-sm border border-emerald-100 mb-6 text-left">
           <h4 className="font-semibold text-emerald-800 border-b border-emerald-50 pb-2 mb-3">Event Slot</h4>
-          <div className="bg-emerald-50/50 p-3 rounded-md">
-            <h5 className="font-bold text-emerald-700">{selectedSlot.title || "Selected Slot"}</h5>
-            <p className="text-sm font-medium text-emerald-600/80 mt-1">
+          <div className="bg-gray-200/50 p-3 rounded-md">
+            <h5 className="font-semibold text-label ">{selectedSlot.title || "Selected Slot"}</h5>
+            <p className="text-sm font-medium text-contrast mt-1">
               {format(selectedSlot.startTime, "hourFull")} — {format(selectedSlot.endTime, "hourFull")}
             </p>
           </div>
