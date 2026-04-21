@@ -13,6 +13,7 @@ const EVENT_TYPES = [
   { value: "Sessions" as EventTypes, label: "Session" },
   { value: "Recruitment" as EventTypes, label: "Recruitment" },
   { value: "Orientation" as EventTypes, label: "Orientation" },
+  { value: "ExtraActivity" as EventTypes, label: "Extra Activity" },
 ];
 
 export default EVENT_TYPES;
